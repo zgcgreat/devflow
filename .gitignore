@@ -1,0 +1,32 @@
+# Git
+.git/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ultimate Workflow 产物（不提交到版本控制）
+.ultimate-workflow/
+specs/
+openspec/
+
+# Node
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Environment
+.env
+.env.local
