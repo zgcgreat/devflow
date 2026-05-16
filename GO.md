@@ -19,8 +19,7 @@
 | 阶段门验证 | `references/gate-rules.md` |
 | Token预算 | `references/token-budget.md` |
 | 完整规则集 | `references/RULES.md` |
-| Stage Skills | `skills/stage-skills/` |
-| Agent Skills | `agent-skills/skills/` |
+| Stage Skills | `skills/stage-skills/` (位于 E:\LLM\skills\ultimate-workflow) |
 
 ---
 
@@ -113,14 +112,13 @@ ultimate-workflow 默认用 `.ultimate-workflow/CONTEXT.md` 作为单一源。�
 
 | 用户说 | 需求状态 | Stage Skill | 依赖 Skills |
 |---|---|---|---|
-| 有新想法想做件事 | 无活跃req | `stage-0-confirm` | idea-refine, development-core, brainstorming |
+| 有新想法想做件事 | 无活跃req | `stage-0-confirm` | brainstorming, writing-plans |
 | 恢复中断任务 | 有中断任务 | 按R1.5重启 | - |
 | 不要进入workflow | - | 直接做，跳过 | - |
 | 健康检查 | - | `stage-m-health` | code-quality |
 | evolve/architect | - | `stage-a-evolve` 或 `stage-a-architect` | design-and-architecture |
 | 纯技术问题 | - | 直接回答 | - |
-| 上传文档/PRD | - | 文档解析模式 → 00-requirements | development-core |
-| 探索代码结构 | - | GitNexus 知识图谱查询 | gitnexus-exploring |
+| 上传文档/PRD | - | 文档解析模式 → 00-requirements | writing-plans |
 | 修复Bug | - | `stage-debug` | systematic-debugging |
 
 ### B. 可选命令
