@@ -2,7 +2,8 @@
 
 > **Layer**: L1-INTERACTION (SuperCorp 交互层) → Layer 2 SEP Engine 介入
 > **前置产物**: `03-tasks.md` (Phase 3 通过 G4)
-> **后置产物**: `.ultimate-workflow/<req-id>/WAVE-N-SUMMARY.md` (每个 Wave 一个)
+> **前置产物(消费)**: `.specs/waves/wave-{N}/SUMMARY.md` (Wave Executor L2-ENGINE 写入,Phase 4 直接消费)
+> **后置产物**: Phase 4 自身不写 summary,仅编排和消费;最终汇总在 Phase 8 archive
 > **门控**: G5 — Integration Gate（Phase 6/7/8 前置）
 
 ## Skill元信息
@@ -30,61 +31,50 @@ v3_upgrade:
 ## 输出
 
 - 按 Wave 分组执行的代码变更
-- `WAVE-N-SUMMARY.md` — 每个 Wave 的完成摘要
-- `[checkpoint][wave:N][task:TXX]` Heartbeat 检查点
+- **消费** `.specs/waves/wave-{N}/SUMMARY.md` — Wave Executor 写入的标准路径(不再产生自己的 WAVE-N-SUMMARY.md)
+- `[phase:orchestrator][wave:N][delegated-to:wave-executor]` — Phase 4 编排心跳
+
+## ⚠️ 职责边界说明
+
+**Phase 4 Build (L1-INTERACTION)** = 编排层: 决定"做什么、按什么顺序做",不直接写代码。
+**Wave Executor (L2-ENGINE)** = 执行层: 负责"怎么做完",包含 Kahn 拓扑排序、心跳、summary 写入。
+
+> **修复 (2024-05-17)**: Phase 4 已退化为纯编排器,所有实际执行逻辑委托给 Wave Executor。Phase 4 不再写自己的 summary(消除双重写入),直接消费 `.specs/waves/wave-{N}/SUMMARY.md`。
 
 ## 执行流程
 
-### Step 1: Wave N 初始化
+### Step 1: 编排 Wave N (委托给 Wave Executor)
 
-1. 读取 `03-tasks.md`，提取 Wave N 的所有 Task
-2. 为无依赖的 Task 启动并行 Execution Agent（~200K fresh context）
-3. 记录心跳：`[checkpoint][wave:N][start]`
+1. 读取 `03-tasks.md`,提取 Wave N 的所有 Task,构建任务图
+2. **调用** Wave Executor (`layers/L2-ENGINE/wave-executor/_SKILL.md`),传入:
+   - Task 列表 + 依赖关系
+   - Verify 命令
+   - Commit 格式要求
+3. Phase 4 记录: `[phase:orchestrator][wave:N][delegated-to:wave-executor]`
 
-### Step 2: Wave N Task 执行
+### Step 2: 消费 Wave Executor 结果
 
-每个 Task 按以下流程执行：
+1. 读取 `.specs/waves/wave-{N}/SUMMARY.md`(Wave Executor 写入)
+2. 确认 Verify 通过率、Commit hashes、Lessons learned
+3. 如果 G5 gate PASS → 编排 Wave N+1
+4. 如果 G5 gate FAIL → 创建修复 Task,退回对应 Wave
 
-```
-1. Heartbeat: [checkpoint][wave:N][task:TXX] START
-2. 加载 Read Files（按需渐进式披露）
-3. 编写/修改代码
-4. 运行 Verify 命令
-5. 提交原子 commit: `<type>(<req-id>): <task-id> <subject>`
-6. Heartbeat: [checkpoint][wave:N][task:TXX] DONE
-```
+### Step 3: LearningWorkflow 聚合 (Phase 完成后)
 
-**并行执行**: Wave N 内互不依赖的 Task 同时启动 Execution Agent
+所有 Wave 执行完毕后,**统一触发** LearningWorkflow(仅一次):
+1. 扫描 `.specs/waves/wave-{N}/SUMMARY.md` 中所有 LESSONS Nomination
+2. 聚合到全局 LESSONS.md(L-NNN 格式)
+3. 高频重复经验（≥ 3 次）→ 提名 Domain Skills Promotion
 
-### Step 3: Wave N 完成总结
+> **修复 (2024-05-17)**: Phase 4 不再每 Wave 都触发 LearningWorkflow(避免与 Phase 8 archive 冲突),由 Orchestrator 统一聚合。
 
-1. 确认所有 Task Verify 通过
-2. 生成 `WAVE-N-SUMMARY.md`:
-   - Tasks completed / failed
-   - Files changed
-   - Commit hashes
-   - Lessons learned（提名到 LESSONS.md）
-3. Heartbeat: `[checkpoint][wave:N][complete]`
-
-### Step 4: LearningWorkflow 触发
-
-Phase 完成后（所有 Wave 结束前），触发 LearningWorkflow：
-1. 扫描 Phase 中失败的 Task → 写入 LESSONS.md（L-NNN 格式）
-2. 高频重复经验（≥ 3 次）→ 提名 Domain Skills Promotion
-3. Wave N+1 启动时，读取相关 LESSON 注入 Execution Agent context
-
-### Step 5: PartyMode 共识（复杂决策时触发）
+### Step 4: PartyMode 共识（复杂决策时触发）
 
 当 Phase 4 遇到需要跨 Agent 共识的决策：
 1. 识别决策点（技术选型冲突、架构权衡）
 2. 激活 PartyMode 多 Agent 讨论
 3. 投票达成共识（>70% 一致或加权平均分 ≥ 75%）
 4. 记录决策到 DECISIONS.md
-
-### Step 6: Wave N+1 推进
-
-- 读取 SUMMARY-WAVE-N → 注入 Wave N+1 context（R15）
-- 重复 Step 1-5 直到所有 Wave 完成
 
 ## G5 门控检查（Phase 4→5）
 

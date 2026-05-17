@@ -36,9 +36,29 @@ v3_upgrade:
 
 ## 执行流程
 
-### Step 1: 设计文档解析
+### Step 1: ADR 与设计文档联合解析
 
-从 `02-design.md` 提取：
+**1.1 读取 Phase 2 产物**:
+- `02-design.md` — 技术方案设计文档(必需)
+- `02a-ui-design.md` — UI设计方案(如有)
+- **ADR (架构决策记录)** — 如果存在 `.ultimate-workflow/adr/*.md` 或 `layers/L3-ARCHITECTURE/schema-definitions/DECISIONS.md`,必须解析
+
+**1.2 ADR 解析步骤**:
+```markdown
+## Phase 3: ADR → Task Mapping
+
+从 ADR 中提取架构决策,转化为带约束的 Task:
+
+| ADR ID | 决策内容 | Task 影响 | 约束类型 |
+|--------|---------|-----------|----------|
+| ADR-001 | 选用 SQLite 而非 PostgreSQL | T01-T05: 使用 sqlx (Rust) | Hard constraint |
+| ADR-002 | UI 框架选定 React + Ant Design | T20-T30: import antd | Soft constraint |
+```
+
+**修复 (2024-05-17)**: Phase 3 必须在 Step 1 中显式解析 Phase 2/Phase 3 生成的 ADR,确保架构决策被 Task Plan 吸收。
+**未解析 ADR 风险**: 实现偏离架构决策(如选了错误数据库 ORM),导致后续重构。
+
+**1.3 从设计文档提取**:
 - 所有 API/接口定义 → 转化为 Task
 - 数据模型变更 → 转化为 Migration Task
 - UI 组件 → 转化为 Frontend Tasks

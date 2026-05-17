@@ -2,7 +2,7 @@
 
 > **Layer**: L1-INTERACTION (SuperCorp 交互层) → Layer 3 QA 介入
 > **前置产物**: `03-tasks.md` Phase 4 所有 Wave 完成
-> **后置产物**: `.ultimate-workflow/<req-id>/05-test-report.md`
+> **后置产物**: `.specs/test/05-test-results.md` (标准化路径,统一命名为 `05-test-results.md`)
 > **门控**: G5 — Test Quality Gate（通过才能进入 Phase 6 审查）
 
 ## Skill元信息
@@ -26,7 +26,7 @@ v3_upgrade:
 
 ## 输出
 
-- `05-test-report.md` — 测试报告，包含：
+- `05-test-results.md` — 测试报告,包含:
   - 功能测试用例执行结果
   - 边界条件测试覆盖度
   - 交叉波测试矩阵分析
@@ -37,9 +37,11 @@ v3_upgrade:
 
 ### Step 1: 加载前置上下文
 
-1. 读取 `03-tasks.md`，提取所有 AC（验收标准）→ 转化为测试用例
-2. 读取 Phase 4 的 `WAVE-N-SUMMARY.md` → 确认所有代码变更范围
+1. 读取 `03-tasks.md`,提取所有 AC(验收标准)→ 转化为测试用例
+2. 读取 Phase 4 的 `.specs/waves/wave-{N}/SUMMARY.md` (标准化路径) → 确认所有代码变更范围
 3. 读取 LESSONS.md → 加载历史失败场景到测试计划中
+
+> **修复 (2024-05-17)**: WAVE-N-SUMMARY.md 引用统一为 `.specs/waves/wave-{N}/SUMMARY.md`,与 Wave Executor 写入路径一致。
 
 ### Step 2: 功能测试执行
 

@@ -23,10 +23,12 @@ v3_upgrade:
 ## 输入
 
 - 所有 Phase 产物 (`.ultimate-workflow/<req-id>/`)
-- Wave SUMMARY.md 文件 (Phase 4 each wave)
+- **Wave SUMMARY.md 文件** — `.specs/waves/wave-{N}/SUMMARY.md` (Wave Executor L2-ENGINE 写入,Phase 4 已在此路径统一输出)
 - Phase 6 审查报告 (`06-review.md`)
 - Phase 7 Canary报告 (`07-canary.md`)
 - `memory/STATE.md` (当前会话状态)
+
+> **修复 (2024-05-17)**: Wave SUMMARY 引用统一为 `.specs/waves/wave-{N}/SUMMARY.md`,与 Phase 4/Phase 5/Wave Executor 一致。不再引用旧的 `WAVE-N-SUMMARY.md` 路径。
 
 ## 输出
 
