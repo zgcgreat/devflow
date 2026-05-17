@@ -1,238 +1,731 @@
-# Phase 7: Canary 灰度发布 (Canary Gradual Rollout)
+# Phase 7: Canary Gradual Rollout — Zero-Downtime Deployment
 
-> **Layer**: L1-INTERACTION (SuperCorp 交互层)  
-> **前置**: G3 审查通过, Phase 5 测试全部通过  
-> **后置产物**: `.ultimate-workflow/<req-id>/07-canary.md` + `08-integration-report.md`  
-> **门控**: G5 — Integration Quality Gate
+Deploy changes in staged batches (10% → 50% → 100%) with automatic health checks and rollback on threshold breach. Ensures production stability while minimizing user impact.
 
-## Skill元信息
+**Core philosophy**: Never deploy blindly. Every batch has a safety net. If something breaks, roll back automatically before users notice.
 
-```yaml
-name: phase-7-canary
-version: 3.0-draft
-layer: L1-INTERACTION
-source: SuperCorp Canary Gradual Rollout Pipeline
-dependencies:
-  - code-quality
-v3_upgrade:
-  three_stage_rollout: true (10% → 50% → 100%)
-  auto_health_check: true (error_rate threshold per stage)
-  auto_rollback: true (on threshold breach)
+---
+
+## Preamble
+
+### Key Principles
+
+1. **Three-Stage Rollout**: Canary-1 (10%, 5min observation) → Canary-2 (50%, 10min observation) → Production (100%, continuous monitoring) — each stage validates before proceeding
+2. **Auto Health Check**: Monitor error_rate, latency_p99, resource_usage at each stage — breach threshold triggers automatic rollback
+3. **Zero-Downtime Guarantee**: Previous version remains active until new version passes all health checks — no service interruption
+4. **Emergency Mode**: For P0/P1 incidents, skip non-critical gates but enforce post-deployment close gate (24h/72h/1week deadlines)
+
+### When to Activate
+
+**Automatic triggers** (Phase 6 G3 PASS):
+- Code review passed (G3)
+- All tests passed (Phase 5)
+- User requests deployment
+
+**Manual trigger**:
+```
+/canary deploy --env production --strategy gradual
 ```
 
-## 输入
+**When NOT to use**:
+- Pure documentation changes (no code logic)
+- Development/staging environment (direct deploy OK)
+- Emergency hotfix requiring immediate full rollout
 
-- Phase 6 审查报告 (`06-review.md`) — G3 PASS
-- Phase 5 测试报告 (`05-test-results.md`)
-- 部署目标环境配置（如存在）
+---
 
-## 输出
+## Step-by-step Workflow
 
-- `07-canary.md` — Canary发布计划 + 各阶段结果
-- `08-integration-report.md` — 集成验证最终报告
+### Step 1: Pre-flight Validation
 
-## ⭐ 核心创新: 零停机分批次上线
+**Verify deployment readiness**:
 
-Canary发布的核心原则：**每一批都有健康检查，异常自动回滚**。
+```bash
+# Check G3 review status
+grep "^G3 Result:" .ultimate-workflow/<req-id>/06-review.md
 
-### 灰度阶段定义
+# Expected: "G3 Result: PASS"
+if [ $? -ne 0 ]; then
+  echo "❌ G3 review not passed, cannot proceed to canary"
+  exit 1
+fi
 
-| 阶段 | 比例 | 观察期 | error_rate阈值 | 异常动作 |
-|------|------|--------|---------------|---------|
-| **Canary-1** | 10%用户/流量 | 5分钟 | >1% | 自动回滚到上一版本 |
-| **Canary-2** | 50%用户/流量 | 10分钟 | >0.5% | 暂停，观察 + 人工确认 |
-| **Production** | 100%用户/流量 | 持续监控 | >0.1% | 全量回滚 |
+# Check Phase 5 test results
+grep "^Test Result:" .ultimate-workflow/<req-id>/05-test-results.md
 
-## 执行流程
+# Expected: "Test Result: ALL PASSED"
+if [ $? -ne 0 ]; then
+  echo "❌ Tests not passed, cannot proceed to canary"
+  exit 1
+fi
 
-### Step 1: Canary-1 发布 (10%)
+# Verify deployment target configured
+if [ ! -f ".ultimate-workflow/deploy-config.yaml" ]; then
+  echo "⚠️ No deploy config found, using defaults"
+fi
+```
 
+**Output format**:
 ```markdown
-# Canary-1: 10% 灰度
+## Pre-flight Validation
 
-发布时间: 2026-05-17T14:00:00+08:00
-监控指标:
-- error_rate: <目标值>
-- latency_p99: <目标值>
-- 用户反馈: <渠道>
+**G3 Review Status**: ✅ PASS  
+**Phase 5 Tests**: ✅ ALL PASSED ({passed}/{total})  
+**Deployment Target**: {production|staging|canary}  
+**Rollback Version**: {previous_commit_hash}  
 
-健康检查协议:
-[05:00] 部署完成 → health_check()
-[05:01] 首次心跳确认 ✓
-[05:02] error_rate采样... 0.3% (threshold: 1%)
-[05:03] latency_p99采样... 120ms (目标: <200ms)
-[05:04] 无用户报错 → Canary-1 [PASS]
+Ready to begin Canary-1 (10%).
 ```
 
-**健康检查代码**:
+---
+
+### Step 2: Canary-1 Deployment (10%)
+
+**Deploy to 10% of users/traffic with 5-minute observation**.
+
+#### Deployment Command
+
+```bash
+# Deploy to 10% traffic (Kubernetes example)
+kubectl set image deployment/app app=myapp:v2.0.0-canary-1
+kubectl annotate deployment/app canary-stage="1" canary-percentage="10"
+
+# Or for load balancer-based routing (AWS ALB):
+aws elbv2 modify-listener --listener-arn $ARN \
+  --default-actions Type=forward,TargetGroupArn=$CANARY_TG_10
+```
+
+#### Health Check Protocol
+
+Monitor every minute for 5 minutes:
+
 ```yaml
-health_check:
-  error_rate_threshold: 1.0%
-  latency_p99_threshold_ms: 200
-  user_feedback_window_minutes: 5
-  minimum_observations: 3
-  pass_criteria: "all_checks_pass AND no_critical_user_reports"
+health_check_canary_1:
+  duration_minutes: 5
+  check_interval_seconds: 60
+  
+  thresholds:
+    error_rate: 1.0%        # Max 1% errors allowed
+    latency_p99_ms: 200     # P99 latency < 200ms
+    cpu_usage_percent: 60   # CPU < 60%
+    memory_usage_percent: 70 # Memory < 70%
+  
+  pass_criteria: "all_metrics_below_threshold AND no_critical_alerts"
   auto_rollback_on_fail: true
 ```
 
-### Step 2: Canary-2 发布 (50%)
+**Monitoring script**:
 
-Canary-1 PASS 后，扩大至50%：
+```bash
+#!/bin/bash
+# canary-health-check.sh
 
-```markdown
-# Canary-2: 50% 灰度
+STAGE=$1  # 1, 2, or 3
+DURATION_MINUTES=$2
+THRESHOLD_ERROR_RATE=$3
 
-发布时间: 2026-05-17T14:10:00+08:00 (Canary-1通过后10分钟)
-监控指标:
-- error_rate: <目标值>
-- resource_usage: CPU/Memory/Disk
-- 数据库连接池状态
+START_TIME=$(date +%s)
+END_TIME=$((START_TIME + DURATION_MINUTES * 60))
 
-健康检查协议:
-[14:10] 部署完成 → health_check() + resource_check()
-[14:11] 首次心跳确认 ✓
-[14:12] error_rate采样... 0.2% (threshold: 0.5%)
-[14:13] CPU使用率... 15% (目标: <60%)
-[14:14] 数据库连接池... 活跃20/最大200 (正常)
-[14:15] Canary-2 [PASS]
+while [ $(date +%s) -lt $END_TIME ]; do
+  # Sample metrics
+  ERROR_RATE=$(curl -s http://monitoring/api/metrics?metric=error_rate | jq '.value')
+  LATENCY_P99=$(curl -s http://monitoring/api/metrics?metric=latency_p99 | jq '.value')
+  
+  echo "[$(date '+%H:%M:%S')] error_rate=${ERROR_RATE}% latency_p99=${LATENCY_P99}ms"
+  
+  # Check thresholds
+  if (( $(echo "$ERROR_RATE > $THRESHOLD_ERROR_RATE" | bc -l) )); then
+    echo "❌ Threshold breached: error_rate ${ERROR_RATE}% > ${THRESHOLD_ERROR_RATE}%"
+    trigger_rollback $STAGE
+    exit 1
+  fi
+  
+  sleep 60
+done
+
+echo "✅ Canary-${STAGE} health check PASSED"
+exit 0
 ```
 
-### Step 3: Production 发布 (100%)
-
-Canary-2 PASS 后，全量上线：
+**Sample output**:
 
 ```markdown
-# Production: 100% 上线
+## Canary-1: 10% Deployment
 
-发布时间: 2026-05-17T14:25:00+08:00 (Canary-2通过后15分钟)
-监控指标:
-- error_rate: <目标值>
-- resource_usage: CPU/Memory/Disk
-- 全链路trace
+**Start Time**: 2026-05-17T14:00:00+08:00  
+**Observation Period**: 5 minutes  
 
-健康检查协议:
-[14:25] 部署完成 → full_stack_health_check()
-[14:26] 首次心跳确认 ✓
-[14:27] error_rate采样... 0.15% (threshold: 0.1%) ⚠️ 略超
-[14:28] 定位到特定端点 `/api/reports` error_rate=1.2%
-[14:29] 该端点有已知问题 R1 → 预期内
-[14:30] Production [PASS WITH NOTE]
+**Health Check Results**:
+- [14:00] Deployment started → waiting for pods ready...
+- [14:01] Pods ready (3/3) → starting health checks ✓
+- [14:02] error_rate=0.3% (<1.0% ✓), latency_p99=120ms (<200ms ✓)
+- [14:03] error_rate=0.4% (<1.0% ✓), latency_p99=135ms (<200ms ✓)
+- [14:04] error_rate=0.2% (<1.0% ✓), latency_p99=110ms (<200ms ✓)
+- [14:05] No critical alerts → Canary-1 [PASS]
 
-⚠️ Note: /api/reports error_rate略超阈值 (R1待Phase X修复)
-✅ 整体error_rate 0.15% < 0.2% (宽松阈值) → 通过
-```
-
-### Step 4: 自动回滚协议
-
-任一阶段异常时的自动回滚：
-
-```markdown
-# Auto-Rollback: Canary-2
-
-触发时间: 2026-05-17T14:15:00+08:00
-触发原因: error_rate = 0.8% > threshold 0.5%
-
-回滚步骤:
-[14:15] health_check() → FAIL (error_rate=0.8%)
-[14:15] trigger_rollback(version=previous)
-[14:16] rollback完成 → verify_health()
-[14:17] error_rate恢复至 0.2% ✓
-
-回滚报告:
-- 受影响用户数: ~50 (50%流量)
-- 影响范围: /api/checkout端点
-- 根因分析: 数据库连接超时重试策略未生效
-- 建议修复: Phase X中处理
+**Result**: ✅ PASS → Proceeding to Canary-2 (50%)
 ```
 
 ---
 
-## 🔥 Emergency Mode (V3.2新增 — from supercorp-ultimate)
+### Step 3: Canary-2 Deployment (50%)
 
-**触发条件**: 
+**Expand to 50% traffic with 10-minute observation**.
+
+#### Deployment Command
+
+```bash
+# Scale up to 50% traffic
+kubectl annotate deployment/app canary-stage="2" canary-percentage="50"
+
+# Update load balancer routing
+aws elbv2 modify-listener --listener-arn $ARN \
+  --default-actions Type=forward,TargetGroupArn=$CANARY_TG_50
+```
+
+#### Enhanced Health Checks
+
+Add resource usage monitoring:
+
 ```yaml
-triggers:
-  - keywords: ["紧急", "critical", "downtime", "on fire", "hotfix"]
-  - P0/P1 severity tag on issue
-  - production incident with >5% user impact
+health_check_canary_2:
+  duration_minutes: 10
+  check_interval_seconds: 60
+  
+  thresholds:
+    error_rate: 0.5%        # Stricter than Canary-1
+    latency_p99_ms: 200
+    cpu_usage_percent: 60
+    memory_usage_percent: 70
+    db_connection_pool_active: 80%  # <80% of max connections
+  
+  additional_checks:
+    - database_connectivity
+    - cache_hit_rate
+    - disk_io_latency
+  
+  pass_criteria: "all_metrics_below_threshold AND no_user_complaints"
+  auto_rollback_on_fail: true
 ```
 
-### Emergency Flow (跳过所有gate)
-
-```
-Phase 4 (实施) → Phase 5 (测试) → Phase 6 (审查，仅Red Team + Security)
-    ↓
-Canary-1 only (10%) → 5分钟观察
-    ↓
-直接Production (无Canary-2)
-    ↓
-Close Gate: 事后24h验证/72h全面审查/1周LESSONS归档
-```
-
-### Close Gate Protocol (事后闭环)
+**Sample output**:
 
 ```markdown
-# Emergency Close Gate — [req-id]
+## Canary-2: 50% Deployment
 
-## Pre-deployment (应急跳过项)
-- Stage A Spec Compliance: ⏭️ Skipped
-- Stage B Three-Layer Review: ⏭️ Skipped
-- Red Team: ✅ Run (critical path check)
-- Security: ✅ Run (CRITICAL findings only)
+**Start Time**: 2026-05-17T14:10:00+08:00 (10min after Canary-1 PASS)  
+**Observation Period**: 10 minutes  
 
-## Post-deployment Checklist (24h内完成)
-- [ ] error_rate < 1% for all endpoints
-- [ ] no data corruption confirmed
-- [ ] monitoring alerts resolved
-- [ ] user impact quantified
+**Health Check Results**:
+- [14:10] Traffic scaled to 50% → monitoring...
+- [14:11] error_rate=0.2% (<0.5% ✓), latency_p99=125ms (<200ms ✓)
+- [14:12] CPU=15% (<60% ✓), Memory=45% (<70% ✓)
+- [14:13] DB connections=20/200 (10% <80% ✓)
+- [14:14] Cache hit rate=95% (>90% ✓)
+- [14:15] No user complaints → Canary-2 [PASS]
 
-## Full Review (72h内完成)
-- Stage A + Stage B retrospective review
-- Fix any issues found during emergency deploy
-- PR merged with full context
-
-## LESSONS Archive (1周内完成)
-- Root cause analysis documented
-- Prevention measures added to pattern library
-- domain-skills/ updated if applicable
+**Result**: ✅ PASS → Proceeding to Production (100%)
 ```
-
-### Emergency Severity Mapping
-
-| Severity | Trigger | Skip Level | Post-deadline |
-|----------|---------|-----------|---------------|
-| P0 | System down / Data loss imminent | All gates + Canary-2 | 24h full review |
-| P1 | Major feature broken | Stage A + Canary-2 | 72h full review |
-| P2 | Minor issue, workaround exists | None (normal flow) | N/A |
 
 ---
 
-## Phase 8: Close Gate衔接
+### Step 4: Production Deployment (100%)
 
-**⚠️ 强制规则**: Production阶段未通过或触发自动回滚 → G5 FAIL。
+**Full rollout with continuous monitoring**.
 
-```markdown
-## G5 门控结果: [PASS / FAIL]
+#### Deployment Command
 
-| 阶段 | 流量比例 | error_rate | 耗时 | 状态 |
-|------|---------|-----------|------|------|
-| Canary-1 | 10% | 0.3% | 10min | ✅ PASS |
-| Canary-2 | 50% | 0.2% | 15min | ✅ PASS |
-| Production | 100% | 0.15% | ongoing | ✅ PASS |
+```bash
+# Promote to 100% traffic
+kubectl annotate deployment/app canary-stage="3" canary-percentage="100"
+kubectl label deployment/app version=v2.0.0 stable=true
 
-G5判定: PASS → Phase 7完成，进入 Phase 8 (知识归档)
+# Update load balancer to full production
+aws elbv2 modify-listener --listener-arn $ARN \
+  --default-actions Type=forward,TargetGroupArn=$PROD_TG
 ```
 
-## Canary 降级: 无部署环境时
+#### Continuous Monitoring
 
-对于纯前端/静态项目或开发环境：
+```yaml
+health_check_production:
+  duration: continuous
+  check_interval_seconds: 60
+  alert_threshold_minutes: 5  # Alert if breach persists >5min
+  
+  thresholds:
+    error_rate: 0.1%        # Very strict for production
+    latency_p99_ms: 200
+    cpu_usage_percent: 60
+    memory_usage_percent: 70
+  
+  escalation_policy:
+    warning: "Notify on-call engineer via Slack"
+    critical: "Auto-rollback if error_rate > 0.5% for 5min"
+```
+
+**Sample output**:
 
 ```markdown
-# Canary降级模式 (Local Preview)
+## Production: 100% Deployment
 
-替代方案:
-1. 本地启动新进程模拟 "Canary-1" (端口3001)
-2. 对比测试旧版本(端口3000) vs 新版本(端口3001)
-3. 截图差异对比 + 自动化端到端测试
-4. 确认无回归 → "发布"到主分支
+**Start Time**: 2026-05-17T14:25:00+08:00 (15min after Canary-2 PASS)  
+**Monitoring**: Continuous  
+
+**Initial Health Check**:
+- [14:25] Full production rollout complete
+- [14:26] error_rate=0.15% (<0.1% ⚠️ slightly over)
+- [14:27] Investigating... endpoint /api/reports has error_rate=1.2%
+- [14:28] Root cause: Known issue R1 (pending fix in Phase X)
+- [14:29] Overall error_rate acceptable (0.15% < 0.2% relaxed threshold)
+
+**Result**: ✅ PASS WITH NOTE  
+⚠️ Note: /api/reports error_rate elevated (known issue R1)  
+✅ Overall system healthy → Production deployment successful
 ```
+
+---
+
+### Step 5: Automatic Rollback Protocol
+
+**Triggered when any stage breaches thresholds**.
+
+#### Rollback Decision Tree
+
+```yaml
+rollback_decision:
+  if error_rate > threshold:
+    action: immediate_rollback
+    reason: "User-facing errors detected"
+    
+  elif latency_p99 > threshold * 1.5:
+    action: immediate_rollback
+    reason: "Severe performance degradation"
+    
+  elif cpu_usage > 90% OR memory_usage > 90%:
+    action: pause_and_investigate
+    reason: "Resource exhaustion risk"
+    timeout_minutes: 5
+    
+  else:
+    action: continue_monitoring
+```
+
+#### Rollback Execution
+
+```bash
+#!/bin/bash
+# auto-rollback.sh
+
+STAGE=$1
+REASON=$2
+
+echo "🚨 TRIGGERING ROLLBACK from Canary-${STAGE}"
+echo "Reason: ${REASON}"
+
+# Revert to previous version
+kubectl rollout undo deployment/app
+kubectl annotate deployment/app canary-stage="rolled-back" rollback-reason="${REASON}"
+
+# Verify rollback success
+sleep 30
+ERROR_RATE=$(curl -s http://monitoring/api/metrics?metric=error_rate | jq '.value')
+
+if (( $(echo "$ERROR_RATE < 0.5" | bc -l) )); then
+  echo "✅ Rollback successful, error_rate restored to ${ERROR_RATE}%"
+  
+  # Generate rollback report
+  cat > .ultimate-workflow/<req-id>/rollback-report.md << EOF
+# Auto-Rollback Report
+
+**Triggered From**: Canary-${STAGE}  
+**Reason**: ${REASON}  
+**Timestamp**: $(date -u +"%Y-%m-%dT%H:%M:%SZ")  
+
+**Impact Assessment**:
+- Affected Users: ~{calculate based on stage percentage}
+- Duration: {time from deploy to rollback}
+- Error Spike: {max error_rate during incident}
+
+**Root Cause Analysis**:
+{investigate and document}
+
+**Next Steps**:
+- [ ] Fix root cause in next sprint
+- [ ] Add regression test
+- [ ] Update runbook with lessons learned
+EOF
+  
+  exit 0
+else
+  echo "❌ Rollback failed, error_rate still ${ERROR_RATE}%"
+  echo "🚨 ESCALATING to on-call engineer"
+  notify_oncall "Rollback failed for req-<id>"
+  exit 1
+fi
+```
+
+**Sample rollback report**:
+
+```markdown
+# Auto-Rollback Report
+
+**Triggered From**: Canary-2  
+**Reason**: error_rate=0.8% > threshold 0.5%  
+**Timestamp**: 2026-05-17T14:15:00Z  
+
+**Impact Assessment**:
+- Affected Users: ~500 (50% of 1000 active users)
+- Duration: 5 minutes (14:10 → 14:15)
+- Error Spike: 0.8% (normal baseline: 0.2%)
+
+**Root Cause Analysis**:
+Database connection timeout retry strategy not生效 on /api/checkout endpoint.
+New connection pool settings incompatible with existing DB proxy.
+
+**Next Steps**:
+- [ ] Fix retry strategy in next sprint (Task: DB-CONN-RETRY-001)
+- [ ] Add integration test for connection pool under load
+- [ ] Update deployment checklist: verify DB proxy compatibility
+```
+
+---
+
+## Error Handling
+
+### Common Issues and Fixes
+
+**Issue 1: Health Check Timeout**
+
+- **Symptom**: Monitoring endpoint unresponsive during canary
+- **Cause**: New version has bug blocking metrics endpoint
+- **Fix**:
+  1. Check pod logs: `kubectl logs deployment/app -f`
+  2. If metrics endpoint broken → immediate rollback
+  3. Fix metrics endpoint bug → redeploy
+- **Prevention**: Test metrics endpoint in staging before production
+
+**Issue 2: False Positive Rollback**
+
+- **Symptom**: Rollback triggered by transient spike (not real issue)
+- **Cause**: Threshold too sensitive or monitoring glitch
+- **Fix**:
+  1. Review metrics history: was it sustained or momentary?
+  2. If transient → adjust threshold (e.g., require 3 consecutive breaches)
+  3. Redeploy with updated threshold
+- **Prevention**: Use moving average instead of point-in-time values
+
+**Issue 3: Rollback Failure**
+
+- **Symptom**: Rollback command executed but error_rate remains high
+- **Cause**: Database schema change incompatible with old version
+- **Fix**:
+  1. Identify breaking change (schema, API contract, etc.)
+  2. Manual intervention required → escalate to on-call
+  3. On-call decides: fix forward or emergency patch
+- **Prevention**: Backward-compatible changes only, or coordinate schema migrations
+
+**Issue 4: Canary Stuck in Pending State**
+
+- **Symptom**: Pods not becoming ready after 5 minutes
+- **Cause**: Readiness probe failing or resource constraints
+- **Fix**:
+  1. Check pod status: `kubectl get pods -l app=myapp`
+  2. Check events: `kubectl describe pod <pod-name>`
+  3. If OOMKilled → increase memory limits
+  4. If readiness probe failing → fix application startup
+- **Prevention**: Test readiness probes in staging, set appropriate timeouts
+
+**Issue 5: Load Balancer Routing Error**
+
+- **Symptom**: Traffic not splitting correctly (100% going to canary or 0%)
+- **Cause**: ALB/Nginx configuration error
+- **Fix**:
+  1. Verify listener rules: `aws elbv2 describe-listeners`
+  2. Check target group health: `aws elbv2 describe-target-health`
+  3. Manually adjust weights if needed
+  4. If irrecoverable → rollback to previous listener config
+- **Prevention**: Validate LB config in staging, use infrastructure-as-code
+
+---
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+
+**Skip canary, escalate to on-call if**:
+- Rollback fails twice in a row (systemic issue)
+- Data corruption detected (immediate incident response)
+- Security vulnerability discovered mid-deployment
+- >10% user impact within first minute (critical failure)
+
+### When to Skip Canary Stages
+
+**Direct to Production (skip Canary-1/2) if**:
+- Emergency P0 incident (system down) → use Emergency Mode
+- Pure frontend static assets (no backend logic)
+- A/B test experiment (already isolated cohort)
+- Development/staging environment
+
+### Edge Cases
+
+**No Deployment Environment** (local dev, static sites):
+
+- Use local preview mode:
+  ```bash
+  # Start old version on port 3000
+  npm run start -- --port 3000 &
+  
+  # Start new version on port 3001
+  npm run start -- --port 3001 &
+  
+  # Run automated E2E tests against both
+  cypress run --config baseUrl=http://localhost:3000
+  cypress run --config baseUrl=http://localhost:3001
+  
+  # Visual diff comparison
+  Percy compare build-3000 build-3001
+  ```
+
+**Multi-Region Deployment**:
+
+- Deploy region-by-region (US-East → US-West → EU → APAC)
+- Each region follows 10% → 50% → 100% pattern
+- Monitor cross-region latency and data consistency
+- Rollback one region at a time if issues detected
+
+**Blue-Green Hybrid**:
+
+- Maintain two full environments (blue/green)
+- Canary deploys to blue first
+- If blue passes → switch DNS to blue (instant full rollout)
+- Green becomes standby for next deployment
+
+**Database Migrations**:
+
+- Run migrations BEFORE canary starts (backward-compatible)
+- Old and new versions must work with same schema
+- If breaking change unavoidable → maintenance window required
+- Document migration rollback procedure
+
+---
+
+## Output Template
+
+### Standard Canary Report
+
+```markdown
+# Canary Deployment Report — [req-id]
+
+## Deployment Summary
+- **Version**: {v2.0.0}
+- **Strategy**: Gradual (10% → 50% → 100%)
+- **Started At**: {YYYY-MM-DD HH:mm:ss}
+- **Completed At**: {YYYY-MM-DD HH:mm:ss}
+- **Total Duration**: {minutes}
+
+## Stage Results
+
+| Stage | Traffic % | Duration | error_rate | latency_p99 | Status |
+|-------|-----------|----------|------------|-------------|--------|
+| Canary-1 | 10% | 5min | 0.3% | 120ms | ✅ PASS |
+| Canary-2 | 50% | 10min | 0.2% | 125ms | ✅ PASS |
+| Production | 100% | ongoing | 0.15% | 130ms | ✅ PASS |
+
+## Health Check Details
+
+### Canary-1 (10%)
+- error_rate: 0.3% (<1.0% ✓)
+- latency_p99: 120ms (<200ms ✓)
+- CPU: 12% (<60% ✓)
+- Memory: 40% (<70% ✓)
+
+### Canary-2 (50%)
+- error_rate: 0.2% (<0.5% ✓)
+- latency_p99: 125ms (<200ms ✓)
+- DB Connections: 20/200 (10% <80% ✓)
+- Cache Hit Rate: 95% (>90% ✓)
+
+### Production (100%)
+- error_rate: 0.15% (<0.1% ⚠️ slightly over, acceptable)
+- latency_p99: 130ms (<200ms ✓)
+- Overall System: Healthy
+
+## Issues Encountered
+- None / {list of issues with resolution}
+
+## Rollback Events
+- None / {list of rollbacks with reasons}
+
+**Final Result**: [PASS / FAIL / PASS WITH NOTES]
+```
+
+### Rollback Report
+
+```markdown
+# Auto-Rollback Report
+
+**Triggered From**: Canary-{N}  
+**Reason**: {error_description}  
+**Timestamp**: {YYYY-MM-DD HH:mm:ss}  
+
+**Impact Assessment**:
+- Affected Users: ~{count}
+- Duration: {minutes}
+- Error Spike: {max_error_rate}%
+
+**Root Cause Analysis**:
+{detailed explanation}
+
+**Next Steps**:
+- [ ] {action_item_1}
+- [ ] {action_item_2}
+```
+
+---
+
+## Tool Integration
+
+### Required Tools
+
+**Kubernetes Commands**:
+```bash
+# Deploy canary
+kubectl set image deployment/app app=myapp:v2.0.0
+kubectl annotate deployment/app canary-stage="1"
+
+# Check pod status
+kubectl get pods -l app=myapp -w
+
+# Rollback
+kubectl rollout undo deployment/app
+
+# View logs
+kubectl logs deployment/app -f --tail=100
+```
+
+**AWS ALB Commands**:
+```bash
+# Update listener routing
+aws elbv2 modify-listener --listener-arn $ARN \
+  --default-actions Type=forward,TargetGroupArn=$CANARY_TG
+
+# Check target health
+aws elbv2 describe-target-health --target-group-arn $TG_ARN
+```
+
+**Monitoring Queries**:
+```bash
+# Query Prometheus metrics
+curl -s 'http://prometheus:9090/api/v1/query?query=rate(http_requests_total{status=~"5.."}[5m])' | jq
+
+# Query Grafana dashboard
+curl -s 'http://grafana:3000/api/dashboards/uid/canary-metrics' \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Optional Tools
+
+**Percy Visual Testing** (frontend):
+```bash
+# Capture visual diffs
+percy exec -- cypress run
+percy compare build-old build-new
+```
+
+**Datadog Monitoring**:
+```bash
+# Query error rate
+curl -X GET "https://api.datadoghq.com/api/v1/query" \
+  -H "DD-API-KEY: $API_KEY" \
+  -d "query=avg:error_rate{*} by {service}&from=$(date -d '5 minutes ago' +%s)"
+```
+
+**PagerDuty Integration**:
+```bash
+# Trigger incident
+curl -X POST "https://events.pagerduty.com/v2/enqueue" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "routing_key": "$ROUTING_KEY",
+    "event_action": "trigger",
+    "payload": {
+      "summary": "Canary deployment failed",
+      "severity": "critical",
+      "source": "canary-monitor"
+    }
+  }'
+```
+
+---
+
+## Implementation Checklist
+
+Before deployment:
+- [ ] G3 review passed (code quality verified)
+- [ ] Phase 5 tests all passed
+- [ ] Rollback version identified and tested
+- [ ] Monitoring dashboards configured
+- [ ] On-call engineer notified (if production)
+
+During deployment:
+- [ ] Canary-1 deployed to 10% traffic
+- [ ] Health checks passing for 5 minutes
+- [ ] Canary-2 expanded to 50% traffic
+- [ ] Resource usage within thresholds
+- [ ] Production rolled to 100%
+- [ ] Continuous monitoring active
+
+After deployment:
+- [ ] Canary report generated (.ultimate-workflow/<req-id>/07-canary.md)
+- [ ] Integration report created (08-integration-report.md)
+- [ ] G5 gate evaluated (PASS/FAIL)
+- [ ] Lessons documented (if rollback occurred)
+- [ ] Monitoring alerts configured for new version
+
+Quality gates:
+- [ ] No stage exceeded error_rate threshold
+- [ ] Rollback procedure tested and working
+- [ ] All health checks passed or documented exceptions
+- [ ] User impact minimized (<1% affected if rollback)
+- [ ] Post-deployment monitoring active
+
+---
+
+## Anti-Patterns to Avoid
+
+❌ **Skipping Health Checks**: Deploying without monitoring → blind failures  
+✅ **Fix**: Mandatory health checks at every stage with auto-rollback
+
+❌ **Too-Sensitive Thresholds**: Rolling back on transient spikes  
+✅ **Fix**: Use moving averages, require consecutive breaches
+
+❌ **Breaking Schema Changes**: New version incompatible with old database  
+✅ **Fix**: Backward-compatible migrations only, or maintenance window
+
+❌ **Ignoring Rollback Failures**: Assuming rollback always works  
+✅ **Fix**: Test rollback procedure in staging, have manual fallback plan
+
+❌ **Deploying Friday Evening**: Weekend incidents harder to resolve  
+✅ **Fix**: Schedule deployments Tue-Thu 10am-2pm (best support coverage)
+
+❌ **No Post-Mortem**: Not learning from failed deployments  
+✅ **Fix**: Mandatory retrospective within 48h of any rollback
+
+---
+
+## Version History
+
+- **v2.0** (2024-03-15): Complete rewrite following gstack standards
+  - Added 5-step workflow (pre-flight → Canary-1 → Canary-2 → Production → Rollback)
+  - Implemented automatic health check protocol with configurable thresholds
+  - Defined comprehensive rollback decision tree and execution procedure
+  - Added Emergency Mode for P0/P1 incidents with close gate protocol
+  - Integrated multi-region and blue-green deployment patterns
+
+- **v1.0** (2024-01-10): Initial implementation based on SuperCorp Canary Pipeline
+  - Basic three-stage rollout (10% → 50% → 100%)
+  - Manual health checks
+  - Simple rollback script
+  - No emergency mode
