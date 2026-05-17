@@ -150,18 +150,18 @@ devflow-kit/
 
 ## Documentation
 
-- [Complete Workflow (GO.md)](./references/GO.md) - Full workflow details
-- [Global Rules](./references/RULES.md) - Core rules and principles
-- [Stage Gate Rules](./references/gate-rules.md) - Stage validation rules
-- [Mode Rules](./references/mode-rules.md) - Fast/Standard/Strict mode
+- [Complete Workflow](SKILL.md) — v3 zero-config entry point
+- [Router (GO.md)](GO.md) — Full routing and step-by-step guide
+- [Global Rules v3](references/RULES-v3.md) — R1-R20 rule set
+- [Architecture](V3-ARCHITECTURE.md) — Three-layer pyramid design
 
 ## Examples
 
-See the `skills/` directory for example implementations and best practices.
+See the `skills/stage-skills/` directory for example implementations.
 
 ## Contributing
 
-Contributions welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+Contributions welcome! See V3-ARCHITECTURE.md「🚀 实施路线图」for v3 development plan.
 
 ## License
 

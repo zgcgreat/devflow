@@ -137,11 +137,11 @@ cp -r ultimate-workflow/ your-project/
 
 ## 📖 详细文档
 
-- [快速上手指南](docs/quickstart.md)
-- [Stage Skills 详解](docs/stage-skills.md)
-- [记忆系统使用](docs/memory-system.md)
-- [OpenSpec 集成](docs/openspec-integration.md)
-- [GitNexus 配置](docs/gitnexus-setup.md)
+- [快速上手指南](SKILL.md「🚀 三步启动」)
+- [Stage Skills 详解](layers/L1-INTERACTION/README.md)
+- [记忆系统使用](memory/)
+- [OpenSpec 集成](../OpenSpec/)
+- [GitNexus 配置](optional/gitnexus-detector.md)
 
 ---
 

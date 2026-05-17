@@ -1,4 +1,4 @@
-﻿# Token 预算估算
+# Token 预算估算
 
 > 本文件是 GO.md 的参考文档，按需加载。
 
@@ -119,4 +119,88 @@
 | REFERENCE（查阅型）| `references/reference/*.md` | **禁止整读**，只读需要的节 |
 | TEMPLATE / PROMPT | `templates|references/prompts/*.md` | 整读OK（必须确保格式正确） |
 | STAGE SKILL | `skills/stage-skills/stage-*/*_SKILL.md` | 整读OK（执行逻辑所在） |
+
+---
+
+## 7级Token压缩策略（增强版）
+
+### 压缩级别定义
+
+| 级别 | 压缩率 | 适用场景 | 特点 | 示例 |
+|------|--------|---------|------|------|
+| **none** | 0% | 关键决策、安全警告、错误信息 | 绝不压缩，完整保留 | OAuth密钥管理、SQL注入警告 |
+| **lite** | 20% | Phase 0战略评估、YC六问法 | 保留关键信息，移除冗余描述 | 战略决策理由 |
+| **standard** | 40% | Phase 1需求分析、用户故事 | 结构化摘要，保留技术细节 | AC列表、用户故事 |
+| **full** | 50% | Phase 2方案设计、ADR决策 | 保留架构决策和技术选型 | 技术栈对比、ADR |
+| **ultra** | 70% | Phase 3任务拆分、依赖图 | 极简要点，仅核心逻辑 | 任务列表、ASCII图 |
+| **extreme** | 90% | Phase 6代码审查、Bug报告 | 符号化表达，最大压缩率 | 审查意见、Bug描述 |
+| **maximum** | 95% | 紧急清理、Token溢出 | 仅保留关键词 | 紧急情况下 |
+
+### 自动选择规则
+
+**基于Token使用率**:
+```javascript
+const usage = await tokenManager.check();
+
+if (usage < 0.70) {
+  level = 'none';      // 充足空间，不压缩
+} else if (usage < 0.80) {
+  level = 'lite';      // 轻度压缩
+} else if (usage < 0.85) {
+  level = 'standard';  // 标准压缩
+} else if (usage < 0.90) {
+  level = 'full';      // 完全压缩
+} else if (usage < 0.95) {
+  level = 'ultra';     // 超压缩
+} else if (usage < 0.98) {
+  level = 'extreme';   // 极限压缩
+} else {
+  level = 'maximum';   // 最大压缩（紧急）
+}
+```
+
+**基于内容类型**:
+- 安全相关 → none（绝不压缩）
+- 关键决策 → lite（轻度压缩）
+- 技术细节 → full（完全压缩）
+- 任务列表 → ultra（超压缩）
+- 审查意见 → extreme（极限压缩）
+
+### 手动触发命令
+
+用户可随时要求：
+```
+/token status     # 查看当前使用率和压缩级别
+/token compress standard  # 手动切换到standard级别
+/token clear      # 清空非必要上下文
+```
+
+### 压缩效果示例
+
+**none级别**（0%压缩）:
+```
+WARNING: This SQL query is vulnerable to injection attacks.
+You must use parameterized queries to prevent SQL injection.
+Example: const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+```
+
+**extreme级别**（90%压缩）:
+```
+⚠️ SQL注入风险 → 用参数化查询
+例: pool.query('SELECT...WHERE id=$1', [userId])
+```
+
+### 各Phase推荐级别
+
+| Phase | 推荐级别 | 原因 |
+|-------|---------|------|
+| Phase 0 | lite | 需要充分讨论，不宜过度压缩 |
+| Phase 1 | standard | 需求细节重要，需保留上下文 |
+| Phase 2 | full | 架构决策复杂，需详细记录 |
+| Phase 3 | ultra | 任务列表可高度压缩 |
+| Phase 4 | ultra | 代码实现，历史对话可压缩 |
+| Phase 5 | ultra | 测试结果，结构化数据 |
+| Phase 6 | extreme | 审查意见，要点式即可 |
+| Phase 7 | ultra | 部署步骤，清单式 |
+| Phase 8 | full | 经验教训，需保留细节 |
 
