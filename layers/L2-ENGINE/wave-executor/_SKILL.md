@@ -1,3 +1,30 @@
+---
+name: wave-executor
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Dependency-aware parallel execution engine using Kahn's topological sort.
+  Achieves wave-level and task-level parallelism with strict dependency validation,
+  heartbeat checkpoints, and LearningWorkflow integration. Use when: "execute waves",
+  "run parallel tasks", "execute phase plan". (ultimate-workflow)
+layer: L2-ENGINE
+source: SEP Wave Engine + Mega-Workflow DAG Router + Kahn Algorithm
+dependencies:
+  - dag-router (Phase 3 output required before execution)
+  - learning-workflow (post-wave hook, optional)
+triggers:
+  - execute waves
+  - run parallel tasks
+  - execute phase plan
+  - wave execution
+allowed-tools:
+  - Read
+  - Bash
+  - Write
+  - Glob
+  - Edit
+---
+
 # Wave Executor — Dependency-Aware Parallel Execution Engine
 
 Execute tasks in dependency-aware waves using Kahn's topological sort algorithm. Achieve 4-5x speedup through wave-level and task-level parallelism while maintaining correctness through strict dependency validation.
@@ -7,6 +34,26 @@ Execute tasks in dependency-aware waves using Kahn's topological sort algorithm.
 ---
 
 ## Preamble
+
+### What I Am / What I'm Not
+
+**I am**: The execution engine that takes Phase 3 DAG Router output and runs tasks in parallel waves with dependency validation, heartbeat checkpoints, and LearningWorkflow integration.
+
+**I'm not**: A task splitter (that's Phase 3 DAG Router), a code linter, a test runner, or a UI dashboard. I orchestrate execution — nothing more, nothing less.
+
+### Pre-Requisite Gate Checklist
+
+Before starting wave execution, verify ALL of the following:
+
+- [ ] Phase 3 DAG Router completed and outputs valid wave plan
+- [ ] Wave plan file exists at `.ultimate-workflow/wave-plan.yaml` (or specified path)
+- [ ] DAG validated — no cycles detected (`validate-dag.py` exits 0)
+- [ ] All task IDs are unique (no duplicates in wave plan)
+- [ ] Task priorities assigned (P0/P1/P2) — no unassigned tasks
+- [ ] Execution Agent context available (~200K fresh tokens per wave start)
+- [ ] Wave {1} has no previous wave dependency (first wave), or Wave {N-1} SUMMARY exists and is PASS
+
+**Gate Result**: `[PASS / FAIL]` — If any item FAILS, fix identified issue before starting. Do not auto-skip checks. This gate MUST pass for every new wave, not just Wave 1.
 
 ### Key Principles
 
@@ -480,6 +527,77 @@ watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
 
 ## Error Handling
 
+### Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Wave Impact |
+|-------|------|------------|--------|-------------|
+| **P0** | BLOCKING | Task failed and ≥1 dependent task in same/nearby wave | Immediate rollback, fix root cause, re-run failed task + all dependents | Blocks downstream waves until resolved |
+| **P1** | RECOVERABLE | Single task fails but has no dependents in current wave | Retry (max 3 attempts with exponential backoff), if still fail → document in SUMMARY, mark FAIL, continue to next wave | No cross-wave impact if no dependents |
+| **P2** | WARNING | Task succeeded but with warnings (lint errors, deprecation notices, partial test pass) | Document in SUMMARY, do NOT block execution | Continue normally |
+| **P3** | INFO | Heartbeat timeout or slow task (>50% of allocated timeout) | Log warning, continue | No impact |
+
+**Severity Assignment Rules**:
+- Default to P1 for any task failure unless known dependency exists (then escalate to P0)
+- Escalate from P1→P0 if retry exhaustion OR dependent task in same wave has not started
+- Never demote: once P0 assigned, only PASS or manual override by Orchestrator
+
+### Retry Chain (Exponential Backoff with Jitter)
+
+For P1 recoverable errors, apply this retry chain:
+
+```yaml
+retry_chain:
+  attempt_1:
+    wait: 5s
+    jitter_range: "0-2s"
+    backoff_multiplier: 1
+    action: "Re-run entire task from start (stateless retry)"
+    
+  attempt_2:
+    wait: 10s (5s × multiplier)
+    jitter_range: "0-3s"
+    backoff_multiplier: 2
+    action: "Clear partial state, re-run from last checkpoint"
+    
+  attempt_3:
+    wait: 20s (10s × multiplier)
+    jitter_range: "0-5s"
+    backoff_multiplier: 2
+    action: "Isolated retry with fresh Execution Agent context (~200K tokens cleared)"
+
+max_retries: 3
+retry_escalation: "After 3 failures → mark P1, document in SUMMARY, continue to next task"
+timeout_per_attempt: "10min default (configurable per task complexity, max 30min)"
+```
+
+**Backoff Jitter Formula**: `jitter = random(0, min(backoff_wait * 0.5, max_jitter))` — prevents thundering herd when multiple tasks retry simultaneously.
+
+### Partial Success Rules
+
+When some tasks in a wave succeed and others fail:
+
+| Scenario | Action | Wave Result |
+|----------|--------|-------------|
+| **No dependencies between failed/successful tasks** | Successful tasks commit, failed tasks documented in SUMMARY | NEEDS_WORK — proceed to next wave with partial results |
+| **Failed task has dependents in same wave** | Wait for all dependents to finish (may also fail), then retry failed task + dependents together | BLOCKED until fix |
+| **>50% tasks fail in single wave** | Flag as potential planning problem, escalate to Orchestrator with analysis | P0 — may require re-split at Phase 3 |
+| **Single task fails, all others PASS** | Continue normally, retry 3x before marking NEEDS_WORK | Proceed if retries exhausted and no dependents blocked |
+
+### Cross-Wave Error Propagation
+
+When Wave N has a failed task:
+
+```
+Wave N Task A (FAIL) → depends on: [constants] ✓
+Wave N Task B (PASS) → depends on: [auth-model] ✗  ← blocked by A in same wave
+
+Transition to Wave N+1:
+├── If A retried and PASS → proceed normally
+├── If A FAILED after 3 retries AND B has no remaining deps on A → partial PASS, document missing artifact
+└── If A FAILED after 3 retries AND any task in Wave N+1 depends on A → BLOCKED (P0)
+    └── Action: Fix A → re-run Wave N from Task A → re-validate all downstream waves
+```
+
 ### Common Issues and Fixes
 
 **Issue 1: DAG Contains Cycle**
@@ -543,6 +661,64 @@ watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
 
 ## Boundary Conditions
 
+### Context Budget (Hard Limits)
+
+| Resource | Limit | Threshold | Overbehavior |
+|----------|-------|-----------|--------------|
+| Execution Agent context | ~200K tokens | Hard cap at 180K (90% of budget) | Cut oldest non-critical injected content; if still over → reduce domain skills from ≤5 to ≤3 |
+| Domain skills loaded | ≤5 per wave | Warning at >3, hard limit at 5 | Load by relevance score; drop lowest-score skill if context exceeds 180K |
+| Task spec size | ≤20K tokens per task | No warning — always compress via distillator if over | Use `distillator compress` before injection |
+| Total injected content | ≤180K tokens (90% of budget) | Grace limit | Remaining 10K tokens reserved for model response buffer |
+
+**Context Injection Order** (each wave start):
+1. Wave {N} task list + dependency graph (~2-5K)
+2. Wave {N-1} SUMMARY only (not full logs) (~3-8K)
+3. Matching domain skills (≤5, ≤120K) — **this is the variable portion**
+4. LearningFlow nominations from previous waves (~1-3K)
+
+### Concurrent Execution Limits
+
+| Parameter | Limit | Rationale |
+|-----------|-------|-----------|
+| Max concurrent tasks per wave | 7 (recommended) / 10 (hard cap) | Beyond 10 → merge conflict risk increases non-linearly; diminishing parallelism returns |
+| Max concurrent waves (inter-wave) | 2 (only if no shared resources) | Wave N+1 depends on Wave N SUMMARY — true inter-wave parallel only for independent wave groups |
+| Max file handles per task | OS-dependent (typical 1024+) | Rarely hit — tasks typically modify <50 files |
+
+**Degradation Trigger**: If any concurrent task exceeds its timeout by >50%, reduce parallelism level for remaining tasks in this wave.
+
+### Timeout + Circuit Breaker
+
+| Scope | Default | Max | Behavior on Timeout |
+|-------|---------|-----|---------------------|
+| Per-task | 10 minutes | 30 minutes (configurable at Phase 3) | Kill task → emit P1 heartbeat → retry 3x with backoff → if exhausted, mark NEEDS_WORK |
+| Per-wave | Sum of all task timeouts × 1.5 (parallel factor) | No hard cap | If wave exceeds: split into sub-waves or downgrade to serial execution |
+| Inter-wave transition | 2 minutes | — | If transition script exceeds: log warning, continue anyway (transition is idempotent) |
+
+**Circuit Breaker Pattern**:
+```
+If 3 consecutive waves fail → OPEN circuit → skip remaining waves, escalate to Orchestrator
+If 1 wave passes → CLOSE circuit → resume normal execution
+```
+
+### Input Schema Validation (Wave Plan JSON Schema)
+
+Every wave plan MUST pass these validation checks before execution:
+
+| Field | Type | Constraint | Error if violated |
+|-------|------|-----------|-------------------|
+| `wave_plan[].wave_number` | integer | ≥1, sequential from 1 | FAIL — non-sequential numbering |
+| `wave_plan[].tasks[].id` | string | Non-empty, unique across all waves | FAIL — duplicate or empty ID |
+| `wave_plan[].tasks[].deps` | string[] | All referenced task IDs must exist in earlier waves | FAIL — forward dependency or missing artifact |
+| `wave_plan[].tasks[].priority` | enum | P0 / P1 / P2 only | FAIL — invalid priority value |
+| `wave_plan[].tasks[].type` | enum (optional) | coding / testing / review / config | WARNING if unknown type — proceed with default handling |
+
+**Validation Command**:
+```bash
+python3 scripts/validate-dag.py --input .ultimate-workflow/wave-plan.yaml
+# Exit 0: valid, all checks pass
+# Exit 1: FAIL — report error details
+```
+
 ### When to Escalate Immediately
 
 **Skip wave execution, escalate to Orchestrator if**:
@@ -550,6 +726,7 @@ watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
 - >50% of tasks in wave fail (indicates fundamental planning problem)
 - Breaking changes without migration plan (risk of production outage)
 - Resource exhaustion (no available Execution Agents)
+- Circuit breaker OPEN (3 consecutive waves failed)
 
 ### When to Skip Parallelism
 
@@ -558,6 +735,7 @@ watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
 - Tasks modify overlapping file sets (>30% file overlap)
 - Single Execution Agent available (resource constraint)
 - Debugging mode enabled (easier to trace issues serially)
+- Current parallelism level HIGH but any task exceeds timeout by >50%
 
 ### Edge Cases
 

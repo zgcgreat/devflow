@@ -1,3 +1,13 @@
+---
+name: party-mode
+version: 3.1-enhanced
+layer: L2-ENGINE
+source: SuperCorp PartyMode + Cavecrew sub-agent delegation
+dependencies: []
+triggers: [multi-agent consensus, technical debate, architectural decision]
+allowed-tools: [Read, Bash, Write, Edit, AskUserQuestion]
+---
+
 # PartyMode — Multi-Agent Consensus Protocol
 
 Orchestrate multi-agent roundtable discussions for complex decisions requiring diverse perspectives. Each agent provides independent analysis, then engages in structured debate to reach consensus or escalate.

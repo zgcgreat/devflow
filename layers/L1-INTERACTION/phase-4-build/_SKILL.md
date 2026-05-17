@@ -95,6 +95,35 @@ Phase 完成后（所有 Wave 结束前），触发 LearningWorkflow：
 | Heartbeat 完整性 | 每个 Task 有 START+DONE 心跳 | 补跑缺失 Task |
 | LESSON 提名 | Phase 失败任务已提名到 LESSONS.md | 自动创建 L-NNN 条目 |
 
+---
+
+## Error Taxonomy (Phase 4 Build 专属)
+
+| Level | Name | Symptom | Recovery Action | Wave Impact |
+|-------|------|---------|-----------------|-------------|
+| P0 | VERIFY_FAIL_CRITICAL | Task verify command exits non-zero after retries | Rollback commit → fix → re-run verify | Blocks this task; dependent tasks in same wave blocked too |
+| P1 | TASK_TIMEOUT | Heartbeat exceeds threshold (no START/DONE pair) | Cancel execution, kill subprocess, restart with fresh context | Retry once; if still fails → P0 |
+| P2 | VERIFY_WARNING | Lint/type errors but runtime passes | Document warning, proceed, fix before Wave complete | Continue; blocked only if >5 warnings |
+| P3 | CONTEXT_PRESSURE | Agent approaching 180K token limit (of ~200K) | Auto-trim CODE-BASE section, compress LESSONS to <5K tokens | No impact on execution |
+
+## Boundary Conditions (Phase 4 Build)
+
+### Thresholds
+- **Per-Task Timeout**: ≤30 min per task (Wave N total ≤60 min)
+- **Verify Retry Chain**: attempt_1: 5s → attempt_2: 10s → attempt_3: 20s + jitter(0-3s), then P0 rollback
+- **Max Concurrent Tasks**: 7 recommended / 10 hard limit per wave (HIGH parallelism)
+- **Commit Atomicity**: Single commit per task, `<type>(<req-id>): <task-id> <subject>` format
+
+### Circuit Breaker
+- 3 consecutive P0 failures on same file → OPEN circuit, route to Phase 6 Specialist review
+- Wave total failure rate >50% → recommend re-split tasks in Phase 3
+
+### Input Schema Validation
+- [ ] `03-tasks.md` exists and has G4 passed
+- [ ] All tasks have verify command + done criterion defined
+- [ ] Worktree assignments match parallelism level (HIGH→per-task, LOW→shared)
+- [ ] No circular dependencies in DAG (Kahn algorithm completed)
+
 ## Provider 路由
 
 - Phase 4 → **高代码能力模型**（Execution Agent）

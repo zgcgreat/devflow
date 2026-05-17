@@ -88,6 +88,35 @@ v3_upgrade:
 - **全部通过** → 标记 Phase 5 completed，进入 Phase 6
 - **有失败** → 创建修复 Task（T<NN>-fix），回退到 Phase 4
 
+---
+
+## Error Taxonomy (Phase 5 Test 专属)
+
+| Level | Name | Symptom | Recovery Action | Wave Impact |
+|-------|------|---------|-----------------|-------------|
+| P0 | AC_UNCOVERED | ≥10% AC lacks test case → G3 FAIL threshold exceeded | Generate missing test cases, re-execute Phase 4 verification | Blocks Phase 6 Review; return to Phase 4 for fixes |
+| P1 | CROSS_WAVE_REGRESSION | Wave N+1 module breaks due to Wave N change | Isolate breaking commit, revert, create T-fix task | No cross-wave impact beyond Wave N-1 |
+| P2 | EDGE_CASE_GAP | Missing boundary scenario (>3 confirmed gaps) | Add targeted test cases for null/empty/concurrent | Continue to Phase 6 with known gaps documented |
+| P3 | TEST_FLAKY | Intermittent fail rate >5% in repeat runs | Flag as flaky, run 3x isolation test, defer if unresolved | No blocking; log as technical debt |
+
+## Boundary Conditions (Phase 5 Test)
+
+### Thresholds
+- **AC Coverage**: ≥90% AC必须有对应测试用例（G5 FAIL if <90%）
+- **Verify Re-run**: Phase 4所有verify命令必须重新执行通过（100% pass率）
+- **Boundary Testing**: ≥3个边界场景已验证（空值/异常路径/并发/大文件）
+- **Regression Scope**: Wave N+1依赖模块必须回归测试
+
+### Timeout
+- Standard test execution: ≤20 min per phase
+- If exceeded: prioritize AC tests first, defer edge cases to Phase 6 known-gaps list
+
+### Input Schema Validation
+- [ ] Phase 4 all Waves completed with verified summaries
+- [ ] `03-tasks.md` contains complete verify commands for all tasks
+- [ ] WAVE-N-SUMMARY.md exists for each wave
+- [ ] AC list from Phase 1/3 is extracted and ready for test case mapping
+
 ## Provider 路由
 
 - Phase 5 → **高分析能力模型**（需要全面测试覆盖判断）

@@ -89,6 +89,35 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 
 输出完成声明，等待用户回复 Y 继续。
 
+---
+
+## Error Taxonomy (Phase 3 Task Plan 专属)
+
+| Level | Name | Symptom | Recovery Action | Wave Impact |
+|-------|------|---------|-----------------|-------------|
+| P0 | UNRESOLVED_DEP | Task B depends_on Task A, but Task A not in task list | Add missing task or remove dangling dependency | Blocks Phase 4 BUILD |
+| P1 | CYCLE_DETECTED | Kahn algorithm finds no zero-in-degree tasks → DAG cycle | Log cycle tasks → return to Phase 2 for re-split | Blocks all downstream waves |
+| P2 | NON_ATOMIC_TASK | Single task >10 files or >500 line change | Split into sub-tasks with shared resource annotation | No cross-wave impact |
+| P3 | WARN_VERIFY_ABSENT | Task missing verify command or done criterion | Auto-generate reasonable default, flag for review | Continue normally |
+
+## Boundary Conditions (Phase 3 Task Plan)
+
+### Thresholds
+- **Atomic Task Limit**: ≤10 files, ≤500 line changes per task (G4 FAIL if exceeded)
+- **DAG Depth Check**: Max depth ≤ task count / 2 (flatten if deeper)
+- **Wave Parallelism Ratio**: Independent tasks in same wave should be ≥60% of total (warn if <60%)
+
+### Timeout
+- Task splitting phase: ≤10 min (parse design → build DAG → output task list)
+- If exceeded: output initial wave plan, defer complex dependencies to Phase 4 refinement
+
+### Input Schema Validation
+- [ ] `02-design.md` exists and has G3 passed
+- [ ] All AC from Phase 1 are addressed in design
+- [ ] Design doc contains explicit module boundary annotations
+- [ ] API definitions cover all user story verification paths
+- [ ] Data model ER diagram present for database changes
+
 ## Provider 路由
 
 - Phase 3 → **高分析能力模型**（需要 DAG 分析和依赖判断）

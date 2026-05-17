@@ -203,6 +203,35 @@ def enforce_budget(agent_context):
 
 ---
 
+---
+
+## Error Taxonomy (Agent Isolation 专属)
+
+| Level | Name | Symptom | Recovery Action | Wave Impact |
+|-------|------|---------|-----------------|-------------|
+| P0 | CONTEXT_LEAK | Cross-agent data visible in new wave's fresh context | Flush agent memory, enforce boundary rotation, re-validate isolation | Blocks Wave N+1 until isolated context verified |
+| P1 | TOKEN_OVERFLOW | Agent context exceeds ~200K token budget after module load | Compress LESSONS→CODE-BASE→DOMAIN-SKILLS in priority order | Continue with truncated modules |
+| P2 | COMM_TIMEOUT | Heartbeat/Channel message exceeds timeout without response | Retry ×3 per channel policy → escalate to Orchestrator | No execution impact, logging only |
+| P3 | DOMAIN_SKILL_LIMIT | Active domain skills >5 (R15 violation) | Truncate to lowest-frequency 5, archive rest to LESSONS | No blocking |
+
+## Boundary Conditions (Agent Isolation)
+
+### Thresholds
+- **Token Budget**: ~200K tokens per agent (hard limit), orchestrator ~50K
+- **Context Rotation**: New wave = fresh context only (≤10K token summary injection)
+- **Domain Skills**: ≤5 active skills per agent (~50K max/skill pool)
+- **Channel Timeout**: Heartbeat 60s / Handoff 120s / ContextSnapshot batched 300s
+
+### Circuit Breaker
+- 3 consecutive token overflows → reduce DOMAIN-SKILLS to ≤3, trim CODE-BASE to required files only
+- Agent failure rate >30% in single wave → recommend new agent instance (context corruption)
+
+### Input Schema Validation
+- [ ] WAVE-PLAN.md exists with valid task assignments
+- [ ] Provider Assignment Table generated
+- [ ] Per-agent context budget ≤200K tokens calculated
+- [ ] Cross-agent communication channels defined per task dependency
+
 ## Phase Integration
 
 | Phase | Usage |

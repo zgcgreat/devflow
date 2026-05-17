@@ -84,6 +84,34 @@ v3_upgrade:
 
 输出完成声明，等待用户回复 Y 继续。
 
+---
+
+## Error Taxonomy (Phase 2 Design 专属)
+
+| Level | Name | Symptom | Recovery Action | Wave Impact |
+|-------|------|---------|-----------------|-------------|
+| P0 | BLOCKING | 设计文档无法闭环所有 AC（缺少核心 API/数据模型） | 回退 Step 1，补充需求澄清后重新执行 | Blocks Phase 2a/Phase 3 |
+| P1 | RECOVERABLE | 方案 A/B 技术风险不均衡或 ADR 记录 < 3 | 补充缺失分析维度，重新输出设计文档 | No cross-wave impact |
+| P2 | WARNING | Brownfield 兼容标注不完整但未阻塞 | 在 `02-design.md` 中追加 `[TODO: Verify Compatibility]` | Continue to Phase 2a |
+| P3 | INFO | 简单任务（≤3文件）跳过 Phase 2a | 正常流程，记录为 skip | No impact |
+
+## Boundary Conditions (Phase 2 Design)
+
+### Thresholds
+- **Simple Task Skip**: ≤3 文件且 <50 行改动 → 直接输出 `02-design.md`，跳过 Phase 2a
+- **ADR Minimum**: ≥3 个关键设计决策必须记录（否则 G3 FAIL）
+- **Architecture Clarity**: 模块边界和依赖关系必须在图中清晰标注（否则 G3 FAIL）
+
+### Timeout
+- Standard design phase: ≤15 min (read analysis → output design doc)
+- If exceeded: reduce to single-scheme output, flag complex items for Phase 4 attention
+
+### Input Schema Validation
+- [ ] `01-analysis.md` exists and has G2 passed
+- [ ] All user stories have ≥2 AC defined
+- [ ] Out of Scope boundary is explicitly stated
+- [ ] Terminology section covers technical constraints
+
 ## Provider 路由
 
 - Phase 2 → **高创造力模型**（需要架构设计能力）

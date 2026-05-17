@@ -332,3 +332,35 @@ Stage A PASS → Stage B FAIL (G3):
 Stage A PASS → Stage B PASS (G3):
     └─→ Phase 7 Canary发布
 ```
+
+---
+
+## Error Taxonomy (Phase 6 Review 专属, P0-P3标准化)
+
+| Level | Name | Symptom | Recovery Action | Wave Impact |
+|-------|------|---------|-----------------|-------------|
+| P0 | BLOCKING_HIGH | Stage B high severity finding (e.g., unbounded file upload) or Specialist CRITICAL | G3 FAIL → 退回对应 Wave 修复 → re-enter Phase 6 | Blocks Phase 7 Canary until fixed |
+| P1 | CONDITIONAL_PASS | Medium severity findings that require fix plan | Conditional pass with sprint-backlog tickets | Continue to Phase 7 with time-bound fix |
+| P2 | ACCEPT_WITH_NOTE | Low severity/style issues, minor edge cases | Accept silently or defer to tech-debt queue | No impact on deployment |
+| P3 | INFO_NO_FINDING | Stage A covers all AC, no spec deviations detected | Document in review report as clean pass | No impact |
+
+## Boundary Conditions (Phase 6 Review)
+
+### Thresholds
+- **Blocking Criteria**: All HIGH severity findings must be fixed before G3 PASS
+- **Spec Coverage Gate**: Stage A NOT_PASS → 直接退回 Phase 3（不进 Stage B）
+- **Cross-Model Review Trigger**: CRITICAL tasks → Claude+Codex comparison per R14
+- **Specialist Cascade Trigger**: diff >200 lines + critical path → red-team + security + testing all active
+
+### Timeout
+- Stage A (Spec Compliance): ≤10 min for PRD→implementation matrix
+- Stage B (Code Review): ≤15 min for Blind Hunter + Edge Case Hunter combined
+- Specialist review: ≤20 min per triggered specialist (parallel execution)
+
+### When NOT to use Phase 6 (Skip directly to Phase 7)
+| Scenario | Skip Because | Alternative |
+|----------|-------------|-------------|
+| Single file fix (<50 lines) | Too small for adversarial review | Direct Phase 7 with G3 manual check |
+| Hotfix deployment | Time-critical (<2h SLA) | Post-deploy Phase 6 in next sprint |
+| All AC already verified by Phase 5 automated tests | No human judgment value added | Skip to Phase 7 with reduced specialist set |
+
