@@ -10,7 +10,14 @@
 L2-ENGINE/
 ├── README.md              ← 本文件
 ├── learning-workflow/     # ⭐LearningWorkflow自进化核心
-│   └── _SKILL.md
+│   ├── _SKILL.md
+│   └── graduation/        # Graduation跨Phase聚类提升 (v3.1新增)
+│       └── SKILL.md
+├── debugging-workflow/    # Systematic Debugging方法论 (v3.1新增)
+│   ├── SKILL.md
+│   ├── root-cause-tracing.md
+│   ├── defense-in-depth.md
+│   └── condition-based-waiting.md
 ├── party-mode/            # PartyMode多Agent共识机制
 │   └── SKILL.md
 ├── wave-executor/         # Wave并行执行器 + Kahn拓扑排序

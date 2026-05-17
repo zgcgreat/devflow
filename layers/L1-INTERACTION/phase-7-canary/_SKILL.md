@@ -145,7 +145,69 @@ Canary-2 PASS 后，全量上线：
 - 建议修复: Phase X中处理
 ```
 
-### Step 5: G5 门控 + Phase 8衔接
+---
+
+## 🔥 Emergency Mode (V3.2新增 — from supercorp-ultimate)
+
+**触发条件**: 
+```yaml
+triggers:
+  - keywords: ["紧急", "critical", "downtime", "on fire", "hotfix"]
+  - P0/P1 severity tag on issue
+  - production incident with >5% user impact
+```
+
+### Emergency Flow (跳过所有gate)
+
+```
+Phase 4 (实施) → Phase 5 (测试) → Phase 6 (审查，仅Red Team + Security)
+    ↓
+Canary-1 only (10%) → 5分钟观察
+    ↓
+直接Production (无Canary-2)
+    ↓
+Close Gate: 事后24h验证/72h全面审查/1周LESSONS归档
+```
+
+### Close Gate Protocol (事后闭环)
+
+```markdown
+# Emergency Close Gate — [req-id]
+
+## Pre-deployment (应急跳过项)
+- Stage A Spec Compliance: ⏭️ Skipped
+- Stage B Three-Layer Review: ⏭️ Skipped
+- Red Team: ✅ Run (critical path check)
+- Security: ✅ Run (CRITICAL findings only)
+
+## Post-deployment Checklist (24h内完成)
+- [ ] error_rate < 1% for all endpoints
+- [ ] no data corruption confirmed
+- [ ] monitoring alerts resolved
+- [ ] user impact quantified
+
+## Full Review (72h内完成)
+- Stage A + Stage B retrospective review
+- Fix any issues found during emergency deploy
+- PR merged with full context
+
+## LESSONS Archive (1周内完成)
+- Root cause analysis documented
+- Prevention measures added to pattern library
+- domain-skills/ updated if applicable
+```
+
+### Emergency Severity Mapping
+
+| Severity | Trigger | Skip Level | Post-deadline |
+|----------|---------|-----------|---------------|
+| P0 | System down / Data loss imminent | All gates + Canary-2 | 24h full review |
+| P1 | Major feature broken | Stage A + Canary-2 | 72h full review |
+| P2 | Minor issue, workaround exists | None (normal flow) | N/A |
+
+---
+
+## Phase 8: Close Gate衔接
 
 **⚠️ 强制规则**: Production阶段未通过或触发自动回滚 → G5 FAIL。
 

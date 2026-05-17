@@ -1,197 +1,792 @@
-# PartyMode — 多Agent共识机制
+# PartyMode — Multi-Agent Consensus Protocol
 
-> 当复杂决策需要多角度审视时，触发 PartyMode 共识协议。
-> **增强版**: 支持自定义Agent阵容、自动摘要、跨Session辩论历史追踪
+Orchestrate multi-agent roundtable discussions for complex decisions requiring diverse perspectives. Each agent provides independent analysis, then engages in structured debate to reach consensus or escalate.
 
----
-
-## 配置文件
-
-### Agent阵容配置
-
-**位置**: `.ultimate-workflow/config/party-agents.yaml`
-
-```yaml
-# PartyMode Agent阵容配置
-agents:
-  - name: CEO
-    weight: 2.0
-    specialty: "战略视角、商业可行性"
-    personality: "挑战现状，关注ROI和市场机会"
-  
-  - name: CFO
-    weight: 1.8
-    specialty: "成本评估、ROI分析"
-    personality: "谨慎保守，关注预算和资源分配"
-  
-  - name: CTO
-    weight: 1.5
-    specialty: "技术架构、可行性"
-    personality: "务实创新，平衡技术债务与交付速度"
-  
-  - name: Designer
-    weight: 1.3
-    specialty: "UX/UI、用户体验"
-    personality: "用户至上，关注可用性和美观度"
-  
-  - name: Security
-    weight: 1.5
-    specialty: "安全审查、威胁建模"
-    personality: "零信任原则，关注攻击面和数据保护"
-  
-  - name: QA
-    weight: 1.2
-    specialty: "测试覆盖、质量保障"
-    personality: "怀疑论者，寻找边界情况和失败模式"
-
-discussion_rules:
-  max_rounds: 5                    # 最大讨论轮次
-  context_summary_threshold: 400   # 上下文摘要阈值（词）
-  auto_summarize_every: 3          # 每N轮自动摘要
-  confidence_threshold: 75         # 共识信心阈值（%）
-  escalation_threshold: 60         # 升级人工决策阈值（%）
-```
-
-### 默认Agent池（无配置时使用）
-
-| 角色 | 专长 | 权重 |
-|------|------|------|
-| **Architect** | 技术架构 | 1.5x |
-| **Security-Auditor** | 安全审查 | 1.5x |
-| **Performance-Auditor** | 性能分析 | 1.3x |
-| **QA-Lead** | 测试覆盖 | 1.2x |
-| **Dev-Reviewer** | 代码质量 | 1.0x |
+**Core philosophy**: Independent thinking prevents groupthink. Structured debate ensures all voices are heard. Clear escalation paths prevent decision paralysis.
 
 ---
 
-## 触发条件
+## Preamble
 
-**自动触发**（满足任一）：
-- 复杂任务涉及多个专业领域
-- Agent 信心指数 < 70%
-- 用户明确要求"讨论"或"评审"
+### Key Principles
 
-**手动触发**：
+1. **Independent Analysis First**: Every agent analyzes the problem independently before discussion begins — no influence from other agents' initial views
+2. **Evidence-Driven Debate**: All arguments must be backed by facts, data, or concrete examples — opinions without evidence carry less weight
+3. **Progressive Convergence**: Discussion aims for 80% consensus, not 100% agreement — document dissenting views and move forward
+4. **Context Hygiene**: Auto-summarize every 3 rounds to keep context under 400 words — prevents token bloat while preserving key insights
+
+### When to Use
+
+**Automatic triggers** (any one):
+- Task involves multiple technical domains (e.g., security + performance + UX)
+- Agent confidence score < 70% on critical decision
+- User explicitly requests "discussion", "review", or "/party"
+- Architectural change affecting >3 modules
+- Security implications with risk level ≥ MEDIUM
+
+**Manual trigger**:
 ```
-/party <问题描述>
+/party <decision description>
+```
+
+**When NOT to use**:
+- Simple implementation details (<5 LOC changes)
+- Purely cosmetic changes (UI styling, text updates)
+- Already documented decision with no new information
+- Time-critical fixes requiring immediate action
+
+---
+
+## Step-by-step Workflow
+
+### Step 0: Initialize Party Mode
+
+**Determine discussion scope**:
+
+AskUserQuestion: "What type of decision needs consensus?"
+- **Technical Architecture** (framework selection, design patterns, database schema)
+- **Business Logic** (feature design, user flows, API contracts)
+- **Risk Assessment** (security vulnerabilities, performance bottlenecks, cost analysis)
+- **Quality Gate** (code review disputes, test coverage gaps, release readiness)
+
+**Select agent roster**:
+
+Load configuration from `.ultimate-workflow/config/party-agents.yaml` if exists. Otherwise use default pool:
+
+| Role | Specialty | Weight |
+|------|-----------|--------|
+| Architect | Technical feasibility, scalability | 1.5x |
+| Security-Auditor | Threat modeling, attack surface | 1.5x |
+| Performance-Auditor | Latency, throughput, resource usage | 1.3x |
+| QA-Lead | Test coverage, edge cases, failure modes | 1.2x |
+| Dev-Reviewer | Code quality, maintainability, readability | 1.0x |
+
+**Agent selection rules**:
+- Minimum 3 agents for any discussion
+- Maximum 5 agents to avoid noise
+- Always include Architect for technical decisions
+- Always include Security-Auditor if security implications exist
+- Rotate agents across rounds to avoid dominance
+
+**Output format**:
+```markdown
+## Party Mode Initialized
+
+**Decision Type**: Technical Architecture  
+**Selected Agents**: Architect (1.5x), Security-Auditor (1.5x), Performance-Auditor (1.3x)  
+**Discussion Rules**: Max 5 rounds, auto-summary every 3 rounds  
+**Consensus Threshold**: 75% weighted agreement  
+
+Ready to begin. Please state the decision to be discussed.
 ```
 
 ---
 
-## 共识流程
+### Step 1: Problem Statement & Independent Analysis
 
+**Present problem to all agents**:
+
+Provide clear problem statement with:
+- Context (what led to this decision)
+- Constraints (budget, timeline, technical limitations)
+- Success criteria (how we'll know it's a good decision)
+- Known unknowns (what we don't know yet)
+
+**Independent analysis phase** (no cross-talk allowed):
+
+Each agent privately analyzes and produces:
+1. Initial position (support/oppose/neutral)
+2. Confidence score (1-10)
+3. Key reasoning (≤100 words)
+4. Critical concerns (if any)
+
+**Tool usage example**:
+```bash
+# If analyzing architecture decision, gather context first
+find . -name "*.md" -path "*/docs/*" | grep -i "architecture\|design"
+grep -rn "TODO\|FIXME" src/ --include="*.ts" | head -20
+npm list --depth=0  # Check dependency versions
 ```
-1. 问题陈述 → 所有 Agent 读题
-2. 独立分析 → 各 Agent 不讨论
-3. 观点发表 → 按专家顺序
-4. 交叉质疑 → 问答轮
-5. 自动摘要 → 每3轮更新上下文（<400词）
-6. 共识形成 → 或升级处理
+
+**Verification checklist**:
+- [ ] All agents have read the full problem statement
+- [ ] No agent has seen other agents' analyses yet
+- [ ] Each agent provided confidence score
+- [ ] Critical concerns are clearly flagged
+
+**Output format** (per agent):
+```markdown
+[Architect] Position: ✅ Support | Confidence: 8/10
+
+**Reasoning**: 
+Current monolith is hitting scaling limits at 10K concurrent users. 
+Microservices allow independent scaling of hot paths.
+
+**Critical Concerns**: 
+- Operational complexity increases significantly
+- Need service mesh for observability
+- Team must learn distributed systems patterns
 ```
 
-### 自动摘要机制
+---
 
-**触发条件**: 每3轮讨论后
+### Step 2: Structured Debate
 
-**摘要内容**:
-- 当前讨论的核心议题
-- 各Agent的立场和关键论点
-- 已达成共识的点
-- 仍存在的分歧
-- 用户倾向性（如有）
+**Round structure** (repeat up to 5 times):
 
-**摘要格式**:
+1. **Opening statements** (agents speak in weight order):
+   - Highest weight speaks first (Architect 1.5x → Security 1.5x → Performance 1.3x → ...)
+   - Each agent: ≤150 words, must reference specific evidence
+   - Can adjust position based on new information
+
+2. **Cross-examination** (Q&A round):
+   - Any agent can question another's reasoning
+   - Questions must be specific: "You mentioned X, but what about Y?"
+   - Answering agent: ≤100 words per response
+   - No ad hominem attacks — focus on ideas, not people
+
+3. **Rebuttal** (optional, if positions shifted):
+   - Agents who changed position explain why
+   - Agents maintaining position address strongest counterargument
+   - ≤100 words each
+
+**Discussion rules enforcement**:
+- ⏱️ **Time limit**: Each round ≤10 minutes total
+- 📝 **Word limit**: Strict enforcement — verbose agents get truncated
+- 🔇 **No interruptions**: Wait for turn to speak
+- 🎯 **Stay on topic**: Moderator (you) redirects if discussion drifts
+
+**Auto-summary trigger** (every 3 rounds):
+
+Generate summary under 400 words:
 ```markdown
 ## Discussion Context (Round 3 Summary)
 
-**核心议题**: WebSocket消息系统的重连策略
+**Core Issue**: Whether to adopt microservices architecture for MVP
 
-**Agent立场**:
-- CTO: 支持指数退避，关注稳定性
-- Security: 要求速率限制，防止DDoS
-- QA: 需要可观测性，便于调试
+**Current Positions**:
+- Architect: ✅ Support (8/10) — Scaling benefits outweigh complexity
+- Security: ⚠️ Conditional (6/10) — Requires service mesh first
+- Performance: ✅ Support (9/10) — Latency improvements significant
 
-**已达成共识**:
-- 最大重试次数: 3次
-- 基础延迟: 1秒
+**Points of Agreement**:
+- Monolith won't scale beyond 10K users
+- Team needs training on distributed systems
+- Service discovery is mandatory
 
-**待决问题**:
-- 是否添加Jitter（随机抖动）？
-- 失败后的降级策略？
+**Remaining Disagreements**:
+- Timing: Now vs. after Series A funding
+- Scope: All services vs. only hot paths
+- Infrastructure: Kubernetes vs. managed containers
 
-**用户倾向**: 偏向CTO方案，但认可Security的担忧
+**User Preference**: Leans toward phased approach (hot paths first)
 ```
 
-**好处**:
-- 避免上下文膨胀（保持<400词）
-- 新加入的Agent快速理解历史
-- 跨Session辩论时可恢复状态
+**Verification after each round**:
+- [ ] All active agents participated
+- [ ] Word limits respected
+- [ ] New evidence introduced (not just repeating)
+- [ ] Summary updated if round % 3 == 0
 
 ---
 
-## Agent 角色池
+### Step 3: Consensus Determination
 
-| 角色 | 专长 | 权重 |
-|------|------|------|
-| **Architect** | 技术架构 | 1.5x |
-| **Security-Auditor** | 安全审查 | 1.5x |
-| **Performance-Auditor** | 性能分析 | 1.3x |
-| **QA-Lead** | 测试覆盖 | 1.2x |
-| **Dev-Reviewer** | 代码质量 | 1.0x |
+**Calculate weighted consensus**:
+
+Formula:
+```
+weighted_score = Σ(agent_confidence × agent_weight) / Σ(agent_weights)
+consensus_pct = (agents_in_agreement / total_agents) × 100
+```
+
+**Decision matrix**:
+
+| Scenario | Weighted Score | Consensus % | Action |
+|----------|---------------|-------------|--------|
+| **Strong Consensus** | ≥8.0 | ≥80% | ✅ Accept decision, document rationale |
+| **Weak Consensus** | 6.0-7.9 | 60-79% | ⚠️ Accept with reservations, log dissent |
+| **No Consensus** | <6.0 | <60% | ❌ Escalate to Orchestrator for manual decision |
+| **Deadlock** | Any | Any | ❌ If >5 rounds with no movement, escalate |
+
+**Special escalation conditions** (immediate escalation regardless of scores):
+- Security-Auditor flags CRITICAL vulnerability with confidence ≥9/10
+- Architect identifies fundamental flaw making solution infeasible
+- Legal/compliance implications discovered mid-discussion
+- Budget overrun >50% from original estimate
+
+**Output format** (consensus reached):
+```markdown
+## Consensus Achieved
+
+**Decision**: Adopt microservices for user authentication and payment processing only
+
+**Weighted Score**: 7.8/10  
+**Consensus Level**: 67% (2/3 agents fully agree, 1 conditional)  
+
+### Rationale
+- Phased approach balances scaling needs with team capacity
+- Hot paths (auth, payments) benefit most from isolation
+- Remaining monolith reduces operational overhead during transition
+
+### Dissenting Views
+**Security-Auditor** (conditional support):
+- Concern: Service-to-service auth adds attack surface
+- Requirement: Implement mTLS before deployment
+- Mitigation: Use Istio service mesh with automatic mutual TLS
+
+### Next Steps
+- [ ] Create RFC for phased migration plan
+- [ ] Prototype auth service in isolation
+- [ ] Evaluate service mesh options (Istio vs. Linkerd)
+- [ ] Schedule team training on distributed tracing
+```
+
+**Output format** (escalation required):
+```markdown
+## Decision Escalated to Orchestrator
+
+**Reason**: No consensus after 5 rounds, fundamental disagreement on approach
+
+**Summary of Positions**:
+- Architect: Microservices now (scaling urgency)
+- Security: Monolith until security framework ready (risk aversion)
+- Performance: Hybrid approach (compromise not accepted by others)
+
+**Key Blockers**:
+1. Security concerns about service-to-service communication
+2. Team lacks distributed systems experience
+3. Budget constraints limit infrastructure investment
+
+**Recommendation for Orchestrator**:
+Consider third-party consultation or proof-of-concept before final decision.
+Cost of wrong decision estimated at $50K (refactor + downtime).
+```
 
 ---
 
-## 共识判定
+### Step 4: Documentation & Memory Update
 
-### 通过条件
-- **多数一致**：≥70% Agent 同意
-- **信心指数**：加权平均 ≥ 75%
+**Record decision in memory system**:
 
-### 升级条件（需人工决策）
-- 信心指数 < 60%
-- 超过 3 轮无共识
-- 涉及安全/架构关键决策
+Update `.specs/memory/DECISIONS.md`:
+```markdown
+## [YYYY-MM-DD] Microservices Adoption Strategy
+
+**Category**: Technical Architecture  
+**Participants**: Architect, Security-Auditor, Performance-Auditor  
+**Outcome**: Phased adoption (auth + payments first)  
+**Confidence**: 7.8/10  
+
+### Context
+Monolith hitting scaling limits at 10K concurrent users. Need horizontal scaling for hot paths while managing team capacity.
+
+### Decision Rationale
+- Phased approach reduces risk
+- Focus on highest-impact services first
+- Allows team to learn gradually
+
+### Dissenting Opinions
+Security-Auditor requires mTLS implementation before any service deployment.
+
+### Lessons Learned
+- Early security involvement prevents rework
+- Team training budget should be included in proposal
+- Service mesh evaluation took longer than expected
+
+### Related Decisions
+- [2024-01-15] API Gateway Selection (Linkerd chosen)
+- [2024-02-01] Observability Stack (Prometheus + Grafana)
+
+### Review Date
+Revisit in 3 months or when user base reaches 20K
+```
+
+**Extract learning points** (for LearningWorkflow):
+
+If discussion revealed new insights:
+```yaml
+# Add to .specs/memory/LESSONS.md
+- lesson: "Service mesh evaluation requires 2-week POC minimum"
+  category: "Infrastructure"
+  severity: "medium"
+  extracted_from: "PartyMode session 2024-03-15"
+  applicability: "Any microservices adoption"
+  
+- lesson: "Security review must happen before architecture finalization"
+  category: "Process"
+  severity: "high"
+  extracted_from: "PartyMode session 2024-03-15"
+  applicability: "All architectural decisions"
+```
+
+**Update domain skills** (if pattern repeats):
+
+Check frequency of similar decisions:
+```bash
+grep -c "microservices\|service mesh" .specs/memory/DECISIONS.md
+# If count >= 3, promote to domain skill
+```
+
+If threshold met, create `.specs/skills/microservices-adoption.md`:
+```markdown
+# Domain Skill: Microservices Adoption
+
+**Frequency**: Used in 4 projects  
+**Last Updated**: 2024-03-15  
+
+## Best Practices
+1. Start with hot paths only (auth, payments, notifications)
+2. Implement service mesh before first service goes live
+3. Allocate 20% budget for team training
+4. Plan 2-week POC for infrastructure evaluation
+
+## Common Pitfalls
+- Underestimating operational complexity
+- Skipping security review until too late
+- Not budgeting for observability tooling
+
+## Recommended Agents for Discussion
+- Architect (mandatory)
+- Security-Auditor (mandatory)
+- Performance-Auditor (recommended)
+- SRE (if available)
+```
 
 ---
 
-## 输出格式
+## Error Handling
+
+### Common Issues and Fixes
+
+**Issue 1: Agents陷入循环争论 (Circular Argument)**
+
+- **Symptom**: Same points repeated for 3+ rounds with no new information
+- **Cause**: Agents talking past each other, not addressing core disagreement
+- **Fix**: 
+  1. Pause discussion
+  2. Ask each agent: "What single piece of evidence would change your mind?"
+  3. If no answer possible → escalate immediately
+  4. If answers provided → focus next round on gathering that evidence
+- **Prevention**: Set explicit success criteria before discussion starts
+
+**Issue 2: Dominant Agent Monopolizes Discussion**
+
+- **Symptom**: One agent speaks >50% of total words, others defer
+- **Cause**: Weight imbalance or personality dominance
+- **Fix**:
+  1. Enforce strict word limits (truncate verbose responses)
+  2. Require quiet agents to speak first in next round
+  3. Ask dominant agent: "What questions do you have for others?" (forces listening)
+- **Prevention**: Rotate speaking order each round, don't always go by weight
+
+**Issue 3: Agent Provides Vague/Generic Response**
+
+- **Symptom**: Response lacks specifics, uses hedging language ("maybe", "perhaps", "it depends")
+- **Cause**: Agent lacks domain expertise or avoiding commitment
+- **Fix**:
+  1. Challenge directly: "Please provide specific numbers/examples"
+  2. If still vague → reduce agent's weight by 0.2 for this session
+  3. Request clarification from user: "Should we bring in a specialist?"
+- **Prevention**: Pre-screen agents for relevance to decision topic
+
+**Issue 4: Context Overflow (Token Limit Approaching)**
+
+- **Symptom**: Warning that context window >80% full
+- **Cause**: Too many rounds without summarization
+- **Fix**:
+  1. Trigger immediate summary (even if not at round 3)
+  2. Compress summary to <300 words (more aggressive)
+  3. Remove early round details, keep only current positions
+  4. If still overflowing → escalate with current state
+- **Prevention**: Monitor token usage, summarize at round 2 if approaching limit
+
+**Issue 5: Agent Timeout/No Response**
+
+- **Symptom**: Agent doesn't respond within 2 minutes
+- **Cause**: System overload or agent stuck
+- **Fix**:
+  1. Wait additional 1 minute (total 3 min timeout)
+  2. If still no response → mark as absent, use default confidence 5/10
+  3. Continue with remaining agents
+  4. Log incident for post-mortem
+- **Prevention**: Keep agent pool small (≤5), monitor system health
+
+---
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+
+**Skip discussion, escalate to Orchestrator if**:
+- Decision has legal/compliance implications (GDPR, HIPAA, etc.)
+- Budget impact >$100K or >50% of project budget
+- Security vulnerability with CVSS score ≥9.0
+- Deadline <24 hours and no clear path forward
+- User explicitly requests human review
+
+### When to Skip PartyMode
+
+**Don't use PartyMode if**:
+- Decision is reversible with low cost (<1 day effort to undo)
+- Only one reasonable option exists (no tradeoffs to discuss)
+- Decision was already made and documented (unless new info emerged)
+- All stakeholders already agree (just document and proceed)
+- Emergency situation requiring immediate action
+
+### Edge Cases
+
+**Monorepo with Multiple Services**:
+- Run separate PartyMode sessions per service boundary
+- Cross-service decisions need representation from each affected team
+- Use "federation" pattern: local consensus → global alignment
+
+**Conflicting Organizational Policies**:
+- Flag policy conflict immediately
+- Escalate to leadership for policy clarification
+- Don't try to resolve policy disputes in technical discussion
+
+**Missing Critical Information**:
+- If key data unavailable (e.g., performance benchmarks, security audit results)
+- Pause discussion, assign action item to gather data
+- Resume when information available (can span multiple sessions)
+
+**Cross-Timezone Teams**:
+- Async PartyMode: agents respond within 24-hour window
+- Summarize after each agent responds
+- May take 2-3 days instead of 30 minutes
+- Document timezone constraints in decision record
+
+---
+
+## Output Template
+
+### Standard Consensus Output
 
 ```markdown
-## PartyMode 共识结果
+## PartyMode Consensus Result
 
-**问题**: <问题描述>
-**耗时**: <轮次> 轮
-**共识度**: <百分比>
-**参与Agent**: <角色列表>
+**Topic**: {decision_topic}  
+**Date**: {YYYY-MM-DD HH:mm}  
+**Duration**: {N} rounds ({M} minutes)  
+**Participants**: {agent_list_with_weights}  
 
-### 结论
-<共识内容>
+### Final Scores
+| Agent | Position | Confidence | Weight | Weighted Score |
+|-------|----------|------------|--------|----------------|
+| Architect | ✅ Support | 8/10 | 1.5x | 12.0 |
+| Security-Auditor | ⚠️ Conditional | 6/10 | 1.5x | 9.0 |
+| Performance-Auditor | ✅ Support | 9/10 | 1.3x | 11.7 |
+| **Total** | - | - | **4.3x** | **32.7/43** |
 
-### Agent观点摘要
-| Agent | 立场 | 关键论点 |
-|-------|------|----------|
-| CTO | ✅ 支持 | 技术可行性高，架构清晰 |
-| Security | ⚠️ 保留 | 需要加强速率限制 |
-| QA | ✅ 支持 | 测试覆盖完整 |
+**Consensus Level**: 76% (Weak Consensus)  
+**Weighted Average**: 7.6/10  
 
-### 保留意见
-<不同意的Agent及理由>
+### Decision
+**Result**: ✅ Accepted with Reservations  
 
-### 辩论历史
-<自动摘要链接或内嵌摘要>
+**Rationale**: 
+{2-3 sentence summary of why this decision was made}
 
-### 升级标记
-<是否需要人工介入>
+**Conditions**:
+- {condition_1_if_any}
+- {condition_2_if_any}
+
+### Key Arguments
+
+**Supporting**:
+- {pro_argument_1_with_evidence}
+- {pro_argument_2_with_evidence}
+
+**Concerns Raised**:
+- {concern_1_with_mitigation_plan}
+- {concern_2_with_mitigation_plan}
+
+### Dissenting Opinions
+
+**{Agent_Name}** ({position}):
+- **Concern**: {specific_concern}
+- **Requirement**: {what_needs_to_happen_before_full_support}
+- **Impact if Ignored**: {risk_assessment}
+
+### Action Items
+- [ ] {action_item_1} — Owner: {role}, Due: {date}
+- [ ] {action_item_2} — Owner: {role}, Due: {date}
+- [ ] {action_item_3} — Owner: {role}, Due: {date}
+
+### Discussion History
+**Full transcript**: `.specs/memory/party-mode/{YYYY-MM-DD}-{topic-slug}.md`  
+**Auto-summaries**: Rounds 3, 6, 9... (if applicable)
+
+### Review Criteria
+**Success Metrics**:
+- {metric_1}: {target_value}
+- {metric_2}: {target_value}
+
+**Review Date**: {YYYY-MM-DD} or {trigger_event}
+
+**Escalation Path**: If metrics not met, revisit with {stakeholder_list}
+```
+
+### Escalation Output
+
+```markdown
+## PartyMode Escalation Report
+
+**Topic**: {decision_topic}  
+**Date**: {YYYY-MM-DD HH:mm}  
+**Escalation Reason**: {no_consensus | deadlock | critical_concern | policy_conflict}  
+
+### Summary of Impasse
+
+**Rounds Conducted**: {N}  
+**Final Positions**:
+- {agent_1}: {position_and_key_reason}
+- {agent_2}: {position_and_key_reason}
+- {agent_3}: {position_and_key_reason}
+
+**Core Disagreement**:
+{1-2 sentences describing the fundamental divide}
+
+**Attempts to Resolve**:
+- {attempt_1}: {outcome}
+- {attempt_2}: {outcome}
+
+### Recommendation for Orchestrator
+
+**Suggested Approach**: {recommendation}  
+**Rationale**: {why_this_approach}  
+**Estimated Cost of Delay**: {time_or_money_impact}  
+
+**Options to Consider**:
+1. {option_1}: {pros_and_cons}
+2. {option_2}: {pros_and_cons}
+3. {option_3}: {pros_and_cons}
+
+**Information Needed**:
+- {missing_data_point_1}
+- {missing_data_point_2}
+
+**Stakeholders to Consult**:
+- {stakeholder_1}: {reason_to_consult}
+- {stakeholder_2}: {reason_to_consult}
+
+### Attachments
+- Full discussion transcript: `.specs/memory/party-mode/{slug}.md`
+- Relevant documentation: {links}
+- Previous related decisions: {links}
 ```
 
 ---
 
-## 实施检查清单
+## Tool Integration
 
-- [ ] 问题清晰陈述
-- [ ] 所有相关专家参与（根据配置或默认池）
-- [ ] 每轮记录信心指数
-- [ ] 少数意见被充分倾听
-- [ ] 每3轮自动摘要上下文
-- [ ] 共识或升级结论明确
-- [ ] 辩论历史可追溯
+### Required Tools
+
+**Configuration Management**:
+```bash
+# Load agent roster
+cat .ultimate-workflow/config/party-agents.yaml
+
+# Check if config exists, fallback to defaults
+test -f .ultimate-workflow/config/party-agents.yaml || echo "Using default agent pool"
+```
+
+**Context Gathering**:
+```bash
+# Find relevant architecture docs
+find . -name "*.md" -path "*/docs/*" | grep -E "architecture|design|rfc"
+
+# Check recent commits for context
+git log --oneline --since="1 week ago" | head -20
+
+# Identify affected files
+git diff --name-only HEAD~5..HEAD | grep -E "\.ts$|\.js$"
+```
+
+**Dependency Analysis**:
+```bash
+# Check package versions
+npm list --depth=0
+
+# Audit for vulnerabilities
+npm audit --json | jq '.metadata.vulnerabilities'
+
+# Check for outdated packages
+npm outdated --json
+```
+
+**Memory System Updates**:
+```bash
+# Append to DECISIONS.md
+echo "## [$(date +%Y-%m-%d)] {topic}" >> .specs/memory/DECISIONS.md
+
+# Extract lessons for LESSONS.md
+grep -A5 "lesson:" .specs/memory/LESSONS.md
+
+# Check domain skill frequency
+grep -c "{keyword}" .specs/memory/DECISIONS.md
+```
+
+### Optional Tools
+
+**Performance Benchmarking** (if Performance-Auditor involved):
+```bash
+# Run load test
+wrk -t12 -c400 -d30s http://localhost:3000/api/test
+
+# Profile application
+node --prof app.js
+node --prof-process isolate-*.log > processed.txt
+```
+
+**Security Scanning** (if Security-Auditor involved):
+```bash
+# Secret detection
+trufflehog filesystem . --only-verified
+
+# Dependency vulnerabilities
+npm audit --audit-level=high
+
+# Static analysis
+semgrep --config=p/security-audit .
+```
+
+**Architecture Validation** (if Architect involved):
+```bash
+# Check circular dependencies
+madge --circular src/index.ts
+
+# Analyze module coupling
+depcheck . --ignores="eslint,jest"
+
+# Generate dependency graph
+npx dpdm src/index.ts --tree false --warning false --exit-code circular:1
+```
+
+---
+
+## Implementation Checklist
+
+Before starting PartyMode:
+- [ ] Problem statement is clear and complete
+- [ ] Success criteria defined
+- [ ] Constraints documented (budget, timeline, technical)
+- [ ] Relevant agents selected (3-5 based on topic)
+- [ ] Configuration loaded (or defaults confirmed)
+- [ ] Memory system accessible for recording
+
+During discussion:
+- [ ] Independent analysis completed before debate starts
+- [ ] Word limits enforced (150 words opening, 100 words rebuttal)
+- [ ] All agents participate in each round
+- [ ] Auto-summary generated every 3 rounds (<400 words)
+- [ ] Token usage monitored (alert at 80% capacity)
+- [ ] Circular arguments detected and interrupted
+
+After consensus:
+- [ ] Weighted scores calculated correctly
+- [ ] Dissenting opinions documented verbatim
+- [ ] Action items assigned with owners and due dates
+- [ ] Decision recorded in `.specs/memory/DECISIONS.md`
+- [ ] Lessons extracted to `.specs/memory/LESSONS.md`
+- [ ] Domain skills updated if frequency threshold met (≥3)
+- [ ] Review date set (typically 3 months or milestone-based)
+
+Quality gates:
+- [ ] No agent dominated (>50% of words)
+- [ ] Evidence cited for all major claims
+- [ ] Counterarguments addressed, not ignored
+- [ ] Mitigation plans for all raised concerns
+- [ ] Output matches standard template format
+- [ ] Links to full transcript provided
+
+---
+
+## Anti-Patterns to Avoid
+
+❌ **Groupthink**: All agents quickly agree without genuine debate  
+✅ **Fix**: Assign one agent as "devil's advocate" to challenge consensus
+
+❌ **Analysis Paralysis**: Endless discussion without decision  
+✅ **Fix**: Enforce 5-round maximum, escalate if no convergence
+
+❌ **Authority Bias**: Lower-weight agents defer to higher-weight  
+✅ **Fix**: Anonymous initial scoring, reveal weights only during debate
+
+❌ **Scope Creep**: Discussion drifts to unrelated topics  
+✅ **Fix**: Moderator redirects firmly: "Let's stay focused on {original_topic}"
+
+❌ **False Consensus**: Agreement reached but concerns not truly resolved  
+✅ **Fix**: Require each agent to state: "My remaining concern is..." before closing
+
+❌ **Documentation Debt**: Decision made but not recorded  
+✅ **Fix**: Make memory update part of Step 4, block progress until done
+
+---
+
+## Cavecrew 轻量级子代理模式 (v3.1 新增)
+
+PartyMode 的 Roundtable Discussion 适用于决策型场景（架构选择、技术方案辩论）。但对于**代码修改类任务**，需要更轻量的子代理委托协议。Cavecrew 提供三个只读/最小变更子代理：
+
+### 何时使用 Cavecrew vs PartyMode
+
+| 场景 | 模式 |
+|------|------|
+| "选哪个框架？" / "怎么设计这个模块？" | PartyMode (Roundtable) |
+| "修这个 bug" / "改这两行代码" | Cavecrew (Surgical) |
+| "review 这段 diff" | Cavecrew-Reviewer |
+| "查一下 X 在哪里定义的" | Cavecrew-Investigator |
+
+### Cavecrew 子代理协议
+
+**Cavecrew-Investigator（只读代码定位器）**:
+- 职责：查找文件:行号表格，回答"X 在哪里定义"、"谁调用了 Y"、"列出 Z 的所有使用点"
+- 输出格式：`<path:line> — <symbol> — <≤6词注释>`，按 Defs/Refs/Callers 分组
+- **关键优势**：输出被主上下文压缩 60%，主会话寿命延长数倍
+- 拒绝提议修复、拒绝设计
+
+**Cavecrew-Builder（手术式单文件编辑）**:
+- 职责：1-2 个文件范围内的精确编辑，包括 typo 修复、单函数重写、机械重命名
+- 硬限制：3+ 文件范围则拒绝并拆分
+- 四种终端状态：tiny-big / needs-confirm / ambiguous / regressed
+- 输出格式：`<path:line-range> — <变更≤10词>` + verified: <re-read OK | mismatch>
+
+**Cavecrew-Reviewer（Diff/分支审查器）**:
+- 职责：代码审查，每个发现一行报告，四级严重度体系
+- 严重度等级：🔴 bug(错误输出/崩溃/安全漏洞) / 🟡 risk(边界条件/竞态/泄漏) / 🔵 nit(样式/命名) / ❓ question(需作者意图)
+- 输出格式：`path:line: <emoji> <severity>: <problem>. <fix>.`
+
+### Cavecrew + PartyMode 集成模式
+
+```
+Wave Execution Agent 需要修改代码时:
+    │
+    ├─→ Step 1: Spawn Investigator (定位变更范围)
+    │   └─→ Output: file list + line ranges (~40% token savings)
+    │
+    ├─→ Step 2: Spawn Builder (执行精确编辑)
+    │   └─→ Constraint: max 2 files, surgical changes only
+    │
+    └─→ Step 3: Spawn Reviewer (审查 diff)
+        └─→ Output: severity-tagged findings
+```
+
+**设计原则**: 子代理输出被注入主上下文时压缩 ~60% = 主会话寿命延长数倍。与 Wave Executor 中"最小变更 Agent 模板"高度互补。
+
+---
+
+## Version History
+
+- **v2.0** (2024-03-15): Complete rewrite following gstack standards
+  - Added detailed step-by-step workflow
+  - Implemented comprehensive error handling
+  - Defined strict output templates
+  - Added boundary conditions and edge cases
+  - Integrated with memory system (DECISIONS, LESSONS, domain skills)
+
+- **v1.0** (2024-01-10): Initial implementation based on BMAD-METHOD
+  - Basic multi-agent discussion framework
+  - YAML configuration system
+  - Auto-summary mechanism
+  - Simplified consensus calculation

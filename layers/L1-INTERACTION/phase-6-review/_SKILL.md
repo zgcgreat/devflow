@@ -237,6 +237,89 @@ G3判定: FAIL → 退回 Wave 修复 R2 后重审
 
 ---
 
+---
+
+## 🔬 Phase 6+: Review Specialists (技术专家审查层, V3.2新增)
+
+**设计理念**: 在双阶段对抗审查(Blind Hunter + Edge Case Hunter)之上，增加按技术领域划分的专家子agent层，获得"思考角度对抗 × 技术领域专精"的双重保障。
+
+### Step D0: Specialist Trigger Decision
+
+```yaml
+specialist_selection:
+  rules:
+    # Always active specialists
+    - always_run: [maintainability, testing]
+    
+    # Conditional triggers (AND with diff size)
+    - if: "SCOPE_SECURITY=true OR diff > 200 lines" → security
+    - if: "SCOPE_MIGRATIONS=true OR DB model changes" → data-migration
+    - if: "Backend/Frontend scope active" → performance
+    - if: "SCOPE_API=true OR API contract changes" → api-contract
+    
+    # Large change (>200 lines) cascade
+    - if: "diff > 200 AND critical path" → red-team + security + testing
+    
+    # Production deployment target
+    - if: "target=production" → red-team always active
+```
+
+### Step D1: Specialist Agent Execution (Parallel)
+
+所有触发的 Specialists 作为并行独立 agent 运行在 Stage B 之后：
+
+```
+Stage B PASS (G3 conditional)
+    │
+    ├─→ Maintainability Specialist ←┐
+    ├─→ Testing Specialist ←────────┤
+    ├─→ Security Specialist ←───────┤ (if triggered)
+    ├─→ Performance Specialist ←────┤ (if triggered)
+    ├─→ API Contract Specialist ←───┤ (if triggered)
+    ├─→ Data Migration Specialist ←─┤ (if triggered)
+    └─→ Red Team Review ←───────────┘ (if triggered)
+```
+
+每个 specialist agent 输出标准 JSON finding，统一归一到 `06-review.md` 中。
+
+### Step D2: Combined G3 Gate Decision with Specialists
+
+G3门控升级为多层级：
+
+```markdown
+## Combined G3 Gate Result (Dual-Stage + Specialists)
+
+### Stage A + Stage B Summary
+- **Spec Compliance**: PASS (4/4 AC)
+- **Blind Hunter**: R1 (medium), R2 (high)
+- **Edge Case Hunter**: E1 (low)
+
+### Specialist Findings
+| ID | Specialist | Severity | Title | Action |
+|----|-----------|----------|-------|--------|
+| S1 | Security | CRITICAL | JWT algo=none bypass in /api/auth | Fix before deploy |
+| P1 | Performance | HIGH | N+1 query on user list endpoint | Plan fix (not blocking) |
+| T1 | Testing | MEDIUM | Missing negative-path for file upload | Add test ticket |
+
+### Final G3 Decision: CONDITIONAL PASS
+
+**Blocking**: S1 (Security CRITICAL — JWT bypass) → 退回 Phase 4  
+**Not Blocking**: P1 (Performance HIGH), T1 (Testing MEDIUM) → 加入 sprint backlog  
+
+**Canary Deployment**: ✅ Approved with caveat (S1 must be fixed within 2h post-deploy)
+```
+
+### Step D3: Specialist Finding Severity Mapping
+
+| Severity | Definition | G3 Action | Time-to-Fix Expectation |
+|----------|-----------|-----------|----------------------|
+| CRITICAL | 生产可用性或安全性直接影响 | G3 FAIL, blocking deploy | ≤2h (hotfix) |
+| HIGH | 功能降级或用户体验影响 | Conditional pass with plan | ≤1 sprint |
+| MEDIUM | 可改进但非阻塞 | Accept with ticket | Next release |
+| LOW | 优雅/风格问题 | Accept silently | Technical debt queue |
+
+---
+
 ## Phase 6 → Next Phase Routing Decision
 
 ```
