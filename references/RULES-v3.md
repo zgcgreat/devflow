@@ -240,4 +240,98 @@ done
 - **v3.0-draft (2026-05-17)**: 初始版本，融合 devflow-kit + mega-workflow + supercorp
 - **R1-R9**: 流程基础（PRD → 模式判定 → 入场检测 → 门禁 → Token 优化 → Agent 隔离 → DAG → LearningWorkflow → Provider）
 - **R10-R21**: 执行保障（Delta Specs → GitNexus → 审查 → Canary → 设计枪战 → 跨波注入 → 原子提交 → Heartbeat → Domain Skills → 模板强制 → 向后兼容）
+- **R22**: 质量评分标准（Quality Scoring）
+- **R23**: Stage Skills Sync Policy（stage-skills 与 core skills 同步）
+- **R24**: Call Chain Ownership（L1→L2/L3 调用链维护）
+
+## R23 · Stage Skills Sync Policy（阶段技能同步规范）
+
+**目的**：`skills/stage-skills/` 目录下的 stage skills 必须与 `layers/L1-INTERACTION/` 核心 skills 保持同步，避免版本分裂。
+
+### R23.1 同步触发条件
+
+- 每次修改 `layers/L1-INTERACTION/phase-*` 下的 core skill，必须同步更新 `skills/stage-skills/stage-*` 对应文件
+- 每次修改 `layers/L2-ENGINE/` 或 `layers/L3-ARCHITECTURE/` 必须检查 stage-skills 是否有引用
+
+### R23.2 SYNC-STATUS.md 维护
+
+- `skills/stage-skills/SYNC-STATUS.md` 是同步状态的单一事实来源
+- 每次同步后更新 `last-synced` 字段和变更摘要
+- SYNC-STATUS.md 格式：
+
+```markdown
+# Stage Skills Sync Status
+
+- **Last Synced**: YYYY-MM-DD
+- **Core Version**: v3.x-draft
+- **Stage Skills Version**: v3.x-draft (must match)
+- **Owner**: L2-ENGINE team
+
+## Sync Mapping
+
+| Stage Skill | Core Skill | Status | Last Verified |
+|-------------|------------|--------|---------------|
+| stage-2-design | phase-2-design | synced | YYYY-MM-DD |
+| stage-3-task | phase-3-task-plan | synced | YYYY-MM-DD |
+| stage-4-dev | phase-4-build | synced | YYYY-MM-DD |
+| stage-6-review | phase-6-review | synced | YYYY-MM-DD |
+| stage-7-integration | phase-7-canary | synced | YYYY-MM-DD |
+
+## Divergence Log
+
+| Date | Core Change | Stage Action | Result |
+|------|-------------|--------------|--------|
+```
+
+### R23.3 版本一致性检查
+
+```bash
+# Stage Skills Sync Gate 检查脚本
+CORE_VERSION=$(grep "^version:" layers/L1-INTERACTION/phase-*/_SKILL.md | awk -F': ' '{print $2}' | sort -u)
+STAGE_VERSION=$(grep "^version:" skills/stage-skills/stage-*\//_SKILL.md | awk -F': ' '{print $2}' | sort -u)
+
+if [ "$CORE_VERSION" != "$STAGE_VERSION" ]; then
+    echo "⚠️ VERSION MISMATCH: core=$CORE_VERSION vs stage=$STAGE_VERSION"
+    echo "Run: cd skills/stage-skills && bash update-sync-status.sh"
+    exit 1
+fi
+```
+
+### R23.4 违规处理
+
+- **P2**: Stage skill 版本与 core skill 不一致超过 7 天
+- **P1**: Stage skill 包含 core skill 已删除的字段或步骤
+- **Escalation**: 同步失败时先更新 SYNC-STATUS.md → 通知 L2-ENGINE owner → 手动合并冲突
+
+---
+
+## R24 · Call Chain Ownership（跨层调用链维护）
+
+**目的**：明确 L1 Phase Skills → L2 Engine Skills → L3 Architecture Components 的调用链和所有权。
+
+### R24.1 call-chain-inventory.md 维护
+
+- `layers/L3-ARCHITECTURE/call-chain-inventory.md` 是调用链的单一事实来源
+- 每次新增 L1→L2/L3 调用时必须同步更新
+- 格式要求：
+
+```markdown
+| Phase Skill (L1) | Calls → | L2 Component | L3 Component | Owner | Boundary Check |
+|------------------|---------|--------------|--------------|-------|----------------|
+| phase-4-build | wave-executor | L2-ENGINE/wave-executor | L3-ARCHITECTURE/dag-router | @l2-engine-team | validates wave-plan.yaml schema |
+```
+
+### R24.2 调用链验证规则
+
+- 跨层调用必须验证输入输出契约（输入文件存在 + 输出文件格式正确）
+- 被调用的 L2/L3 component 必须在 call-chain-inventory.md 中注册
+- 未注册的调用链在 CI gate 中报 P2 错误
+
+### R24.3 违规处理
+
+- **P2**: 新增 L1→L2 调用未更新 call-chain-inventory.md
+- **P1**: 调用未注册的 L2/L3 component
+- **Escalation**: 调用方负责验证输出 → 被调用方记录 input schema 到 frontmatter
+
+---
 
