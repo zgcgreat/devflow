@@ -83,6 +83,8 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 
 ```markdown
 ### Task ID: {kebab-case-id}
+**优先级**: {P0/P1/P2} (默认 P1, wave 1 中并行度最高的任务 → P0)
+**类型**: {dev/test/config/docs/refactor}
 **描述**: <一句话说明做什么>
 **前置**: [{dep-task-id}] (如无条件为空)
 **Read Files**: [<path1>, <path2>]
@@ -90,6 +92,13 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 **Verify**: `<command>`
 **Done 判定**: <具体的验收标准>
 ```
+
+**优先级分配规则 (2026-05-18 Sprint 9 新增)**:
+- Wave 1 中并行度最高的核心任务 → P0
+- 其他功能任务 → P1
+- 辅助性任务（文档、配置、基础设施） → P2
+
+**格式消费契约**: Phase 3 输出 `03-tasks.md` 为 Markdown 格式，Wave Executor 直接消费（不需要 YAML 中间格式）。Wave Executor Step 0 内置 markdown → internal task array 解析器。
 
 **Task ID convention**: Use descriptive kebab-case IDs that reflect the task's domain/module (e.g., `user-auth-model`, `payment-webhook-handler`). This aligns with dag-router and executor expectations which use kebab-case identifiers. The legacy `T<NN>` format (e.g., `T01`) is still accepted for backward compatibility but kebab-case is canonical.
 
