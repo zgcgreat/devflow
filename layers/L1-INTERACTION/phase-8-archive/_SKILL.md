@@ -125,6 +125,29 @@ Phase 8 是 v3.0 **LearningWorkflow自动进化**的核心入口——将本次�
 - `Result` = read from `**Result**: {value}` line at bottom of SUMMARY
 - LESSONS nominations = extract all `L-XXX [CATEGORY]` entries from LESSONS section
 
+#### Brownfield Considerations
+
+When archive contains changes from multiple waves, apply brownfield-aware analysis:
+
+1. **Cross-wave conflict detection**: When comparing consecutive wave outputs (wave-{N} vs wave-{N+1}), detect merge conflicts between overlapping files
+   - Command: `git diff --name-only wave-{N-1}..wave-{N}` for each wave boundary
+   - Flag files modified by multiple waves with different changes
+
+2. **Actual vs reported delta**: Use `.specs/waves/wave-{N}/SUMMARY.md` git diff to identify actual changes vs. what was reported in the summary
+   - Compare `git status --short` against files listed in SUMMARY's "Modified Files" section
+   - Report discrepancies in archive audit trail
+
+3. **Delta Summary**: Add a "Delta Summary" section showing what actually changed vs Phase 4 initial brownfield state (from `brownfield-report.md`)
+   ```markdown
+   ## Delta Summary (Brownfield Analysis)
+   
+   | File | Brownfield State (Phase 4) | Final State | Net Change |
+   |------|---------------------------|-------------|------------|
+   | src/auth.py | Modified (pre-existing) | Wave 2 modified + Wave 3 refactored | Delta: {line changes} |
+   ```
+   - If brownfield-report.md flagged N conflicts and M were resolved → report resolution rate
+   - Unresolved conflicts → escalate to Phase 6 review
+
 ### Step 2: LESSONS 提名 + 去重
 
 **⚠️ 强制规则**: 每个Wave的失败教训必须提名到LESSONS.md，重复根因合并。

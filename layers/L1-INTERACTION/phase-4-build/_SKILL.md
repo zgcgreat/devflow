@@ -43,7 +43,22 @@ allowed-tools:
 
 ## 执行流程
 
-### Step 0: Phase 3→Wave Plan Converter
+### Step 0: Brownfield Detection (Pre-Wave Analysis)
+
+Before executing waves, detect existing codebase state to handle incremental changes:
+
+1. **Check for git status**: `git status --short` — any uncommitted changes in target directories?
+2. **Checksum verification**: If `.specs/checksums/` exists, compare against current files
+3. **Conflict detection**: Flag files that exist but differ from expected baseline
+4. **Strategy selection**:
+   - Clean room (no prior state) → Standard execution
+   - Brownfield (existing codebase) → Delta Specs mode, backup modified files before overwrite
+
+Output: `.ultimate-workflow/brownfield-report.md` with conflict list and recommended strategy.
+
+---
+
+### Step 1: Phase 3→Wave Plan Converter
 
 在波执行开始前,将 Phase 3 的 Markdown 任务文件(`03-tasks.md`)转换为 Wave Executor 需要的 `wave-plan.yaml`。此步骤必须在 Wave 编排之前完成,是 Phase 4 的入口网关。
 
@@ -188,29 +203,29 @@ wave_plan:
 ```
 
 **实现方式**:
-- Wave Executor 在 Step 0 中用 Python/JavaScript/Shell 脚本读取 `03-tasks.md` 并生成 `wave-plan.yaml`
+- Wave Executor 在 Step 1 中用 Python/JavaScript/Shell 脚本读取 `03-tasks.md` 并生成 `wave-plan.yaml`
 - 脚本需处理 Markdown 解析、字段映射、优先级推断和 YAML 序列化
 - 生成的 `wave-plan.yaml` 写入 `.ultimate-workflow/wave-plan.yaml`(与 Wave Executor 预检门控的路径一致)
 
 ---
 
-### Step 1: 编排 Wave N (委托给 Wave Executor)
+### Step 2: 编排 Wave N (委托给 Wave Executor)
 
-1. 读取 `.ultimate-workflow/wave-plan.yaml`(Step 0 生成的转换产物),提取 Wave N 的所有 Task,构建任务图
+1. 读取 `.ultimate-workflow/wave-plan.yaml`(Step 1 生成的转换产物),提取 Wave N 的所有 Task,构建任务图
 2. **调用** Wave Executor (`layers/L2-ENGINE/wave-executor/_SKILL.md`),传入:
    - Task 列表 + 依赖关系
    - Verify 命令
    - Commit 格式要求
 3. Phase 4 记录: `[phase:orchestrator][wave:N][delegated-to:wave-executor]`
 
-### Step 2: 消费 Wave Executor 结果
+### Step 3: 消费 Wave Executor 结果
 
 1. 读取 `.specs/waves/wave-{N}/SUMMARY.md`(Wave Executor 写入)
 2. 确认 Verify 通过率、Commit hashes、Lessons learned
 3. 如果 G4-PHASE4 gate PASS → 编排 Wave N+1
 4. 如果 G4-PHASE4 gate FAIL → 创建修复 Task,退回对应 Wave
 
-### Step 3: LearningWorkflow 聚合 (Phase 完成后)
+### Step 4: LearningWorkflow 聚合 (Phase 完成后)
 
 所有 Wave 执行完毕后,**统一触发** LearningWorkflow(仅一次):
 1. 扫描 `.specs/waves/wave-{N}/SUMMARY.md` 中所有 LESSONS Nomination
@@ -219,7 +234,7 @@ wave_plan:
 
 > **修复 (2024-05-17)**: Phase 4 不再每 Wave 都触发 LearningWorkflow(避免与 Phase 8 archive 冲突),由 Orchestrator 统一聚合。
 
-### Step 4: PartyMode 共识（复杂决策时触发）
+### Step 5: PartyMode 共识（复杂决策时触发）
 
 当 Phase 4 遇到需要跨 Agent 共识的决策：
 1. 识别决策点（技术选型冲突、架构权衡）
