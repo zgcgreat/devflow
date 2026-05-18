@@ -1,93 +1,950 @@
-# Phase 1: 需求追问 (5 Whys)
+# Phase 1: 5 Whys Deep Dive — Requirements Clarification
 
-> **Layer**: L1-INTERACTION (SuperCorp 交互层)
-> **前置产物**: `00-strategy.md` (Phase 0 通过 G1)
-> **后置产物**: `.ultimate-workflow/<req-id>/01-analysis.md`
-> **门控**: G2 — Analysis Quality Gate
+Apply the "5 Whys" root cause analysis technique to uncover true user needs beneath surface-level requests. Transform vague requirements into testable acceptance criteria with clear scope boundaries. Prevents building solutions to wrong problems.
 
-## Skill元信息
-
-```yaml
-name: phase-1-5whys
-version: 3.0-draft
-layer: L1-INTERACTION
-source: SuperCorp Phase 1 + get-shit-done Grill
-dependencies:
-  - writing-plans
-v3_upgrade:
-  provider_routing: true (Phase 1→Search-Model)
-  agent_isolation: Research Agent ~200K fresh context
-```
-
-## 输入
-
-- `00-strategy.md` — YC六问结果 + G1门控状态
-- `.ultimate-workflow/CONTEXT.md` — 项目上下文（术语表、技术栈、禁动清单）
-- LESSONS.md — 过往相关经验
-
-## 输出
-
-- `01-analysis.md` — 需求分析文档，包含：
-  - 用户故事 (User Stories)
-  - 验收标准 (Acceptance Criteria, AC)
-  - 术语表 (Glossary)
-  - v2/out (至少各1条风险分析)
-  - 范围边界 (In Scope / Out of Scope)
-
-## 执行流程
-
-### Step 1: 加载前置产物
-
-读取 `00-strategy.md`，提取：
-- 核心需求摘要
-- YC六问中的关键决策点
-- G1门控的通过条件
-
-### Step 2: 5 Whys 穷追追问
-
-对每个模糊表述执行至少 3 轮 Why：
-
-```
-Q1: 用户要什么？ → A1: [原始需求]
-Q2: 为什么需要这个？ → A2: [业务动机]
-Q3: 不这样做会怎样？ → A3: [痛点/风险]
-Q4: 有没有更简单的方案？ → A4: [替代方案]
-Q5: 如何验证成功了？ → A5: [验证标准]
-```
-
-### Step 3: 编写分析文档
-
-按模板 `templates/01-analysis.md` 输出：
-- 每个 AC 必须可测试（Testable）
-- 每个 out of scope 必须明确边界
-- v2/out 风险至少各列 1 条
-
-### Step 4: G2 门控检查
-
-- [ ] AC 是否全部可测试？
-- [ ] 范围边界是否清晰？
-- [ ] 术语表是否完整？
-- [ ] 风险分析是否有 v2+out 平衡？
-- [ ] 是否与 `00-strategy.md` 保持一致？
-
-### Step 5: 停等用户确认
-
-输出完成声明（R8.2），等待用户回复 Y 继续。
-
-## G2 门控规则
-
-| 检查项 | 通过条件 | 失败处理 |
-|--------|---------|----------|
-| AC 可测试性 | 每个 AC 包含可执行验证步骤 | 回退到 Step 2 补追问 |
-| 范围边界 | In/Out of Scope 明确列出 | 追加讨论轮次 |
-| 术语表 | ≥ 3 个专业术语定义 | 要求用户提供领域专家 |
-| 风险平衡 | v2 ≥ 1, out ≥ 1 | 标注为 Standard 模式 |
-
-## Provider 路由
-
-- Phase 1 → **高检索能力模型**（需要广泛搜索领域知识）
+**Core philosophy**: Users often describe solutions, not problems. Dig deeper. Ask "why" until you hit the real pain point. Define success criteria before writing code.
 
 ---
 
-> **关联规则**: R1 (PRD驱动), R2 (三档模式), R7 (Agent隔离)
-> **参考文件**: `references/RULES-v3.md` R1-R20, `references/prompts/1-analysis.md`
+## Preamble
+
+### Key Principles
+
+1. **Root Cause Over Surface Requests**: Users say "I need a button" but mean "I need faster workflow" — find the underlying need through iterative questioning
+2. **Testable Acceptance Criteria**: Every requirement must have measurable success criteria (not "improve UX" but "reduce clicks from 5 to 2")
+3. **Explicit Scope Boundaries**: Clearly define what's IN scope and OUT of scope — prevents scope creep during implementation
+4. **Risk-Aware Planning**: Identify v2 opportunities (nice-to-have) and out-of-scope risks early — set realistic expectations
+
+### When to Activate
+
+**Automatic triggers** (Phase 0 G1 PASS):
+- YC strategy assessment passed (≥4 questions substantive)
+- User confirms proceeding to requirements phase
+- Complex feature requiring detailed specification
+
+**Manual trigger**:
+```
+/requirements analyze --input .ultimate-workflow/<req-id>/00-strategy.md
+```
+
+**When NOT to use**:
+- Trivial bug fixes (<1 hour effort)
+- Requirements already crystal clear (documented API spec, wireframes)
+- Emergency hotfixes (speed over thoroughness)
+- Pure technical refactoring (no user-facing changes)
+
+---
+
+## Step-by-step Workflow
+
+### Step 0: Load Phase 0 Strategy & Context
+
+**Read prerequisite documents**:
+
+```bash
+# Load Phase 0 output
+cat .ultimate-workflow/<req-id>/00-strategy.md
+
+# Extract key decisions
+YC_PAIN=$(grep -A 3 "Q1:" .ultimate-workflow/<req-id>/00-strategy.md | grep "Answer:")
+YC_COMPETITION=$(grep -A 3 "Q2:" .ultimate-workflow/<req-id>/00-strategy.md | grep "Answer:")
+YC_ADVANTAGE=$(grep -A 3 "Q3:" .ultimate-workflow/<req-id>/00-strategy.md | grep "Answer:")
+
+echo "✅ Loaded YC assessment: Pain=$YC_PAIN, Competition=$YC_COMPETITION"
+
+# Load project context
+if [ -f ".ultimate-workflow/CONTEXT.md" ]; then
+  cat .ultimate-workflow/CONTEXT.md
+  
+  # Extract glossary terms
+  TERMS=$(grep "^- " .ultimate-workflow/CONTEXT.md | wc -l)
+  echo "✅ Context loaded: $TERMS terms defined"
+else
+  echo "⚠️ No CONTEXT.md found, will create glossary from scratch"
+fi
+
+# Load relevant lessons
+if [ -f ".ultimate-workflow/memory/LESSONS.md" ]; then
+  grep -A 5 "related:.*$(basename $(pwd))" .ultimate-workflow/memory/LESSONS.md
+  echo "✅ Relevant lessons loaded"
+else
+  echo "⚠️ No LESSONS.md found"
+fi
+```
+
+**Extract core requirement**:
+
+```markdown
+## Requirement Summary
+
+**Original Request**: "{user's initial statement}"  
+**YC Pain Point**: {from Q1}  
+**Target Users**: {from PROJECT_CONTEXT.md}  
+**Business Goal**: {from Q5 monetization}  
+
+**Key Constraints**:
+- Timeline: {from user or default 2 weeks}
+- Budget: {from user or default standard}
+- Technical: {from tech stack in CONTEXT.md}
+
+Ready for 5 Whys deep dive.
+```
+
+---
+
+### Step 1: Execute 5 Whys Root Cause Analysis
+
+**Iteratively question each requirement to uncover root cause**.
+
+#### 5 Whys Framework
+
+```markdown
+## 5 Whys Analysis — [Requirement Topic]
+
+**Starting Point**: "{user's original request}"
+
+### Why #1: Why do you need this?
+**Answer**: {business motivation}
+
+### Why #2: Why is that important?
+**Answer**: {deeper business impact}
+
+### Why #3: What happens if we don't solve this?
+**Answer**: {pain point / risk quantified}
+
+### Why #4: Is there a simpler way to achieve this?
+**Answer**: {alternative solutions considered}
+
+### Why #5: How will we know it's successful?
+**Answer**: {measurable success criteria}
+
+### Root Cause Identified
+**Surface Request**: "{original solution idea}"  
+**Real Problem**: "{underlying pain point}"  
+**Success Metric**: "{quantifiable target}"
+```
+
+#### Example: E-commerce Checkout Optimization
+
+```markdown
+## 5 Whys Analysis — Checkout Flow Redesign
+
+**Starting Point**: "Add one-click checkout button"
+
+### Why #1: Why do you need one-click checkout?
+**Answer**: Customers abandon cart at payment step (60% drop-off rate).
+
+### Why #2: Why do they abandon at payment?
+**Answer**: Form has 12 fields, takes 3-5 minutes to complete on mobile.
+
+### Why #3: What's the cost of this abandonment?
+**Answer**: 
+- Lost revenue: $50K/month (based on 1,000 abandoned carts × $50 avg order)
+- Customer frustration: 40% negative reviews mention "checkout too long"
+- Competitive disadvantage: Amazon has 1-click, we don't
+
+### Why #4: Is one-click the only solution?
+**Answer**: Alternatives considered:
+1. **Guest checkout** (no account required) → Reduces friction but doesn't solve form length
+2. **Address autocomplete** (Google Places API) → Helps but still 8+ fields
+3. **Saved payment methods** (Stripe Customer) → Good for returning users, not new
+4. **Progressive disclosure** (show fields step-by-step) → Better UX but same time
+5. **One-click** (pre-fill from profile) → Best for returning users, requires account
+
+**Best approach**: Hybrid — guest checkout + address autocomplete + saved payments for logged-in users
+
+### Why #5: How will we measure success?
+**Answer**:
+- Primary metric: Cart abandonment rate at payment step (current: 60%, target: <30%)
+- Secondary metric: Checkout completion time (current: 3-5 min, target: <1 min)
+- Tertiary metric: Conversion rate (current: 2%, target: 3.5%)
+- Validation period: 2 weeks A/B test
+
+### Root Cause Identified
+**Surface Request**: "Add one-click checkout button"  
+**Real Problem**: "Mobile checkout form too long, causing 60% abandonment"  
+**Success Metric**: "Reduce payment-step abandonment from 60% to <30% within 2 weeks"
+```
+
+**Execution script** (automated):
+
+```python
+# scripts/5-whys-analysis.py
+import sys
+import json
+
+def execute_5_whys(requirement, context):
+    """
+    Execute 5 Whys analysis on a requirement.
+    
+    Args:
+        requirement: str - User's original request
+        context: dict - Project context (users, goals, constraints)
+    
+    Returns:
+        dict - Root cause analysis with success metrics
+    """
+    whys = []
+    
+    # Why 1: Business motivation
+    why1 = ask_user(f"Why do you need: {requirement}?")
+    whys.append(why1)
+    
+    # Why 2: Deeper impact
+    why2 = ask_user(f"Why is '{why1}' important to your business?")
+    whys.append(why2)
+    
+    # Why 3: Pain quantification
+    why3 = ask_user(f"What happens if you DON'T solve '{why2}'? Quantify the cost.")
+    whys.append(why3)
+    
+    # Why 4: Alternative solutions
+    why4 = ask_user(f"Is '{requirement}' the only way? What are simpler alternatives?")
+    whys.append(why4)
+    
+    # Why 5: Success criteria
+    why5 = ask_user(f"How will you measure success? Be specific (numbers, timelines).")
+    whys.append(why5)
+    
+    return {
+        "surface_request": requirement,
+        "root_cause": why3,
+        "success_metric": why5,
+        "alternatives_considered": why4,
+        "whys_chain": whys
+    }
+
+# Usage
+requirement = sys.argv[1]
+context = json.loads(sys.argv[2])
+result = execute_5_whys(requirement, context)
+print(json.dumps(result, indent=2))
+```
+
+---
+
+### Step 2: Generate User Stories & Acceptance Criteria
+
+**Transform root cause into actionable user stories with testable AC**.
+
+#### User Story Template
+
+```markdown
+## User Stories
+
+### Story US-001: [Role] can [Action] so that [Benefit]
+
+**As a**: {user persona}  
+**I want to**: {specific action}  
+**So that**: {business value / benefit}  
+
+**Priority**: {P0/P1/P2}  
+**Effort Estimate**: {S/M/L/XL}  
+
+### Acceptance Criteria
+
+**AC-001**: {testable condition}
+- **Given**: {precondition}
+- **When**: {action}
+- **Then**: {expected outcome}
+- **Verification**: {how to test}
+
+**AC-002**: {testable condition}
+- **Given**: ...
+- **When**: ...
+- **Then**: ...
+- **Verification**: ...
+
+[Repeat for all ACs]
+
+### Out of Scope (for this iteration)
+- {item_1} → Deferred to v2
+- {item_2} → Requires separate epic
+
+### Risks
+- **v2 Opportunity**: {nice-to-have enhancement}
+- **Out-of-Scope Risk**: {what could go wrong if we skip this}
+```
+
+#### Example: Checkout Optimization User Stories
+
+```markdown
+## User Stories
+
+### Story US-001: Guest users can checkout without creating an account
+
+**As a**: First-time shopper  
+**I want to**: Complete purchase without forced account creation  
+**So that**: I can buy quickly without remembering another password  
+
+**Priority**: P0 (critical for conversion)  
+**Effort Estimate**: M (2-3 days)  
+
+### Acceptance Criteria
+
+**AC-001**: Guest checkout option visible on cart page
+- **Given**: User has items in cart
+- **When**: User clicks "Proceed to Checkout"
+- **Then**: User sees two options: "Login" or "Continue as Guest"
+- **Verification**: Manual test on staging environment
+
+**AC-002**: Guest checkout form has ≤5 required fields
+- **Given**: User selects "Continue as Guest"
+- **When**: Checkout form loads
+- **Then**: Only 5 fields marked as required: Email, Name, Address, City, ZIP
+- **Verification**: Count required fields in UI, verify form submits with only these
+
+**AC-003**: Guest checkout completes in <1 minute on mobile
+- **Given**: User on mobile device (iPhone/Android)
+- **When**: User fills guest checkout form with valid data
+- **Then**: Total time from form load to confirmation <60 seconds
+- **Verification**: Automated performance test using Lighthouse mobile emulation
+
+**AC-004**: Guest receives order confirmation email
+- **Given**: User completes guest checkout
+- **When**: Payment succeeds
+- **Then**: Confirmation email sent to provided email within 30 seconds
+- **Verification**: Check email inbox (or Mailhog in staging)
+
+**AC-005**: Guest can optionally create account after purchase
+- **Given**: User completed guest checkout
+- **When**: User views order confirmation page
+- **Then**: Option to "Create Account with This Order" appears
+- **Verification**: Click button, verify account created with order history
+
+### Out of Scope (for this iteration)
+- Saved payment methods for guests → Requires PCI compliance, deferred to v2
+- Address validation (USPS API) → Nice-to-have, not critical for MVP
+- Multi-shipping addresses → Complex feature, separate epic
+
+### Risks
+- **v2 Opportunity**: One-click checkout for returning customers (requires Stripe Customer integration)
+- **Out-of-Scope Risk**: Without saved payments, repeat purchases still slow → May lose loyal customers to competitors
+```
+
+**Generation script** (automated):
+
+```bash
+#!/bin/bash
+# generate-user-stories.sh
+
+ROOT_CAUSE=$1
+SUCCESS_METRIC=$2
+
+# Call AI to generate user stories
+python3 scripts/generate-stories.py \
+  --root-cause "$ROOT_CAUSE" \
+  --success-metric "$SUCCESS_METRIC" \
+  --output .ultimate-workflow/<req-id>/01-analysis.md
+
+echo "✅ User stories generated"
+```
+
+---
+
+### Step 3: Define Glossary & Terminology
+
+**Document domain-specific terms to prevent ambiguity**.
+
+#### Glossary Template
+
+```markdown
+## Glossary
+
+| Term | Definition | Example |
+|------|------------|---------|
+| {term_1} | {clear definition} | {usage example} |
+| {term_2} | {clear definition} | {usage example} |
+| {term_3} | {clear definition} | {usage example} |
+
+**Minimum**: ≥3 terms for technical domains, ≥5 for complex business logic
+```
+
+#### Example: E-commerce Glossary
+
+```markdown
+## Glossary
+
+| Term | Definition | Example |
+|------|------------|---------|
+| Cart Abandonment Rate | % of users who add items to cart but don't complete purchase | 60% = 600 abandonments / 1,000 cart additions |
+| Guest Checkout | Purchase flow that doesn't require account creation | User enters email, ships, pays, done — no password needed |
+| Conversion Rate | % of visitors who complete desired action (purchase) | 2% = 20 purchases / 1,000 visitors |
+| PCI Compliance | Payment Card Industry security standards for handling credit cards | Required if storing card numbers; Stripe handles this for us |
+| A/B Test | Experiment comparing two versions to determine which performs better | Version A (current) vs Version B (guest checkout) for 2 weeks |
+| Lighthouse Score | Google's performance measurement tool (0-100 scale) | Target: Mobile score >80 for checkout page |
+```
+
+**Extraction script** (automated):
+
+```python
+# scripts/extract-glossary.py
+import re
+
+def extract_terms_from_context(context_file):
+    """Extract existing terms from CONTEXT.md"""
+    with open(context_file) as f:
+        content = f.read()
+    
+    # Find terms in glossary section
+    terms = re.findall(r'^- \*\*(.+?)\*\*: (.+)$', content, re.MULTILINE)
+    return terms
+
+def add_new_terms(root_cause_analysis):
+    """Identify new terms from 5 Whys analysis"""
+    # Extract technical/business terms from root cause
+    # Use NLP to identify domain-specific vocabulary
+    pass
+
+# Merge and deduplicate
+existing = extract_terms_from_context('.ultimate-workflow/CONTEXT.md')
+new = add_new_terms(analysis_result)
+all_terms = merge_and_deduplicate(existing, new)
+
+# Output glossary markdown
+print("## Glossary\n")
+for term, definition in all_terms:
+    print(f"| **{term}** | {definition} | ... |")
+```
+
+---
+
+### Step 4: Define Scope Boundaries (In/Out)
+
+**Explicitly state what's included and excluded to prevent scope creep**.
+
+#### Scope Boundary Template
+
+```markdown
+## Scope Boundaries
+
+### In Scope (This Iteration)
+- ✅ {feature_1}
+- ✅ {feature_2}
+- ✅ {feature_3}
+
+### Out of Scope (Deferred)
+- ❌ {feature_4} → Reason: {why deferred}
+- ❌ {feature_5} → Reason: {why deferred}
+- ❌ {feature_6} → Reason: {why deferred}
+
+### Rationale for Exclusions
+1. {exclusion_1}: {justification based on priority/cost/complexity}
+2. {exclusion_2}: {justification}
+3. {exclusion_3}: {justification}
+```
+
+#### Example: Checkout Scope
+
+```markdown
+## Scope Boundaries
+
+### In Scope (This Iteration)
+- ✅ Guest checkout flow (no account required)
+- ✅ Simplified form (≤5 required fields)
+- ✅ Address autocomplete (Google Places API)
+- ✅ Mobile-optimized layout (responsive design)
+- ✅ Order confirmation email
+
+### Out of Scope (Deferred)
+- ❌ Saved payment methods for guests → Reason: Requires PCI compliance audit ($10K cost), deferred to v2
+- ❌ Multi-shipping addresses → Reason: Complex logic, low demand (only 2% of orders), separate epic
+- ❌ International shipping calculations → Reason: Requires carrier API integration, current focus is domestic
+- ❌ Loyalty points integration → Reason: Depends on loyalty program launch (Q3 roadmap)
+- ❌ Buy Now Pay Later (Klarna/Afterpay) → Reason: Partnership negotiations ongoing, not ready
+
+### Rationale for Exclusions
+1. **Saved payments**: High compliance cost, low immediate ROI — guest checkout solves 80% of abandonment problem
+2. **Multi-shipping**: Edge case (2% of orders) — prioritize features impacting 60% abandonment rate first
+3. **International shipping**: Expands scope significantly — validate domestic improvement before expanding
+4. **Loyalty points**: Dependency on unreleased feature — avoid coupling to uncertain timeline
+5. **BNPL**: External dependency — can't control partner readiness, defer until partnership finalized
+```
+
+---
+
+### Step 5: Risk Assessment (v2/out Balance)
+
+**Identify opportunities and risks for future iterations**.
+
+#### Risk Assessment Template
+
+```markdown
+## Risk Assessment
+
+### v2 Opportunities (Nice-to-Have Enhancements)
+1. **{opportunity_1}**: {description}
+   - Impact: {high/medium/low}
+   - Effort: {S/M/L}
+   - Dependencies: {prerequisites}
+
+2. **{opportunity_2}**: {description}
+   - Impact: ...
+   - Effort: ...
+   - Dependencies: ...
+
+### Out-of-Scope Risks (What Could Go Wrong)
+1. **{risk_1}**: {description}
+   - Probability: {high/medium/low}
+   - Severity: {high/medium/low}
+   - Mitigation: {how to reduce impact}
+
+2. **{risk_2}**: {description}
+   - Probability: ...
+   - Severity: ...
+   - Mitigation: ...
+
+### Monitoring Plan
+- **Metric 1**: {what to track post-launch}
+- **Metric 2**: {what to track}
+- **Review Date**: {when to reassess v2 priorities}
+```
+
+#### Example: Checkout Risks
+
+```markdown
+## Risk Assessment
+
+### v2 Opportunities (Nice-to-Have Enhancements)
+1. **One-click checkout for returning customers**: Pre-fill payment/shipping from profile
+   - Impact: HIGH (could reduce abandonment to <15%)
+   - Effort: M (2 days — Stripe Customer integration)
+   - Dependencies: User authentication system (already exists)
+
+2. **Address validation (USPS API)**: Auto-correct invalid addresses
+   - Impact: MEDIUM (reduces failed deliveries by 5%)
+   - Effort: S (1 day — API integration)
+   - Dependencies: USPS developer account (free)
+
+3. **Express checkout wallets (Apple Pay/Google Pay)**: Native mobile payment
+   - Impact: HIGH (30% of mobile users prefer wallet payments)
+   - Effort: L (5 days — wallet SDK integration)
+   - Dependencies: Stripe supports both (no extra work)
+
+### Out-of-Scope Risks (What Could Go Wrong)
+1. **Fraud increases with guest checkout**: No account = harder to track fraudulent orders
+   - Probability: MEDIUM (industry average 1-2% fraud rate)
+   - Severity: HIGH ($50K/month loss if fraud doubles)
+   - Mitigation: Implement Stripe Radar (fraud detection), monitor fraud rate weekly, revert if >2%
+
+2. **Customer support burden**: Guests can't view order history, call support more
+   - Probability: HIGH (likely increase in "where's my order?" calls)
+   - Severity: MEDIUM (support team capacity strain)
+   - Mitigation: Add "Track Order" link in confirmation email (no login required), train support on guest lookup
+
+3. **Email deliverability issues**: Guest emails may go to spam
+   - Probability: LOW (using SendGrid with good reputation)
+   - Severity: HIGH (customer thinks order failed, duplicates order)
+   - Mitigation: Monitor bounce rate, implement SPF/DKIM records, test with Gmail/Yahoo/Outlook
+
+### Monitoring Plan
+- **Metric 1**: Cart abandonment rate at payment step (target: <30%, alert if >40%)
+- **Metric 2**: Guest checkout fraud rate (target: <2%, alert if >3%)
+- **Metric 3**: Support ticket volume related to "order status" (baseline: 50/week, alert if >100/week)
+- **Review Date**: 2 weeks post-launch (after A/B test completes)
+```
+
+---
+
+### Step 6: G2 Gate Evaluation
+
+**Validate analysis quality before proceeding to Phase 2**.
+
+#### G2 Checklist
+
+```markdown
+## G2 Gate: Analysis Quality Assessment
+
+### Validation Checklist
+
+- [ ] **AC Testability**: Each AC has Given/When/Then format with verification method
+  - Status: {PASS/FAIL}
+  - Notes: {details}
+
+- [ ] **Scope Clarity**: In/Out of Scope explicitly listed with rationale
+  - Status: {PASS/FAIL}
+  - Notes: {details}
+
+- [ ] **Glossary Completeness**: ≥3 technical/business terms defined
+  - Status: {PASS/FAIL}
+  - Count: {number of terms}
+  - Notes: {details}
+
+- [ ] **Risk Balance**: At least 1 v2 opportunity AND 1 out-of-scope risk identified
+  - Status: {PASS/FAIL}
+  - v2 count: {number}
+  - Risk count: {number}
+  - Notes: {details}
+
+- [ ] **Consistency with Phase 0**: Aligns with YC strategy (pain point, target users)
+  - Status: {PASS/FAIL}
+  - Notes: {details}
+
+### Gate Decision
+
+**Passing Criteria**: All 5 checks PASS  
+**Result**: [PASS / FAIL]
+
+If FAIL:
+- Return to Step 2 (5 Whys) to clarify ambiguous areas
+- Add missing ACs, glossary terms, or risk assessments
+- Re-evaluate gate
+
+If PASS:
+- Proceed to Phase 2 (Design & Architecture)
+- User stories become input for task breakdown
+```
+
+**Automated validation script**:
+
+```bash
+#!/bin/bash
+# g2-validation.sh
+
+ANALYSIS_FILE=".ultimate-workflow/<req-id>/01-analysis.md"
+
+# Check AC testability
+AC_COUNT=$(grep -c "^AC-" $ANALYSIS_FILE)
+TESTABLE_AC=$(grep -c "Verification:" $ANALYSIS_FILE)
+
+if [ $AC_COUNT -eq $TESTABLE_AC ]; then
+  echo "✅ AC Testability: PASS ($TESTABLE_AC/$AC_COUNT testable)"
+else
+  echo "❌ AC Testability: FAIL ($TESTABLE_AC/$AC_COUNT testable)"
+  exit 1
+fi
+
+# Check scope clarity
+IN_SCOPE=$(grep -c "^- ✅" $ANALYSIS_FILE)
+OUT_SCOPE=$(grep -c "^- ❌" $ANALYSIS_FILE)
+
+if [ $IN_SCOPE -ge 1 ] && [ $OUT_SCOPE -ge 1 ]; then
+  echo "✅ Scope Clarity: PASS ($IN_SCOPE in, $OUT_SCOPE out)"
+else
+  echo "❌ Scope Clarity: FAIL (missing in/out scope)"
+  exit 1
+fi
+
+# Check glossary
+GLOSSARY_TERMS=$(grep -c "^|" $ANALYSIS_FILE | head -1)
+
+if [ $GLOSSARY_TERMS -ge 3 ]; then
+  echo "✅ Glossary: PASS ($GLOSSARY_TERMS terms)"
+else
+  echo "❌ Glossary: FAIL (only $GLOSSARY_TERMS terms, need ≥3)"
+  exit 1
+fi
+
+# Check risk balance
+V2_OPPORTUNITIES=$(grep -c "v2 Opportunity" $ANALYSIS_FILE)
+OUT_RISKS=$(grep -c "Out-of-Scope Risk" $ANALYSIS_FILE)
+
+if [ $V2_OPPORTUNITIES -ge 1 ] && [ $OUT_RISKS -ge 1 ]; then
+  echo "✅ Risk Balance: PASS ($V2_OPPORTUNITIES v2, $OUT_RISKS risks)"
+else
+  echo "❌ Risk Balance: FAIL (need ≥1 v2 AND ≥1 risk)"
+  exit 1
+fi
+
+echo "✅ G2 Gate: PASS — All checks passed"
+exit 0
+```
+
+**Update STATE.md**:
+
+```bash
+# Update state file
+cat >> .ultimate-workflow/STATE.md << EOF
+
+## Phase 1 Results ($(date))
+current_phase: phase-1-complete
+g2_result: PASS
+user_stories_count: $(grep -c "^### Story US-" .ultimate-workflow/<req-id>/01-analysis.md)
+acceptance_criteria_count: $(grep -c "^AC-" .ultimate-workflow/<req-id>/01-analysis.md)
+glossary_terms: $(grep -c "^|" .ultimate-workflow/<req-id>/01-analysis.md | head -1)
+next_phase: phase-2-design
+EOF
+
+echo "✅ STATE.md updated with Phase 1 results"
+```
+
+---
+
+## Error Handling
+
+### Common Issues and Fixes
+
+**Issue 1: Vague Acceptance Criteria**
+
+- **Symptom**: AC says "Improve UX" or "Make it fast" (not testable)
+- **Cause**: Didn't complete 5 Whys deeply enough
+- **Fix**:
+  1. Rewrite AC with Given/When/Then format
+  2. Add measurable metric: "Load time <2s" not "fast"
+  3. Specify verification method: "Lighthouse score >90" not "good performance"
+- **Prevention**: Enforce AC template with verification field
+
+**Issue 2: Missing Scope Boundaries**
+
+- **Symptom**: No Out of Scope section, everything seems included
+- **Cause**: Fear of excluding important features
+- **Fix**:
+  1. List top 3-5 features NOT building in this iteration
+  2. Provide rationale for each exclusion (cost, complexity, priority)
+  3. Document when they'll be addressed (v2, separate epic)
+- **Prevention**: Require Out of Scope section in template
+
+**Issue 3: Insufficient Glossary**
+
+- **Symptom**: Only 1-2 terms defined, assuming everyone knows domain jargon
+- **Cause**: Expert blind spot (forgetting what beginners don't know)
+- **Fix**:
+  1. Identify all acronyms and technical terms in user stories
+  2. Define each term clearly with examples
+  3. Ask non-expert colleague to review for clarity
+- **Prevention**: Minimum 3 terms enforced by G2 gate
+
+**Issue 4: No Risk Assessment**
+
+- **Symptom**: v2/out sections empty or "none"
+- **Cause**: Optimism bias (assuming everything will go smoothly)
+- **Fix**:
+  1. Brainstorm worst-case scenarios for each out-of-scope item
+  2. Identify nice-to-have enhancements deferred to v2
+  3. Create monitoring plan to detect issues early
+- **Prevention**: Require ≥1 v2 opportunity AND ≥1 risk
+
+**Issue 5: Inconsistency with Phase 0**
+
+- **Symptom**: User stories don't align with YC pain point from Phase 0
+- **Cause**: Lost sight of original problem during analysis
+- **Fix**:
+  1. Re-read 00-strategy.md Q1 (pain point) and Q6 (success metric)
+  2. Verify each user story directly addresses that pain
+  3. Remove stories that don't contribute to solving core problem
+- **Prevention**: Cross-reference checklist in G2 gate
+
+---
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+
+**Skip 5 Whys, escalate to product manager if**:
+- Conflicting stakeholder requirements (CEO wants X, CTO wants Y)
+- Regulatory/legal implications (GDPR, HIPAA compliance)
+- Major architectural decisions affecting multiple teams
+- Budget/timeline unrealistic for stated requirements
+
+### When to Skip Phase 1
+
+**Use lightweight analysis (no full 5 Whys) if**:
+- Requirements documented in detail already (API spec, Figma wireframes)
+- Small enhancement (<2 user stories, <1 week effort)
+- Bug fix with clear reproduction steps
+- Internal tooling with known users (informal agreement sufficient)
+
+### Edge Cases
+
+**Technical Spikes (Research Tasks)**:
+
+- Replace user stories with research questions
+- AC becomes "answer validated by prototype/test"
+- Glossary focuses on new technologies/concepts
+- Scope = research scope, not implementation scope
+
+**Regulatory Compliance Features**:
+
+- 5 Whys less relevant (requirement is legal mandate, not user choice)
+- Focus on compliance checklist rather than user benefits
+- Glossary includes legal/regulatory terms
+- Risks emphasize non-compliance penalties
+
+**AI/ML Features**:
+
+- AC includes accuracy thresholds (e.g., "90% precision")
+- Glossary defines ML metrics (precision, recall, F1)
+- v2 opportunities include model improvements
+- Risks highlight data quality dependencies
+
+**Legacy System Integration**:
+
+- 5 Whys uncovers hidden dependencies on old systems
+- Glossary includes legacy terminology
+- Out of Scope lists modernizations deferred
+- Risks emphasize integration complexity
+
+---
+
+## Output Template
+
+### Standard 01-analysis.md
+
+```markdown
+# Phase 1: Requirements Analysis — [Project Name]
+
+## 5 Whys Root Cause Analysis
+
+**Starting Point**: "{original request}"  
+**Root Cause**: "{underlying problem}"  
+**Success Metric**: "{measurable target}"  
+
+[Full 5 Whys chain]
+
+## User Stories
+
+### Story US-001: [Role] can [Action] so that [Benefit]
+**Priority**: {P0/P1/P2}  
+**Effort**: {S/M/L}  
+
+**Acceptance Criteria**:
+- AC-001: Given/When/Then + Verification
+- AC-002: ...
+
+**Out of Scope**:
+- {deferred_item}
+
+---
+
+[Repeat for all stories]
+
+## Glossary
+
+| Term | Definition | Example |
+|------|------------|---------|
+| ... | ... | ... |
+
+## Scope Boundaries
+
+### In Scope
+- ✅ {feature_1}
+- ✅ {feature_2}
+
+### Out of Scope
+- ❌ {feature_3} → Reason: {rationale}
+
+## Risk Assessment
+
+### v2 Opportunities
+1. {opportunity_1} (Impact: {level}, Effort: {size})
+
+### Out-of-Scope Risks
+1. {risk_1} (Probability: {level}, Severity: {level}, Mitigation: {plan})
+
+## G2 Gate Result
+
+**Checklist**:
+- [ ] AC Testability: PASS/FAIL
+- [ ] Scope Clarity: PASS/FAIL
+- [ ] Glossary: PASS/FAIL ({count} terms)
+- [ ] Risk Balance: PASS/FAIL
+- [ ] Phase 0 Consistency: PASS/FAIL
+
+**Result**: [PASS / FAIL]
+```
+
+---
+
+## Tool Integration
+
+### Required Tools
+
+**User Story Generation**:
+```bash
+python3 scripts/generate-stories.py \
+  --root-cause "Checkout form too long" \
+  --success-metric "Abandonment <30%" \
+  --output .ultimate-workflow/<req-id>/01-analysis.md
+```
+
+**G2 Validation**:
+```bash
+bash scripts/g2-validation.sh
+```
+
+### Optional Tools
+
+**Lighthouse Performance Testing** (for AC verification):
+```bash
+# Test checkout page performance
+lighthouse http://localhost:3000/checkout \
+  --output=json \
+  --output-path=.ultimate-workflow/<req-id>/lighthouse-report.json
+```
+
+**A/B Test Setup** (for success metric tracking):
+```bash
+# Configure A/B test in analytics platform
+curl -X POST "https://api.optimizely.com/v2/experiments" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{"name": "Guest Checkout Test", "variations": [...]}'
+```
+
+---
+
+## Implementation Checklist
+
+Before analysis:
+- [ ] Phase 0 strategy loaded (00-strategy.md)
+- [ ] Project context available (CONTEXT.md or user interview)
+- [ ] Relevant lessons reviewed (LESSONS.md)
+
+During analysis:
+- [ ] 5 Whys executed to root cause (not stopping at surface)
+- [ ] User stories written in Role/Action/Benefit format
+- [ ] Each AC has Given/When/Then + Verification method
+- [ ] Glossary has ≥3 terms defined
+- [ ] In/Out of Scope explicitly listed with rationale
+- [ ] ≥1 v2 opportunity AND ≥1 out-of-scope risk identified
+
+After analysis:
+- [ ] 01-analysis.md written to .ultimate-workflow/<req-id>/
+- [ ] G2 gate validation passed (all 5 checks)
+- [ ] STATE.md updated with results
+- [ ] User confirmation received (R8.2 stop-and-wait)
+
+Quality gates:
+- [ ] Every AC is testable (has verification method)
+- [ ] Scope boundaries prevent ambiguity
+- [ ] Glossary prevents terminology confusion
+- [ ] Risks documented for proactive mitigation
+- [ ] Alignment with Phase 0 strategy maintained
+
+---
+
+## Anti-Patterns to Avoid
+
+❌ **Stopping at Surface Requests**: Building what user asked for, not what they need  
+✅ **Fix**: Execute full 5 Whys chain, validate root cause with user
+
+❌ **Untestable ACs**: "Improve performance" without metrics  
+✅ **Fix**: Every AC must have measurable success criteria
+
+❌ **Implicit Scope**: Assuming everyone knows what's excluded  
+✅ **Fix**: Explicitly list Out of Scope items with rationale
+
+❌ **Empty Glossary**: Using jargon without definitions  
+✅ **Fix**: Define all domain-specific terms, minimum 3
+
+❌ **Ignoring Risks**: Pretending nothing can go wrong  
+✅ **Fix**: Identify v2 opportunities AND out-of-scope risks
+
+❌ **Skipping User Confirmation**: Proceeding without explicit approval  
+✅ **Fix**: R8.2 rule — wait for user "Y" before next phase
+
+---
+
+## Version History
+
+- **v2.0** (2024-03-15): Complete rewrite following gstack standards
+  - Added 6-step workflow (load context → 5 Whys → user stories → glossary → scope → G2)
+  - Implemented detailed AC template (Given/When/Then + Verification)
+  - Defined comprehensive error handling (5 common issues)
+  - Integrated automated G2 validation script
+  - Added boundary conditions for edge cases (spikes, compliance, AI/ML)
+
+- **v1.0** (2024-01-10): Initial implementation based on SuperCorp Phase 1 + get-shit-done Grill
+  - Basic 5 Whys framework
+  - Simple user story template
+  - No automated validation
+  - Minimal error handling
