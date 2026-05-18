@@ -7,6 +7,17 @@ description: Deploy changes in staged batches (10% → 50% → 100%) with automa
 requires: [g3-gate, all-tests-passed]
 provides: [canary-report, rollback-report, g5-gate-decision]
 gate: G5
+triggers:
+  - canary deployment
+  - gradual rollout
+  - zero-downtime deploy
+  - canary phase
+allowed-tools:
+  - Read
+  - Bash
+  - Write
+  - Edit
+  - Skill
 ---
 
 # Phase 7: Canary Gradual Rollout — Zero-Downtime Deployment
@@ -463,12 +474,12 @@ New connection pool settings incompatible with existing DB proxy.
 
 ## Error Taxonomy
 
-| Priority | Condition | Detection Method | Recovery Action |
-|----------|-----------|------------------|-----------------|
-| **P0** | Canary error rate exceeds threshold (≥5%) | `error_rate` metric breach in health check monitor | Auto rollback to previous version, generate rollback report with root cause analysis |
-| **P1** | Canary deployment timeout (>15 minutes total observation) | Total elapsed time from Canary-1 start to decision >15 min | Force decision: if metrics inconclusive → hold at current stage + escalate to on-call |
-| **P2** | Feature flag configuration inconsistency across canary stages | Flags active in Canary-1 but not Canary-2 (or vice versa) | Sync flag values across all stages, re-validate before continuing rollout |
-| **P3** | Rollback report contains unresolved warnings | Non-critical alerts pending in rollback-report.md | Log warnings, schedule follow-up investigation within next sprint, continue monitoring |
+| Priority | Stage | Condition | Recovery Action |
+|----------|-------|-----------|-----------------|
+| **P0** | All canary stages | Canary-1 error_rate ≥1.0% OR Canary-2 error_rate ≥0.5% OR Production error_rate ≥0.1% | Auto rollback to previous version, generate rollback report with root cause analysis |
+| **P1** | All canary stages | Canary-1 0.8% ≤ error_rate <1.0% OR Canary-2 0.4% ≤ error_rate <0.5% OR Production 0.08% ≤ error_rate <0.1% | Force warning → escalate to on-call, continue observation with increased check frequency |
+| **P2** | Any stage | Feature flag configuration inconsistency across canary stages | Sync flag values across all stages, re-validate before continuing rollout |
+| **P3** | Any stage | Rollback report contains unresolved warnings OR error_rate within normal range (all < thresholds) | Log warnings, schedule follow-up investigation within next sprint, continue monitoring |
 
 ---
 
@@ -478,9 +489,9 @@ New connection pool settings incompatible with existing DB proxy.
 
 | Parameter | Value/Condition | Rationale | Enforcement |
 |-----------|-----------------|-----------|-------------|
-| Canary window per stage | ≥48h for production, ≥2h for staging | Allows observation of different usage patterns (business hours + off-hours) | Total deployment duration logged in canary report |
-| Error rate threshold | ≤5% across all stages | Industry standard for acceptable error budget consumption | Auto-rollback triggered if breached for ≥3 consecutive health checks |
-| Rollback condition | error_rate ≥5% OR latency_p99 ≥2x baseline | Rapid detection of performance regression | Auto-executed via rollback script; manual confirmation within 1 min |
+| Canary window per stage | Observation period: Canary-1 = 5 min, Canary-2 = 10 min. Full canary window for metrics collection: ≥48h post-deployment (optional deep monitoring) | Allows observation of different usage patterns (business hours + off-hours) | Total deployment duration logged in canary report |
+| Error rate threshold | Canary-1 ≤1.0%, Canary-2 ≤0.5%, Production ≤0.1% | Stage-specific thresholds aligned with Step implementation (Step 2: 1.0%, Step 3: 0.5%, Step 4: 0.1%) | Auto-rollback triggered if breached for ≥3 consecutive health checks |
+| Rollback condition | Canary-1 error_rate ≥1.0% OR Canary-2 ≥0.5% OR Production ≥0.1% (or latency_p99 ≥2x baseline) | Consistent with stage-specific thresholds in Error Taxonomy and Step implementation | Auto-executed via rollback script; manual confirmation within 1 min |
 | Observability coverage | All stages must have metrics, logs, traces | Blind deployments increase mean-time-to-detection (MTTD) | Missing any observability pillar → canary runs at half-traffic until added |
 
 ### When to Escalate Immediately

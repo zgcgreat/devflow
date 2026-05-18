@@ -66,10 +66,11 @@ Before starting archive phase, verify ALL of the following:
 ```yaml
 name: phase-8-archive
 version: 3.0-draft
-layer: L1-L2-L3_COLLABORATION
+layer: L1-INTERACTION (L2/L3 collaboration for knowledge archival)
 source: SuperCorp Phase 8 + SEP LearningWorkflow + Mega-Workflow Memory Manager
 dependencies:
-  - none (finalization phase)
+  - wave-executor (input: per-wave SUMMARY.md files)
+  - learning-workflow (post-archive: LESSONS update + domain skill graduation)
 v3_upgrade:
   learning_workflow_integration: true (LESSONS nomination + domain-skills promotion)
   cross_wave_dedup: true (cross-wave lesson deduplication)

@@ -7,6 +7,17 @@ description: |
   Generates 4-6 design variants with clear trade-offs and AI recommendation based on maintainability/cost/UX scoring. (ultimate-workflow)
 layer: L1-INTERACTION
 parent: phase-2a-shotgun
+triggers:
+  - design variant generation
+  - shot gun design
+  - multi-design exploration
+  - phase 2a
+allowed-tools:
+  - Read
+  - Write
+  - Bash
+  - Edit
+  - AskUserQuestion
 ---
 
 # Phase 2a: Design Shotgun — Multi-Variant Design Generation

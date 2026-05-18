@@ -11,7 +11,8 @@ layer: L2-ENGINE
 source: SEP Executor + Wave Engine + TDD Workflow
 dependencies:
   - dag-router (input: wave-plan.yaml with task dependencies)
-  - wave-executor (runs executor per wave in dependency order)
+  - parallel-engine (dispatches executor per wave in dependency order)
+  - wave-executor (coordinates Wave lifecycle; executor is the implementation engine invoked by parallel-engine during each wave)
 triggers:
   - implement feature
   - TDD development

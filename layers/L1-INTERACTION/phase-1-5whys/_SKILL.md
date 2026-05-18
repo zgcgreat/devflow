@@ -7,6 +7,20 @@ description: Apply the "5 Whys" root cause analysis technique to uncover true us
 requires: [g1-gate-decision, strategy-document]
 provides: [user-stories, acceptance-criteria, glossary, scope-boundaries, g2-gate-decision]
 gate: G2
+triggers:
+  - requirements clarification
+  - root cause analysis
+  - user stories
+  - g2-gate
+  - phase 1
+allowed-tools:
+  - Read
+  - Write
+  - Bash
+  - Edit
+  - AskUserQuestion
+  - WebSearch
+  - Skill
 ---
 
 # Phase 1: 5 Whys Deep Dive — Requirements Clarification

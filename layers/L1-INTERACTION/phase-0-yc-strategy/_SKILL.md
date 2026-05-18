@@ -7,6 +7,19 @@ description: Apply Y Combinator's due diligence framework to validate project vi
 requires: [project-context]
 provides: [g1-gate-decision, strategy-document, follow-up-queue]
 gate: G1
+triggers:
+  - YC strategy validation
+  - six questions assessment
+  - g1-gate
+  - strategy phase
+allowed-tools:
+  - Read
+  - Write
+  - Bash
+  - Edit
+  - AskUserQuestion
+  - WebSearch
+  - WebFetch
 ---
 
 # Phase 0: YC Six Questions — Strategic Assessment
