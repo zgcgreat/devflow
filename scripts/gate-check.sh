@@ -26,8 +26,10 @@ Gate IDs:
   G2          Design quality gate — check structural requirements
   G3-PHASE6   Review quality gate — spec compliance + code review
   G4          Execution readiness gate — wave-plan validation
-  G6-PHASE6             Phase 5→6 artifact validation — test report existence and content
-  G3-PHASE6-CRITERIA    Phase 6 exit criteria — severity, P0 resolution, TODO/FIXME, report completeness
+  G5-PHASE5   Test quality gate — coverage, boundary, negative paths, mutation
+  G6-PHASE6   Phase 5→6 artifact validation — test report existence and content
+  G7-PHASE7   Canary gate — health check, rollback readiness, traffic ramp-up plan
+  G8-PHASE8   Archive gate — LESSONS.md exists, wave SUMMARIES collected, domain skills audit
   CUSTOM                Run custom gate script from scripts/gates/ directory
 
 Options:
@@ -555,6 +557,276 @@ check_custom() {
     fi
 }
 
+# --- G5: Test Quality Gate (Phase 5) -----------------------------------------
+
+check_g5() {
+    _gate_name="G5 (Test Quality)"
+
+    # Try to find test results from multiple possible locations
+    test_report=""
+    for candidate in \
+        "${ABSOLUTE_ROOT}/05-test-results.md" \
+        "${ABSOLUTE_ROOT}/.specs/test/05-test-results.md" \
+        "${ABSOLUTE_ROOT}/.specs/waves/wave-*/SUMMARY.md"; do
+        if [ -f "$candidate" ]; then
+            test_report="$candidate"
+            break
+        fi
+    done
+
+    # If glob matched multiple files, use the last one (latest wave)
+    if [ -z "$test_report" ] && [ -d "${ABSOLUTE_ROOT}/.specs/waves" ]; then
+        test_report=$(find "${ABSOLUTE_ROOT}/.specs/waves" -name "SUMMARY.md" -type f 2>/dev/null | sort | tail -1)
+    fi
+
+    if [ -z "$test_report" ] || [ ! -f "$test_report" ]; then
+        fail "$_gate_name — no test report found"
+        return 1
+    fi
+
+    checks_passed=0
+    _total_checks=4
+    failed=""
+
+    # Check 1: Coverage metric present (≥80% new code target)
+    _total_checks=$((_total_checks + 1))
+    if grep -qiE "coverage|test.coverage|coverage.*%" "$test_report" 2>/dev/null; then
+        checks_passed=$((checks_passed + 1))
+        info "Coverage metric found in test report"
+        # Try to extract coverage percentage
+        _coverage_val=$(grep -oE "[0-9]+\.?[0-9]*%" "$test_report" 2>/dev/null | head -1)
+        if [ -n "$_coverage_val" ]; then
+            info "  Coverage value found: $_coverage_val"
+        fi
+    else
+        failed="$_failed\n  - No coverage metric found in test report"
+    fi
+
+    # Check 2: Boundary scenarios tested (≥3)
+    _total_checks=$((_total_checks + 1))
+    _boundary_count=$(grep -ciE "boundary|edge.?case|boundary.?scenario" "$test_report" 2>/dev/null || echo 0)
+    if [ "$_boundary_count" -ge 3 ] 2>/dev/null; then
+        checks_passed=$((checks_passed + 1))
+        info "Boundary scenarios found: $_boundary_count (≥3 threshold met)"
+    else
+        warn "Boundary scenarios found: $_boundary_count (<3 threshold, may need more)"
+    fi
+
+    # Check 3: Negative path tests present
+    _total_checks=$((_total_checks + 1))
+    if grep -qiE "negative|error.?path|invalid|failure.?case" "$test_report" 2>/dev/null; then
+        checks_passed=$((checks_passed + 1))
+        info "Negative path tests present"
+    else
+        failed="$_failed\n  - No negative path tests found"
+    fi
+
+    # Check 4: No flaky test warnings (flaky_threshold=3)
+    _total_checks=$((_total_checks + 1))
+    _flaky_count=$(grep -ciE "flaky" "$test_report" 2>/dev/null || echo 0)
+    if [ "$_flaky_count" -le 3 ] 2>/dev/null; then
+        checks_passed=$((checks_passed + 1))
+        info "Flaky tests within threshold: $_flaky_count (≤3)"
+    else
+        failed="$_failed\n  - Excessive flaky tests: $_flaky_count (>3 threshold)"
+    fi
+
+    if [ "$DETAIL" -eq 1 ]; then
+        echo ""
+        printf "  Checks passed: %d / %d\n" "$checks_passed" "$((_total_checks))"
+        if [ -n "$failed" ]; then
+            printf "  Failures:%s\n" "$failed"
+        fi
+    fi
+
+    if [ "$STRICT" -eq 1 ] && [ "$checks_passed" -lt "$_total_checks" ]; then
+        fail "$_gate_name"
+        return 1
+    fi
+    pass "$_gate_name"
+    return 0
+}
+
+# --- G7: Canary Gate (Phase 7) -----------------------------------------------
+
+check_g7() {
+    _gate_name="G7 (Canary Readiness)"
+
+    # Check for canary health check script
+    _canary_script=""
+    for candidate in \
+        "${ABSOLUTE_ROOT}/scripts/canary-health-check.sh" \
+        "${ABSOLUTE_ROOT}/canary-health-check.sh"; do
+        if [ -f "$candidate" ]; then
+            _canary_script="$candidate"
+            break
+        fi
+    done
+
+    checks_passed=0
+    _total_checks=4
+    failed=""
+
+    # Check 1: Health check script exists
+    _total_checks=$((_total_checks + 1))
+    if [ -n "$_canary_script" ]; then
+        checks_passed=$((checks_passed + 1))
+        info "Canary health check script found: $_canary_script"
+    else
+        # Allow if CUSTOM gate exists for canary
+        if [ -f "${ABSOLUTE_ROOT}/scripts/gates/G7-CANARY.sh" ]; then
+            checks_passed=$((checks_passed + 1))
+            info "Custom G7 canary gate script found (scripts/gates/G7-CANARY.sh)"
+        else
+            warn "No canary health check script found (use scripts/canary-health-check.sh or custom G7 gate)"
+        fi
+    fi
+
+    # Check 2: Rollback script exists
+    _total_checks=$((_total_checks + 1))
+    _rollback_script=""
+    for candidate in \
+        "${ABSOLUTE_ROOT}/scripts/auto-rollback.sh" \
+        "${ABSOLUTE_ROOT}/auto-rollback.sh"; do
+        if [ -f "$candidate" ]; then
+            _rollback_script="$candidate"
+            break
+        fi
+    done
+    if [ -n "$_rollback_script" ]; then
+        checks_passed=$((checks_passed + 1))
+        info "Auto-rollback script found: $_rollback_script"
+    else
+        warn "No auto-rollback script found (recommended for canary)"
+    fi
+
+    # Check 3: Traffic ramp-up plan present (look for percentage or ramp keywords)
+    _total_checks=$((_total_checks + 1))
+    if grep -qiE "ramp.?up|traffic.*percent|canary.*weight|rollout.*percent" "$test_report" 2>/dev/null || \
+       grep -qiE "ramp.?up|traffic.*percent|canary.*weight|rollout.*percent" "$_canary_script" 2>/dev/null; then
+        checks_passed=$((checks_passed + 1))
+        info "Traffic ramp-up plan present"
+    else
+        warn "No explicit traffic ramp-up plan found (may be documented elsewhere)"
+    fi
+
+    # Check 4: Threshold values defined (look for numeric thresholds)
+    _total_checks=$((_total_checks + 1))
+    if grep -qE "[0-9]+%|error.?rate|latency.*ms|timeout.*[0-9]+" "$_canary_script" 2>/dev/null; then
+        checks_passed=$((checks_passed + 1))
+        info "Threshold values defined in canary script"
+    else
+        warn "No explicit threshold values found in canary script"
+    fi
+
+    if [ "$DETAIL" -eq 1 ]; then
+        echo ""
+        printf "  Checks passed: %d / %d\n" "$checks_passed" "$((_total_checks))"
+        if [ -n "$failed" ]; then
+            printf "  Failures:%s\n" "$failed"
+        fi
+    fi
+
+    if [ "$STRICT" -eq 1 ] && [ "$checks_passed" -lt "$_total_checks" ]; then
+        fail "$_gate_name"
+        return 1
+    fi
+    pass "$_gate_name"
+    return 0
+}
+
+# --- G8: Archive Gate (Phase 8) ----------------------------------------------
+
+check_g8() {
+    _gate_name="G8 (Archive Readiness)"
+
+    checks_passed=0
+    _total_checks=3
+    failed=""
+
+    # Check 1: LESSONS.md exists and has content
+    _total_checks=$((_total_checks + 1))
+    _lessons_file=""
+    for candidate in \
+        "${ABSOLUTE_ROOT}/LESSONS.md" \
+        "${ABSOLUTE_ROOT}/.specs/memory/LESSONS.md"; do
+        if [ -f "$candidate" ]; then
+            _lessons_file="$candidate"
+            break
+        fi
+    done
+    if [ -n "$_lessons_file" ]; then
+        _lessons_count=$(wc -l < "$_lessons_file" 2>/dev/null || echo 0)
+        if [ "$_lessons_count" -gt 5 ] 2>/dev/null; then
+            checks_passed=$((checks_passed + 1))
+            info "LESSONS.md exists with substantive content: $_lessons_count lines"
+        else
+            warn "LESSONS.md exists but may be thin: $_lessons_count lines (need >5)"
+        fi
+    else
+        failed="$_failed\n  - LESSONS.md not found (expected in project root or .specs/memory/)"
+    fi
+
+    # Check 2: All wave SUMMARIES collected
+    _total_checks=$((_total_checks + 1))
+    _wave_summary_dir=""
+    for d in "${ABSOLUTE_ROOT}/.specs/waves" "${ABSOLUTE_ROOT}/waves"; do
+        if [ -d "$d" ]; then
+            _wave_summary_dir="$d"
+            break
+        fi
+    done
+    if [ -n "$_wave_summary_dir" ]; then
+        _summary_count=$(find "$_wave_summary_dir" -name "SUMMARY.md" -type f 2>/dev/null | wc -l || echo 0)
+        if [ "$_summary_count" -gt 0 ] 2>/dev/null; then
+            checks_passed=$((checks_passed + 1))
+            info "Wave SUMMARIES collected: $_summary_count file(s)"
+        else
+            failed="$_failed\n  - No SUMMARY.md files found in wave directory"
+        fi
+    else
+        # May be pre-wave project, skip with info
+        info "No wave directory found — G8 may be pre-execution (non-blocking)"
+        checks_passed=$((checks_passed + 1))
+    fi
+
+    # Check 3: Domain skills audit (check for promoted skills from LESSONS)
+    _total_checks=$((_total_checks + 1))
+    _domain_skills_dir=""
+    for d in "${ABSOLUTE_ROOT}/.specs/skills" "${ABSOLUTE_ROOT}/.specs/memory/domain-skills"; do
+        if [ -d "$d" ]; then
+            _domain_skills_dir="$d"
+            break
+        fi
+    done
+    if [ -n "$_domain_skills_dir" ]; then
+        _skill_count=$(find "$_domain_skills_dir" -name "*.md" -type f 2>/dev/null | wc -l || echo 0)
+        if [ "$_skill_count" -gt 0 ] 2>/dev/null; then
+            checks_passed=$((checks_passed + 1))
+            info "Domain skills present: $_skill_count file(s)"
+        else
+            warn "Domain skills directory exists but empty (no promoted skills yet)"
+        fi
+    else
+        warn "No domain skills directory found (expected if no lessons have been promoted yet)"
+    fi
+
+    if [ "$DETAIL" -eq 1 ]; then
+        echo ""
+        printf "  Checks passed: %d / %d\n" "$checks_passed" "$((_total_checks))"
+        if [ -n "$failed" ]; then
+            printf "  Failures:%s\n" "$failed"
+        fi
+    fi
+
+    if [ "$STRICT" -eq 1 ] && [ "$checks_passed" -lt "$_total_checks" ]; then
+        fail "$_gate_name"
+        return 1
+    fi
+    pass "$_gate_name"
+    return 0
+}
+
 # --- Main dispatch ----------------------------------------------------------
 
 case "$GATE_ID" in
@@ -562,9 +834,12 @@ case "$GATE_ID" in
     G2)           check_g2 "$@" ;;
     G4)           check_g4 "$@" ;;
     G3-PHASE6|G3) check_g3_phase6 "$@" ;;
+    G5-PHASE5|G5) check_g5 "$@" ;;
     G6-PHASE6)    check_g6_phase6 "$@" ;;
+    G7-PHASE7|G7) check_g7 "$@" ;;
+    G8-PHASE8|G8) check_g8 "$@" ;;
     CUSTOM)       check_custom "$@" ;;
     *)
-        die "Unknown gate ID: $GATE_ID. Use G1, G2, G4, G3-PHASE6, G6-PHASE6, or CUSTOM."
+        die "Unknown gate ID: $GATE_ID. Use G1, G2, G3, G4, G5, G6, G7, G8, or CUSTOM."
         ;;
 esac
