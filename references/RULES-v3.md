@@ -156,6 +156,56 @@
 
 ---
 
+## R22 · Quality Scoring Methodology（质量评分标准）
+
+### 22.1 5级评分标准
+
+| 分数 | 定义 | 示例 |
+|------|------|------|
+| **1 — 未达标** | 缺少核心 section 或关键字段为空 | 无 Error Taxonomy、无 Boundary Conditions |
+| **2 — 需修复** | 有核心 section 但内容不全（覆盖率 < 60%） | Error Taxonomy 仅列出 P0，缺 P1-P3；Boundary Conditions 无阈值 |
+| **3 — 基本达标** | 核心 section 完整但有遗漏或不精确（覆盖率 60-85%） | 有全量 P0-P3 但错误描述模糊；Boundary Conditions 有阈值但缺 escalation rules |
+| **4 — 达标** | 核心 section 完整且准确（覆盖率 85-95%），引用路径正确，示例可执行 | Error Taxonomy 有完整 P0-P3 + escalation rules + 示例场景；Boundary Conditions 有阈值、限制、触发条件 |
+| **5 — 优秀** | 完整、准确且有示例/模板/参考链接（覆盖率 >95%），无 TODO/FIXME/HACK | 除核心 section 外，还有 Output Template、Anti-Patterns、参考文件链接 |
+
+### 22.2 最小 Section Checklist（每个 _SKILL.md 必须包含）
+
+| # | Section | 最低要求 |
+|---|---------|----------|
+| 1 | YAML frontmatter | name + version + layer + description + triggers 五项必填 |
+| 2 | Preamble Tier | 声明当前 skill 的 preamble-tier（1-3），对应加载深度 |
+| 3 | Error Taxonomy | P0-P3 四级分类表，每级含条件、处理方式、回退路径 |
+| 4 | Boundary Conditions | 输入阈值、输出限制、轮数上限、超时触发、并发安全 |
+| 5 | Execution Steps | Step-by-step 执行流程，每步有明确的输入/输出描述 |
+
+### 22.3 达标门控规则
+
+- **R22.1** Phase Skill（L1）最低合格分数：≥4/5。质量 < 4 禁止进入执行阶段
+- **R22.2** Engine Skill（L2）最低合格分数：≥3/5。L2 skill 由 Orchestrator 自动校验
+- **R22.3** Architecture Skill（L3）最低合格分数：≥3/5。若为可执行 skill（非纯文档），必须 ≥4/5
+- **R22.4** 质量验收以"最小 Section Checklist"为准，不依赖主观判断
+- **R22.5** Phase N+1 读取 Phase N 产物时，验证该产物文件至少达到对应层级最低分数（基于 checklist 覆盖率）
+
+### 22.6 评分执行流程
+
+```bash
+# Quality Gate 检查脚本伪代码
+for skill_file in layers/L*-*/_SKILL.md; do
+    SCORE=0
+    # Check YAML frontmatter
+    grep -q "^---$" "$skill_file" && head_check=$(grep -c "^name:\|^version:\|^layer:" "$skill_file")
+    [ "$head_check" -ge 3 ] && SCORE=$((SCORE + 1))
+    # Check Error Taxonomy section exists with P0-P3
+    grep -q "P0.*BLOCKING\|P0.*致命" "$skill_file" && SCORE=$((SCORE + 1))
+    # Check Boundary Conditions section exists
+    grep -q "Thresholds\|max\|≤\|上限" "$skill_file" && SCORE=$((SCORE + 1))
+    # ... (continue for each checklist item)
+    echo "$skill_file: $SCORE/5"
+done
+```
+
+---
+
 ## 违规处理
 
 检测到自己即将违反任一规则时，先输出：
