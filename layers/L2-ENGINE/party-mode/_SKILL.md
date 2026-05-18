@@ -1010,3 +1010,18 @@ Wave Execution Agent 需要修改代码时:
   - YAML configuration system
   - Auto-summary mechanism
   - Simplified consensus calculation
+
+## Sprint 10 Audit: G-P2-2 PartyMode Consensus PASS/FAIL Gate 修复确认
+
+**Issue**: PartyMode 的 consensus algorithm 无结构化 quality gate
+**Status**: ✅ RESOLVED — Step 5 已添加 confidence-weighted consensus validation gate
+
+**修复内容**:
+1. Step 5 (lines 378-496) 添加了 "Consensus Gate Validation (PASS/FAIL)"
+2. `consensus-gate-validation.sh` 定义了 4 个 gate 检查:
+   - G1: Consensus Coverage ≥70%
+   - G2: Weighted Confidence ≥6.5/10
+   - G3: No P0 Blocking Conflict (0 conflicts)
+   - G4: Round Limit ≤7 rounds
+3. GATE FALLBACK 协议定义了三级回退机制 (LVL-1 扩展辩论 → LVL-2 Executor仲裁 → LVL-3 Architect强制决定)
+4. Gate validation output format 确保每个决策都有可审计的 gate report

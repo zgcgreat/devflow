@@ -334,6 +334,93 @@ function normalize(text) {
 
 ---
 
+### Step 2.5: LESSONS Nomination → Injection Log Mapping
+
+**⚠️ MANDATORY**: Before promoting to Domain Skills, map LESSONS nominations to Cross-Wave Injection Log entries. This creates the audit trail from Nomination → Injection → Feedback.
+
+**Purpose**: The injection log tracks which lessons were actually injected into which waves and their measured impact. Without this mapping, lessons exist in isolation — we can't prove the learning loop closes.
+
+#### Nomination → Injection Mapping
+
+```markdown
+## Nomination → Injection Log ({YYYY-MM-DD})
+
+| nomination_id | lesson_title | source_wave | injected_to_waves | injection_status | feedback_score |
+|--------------|-------------|-------------|-------------------|------------------|----------------|
+| L-101 | React useEffect Infinite Loop | Wave 3 | Wave 4, Wave 5 | Injected | 4 (significant quality improvement) |
+| L-102 | Token Bucket Rate Limiter | Wave 2 | Wave 3 | Injected | 3 (clear efficiency gain) |
+| L-103 | JWT Single-Flight Refresh | Wave 1 | Wave 2 | Injected | 5 (blocked major race condition) |
+| L-104 | File Upload Order Preservation | Wave 4 | Wave 5 | Pending | — |
+```
+
+**Mapping Rules**:
+
+1. **Nomination ID**: Use the L-XXX identifier from the LESSONS nomination
+2. **Source Wave**: Which wave produced this nomination (from LESSONS metadata)
+3. **Injected To Waves**: Which subsequent waves loaded this skill (tracked by Cross-Wave Injection step)
+4. **Injection Status**: `Injected` (loaded) / `Pending` (not yet loaded) / `Expired` (no matching waves in 30 days)
+5. **Feedback Score**: 1-5 rating from the receiving wave's execution agent
+
+#### Injection Feedback Collection
+
+After each wave that receives an injection:
+
+```markdown
+## Wave {N+1} Injection Feedback
+
+**Received Injections**:
+1. L-101 (React useEffect) → applied: Yes → impact: 4/5 → note: Prevented 2 race conditions
+2. L-102 (Token Bucket) → applied: Yes → impact: 3/5 → note: Reduced API errors but needed tuning
+
+**Unapplied Injections**:
+1. L-103 (JWT Single-Flight) → reason: No auth tasks in this wave → will carry to next wave with auth tasks
+
+**Injection Log Update**:
+- L-101: Wave 4 → update injection log with feedback 4
+- L-102: Wave 3 → update injection log with feedback 3
+- L-103: mark as `Expired` (no auth tasks in waves 4-5)
+```
+
+#### Conversion Checklist
+
+Before proceeding to Step 3 (Domain Skills Promotion):
+
+- [ ] All `[NEW]` nominations have corresponding Injection Log entries
+- [ ] All `[UPDATE]` nominations merged into existing Injection Log entries
+- [ ] Expired nominations (no injection in 30 days) marked `Expired`
+- [ ] Low-scoring injections (avg < 3 over ≥3 waves) flagged for review in Phase 8
+- [ ] Injection Log written to `.specs/memory/injection-log.md`
+
+**Injection Log Format**:
+
+```markdown
+# Cross-Wave Injection Log
+
+> Maps LESSONS nominations to actual wave injections with feedback scores.
+> Updated by Step 2.5 during learning workflow and reviewed in Phase 8.
+
+## Active Injections
+
+| ID | Title | Source Wave | Injected Waves | Avg Score | Status |
+|----|-------|-------------|----------------|-----------|--------|
+| L-101 | React useEffect Infinite Loop | Wave 3 | [4, 5] | 4.0 | Active |
+| L-102 | Token Bucket Rate Limiter | Wave 2 | [3] | 3.0 | Active |
+
+## Expired Injections
+
+| ID | Title | Source Wave | Injected Waves | Last Used | Status |
+|----|-------|-------------|----------------|-----------|--------|
+| L-099 | Old Pattern | Wave 1 | [2] | 2024-01-15 | Expired (30+ days) |
+
+## Pending Injections
+
+| ID | Title | Source Wave | Expected Wave | Status |
+|----|-------|-------------|---------------|--------|
+| L-104 | File Upload Order | Wave 4 | ≥5 | Pending |
+```
+
+---
+
 ### Step 3: Domain Skills Promotion
 
 **⚠️ MANDATORY**: Same pattern appearing ≥3 times across different waves → create/update domain skill.

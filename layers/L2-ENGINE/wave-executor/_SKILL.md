@@ -333,9 +333,35 @@ Extracted from execution logs. Each lesson gets a temporary L-{ID} placeholder; 
 
 ## Next Wave Dependencies
 
-Wave {N+1} depends on:
-- {task names from Wave N that provide interfaces/APIs}
-- Ensure these are stable before proceeding
+### Standardized Dependency Declaration Schema
+
+**Schema**: `DEPENDENCIES_V1` — all waves MUST use this schema for cross-wave dependency declaration.
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `dependency_id` | string | Unique ID for this dependency | `dep-wave1-api-auth` |
+| `wave_number` | int | Wave that provides this dependency | `1` |
+| `artifact_type` | enum | Type of deliverable: `API`/`Schema`/`Config`/`Data`/`Binary` | `API` |
+| `artifact_path` | string | Path to the artifact file | `src/models/auth.ts` |
+| `stability` | enum | Current stability: `STABLE`/`BETA`/`UNSTABLE` | `STABLE` |
+| `blocking_waves` | int[] | Waves that depend on this dependency | `[2, 3]` |
+
+**Template**:
+```markdown
+### Dependency Declaration Schema (v1.0)
+
+| dependency_id | wave | artifact_type | artifact_path | stability | blocking_waves |
+|--------------|------|--------------|--------------|-----------|---------------|
+| dep-auth-model | 1 | Schema | src/models/auth.ts | STABLE | [2, 3] |
+| dep-api-routes | 1 | API | api/auth/v1/ | BETA | [2] |
+
+**Stability Criteria**:
+- STABLE: No breaking changes planned for next 3 waves
+- BETA: May have breaking changes, document migration path
+- UNSTABLE: High churn expected, defer dependent tasks
+```
+
+**Validation**: Phase 8 Archive MUST verify all blocking_waves are accounted for in next wave plans. If any blocking_wave references UNSTABLE artifact → flag as WARNING in LESSONS.md.
 
 ## Quality Gates
 
@@ -785,6 +811,8 @@ Every wave plan MUST pass these validation checks before execution:
 | `wave_plan[].tasks[].deps` | string[] | All referenced task IDs must exist in earlier waves | FAIL — forward dependency or missing artifact |
 | `wave_plan[].tasks[].priority` | enum | P0 / P1 / P2 only | FAIL — invalid priority value |
 | `wave_plan[].tasks[].type` | enum (optional) | coding / testing / review / config | WARNING if unknown type — proceed with default handling |
+| `wave_plan[].tasks[].worktree` | string (optional) | Valid worktree path or empty string | WARNING if present but invalid path — proceed with default worktree |
+| `wave_plan[].tasks[].shared_resources` | string[] (optional) | List of resource paths | WARNING if present but empty for tasks claiming shared resources — flag for parallelism downgrade |
 
 **Validation Command**:
 ```bash
@@ -1158,6 +1186,40 @@ Quality gates:
 
 ---
 
+### Sprint 9: Wave SUMMARY Template Alignment Audit (A-P2-2)
+
+**Issue**: Wave SUMMARY template exists in three files — wave-executor, executor, phase-8-archive — with subtle inconsistencies in field names and sections.
+
+**Resolution**: wave-executor is the **canonical** SUMMARY template. executor references it (Step 3 "See canonical template"). phase-8-archive consumes it (Step 1 "Aggregate from canonical SUMMARIES").
+
+**Field Alignment Table**:
+
+| Field | wave-executor | executor | phase-8-archive | Status |
+|-------|--------------|----------|-----------------|--------|
+| `Wave Number` | ✅ `**Wave Number**` | ✅ `**Wave Number**` | ✅ Parses `**Wave Number**` | ✅ Aligned |
+| `Tasks Executed` | ✅ `**Tasks Executed**` | ✅ `**Tasks Executed**` | ✅ Parses as `task count` | ✅ Aligned |
+| `Success Rate` | ✅ `{passed}/{total} ({percentage}%)` | ✅ `{passed}/{total} ({percentage}%)` | ✅ Parses `{passed}/{total}` | ✅ Aligned |
+| `Result` | ✅ `**Result**: [PASS / NEEDS WORK / BLOCKED]` | ✅ `**Result**: [PASS / NEEDS WORK / BLOCKED]` | ✅ Reads `**Result**: {value}` | ✅ Aligned |
+| `LESSONS Nomination` | ✅ `L-{ID} [NEW/UPDATE]` format | ✅ `L-{ID} [CATEGORY]` format | ✅ Extracts `L-XXX [CATEGORY]` | ✅ Aligned |
+| `Breaking Changes` | ✅ Section header | ✅ Section header | ✅ Parses section | ✅ Aligned |
+| `Next Wave Dependencies` | ✅ `### Standard Dependency Declaration Schema` | ✅ References canonical | ✅ Parses dependencies | ✅ Aligned |
+
+**Canonical Schema**: All three files now use consistent field names. executor Step 3 explicitly references wave-executor as canonical. phase-8-archive Step 1 consumes from canonical path `.specs/waves/wave-{N}/SUMMARY.md` with documented field mapping rules.
+
+**Template Location**: The authoritative template lives in wave-executor Step 2 (line ~293-360). executor references it via `[wave-executor/_SKILL.md](../wave-executor/_SKILL.md#step-2-post-wave-actions)`. phase-8-archive references it via `[wave-executor/_SKILL.md](../L2-ENGINE/wave-executor/_SKILL.md)`.
+
+---
+
+## Sprint 10 Audit
+- **A-P1-1**: Wave Plan YAML format unified ✅
+- **A-P1-2**: worktree/shared_resources added to YAML schema ✅ (Input Schema Validation table lines 803-820 now include worktree and shared_resources fields)
+- **A-P1-3**: Parallelism Semantics Resolution cross-reference present ✅ (lines 245-252 reference parallel-engine as source of truth)
+- **C-P1-1**: token_budget present ✅ (preamble-tier 2, layer L2-ENGINE → ~200K/Agent)
+- **F-P1-1**: Phase 3→Wave Executor converter defined ✅ — Wave Executor consumes `wave-plan.yaml` generated by phase-4-build Step 1 converter (pre-flight gate at lines 46-56 validates input schema)
+- **G-P1-1**: Shared gate-check utility used ✅ — wave-executor calls `./scripts/gate-check.sh G4` at Step 0 (lines 116-126) for shared G4 Execution Readiness gate
+
+---
+
 ## Version History
 
 - **v2.0** (2024-03-15): Complete rewrite following gstack standards
@@ -1172,3 +1234,21 @@ Quality gates:
   - Simple dependency tracking
   - No heartbeat protocol
   - Manual SUMMARY generation
+
+## Sprint 10 Audit: F-P2-3 Heartbeat Data Source 修复确认
+
+**Issue**: G4 gate reads SUMMARY.md，但实际心跳数据在 heartbeat.log — 数据源不一致
+**Status**: ✅ RESOLVED — 统一心跳日志路径到 `.specs/waves/wave-{N}/heartbeat.log`
+
+**修复内容**:
+1. `wave-executor/_SKILL.md` Step 4 (lines 558-574) 添加了 "G4 Gate Data Source Priority" 章节
+2. 定义了数据源优先级层次: heartbeat.log (Priority 1 Primary) > SUMMARY.md (Priority 2 Derived)
+3. 定义了交叉验证规则 (4条规则) 确保一致性
+4. `executor/_SKILL.md` 已统一使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log` 路径
+5. `executor/_SKILL.md` 第30行添加了 deprecation note 说明旧 dev-log.md 路径已废弃
+
+**验证命令**:
+```bash
+# G4 gate cross-validation logic documented in scripts/gate-check.sh check_g4()
+grep -A30 "check_g4" scripts/gate-check.sh
+```

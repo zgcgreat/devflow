@@ -787,3 +787,8 @@ Quality gates:
   - Manual health checks
   - Simple rollback script
   - No emergency mode
+
+---
+
+### Sprint 10 Audit
+- **F-P1-2**: Phase 7 external scripts lifecycle defined ✅ — `canary-health-check.sh` (lines 154-184) and `auto-rollback.sh` (lines 355-405) managed by `canary-wrapper/_SKILL.md`, with invocation parameters documented (STAGE, DURATION_MINUTES, THRESHOLD_ERROR_RATE, REASON), ownership via wrapper skill, versioning alongside phase-7-canary

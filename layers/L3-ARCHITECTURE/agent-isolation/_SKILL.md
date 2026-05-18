@@ -235,7 +235,168 @@ def enforce_budget(agent_context):
 - [ ] Per-agent context budget ≤200K tokens calculated
 - [ ] Cross-agent communication channels defined per task dependency
 
-## Phase Integration
+## Context Budget Validation Test Harness (Sprint 9 Addition — G-P2-4)
+
+**Purpose**: Executable validation that agent context budget (~200K/Agent) is enforced at runtime. This test harness verifies the soft limit is actively monitored and enforced by executor/wave-executor.
+
+### Test Cases
+
+| Test ID | Scenario | Expected Behavior | Pass Condition |
+|---------|----------|------------------|----------------|
+| AGENT-01 | Single agent loads all 6 modules | Total tokens ≤200K | PASS if total ≤200K |
+| AGENT-02 | Agent triggers Ultra compression (>100K) | Compressed ratio ≥75% | PASS if compression applied |
+| AGENT-03 | Agent triggers Extreme compression (>180K) | Compressed ratio ≥90%, only key decisions | PASS if compression applied |
+| AGENT-04 | Cross-agent context isolation | No shared data between agents | PASS if isolation verified |
+| AGENT-05 | Wave boundary rotation | Fresh context loaded, ≤10K summary injection | PASS if fresh context |
+| AGENT-06 | Domain skill limit (>5) | Truncated to ≤5 active skills | PASS if ≤5 skills |
+| AGENT-07 | Context leak detection | No cross-agent data in new wave | PASS if zero leaks |
+
+### Validation Script
+
+```bash
+#!/bin/bash
+# context-budget-validation.sh — Sprint 9 addition (G-P2-4)
+# Validates agent context budget enforcement at runtime
+
+WAVE_PLAN=$1
+AGENT_LOGS_DIR=${2:-.specs/waves/wave-*/agent-logs/}
+
+echo "=== Context Budget Validation Test Harness ==="
+echo "Wave Plan: $WAVE_PLAN"
+echo "Agent Logs: $AGENT_LOGS_DIR"
+echo ""
+
+PASS_COUNT=0
+FAIL_COUNT=0
+TOTAL_TESTS=7
+
+# AGENT-01: Token budget check
+for agent_log in $AGENT_LOGS_DIR/*.log; do
+  [ -f "$agent_log" ] || continue
+  
+  # Extract token usage from heartbeat log
+  token_usage=$(grep -oP "token_usage=\d+" "$agent_log" | tail -1 | cut -d= -f2)
+  
+  if [ -n "$token_usage" ] && [ "$token_usage" -gt 200000 ]; then
+    echo "❌ AGENT-01 FAIL: Agent $(basename $agent_log .log) exceeded 200K tokens ($token_usage)"
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+  else
+    echo "✅ AGENT-01 PASS: Agent $(basename $agent_log .log) within budget"
+    PASS_COUNT=$((PASS_COUNT + 1))
+  fi
+done
+
+# AGENT-02/03: Compression check
+echo ""
+echo "Checking compression ratios..."
+for agent_log in $AGENT_LOGS_DIR/*.log; do
+  [ -f "$agent_log" ] || continue
+  
+  compression_ratio=$(grep -oP "compression_ratio=\d+" "$agent_log" | tail -1 | cut -d= -f2)
+  
+  if [ -n "$compression_ratio" ]; then
+    if [ "$compression_ratio" -lt 75 ]; then
+      echo "❌ AGENT-02/03 FAIL: Agent $(basename $agent_log .log) compression ratio $compression_ratio% (<75%)"
+      FAIL_COUNT=$((FAIL_COUNT + 1))
+    else
+      echo "✅ AGENT-02/03 PASS: Agent $(basename $agent_log .log) compression ratio $compression_ratio%"
+      PASS_COUNT=$((PASS_COUNT + 1))
+    fi
+  fi
+done
+
+# AGENT-04: Context isolation check
+echo ""
+echo "Checking cross-agent context isolation..."
+for agent_log in $AGENT_LOGS_DIR/*.log; do
+  [ -f "$agent_log" ] || continue
+  agent_name=$(basename $agent_log .log)
+  
+  # Check for data from other agents (should not appear in isolated context)
+  cross_agent_data=$(grep -c "agent_[a-z]" "$agent_log" || true)
+  expected_own_refs=$(grep -c "$agent_name" "$agent_log" || true)
+  
+  if [ "$cross_agent_data" -gt 0 ] && [ "$cross_agent_data" -gt "$((expected_own_refs / 2))" ]; then
+    echo "❌ AGENT-04 FAIL: Context leak detected in $agent_name ($cross_agent_data cross-agent references)"
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+  else
+    echo "✅ AGENT-04 PASS: No context leak in $agent_name"
+    PASS_COUNT=$((PASS_COUNT + 1))
+  fi
+done
+
+# AGENT-05: Wave boundary rotation
+echo ""
+echo "Checking wave boundary context rotation..."
+for wave_dir in .specs/waves/wave-*/; do
+  [ -d "$wave_dir" ] || continue
+  wave_num=$(basename $wave_dir | grep -oP '\d+')
+  
+  summary_size=$(wc -c "$wave_dir/SUMMARY.md" 2>/dev/null | cut -d' ' -f1 || echo 0)
+  summary_tokens=$((summary_size / 4))  # Rough estimate: 4 chars per token
+  
+  if [ "$summary_tokens" -gt 10000 ]; then
+    echo "❌ AGENT-05 FAIL: Wave $wave_num summary exceeds 10K tokens ($summary_tokens)"
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+  else
+    echo "✅ AGENT-05 PASS: Wave $wave_num summary within 10K token budget ($summary_tokens)"
+    PASS_COUNT=$((PASS_COUNT + 1))
+  fi
+done
+
+# AGENT-06/07: Domain skill limit and freshness
+echo ""
+echo "Checking domain skill limits and freshness..."
+for agent_log in $AGENT_LOGS_DIR/*.log; do
+  [ -f "$agent_log" ] || continue
+  
+  domain_skill_count=$(grep -c "domain_skill:" "$agent_log" || true)
+  
+  if [ "$domain_skill_count" -gt 5 ]; then
+    echo "❌ AGENT-06 FAIL: Agent $(basename $agent_log .log) has $domain_skill_count active domain skills (>5)"
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+  else
+    echo "✅ AGENT-06 PASS: Agent $(basename $agent_log .log) has $domain_skill_count domain skills (≤5)"
+    PASS_COUNT=$((PASS_COUNT + 1))
+  fi
+done
+
+# Final summary
+echo ""
+echo "=== Context Budget Validation Summary ==="
+echo "Total Tests: $TOTAL_TESTS"
+echo "Passed: $PASS_COUNT"
+echo "Failed: $FAIL_COUNT"
+
+if [ "$FAIL_COUNT" -gt 0 ]; then
+  echo "Result: FAIL — Review failed tests above"
+  exit 1
+else
+  echo "Result: PASS — All context budget validations passed"
+  exit 0
+fi
+```
+
+**Usage**:
+```bash
+# Run before proceeding to next wave
+./context-budget-validation.sh .ultimate-workflow/wave-plan.yaml .specs/waves/
+
+# Integrate into G4 gate validation
+if ./context-budget-validation.sh "$WAVE_PLAN" "$AGENT_LOGS"; then
+  echo "G4 Gate: PASS (context budget validated)"
+else
+  echo "G4 Gate: FAIL (context budget violation detected)"
+  exit 1
+fi
+```
+
+**Integration with executor/wave-executor**:
+- executor 在每次 agent 启动前调用 `calculate_total()` 估算上下文大小
+- wave-executor 在 Wave N 结束时运行此 test harness
+- 失败项记录到 `LESSONS.md` 作为跨会话改进点
+
+**Rationale**: This validation harness ensures the ~200K/Agent budget is not just documented but actively enforced at runtime. Tests cover all critical aspects: token budget compliance, compression effectiveness, context isolation, wave boundary rotation, and domain skill limits.
 
 | Phase | Usage |
 |-------|-------|

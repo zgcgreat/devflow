@@ -5,7 +5,13 @@
 
 set -e
 
-VERSION="1.0.0"
+VERSION="1.1.0-sprint10"
+
+# Sprint 10 Audit: Enhanced shared gate-check utility
+# - G7 gate added for canary readiness (health check + rollback script + traffic ramp-up)
+# - G8 gate added for archive readiness (LESSONS.md + wave SUMMARIES + domain skills)
+# - G4 enhanced with heartbeat.log cross-validation (F-P2-3 fix)
+# - All Phase skills (4, 5, 6, 7) now reference gate-check.sh for gate verification
 PROGNAME="$(basename "$0")"
 
 # --- Helpers ---------------------------------------------------------------
@@ -173,39 +179,70 @@ check_g1() {
 check_g2() {
     # G2 — Design quality gate: check structural requirements
     # Validates that design outputs meet minimum standards.
+    # Enhanced (Sprint 9): Added ADR completeness, module boundary annotations, API definitions section, data model section.
     _gate_name="G2 (Design Quality)"
 
-    layers_dir="${ABSOLUTE_ROOT}/layers"
+    design_file="${ABSOLUTE_ROOT}/02-design.md"
     checks_passed=0
-    checks_total=3
+    _total_checks=0
     failed=""
 
-    # Check 1: module boundaries defined
-    _checks_total=$((_checks_total + 1))
-    design_file="${ABSOLUTE_ROOT}/02-design.md"
-    if [ -f "$design_file" ] && grep -qi "module\|layer\|boundary\|component" "$design_file" 2>/dev/null; then
+    # Check 1: design file exists
+    _total_checks=$((_total_checks + 1))
+    if [ -f "$design_file" ]; then
         checks_passed=$((checks_passed + 1))
-        info "Module boundaries documented in design spec"
+        info "Design file exists: $design_file"
     else
-        failed="$_failed\n  - Module boundaries not found in design"
+        failed="$_failed\n  - Design file missing (expected 02-design.md)"
     fi
 
-    # Check 2: API definitions present
-    _checks_total=$((_checks_total + 1))
-    if [ -f "$design_file" ] && grep -qi "API\|endpoint\|interface\|contract\|route" "$design_file" 2>/dev/null; then
+    # Check 2: module boundary annotations present
+    _total_checks=$((_total_checks + 1))
+    if [ -f "$design_file" ] && grep -qiE "module.?boundary|layer.?boundary|component.?boundary" "$design_file" 2>/dev/null; then
         checks_passed=$((checks_passed + 1))
-        info "API definitions present in design spec"
+        info "Module boundary annotations present in design spec"
     else
-        failed="$_failed\n  - API definitions not found in design"
+        failed="$_failed\n  - Module boundary annotations missing in design (expected section with 'module boundary' or 'layer boundary')"
     fi
 
-    # Check 3: data models / schemas defined
-    _checks_total=$((_checks_total + 1))
-    if [ -f "$design_file" ] && grep -qi "model\|schema\|table\|entity\|type\s*=" "$design_file" 2>/dev/null; then
+    # Check 3: API definitions section present
+    _total_checks=$((_total_checks + 1))
+    if [ -f "$design_file" ] && grep -qiE "^\s*#{2,4}\s*API|^\s*API\s*[:=]|API\s+definitions|endpoint\s+definitions" "$design_file" 2>/dev/null; then
         checks_passed=$((checks_passed + 1))
-        info "Data models/schemas defined in design spec"
+        info "API definitions section present in design spec"
     else
-        failed="$_failed\n  - Data models not found in design"
+        failed="$_failed\n  - API definitions section missing in design (expected dedicated section with 'API' heading or 'API definitions')"
+    fi
+
+    # Check 4: data model section present
+    _total_checks=$((_total_checks + 1))
+    if [ -f "$design_file" ] && grep -qiE "^\s*#{2,4}\s*(Data|Schema|Model)|^\s*Data\s+model|^\s*Schema|entity.?relationship" "$design_file" 2>/dev/null; then
+        checks_passed=$((checks_passed + 1))
+        info "Data model section present in design spec"
+    else
+        failed="$_failed\n  - Data model section missing in design (expected dedicated section with 'Data Model' or 'Schema' heading)"
+    fi
+
+    # Check 5: ADR completeness (if ADR directory exists, all decisions referenced)
+    _total_checks=$((_total_checks + 1))
+    _adr_dir="${ABSOLUTE_ROOT}/.ultimate-workflow/adr"
+    if [ -d "$_adr_dir" ]; then
+        _adr_count=$(find "$_adr_dir" -name "*.md" -type f 2>/dev/null | wc -l || echo 0)
+        if [ "$_adr_count" -gt 0 ] 2>/dev/null; then
+            # Check if design references ADRs
+            if grep -qiE "ADR|Architecture.?Decision" "$design_file" 2>/dev/null; then
+                checks_passed=$((checks_passed + 1))
+                info "ADRs found: $_adr_count, design references ADRs ✓"
+            else
+                warn "ADRs exist ($_adr_count) but design does not reference them (may be manual)"
+            fi
+        else
+            checks_passed=$((checks_passed + 1))
+            info "ADR directory exists but empty (non-blocking)"
+        fi
+    else
+        info "No ADR directory found (ADRs may not be used for this project)"
+        checks_passed=$((checks_passed + 1))
     fi
 
     if [ "$DETAIL" -eq 1 ]; then

@@ -102,6 +102,8 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 
 **Task ID convention**: Use descriptive kebab-case IDs that reflect the task's domain/module (e.g., `user-auth-model`, `payment-webhook-handler`). This aligns with dag-router and executor expectations which use kebab-case identifiers. The legacy `T<NN>` format (e.g., `T01`) is still accepted for backward compatibility but kebab-case is canonical.
 
+**Sprint 9 Audit (A-P2-1)**: All existing task ID examples in this file use `T01`, `T02` format. New task specifications SHOULD use kebab-case. Validation bash script provided in "可执行命令示例" section scans for non-conforming IDs. Phase 3 output `03-tasks.md` MUST have all Task IDs in kebab-case format (legacy `T<NN>` accepted only for backward compatibility with existing Wave Executor parsers).
+
 ### Step 4: G4 门控检查
 
 | 检查项 | 通过条件 | 失败处理 |
@@ -149,6 +151,24 @@ print(f'Tasks with valid verify+done: {ok}/{ok+bad}')
 
 # Count tasks per wave for parallelism check
 grep -E 'Wave N\d+' 03-tasks.md | while read line; do echo "$line"; done
+
+# Validate Task ID format (kebab-case or T<NN> for backward compatibility)
+python -c "
+import re
+with open('03-tasks.md') as f:
+    content = f.read()
+ids = re.findall(r'Task ID: ([\w-]+)', content)
+kebab = [i for i in ids if re.match(r'^[a-z]+(-[a-z]+)+$', i)]
+legacy = [i for i in ids if re.match(r'^T\d+$', i)]
+other = [i for i in ids if not re.match(r'^[a-z]+(-[a-z]+)+$', i) and not re.match(r'^T\d+$', i)]
+print(f'Total Task IDs: {len(ids)}')
+print(f'  kebab-case (canonical): {len(kebab)}')
+print(f'  T<NN> (legacy, backward compat): {len(legacy)}')
+if other:
+    print(f'  non-conforming: {other} — should be kebab-case')
+if not kebab and not legacy:
+    print('WARNING: No Task IDs found — verify 03-tasks.md format')
+"
 ```
 
 ---

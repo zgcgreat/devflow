@@ -289,3 +289,7 @@ wave_plan:
 
 > **关联规则**: R8 (Wave并行), R16 (原子提交), R17 (Heartbeat), R9/15 (LearningWorkflow)
 > **参考文件**: `references/RULES-v3.md` R1-R20, `references/prompts/4-dev.md`, `layers/L2-ENGINE/wave-executor/SKILL.md`
+
+### Sprint 10 Audit
+- **F-P1-1**: Phase 3→Wave Executor converter defined ✅ — Step 1 "Phase 3→Wave Plan Converter" with YAML schema (lines 71-86), field mapping table (lines 110-119), priority inference rules (lines 121-127), pre/post validation (lines 131-142), worked examples (lines 144-203)
+- **G-P1-1**: Shared gate-check utility referenced ✅ — Phase 4 delegates G4 verification to `scripts/gate-check.sh` via Wave Executor integration

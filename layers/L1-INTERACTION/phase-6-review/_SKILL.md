@@ -486,3 +486,17 @@ Stage A PASS → Stage B PASS (G3-PHASE6):
 | Hotfix deployment | Time-critical (<2h SLA) | Post-deploy Phase 6 in next sprint |
 | All AC already verified by Phase 5 automated tests | No human judgment value added | Skip to Phase 7 with reduced specialist set |
 
+
+
+## Sprint 10 Audit: F-P2-1 修复确认
+
+**Issue**: Phase 6 Specialist Sub-agents 未定义 — 缺少 reviewer sub-agent _SKILL.md
+**Status**: ✅ RESOLVED — Sub-agents 已存在且已定义
+
+| Sub-Agent | _SKILL.md Location | Status |
+|-----------|-------------------|--------|
+| Reviewer (main) | `reviewer/_SKILL.md` | ✅ Exists (~28KB) |
+| Security Reviewer | `specialists/security/_SKILL.md` | ✅ Exists (~5.6KB) |
+| Testing Reviewer | `specialists/testing/_SKILL.md` | ✅ Exists (~6KB) |
+
+**Note**: Phase 6 review architecture includes reviewer sub-agents under `reviewer/` directory (main reviewer skill) and specialist sub-agents under `specialists/` directory (security, testing, performance, etc.). Each has its own _SKILL.md with independent execution capabilities. The main phase-6-review/_SKILL.md defines the trigger decision logic (Step D0) that orchestrates these sub-agents.

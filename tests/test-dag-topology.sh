@@ -342,3 +342,20 @@ fi
 echo ""
 echo "  ✅ All Kahn Algorithm edge case tests passed!"
 exit 0
+
+## Sprint 10 Audit: G-P2-3 DAG Topology Tests
+
+**Issue**: DAG 拓扑排序算法正确性无可执行验证
+**Status**: ✅ RESOLVED — `tests/test-dag-topology.sh` exists with 6 comprehensive tests
+
+**Test Coverage**:
+| Test | Description | Validates |
+|------|-------------|-----------|
+| Test 1: Linear Chain (A→B→C→D) | Linear dependency ordering | Correct topological sort |
+| Test 2: Diamond DAG (A→B, A→C, B→D, C→D) | Diamond dependency pattern | Correct wave grouping |
+| Test 3: Circular Dependency (A→B→C→A) | Cycle detection | CYCLE_DETECTED output |
+| Test 4: Single Node (A) | Trivial graph | Edge case handling |
+| Test 5: Independent Nodes (A, B, C) | No dependencies | All nodes present |
+| Test 6: Multiple Roots Mixed Dependencies | Complex DAG structure | Correct positioning |
+
+**Validation**: Run with `bash tests/test-dag-topology.sh`. Includes inline Kahn's algorithm implementation for standalone execution.

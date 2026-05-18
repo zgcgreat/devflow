@@ -6,6 +6,7 @@ layer: L1-INTERACTION (SuperCorp 交互层)
 source: SuperCorp Phase 2 + Mega-Workflow DAG Routing
 dependencies:
   - writing-plans
+token_budget: ~100K tokens (Phase 2 design context)
 allowed-tools:
   - Read
   - Bash
@@ -116,6 +117,61 @@ while read ac; do grep -q "$ac" .ultimate-workflow/<req-id>/02-design.md && echo
 # Verify ADR count meets minimum (≥3)
 adr_count=$(grep -c "^ADR-" .ultimate-workflow/<req-id>/02-design.md || true); test "$adr_count" -ge 3 && echo "G2-ADR PASS" || echo "G2-ADR FAIL: need $((3 - adr_count)) more ADRs"
 ```
+
+### G2 Automated Structural Checks (Sprint 9 Addition)
+
+**G2-PHASE2 自动化检查清单** — 以下为 grep-able structural checks，用于验证设计文档质量：
+
+| Check | Command | Threshold | Gate Result |
+|-------|---------|-----------|-------------|
+| Module Boundaries | `grep -c "^## Module\|^## Architecture" 02-design.md` | ≥3 module sections | PASS/FAIL |
+| API Definitions | `grep -c "^### API\|^#### Endpoint" 02-design.md` | ≥1 API per AC | PASS/FAIL |
+| Data Models | `grep -c "^### Data Model\|^#### Entity\|^ER Diagram" 02-design.md` | ≥2 data model sections | PASS/FAIL |
+| ADR Records | `grep -c "^ADR-" 02-design.md` | ≥3 ADRs | PASS/FAIL |
+| Brownfield Markers | `grep -c "\[BROWNFIELD\]\|既有\|migration" 02-design.md` | ≥1 if brownfield | PASS/FAIL |
+
+**Automated Gate Script**:
+```bash
+#!/bin/bash
+# G2-PHASE2 automated structural check (Sprint 9 addition)
+# Usage: ./g2-structural-check.sh .ultimate-workflow/<req-id>/02-design.md
+
+DESIGN_DOC=$1
+PASS_COUNT=0
+FAIL_COUNT=0
+
+check() {
+  local name=$1
+  local cmd=$2
+  local threshold=$3
+  
+  result=$(eval "$cmd" || true)
+  if [ "$result" -ge "$threshold" ] 2>/dev/null; then
+    echo "✅ $name: $result (≥$threshold) PASS"
+    PASS_COUNT=$((PASS_COUNT + 1))
+  else
+    echo "❌ $name: $result (<$threshold) FAIL"
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+  fi
+}
+
+check "Module Boundaries" "grep -c '^## Module\|^## Architecture' $DESIGN_DOC" 3
+check "API Definitions" "grep -c '^### API\|^#### Endpoint' $DESIGN_DOC" 1
+check "Data Models" "grep -c '^### Data Model\|^#### Entity' $DESIGN_DOC" 2
+check "ADR Records" "grep -c '^ADR-' $DESIGN_DOC" 3
+
+echo "---"
+echo "G2 Gate: $PASS_COUNT PASS, $FAIL_COUNT FAIL"
+if [ "$FAIL_COUNT" -gt 0 ]; then
+  echo "Result: FAIL — Fix failed checks before Phase 2a/Phase 3"
+  exit 1
+else
+  echo "Result: PASS — Proceed to Phase 2a/Phase 3"
+  exit 0
+fi
+```
+
+**Rationale**: These grep-able structural checks ensure design documents meet minimum quality thresholds before proceeding to implementation. Module boundaries prevent tangled architectures, API definitions ensure AC coverage, data models guarantee schema completeness, and ADRs document critical decisions.
 
 ---
 

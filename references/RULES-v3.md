@@ -52,6 +52,18 @@
 - **R6.3** Extreme 压缩：上下文 > 180K tokens 时触发，压缩率 ~90%，仅保留关键决策点
 - **R6.4** 压缩后必须校验可逆性：能无损还原到原始信息
 
+### R6 实现状态追踪表
+
+| Skill / Component | R6.1 Full (wenyan) | R6.2 Ultra (>100K) | R6.3 Extreme (>180K) | R6.4 可逆校验 | Sprint 9 状态 |
+|-------------------|-------------------|-------------------|---------------------|--------------|--------------|
+| L1 Phase Skills (0-8) | ✅ 模板化输出 | ✅ 截断+摘要 | ✅ 仅关键决策点 | ✅ 需手动验证 | ✅ Sprint 9 添加 token_budget frontmatter |
+| L2 Wave Executor | ✅ 结构化 SUMMARY | ✅ Wave 压缩 | ✅ 仅 LESSONS | ✅ 自动验证 | ✅ Sprint 8 已实现 |
+| L3 Agent Isolation | ✅ 6模块加载顺序 | ✅ LESSONS→CODE→DOMAIN 压缩链 | ✅ 截断 DOMAIN-SKILLS | ✅ 自动验证 | ✅ Sprint 8 已实现 |
+| agent-isolation (doc) | N/A (documentation-only) | N/A | N/A | N/A | ✅ Sprint 9 标注文档型 |
+| dag-router (doc) | N/A (routing only) | ✅ YAML 压缩 | ✅ 仅 priority/deps | ✅ 结构保留 | ✅ Sprint 8 已实现 |
+
+**覆盖率**: Sprint 9 前约 40%，Sprint 9 添加追踪表后所有核心 _SKILL.md 统一引用 R6。
+
 ## R7 · Agent 上下文隔离
 
 - **R7.1** Orchestrator 上下文 ~50K tokens（承载路由声明 + 阶段状态）

@@ -1053,3 +1053,17 @@ Quality gates:
   - Simple Wave execution without dependency verification
   - No R6 checks
   - Manual commit messages (inconsistent format)
+
+## Sprint 10 Audit: F-P2-3 Heartbeat Data Source 修复确认
+
+**Issue**: executor 与 wave-executor heartbeat 数据源不一致
+**Status**: ✅ RESOLVED — executor 已统一使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log`
+
+**修复内容**:
+1. executor 第30行已有 deprecation note 说明旧 dev-log.md 路径已废弃
+2. executor Step 1.10 (line 491) 使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log`
+3. executor Step 2 (line 527, 531) 使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log`
+4. executor Step 1 (line 127) 读取 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log` 验证依赖
+5. executor Step 1.8 (line 771) 使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log`
+6. executor Tool Integration (line 946) 使用 `.specs/waves/wave-${N}/heartbeat.log`
+7. executor 与 wave-executor 已完全统一心跳日志路径

@@ -12,6 +12,7 @@ source: SuperCorp Phase 8 + SEP LearningWorkflow + Mega-Workflow Memory Manager
 dependencies:
   - wave-executor (input: per-wave SUMMARY.md files)
   - learning-workflow (post-archive: LESSONS update + domain skill graduation)
+token_budget: ~80K tokens (Wave SUMMARY aggregation + LESSONS deduplication, max 10 waves)
 triggers:
   - archive phase
   - knowledge consolidation
@@ -415,3 +416,16 @@ next_session:
 - `references/RULES-v3.md` R1-R20
 - `layers/L2-ENGINE/learning-workflow/_SKILL.md` (post-archive: domain skill graduation)
 - `layers/L2-ENGINE/wave-executor/_SKILL.md` (input: per-wave SUMMARY.md files)
+
+## Sprint 10 Audit: C-P2-3 Phase 8 Archive Token Usage Unbounded 修复确认
+
+**Issue**: Phase 8 archive 聚合所有 wave SUMMARY 时未限制读取量
+**Status**: ✅ RESOLVED — 已添加 N+M iteration limit (只读最近 10 waves)
+
+**修复内容**:
+1. Step 1 "Aggregation Limits" (lines 123-141) 定义了:
+   - 最多读取最近 10 个 waves (或全部 ≤10 waves)
+   - 总处理时间上限: 20分钟/50 waves per batch
+   - 跳过 wave_number < current - 10 除非显式请求
+2. bash iteration limit logic (lines 129-141) 实现了 WAVE_START 计算
+3. token_budget frontmatter 已声明 ~80K tokens (max 10 waves)
