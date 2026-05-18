@@ -243,12 +243,14 @@ For each task in wave (parallel if no shared resources):
 
 **Parallelism strategy**:
 
-| Scenario | Parallelism Level | Strategy |
-|----------|------------------|----------|
-| No shared resources (pure frontend components) | HIGH | All tasks truly parallel |
-| Shared database schema | MEDIUM | Serial DDL migrations, parallel DML operations |
-| Shared API contract | LOW | Serial interface definition updates, parallel implementations |
-| Conflicting file modifications | NONE | Force serial execution |
+The parallelism level definitions below map concrete scenarios to the canonical levels defined by [parallel-engine](../../L3-ARCHITECTURE/parallel-engine/_SKILL.md). See that file for the authoritative unified table. The wave-executor's role is to apply these definitions — not redefine them.
+
+| Scenario | Canonical Level | Execution Illustration (wave-executor context) |
+|----------|----------------|-----------------------------------------------|
+| No shared resources (pure frontend components) | **HIGH** | All tasks truly parallel, each in `wt/{task-id}` |
+| Shared database schema | **MEDIUM** | Serial DDL migrations, parallel DML operations — conflicts resolved via file locks, last-write-wins |
+| Shared API contract | **LOW** | Serial interface definition updates, parallel implementations — sequential commit within wave |
+| Conflicting file modifications | **NONE** | Force serial execution — single task, atomic commit |
 
 **Detection logic**:
 
