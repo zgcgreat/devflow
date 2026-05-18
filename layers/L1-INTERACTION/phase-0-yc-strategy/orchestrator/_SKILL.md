@@ -8,6 +8,7 @@ description: |
   Coordinates specialist agents, enforces quality gates, maintains project state throughout multi-phase workflows. (ultimate-workflow)
 layer: L1-INTERACTION
 parent: phase-0-yc-strategy
+token_budget: "~200K per execution agent"
 ---
 
 # Orchestrator — Workflow Pipeline Manager & Agent Coordinator

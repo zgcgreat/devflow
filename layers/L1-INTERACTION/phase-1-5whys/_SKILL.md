@@ -21,6 +21,7 @@ allowed-tools:
   - AskUserQuestion
   - WebSearch
   - Skill
+token_budget: "~200K per execution agent"
 ---
 
 # Phase 1: 5 Whys Deep Dive — Requirements Clarification

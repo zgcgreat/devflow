@@ -20,6 +20,7 @@ allowed-tools:
   - AskUserQuestion
   - WebSearch
   - WebFetch
+token_budget: "~200K per execution agent"
 ---
 
 # Phase 0: YC Six Questions — Strategic Assessment

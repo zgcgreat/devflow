@@ -50,6 +50,15 @@ Before starting review, verify ALL of the following:
 
 **Gate Result**: `[PASS / FAIL]` — If any item FAILS, address before starting. Stage A must pass for every requirement review.
 
+**Shared gate-check execution** (recommended over manual checklist):
+
+```bash
+# Run shared G3-PHASE6 Review Quality gate
+./scripts/gate-check.sh G3-PHASE6 "$PROJECT_ROOT" --detail
+# Exit 0 = all prerequisite checks passed, proceed to Stage A
+# Exit 1 = failed, address missing artifacts before starting review
+```
+
 ### Key Principles
 
 1. **Two-Stage Separation**: Spec compliance (Stage A) and code quality (Stage B) are orthogonal concerns — don't mix them

@@ -16,6 +16,7 @@ triggers:
   - clarify requirements
   - decision gate
   - G2.5
+token_budget: "~200K per execution agent"
 ---
 
 # Phase 1b: 决策捕获（Discuss）

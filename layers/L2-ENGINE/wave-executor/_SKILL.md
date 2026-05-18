@@ -113,17 +113,16 @@ cat .ultimate-workflow/wave-plan.yaml
 #     parallelism: false (depends on Wave 1)
 ```
 
-**Validate wave plan integrity**:
+**Validate wave plan integrity** (shared gate-check):
 
 ```bash
-# Check for cycles (should already be caught by DAG Router, but verify)
+# Run shared G4 Execution Readiness gate
+./scripts/gate-check.sh G4 "$PROJECT_ROOT" --detail
+# Exit 0 = all checks passed, proceed to execution
+# Exit 1 = failed, fix identified issues before starting
+
+# Additional DAG cycle check (G4 covers this via wave-plan structure)
 python3 scripts/validate-dag.py --input .ultimate-workflow/wave-plan.yaml
-
-# Verify all task IDs are unique
-grep "^      - id:" .ultimate-workflow/wave-plan.yaml | sort | uniq -d
-
-# Check priority distribution
-grep "priority:" .ultimate-workflow/wave-plan.yaml | sort | uniq -c
 ```
 
 **Output format**:

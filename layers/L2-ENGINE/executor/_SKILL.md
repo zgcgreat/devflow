@@ -445,14 +445,16 @@ Document implementation decisions and issues:
 - Email validation edge case: "user@localhost" rejected → Acceptable (require valid domain)
 
 **LESSONS Nomination**:
-- L-NEW [SUCCESS] bcrypt default salt rounds (10) sufficient for most apps → Wave {N}, Task: auth-model
+- **L-103 [SUCCESS]** bcrypt default salt rounds (10) sufficient for most apps → Wave {N}, Task: auth-model
   - Root cause: Verified via testing, no issues found
   - Fix: Confirmed best practice
   - Reusability: ⭐⭐⭐
-- L-NEW [INSIGHT] Type-first development catches interface mismatches early → Wave {N}, Task: auth-model
+- **L-104 [INSIGHT]** Type-first development catches interface mismatches early → Wave {N}, Task: auth-model
   - Root cause: Catched TS2307 errors before runtime
   - Fix: Define types/contracts first, implementation second
   - Reusability: ⭐⭐⭐⭐
+
+> Note: L-XXX numbers are temporary placeholders assigned during wave execution. The learning-workflow Step 2 assigns the final canonical L-XXX number during LESSONS.md consolidation (see learning-workflow/_SKILL.md §Step 2 Numbering rules).
 ```
 
 #### Step 1.10: Atomic Commit (caveman-commit)
@@ -572,15 +574,17 @@ See canonical template in [wave-executor/_SKILL.md](../wave-executor/_SKILL.md#s
 | api-service | ❌ FAIL | 15min | 1/3 | TypeScript compile error TS2307 |
 
 ## LESSONS Nomination
-- L-NEW [SUCCESS] bcrypt salt rounds 10 sufficient for most apps → Wave {N}, Task: auth-model
+- **L-105 [SUCCESS]** bcrypt salt rounds 10 sufficient for most apps → Wave {N}, Task: auth-model
   - Root cause: Verified via testing, no issues found
   - Fix: Confirmed best practice
   - Reusability: ⭐⭐⭐
 
-- L-NEW [FAILURE] Missing type import causes TS2307 → Wave {N}, Task: api-service
+- **L-106 [FAILURE]** Missing type import causes TS2307 → Wave {N}, Task: api-service
   - Root cause: Import path incorrect or file not exported
   - Fix: `import { AuthConfig } from './types'`
   - Reusability: ⭐⭐
+
+> Note: L-XXX numbers are temporary placeholders assigned during wave execution. The learning-workflow Step 2 assigns the final canonical L-XXX number during LESSONS.md consolidation (see learning-workflow/_SKILL.md §Step 2 Numbering rules).
 
 ## Breaking Changes
 
@@ -606,10 +610,10 @@ Wave {N+1} depends on:
 
 #### LESSONS Nomination Format (executor-specific)
 
-All lesson nominations in executor MUST use the `L-XXX` prefix format for cross-file consistency:
+All lesson nominations in executor MUST use the `L-XXX` prefix format for cross-file consistency. Use sequential placeholder numbers (e.g., L-103, L-104); learning-workflow Step 2 assigns final canonical L-XXX during consolidation:
 
-- `L-NEW [{CATEGORY}] {lesson_title} → Wave {N}, Task: {task_id}` — new lesson nominated from this wave
-- `L-UPDATE [{CATEGORY}] {lesson_title} → Wave {N}, Task: {task_id}` — existing lesson updated with new observation
+- **L-{ID} [NEW] {lesson_title} → Wave {N}, Task: {task_id}** — new lesson nominated from this wave
+- **L-{ID} [UPDATE] {lesson_title} → Wave {N}, Task: {task_id}** — existing lesson updated with new observation
   - Root cause: {description}
   - Fix: {solution}
   - Reusability: ⭐{rating}
