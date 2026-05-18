@@ -337,6 +337,50 @@ const ambiguities = detectAmbiguities(analysisDoc);
 - Team Preferences: `.ultimate-workflow/memory/TEAM_PREFERENCES.md`
 ```
 
+### Step 3.5: PartyMode Output Gate 集成（仅当决策需 PartyMode 审议时）
+
+当 Step 2 中某个歧义点涉及 ≥3 个技术维度交叉（如架构选型 + 性能 + 安全）或 Agent 置信度 <70% 时，调用 PartyMode (L2-ENGINE) 进行多 Agent 共识审议。
+
+**PartyMode 调用契约**:
+
+```
+Phase 1b → PartyMode (Decision Type: Technical Architecture)
+    │
+    ├─ Step A: 提交问题陈述（含上下文 + 约束 + 成功标准）
+    ├─ Step B: 等待 PartyMode consensus gate 验证
+    ├─ Step C: 消费 PartyMode gate output
+    │   │
+    │   └─ Gate PASS → 将 consensus decision 写入 CONTEXT.md
+    │          作为 [PARTYMODE-CONSENSUS] 标记的硬约束
+    │   │
+    │   └─ Gate FAIL → 执行 fallback protocol (FAILLVL-1→3)
+    │          最终结果写入 CONTEXT.md 并标注 fallback level
+    │
+    └─ Step D: 将 PartyMode gate validation report 附加到 G2.5 gate check
+```
+
+**PartyMode Output Gate 消费规则**:
+
+| Gate 结果 | CONTEXT.md 写入格式 | G2.5 影响 |
+|-----------|---------------------|-----------|
+| PASS | `[PARTYMODE-CONSENSUS: decision + weighted_score]` | 该决策项标记为 ✅（已确认） |
+| FAIL → LVL-1 解决 | `[PARTYMODE-CONSENSUS: decision + FALLBACK-LVL-1]` | 该决策项标记为 ✅（已确认） |
+| FAIL → LVL-2 解决 | `[PARTYMODE-CONSENSUS: decision + FALLBACK-LVL-2]` | 该决策项标记为 ✅（已确认） |
+| FAIL → LVL-3 解决 | `[PARTYMODE-CONSENSUS: decision + FALLBACK-LVL-3 + Architect override]` | 该决策项标记为 ✅（已确认） |
+| FAIL（无 fallback） | `[PARTYMODE-NEEDS-CLARIFICATION: reason]` | 该决策项标记为 [NEEDS CLARIFICATION] |
+
+**消费契约注释**（写入 CONTEXT.md 的 PartyMode 决策旁）:
+```markdown
+> **来源**: PartyMode Consensus Gate (G1:75% PASS | G2:7.4/10 PASS | G3:0 conflicts PASS | G4:4 rounds PASS)
+> **Gate Validation**: `.ultimate-workflow/<req-id>/partymode-gate-report.md`
+```
+
+**未通过 Gate 的决策不计入覆盖率**:
+- `[PARTYMODE-NEEDS-CLARIFICATION]` 项在 G2.5 覆盖率计算中计为未决项
+- 需回到 Step 2 进行二次追问或手动决策
+
+---
+
 ### Step 4: 输出决策捕获报告
 
 ```markdown
@@ -396,6 +440,40 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 | 未决项标记 | 所有未决项标注[NEEDS CLARIFICATION] | 阻止进入Phase 2 |
 | CONTEXT.md完整性 | 文件存在且格式正确 | 重新生成 |
 | 用户确认 | 用户回复Y或继续 | 停等用户输入 |
+| **PartyMode Gate 集成** | 所有 PartyMode 审议的决策均已消费 gate output 并标记 | 未消费 gate result 的决策计为 [NEEDS CLARIFICATION] |
+| **PartyMode Gate Report** | `.ultimate-workflow/<req-id>/partymode-gate-report.md` 存在（如有 PartyMode 调用） | 缺失则回溯 PartyMode Step D |
+
+### G2.5 Gate Check 最终验证模板
+
+```markdown
+## G2.5 Decision Clarity Gate — Final Validation
+
+**Gate Result**: ✅ PASS / ❌ FAIL
+
+### Gate Checks
+| Gate | Condition | Actual | Result |
+|------|-----------|--------|--------|
+| G1: Decision Coverage | ≥70% key decisions confirmed | 8/11 = 73% | ✅ PASS |
+| G2: Unresolved Items | All marked [NEEDS CLARIFICATION] | 3 items marked | ✅ PASS |
+| G3: CONTEXT.md Integrity | File exists + valid format | Present | ✅ PASS |
+| G4: User Confirmation | User explicitly confirmed | Y | ✅ PASS |
+| G5: PartyMode Gate Integration | All PartyMode decisions consumed | 2 decisions, 2 consumed | ✅ PASS |
+| G6: PartyMode Gate Report | Report exists (if PartyMode called) | Present | ✅ PASS |
+
+### Unresolved Items (3)
+1. [NEEDS CLARIFICATION] CDN 选择 — 影响: 静态资源分发 | 建议: 根据用户地域决定
+2. [NEEDS CLARIFICATION] 日志聚合方案 — 影响: 监控能力 | 建议: MVP 用 Sentry
+3. [NEEDS CLARIFICATION] CI/CD 平台 — 影响: 构建流程 | 建议: GitHub Actions
+
+### PartyMode Decisions (2)
+- [PARTYMODE-CONSENSUS] 状态管理: React Context + useReducer (Weighted Score: 8.1/10, Consensus: 85%)
+- [PARTYMODE-CONSENSUS] API 设计: RESTful (Weighted Score: 7.6/10, Consensus: 75%)
+  > Gate Validation: `.ultimate-workflow/<req-id>/partymode-gate-report.md`
+
+### Gate Approval
+**G2.5 Status**: ✅ PASS — Proceed to Phase 2 with 3 unresolved items marked [NEEDS CLARIFICATION]
+**Next Gate**: G2 (Phase 2 Actionability Gate)
+```
 
 ---
 
