@@ -16,7 +16,7 @@ triggers:
   - two-stage review
   - spec compliance check
   - adversarial review
-  - G3 gate
+  - G3-PHASE6 gate
 allowed-tools:
   - Read
   - Bash
@@ -28,7 +28,7 @@ allowed-tools:
 > **Layer**: L1-INTERACTION (SuperCorp 交互层)  
 > **前置**: Phase 5 测试通过, Phase 4 Wave执行完成  
 > **后置产物**: `.ultimate-workflow/<req-id>/06-review.md`  
-> **门控**: G3 — Review Quality Gate
+> **门控**: G3-PHASE6 — Review Quality Gate
 
 ## Preamble
 
@@ -55,7 +55,7 @@ Before starting review, verify ALL of the following:
 1. **Two-Stage Separation**: Spec compliance (Stage A) and code quality (Stage B) are orthogonal concerns — don't mix them
 2. **Three Independent Reviewers in Stage B**: Blind Hunter / Edge Case Hunter / Acceptance Auditor run independently with ~200K context each
 3. **Cross-Model Review for CRITICAL Tasks**: R14 requires comparing results from different models (Claude + Codex) for critical architectural decisions
-4. **G3 Gate is Non-Negotiable**: Phase 6 fails if any P0 spec violation found OR ≥3 P1 issues unaddressed
+4. **G3-PHASE6 Gate is Non-Negotiable**: Phase 6 fails if any P0 spec violation found OR ≥3 P1 issues unaddressed
 
 ---
 
@@ -85,7 +85,7 @@ v3_upgrade:
 
 ## 输出
 
-- `06-review.md` — 双阶段审查报告 + G3门控结果
+- `06-review.md` — 双阶段审查报告 + G3-PHASE6门控结果
 
 ---
 
@@ -111,7 +111,7 @@ Phase 6: 双阶段审查
         ├─ Agents: Blind Hunter + Edge Case Hunter (并行独立)
         ├─ 输入: 代码 + Stage A 通过的覆盖矩阵
         ├─ 输出: 盲点发现 + 边界条件报告
-        └─ Gate: G3 → PASS/FAIL
+        └─ Gate: G3-PHASE6 → PASS/FAIL
 ```
 
 ---
@@ -234,11 +234,11 @@ review_agents:
 
 ---
 
-## Stage A + Stage B 汇总 + G3 门控
+## Stage A + Stage B 汇总 + G3-PHASE6 门控
 
 ### Step C: 双阶段审查报告合并
 
-**⚠️ 强制规则**: 所有 High 风险必须修复后才能通过 G3。Medium 可标记已知问题并计划修复。
+**⚠️ 强制规则**: 所有 High 风险必须修复后才能通过 G3-PHASE6。Medium 可标记已知问题并计划修复。
 
 ```markdown
 # Phase 6 Review Report — [req-id]
@@ -262,20 +262,20 @@ review_agents:
 | E1 | B | Edge Case | low | UI空状态不一致 | Unified EmptyState |
 | E3 | B | Edge Case | medium | Regex special chars | RegExp.escape() |
 
-### G3 门控结果: [FAIL]
+### G3-PHASE6 门控结果: [FAIL]
 
 - **需修复**: R2 (high) — 阻塞 Phase 7
 - **计划中**: R1 (medium), E3 (medium) — 可后续处理
 - **Low风险**: E1 — 忽略或标记 technical debt
 
-G3判定: FAIL → 退回 Wave 修复 R2 后重审
+G3-PHASE6判定: FAIL → 退回 Wave 修复 R2 后重审
 预计修复时间: ~15分钟
 ```
 
 ## Phase 6 → Phase 7 衔接
 
-- G3 PASS → 进入 Phase 7 (Canary发布)
-- G3 FAIL → 退回对应 Wave 修复，重新执行 Phase 4→5→6
+- G3-PHASE6 PASS → 进入 Phase 7 (Canary发布)
+- G3-PHASE6 FAIL → 退回对应 Wave 修复，重新执行 Phase 4→5→6
 - Stage A NOT_PASS → 直接退回 Phase 3/4，不执行 Stage B
 
 ---
@@ -323,7 +323,7 @@ specialist_selection:
 所有触发的 Specialists 作为并行独立 agent 运行在 Stage B 之后：
 
 ```
-Stage B PASS (G3 conditional)
+Stage B PASS (G3-PHASE6 conditional)
     │
     ├─→ Maintainability Specialist ←┐
     ├─→ Testing Specialist ←────────┤
@@ -336,12 +336,12 @@ Stage B PASS (G3 conditional)
 
 每个 specialist agent 输出标准 JSON finding，统一归一到 `06-review.md` 中。
 
-### Step D2: Combined G3 Gate Decision with Specialists
+### Step D2: Combined G3-PHASE6 Gate Decision with Specialists
 
-G3门控升级为多层级：
+G3-PHASE6门控升级为多层级：
 
 ```markdown
-## Combined G3 Gate Result (Dual-Stage + Specialists)
+## Combined G3-PHASE6 Gate Result (Dual-Stage + Specialists)
 
 ### Stage A + Stage B Summary
 - **Spec Compliance**: PASS (4/4 AC)
@@ -355,7 +355,7 @@ G3门控升级为多层级：
 | P1 | Performance | HIGH | N+1 query on user list endpoint | Plan fix (not blocking) |
 | T1 | Testing | MEDIUM | Missing negative-path for file upload | Add test ticket |
 
-### Final G3 Decision: CONDITIONAL PASS
+### Final G3-PHASE6 Decision: CONDITIONAL PASS
 
 **Blocking**: S1 (Security CRITICAL — JWT bypass) → 退回 Phase 4  
 **Not Blocking**: P1 (Performance HIGH), T1 (Testing MEDIUM) → 加入 sprint backlog  
@@ -365,9 +365,9 @@ G3门控升级为多层级：
 
 ### Step D3: Specialist Finding Severity Mapping
 
-| Severity | Definition | G3 Action | Time-to-Fix Expectation |
-|----------|-----------|-----------|----------------------|
-| CRITICAL | 生产可用性或安全性直接影响 | G3 FAIL, blocking deploy | ≤2h (hotfix) |
+| Severity | Definition | G3-PHASE6 Action | Time-to-Fix Expectation |
+|----------|-----------|-----------------|----------------------|
+| CRITICAL | 生产可用性或安全性直接影响 | G3-PHASE6 FAIL, blocking deploy | ≤2h (hotfix) |
 | HIGH | 功能降级或用户体验影响 | Conditional pass with plan | ≤1 sprint |
 | MEDIUM | 可改进但非阻塞 | Accept with ticket | Next release |
 | LOW | 优雅/风格问题 | Accept silently | Technical debt queue |
@@ -380,10 +380,10 @@ G3门控升级为多层级：
 Stage A NOT_PASS:
     └─→ 退回 Phase 3/4 → 补充实现/修改 spec → re-enter Phase 6
 
-Stage A PASS → Stage B FAIL (G3):
+Stage A PASS → Stage B FAIL (G3-PHASE6):
     └─→ 退回对应 Wave → 修复 High/Medium issues → re-enter Phase 6
 
-Stage A PASS → Stage B PASS (G3):
+Stage A PASS → Stage B PASS (G3-PHASE6):
     └─→ Phase 7 Canary发布
 ```
 
@@ -393,7 +393,7 @@ Stage A PASS → Stage B PASS (G3):
 
 | Level | Name | Symptom | Recovery Action | Wave Impact |
 |-------|------|---------|-----------------|-------------|
-| P0 | BLOCKING_HIGH | Stage B high severity finding (e.g., unbounded file upload) or Specialist CRITICAL | G3 FAIL → 退回对应 Wave 修复 → re-enter Phase 6 | Blocks Phase 7 Canary until fixed |
+| P0 | BLOCKING_HIGH | Stage B high severity finding (e.g., unbounded file upload) or Specialist CRITICAL | G3-PHASE6 FAIL → 退回对应 Wave 修复 → re-enter Phase 6 | Blocks Phase 7 Canary until fixed |
 | P1 | CONDITIONAL_PASS | Medium severity findings that require fix plan | Conditional pass with sprint-backlog tickets | Continue to Phase 7 with time-bound fix |
 | P2 | ACCEPT_WITH_NOTE | Low severity/style issues, minor edge cases | Accept silently or defer to tech-debt queue | No impact on deployment |
 | P3 | INFO_NO_FINDING | Stage A covers all AC, no spec deviations detected | Document in review report as clean pass | No impact |
@@ -401,7 +401,7 @@ Stage A PASS → Stage B PASS (G3):
 ## Boundary Conditions (Phase 6 Review)
 
 ### Thresholds
-- **Blocking Criteria**: All HIGH severity findings must be fixed before G3 PASS
+- **Blocking Criteria**: All HIGH severity findings must be fixed before G3-PHASE6 PASS
 - **Spec Coverage Gate**: Stage A NOT_PASS → 直接退回 Phase 3（不进 Stage B）
 - **Cross-Model Review Trigger**: CRITICAL tasks → Claude+Codex comparison per R14
 - **Specialist Cascade Trigger**: diff >200 lines + critical path → red-team + security + testing all active
@@ -414,7 +414,7 @@ Stage A PASS → Stage B PASS (G3):
 ### When NOT to use Phase 6 (Skip directly to Phase 7)
 | Scenario | Skip Because | Alternative |
 |----------|-------------|-------------|
-| Single file fix (<50 lines) | Too small for adversarial review | Direct Phase 7 with G3 manual check |
+| Single file fix (<50 lines) | Too small for adversarial review | Direct Phase 7 with G3-PHASE6 manual check |
 | Hotfix deployment | Time-critical (<2h SLA) | Post-deploy Phase 6 in next sprint |
 | All AC already verified by Phase 5 automated tests | No human judgment value added | Skip to Phase 7 with reduced specialist set |
 

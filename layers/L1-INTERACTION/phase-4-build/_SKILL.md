@@ -19,7 +19,7 @@ allowed-tools:
 > **前置产物**: `03-tasks.md` (Phase 3 通过 G4)
 > **前置产物(消费)**: `.specs/waves/wave-{N}/SUMMARY.md` (Wave Executor L2-ENGINE 写入,Phase 4 直接消费)
 > **后置产物**: Phase 4 自身不写 summary,仅编排和消费;最终汇总在 Phase 8 archive
-> **门控**: G5 — Integration Gate（Phase 6/7/8 前置）
+> **门控**: G4-PHASE4 — Integration Gate（Phase 5/6/7/8 前置）
 
 ## 输入
 
@@ -56,8 +56,8 @@ allowed-tools:
 
 1. 读取 `.specs/waves/wave-{N}/SUMMARY.md`(Wave Executor 写入)
 2. 确认 Verify 通过率、Commit hashes、Lessons learned
-3. 如果 G5 gate PASS → 编排 Wave N+1
-4. 如果 G5 gate FAIL → 创建修复 Task,退回对应 Wave
+3. 如果 G4-PHASE4 gate PASS → 编排 Wave N+1
+4. 如果 G4-PHASE4 gate FAIL → 创建修复 Task,退回对应 Wave
 
 ### Step 3: LearningWorkflow 聚合 (Phase 完成后)
 
@@ -76,7 +76,7 @@ allowed-tools:
 3. 投票达成共识（>70% 一致或加权平均分 ≥ 75%）
 4. 记录决策到 DECISIONS.md
 
-## G5 门控检查（Phase 4→5）
+## G4-PHASE4 门控检查（Phase 4→5）
 
 | 检查项 | 通过条件 | 失败处理 |
 |--------|---------|----------|

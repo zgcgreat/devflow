@@ -18,7 +18,7 @@ allowed-tools:
 > **Layer**: L1-INTERACTION (SuperCorp 交互层)
 > **前置产物**: `01-analysis.md` (Phase 1 通过 G2)
 > **后置产物**: `.ultimate-workflow/<req-id>/02-design.md`
-> **门控**: G3 — Design Quality Gate
+> **门控**: G2-PHASE2 — Design Quality Gate
 
 ## Skill元信息
 
@@ -79,7 +79,7 @@ v3_upgrade:
 - Brownfield 项目必须有"既有架构对齐分析"章节
 - 每个设计决策记录为 ADR-NNN（Architecture Decision Record）
 
-### Step 4: G3 门控检查
+### Step 4: G2-PHASE2 门控检查
 
 | 检查项 | 通过条件 | 失败处理 |
 |--------|---------|----------|
@@ -114,8 +114,8 @@ v3_upgrade:
 
 ### Thresholds
 - **Simple Task Skip**: ≤3 文件且 <50 行改动 → 直接输出 `02-design.md`，跳过 Phase 2a
-- **ADR Minimum**: ≥3 个关键设计决策必须记录（否则 G3 FAIL）
-- **Architecture Clarity**: 模块边界和依赖关系必须在图中清晰标注（否则 G3 FAIL）
+- **ADR Minimum**: ≥3 个关键设计决策必须记录（否则 G2-PHASE2 FAIL）
+- **Architecture Clarity**: 模块边界和依赖关系必须在图中清晰标注（否则 G2-PHASE2 FAIL）
 
 ### Timeout
 - Standard design phase: ≤15 min (read analysis → output design doc)

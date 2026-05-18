@@ -519,6 +519,27 @@ MATCHED_SKILLS=$(echo "${MATCHED_SKILLS[@]}" | tr ' ' '\n' | head -5)
 **Next Steps**: Execution Agent will apply these patterns during implementation.
 ```
 
+#### Feedback Tracking (Cross-Wave Injection Loop Closure)
+
+After injecting skills into subsequent waves, log usage outcomes to create a measurable feedback loop:
+
+```markdown
+## Cross-Wave Injection Log ({YYYY-MM-DD})
+
+| injected_skill | wave_from | wave_to | success:bool | impact_score:1-5 | notes |
+|----------------|-----------|---------|--------------|-------------------|-------|
+| auth.md/JWT-Single-Flight-Refresh | Wave 2 | Wave 3 | true | 5 | Reduced refresh race conditions to zero |
+| file-upload.md/Multi-File-Order | Wave 1 | Wave 3 | false | 2 | Order preserved but batch size limit hit |
+```
+
+**Scoring rubric**: impact_score maps directly to business outcome:
+- 1-2: Minor improvement, mostly cosmetic
+- 3: Clear efficiency gain, no regression
+- 4: Significant quality or velocity improvement
+- 5: Blocker prevented or major bug avoided
+
+**Review cadence**: Every Phase 8 Archive cycle, scan injection logs to identify skills with avg impact < 3 and demote to [NEEDS REVISION].
+
 **Token budget enforcement**:
 - Max 5 skills per wave
 - Max 200K tokens total (including task specs)
@@ -535,7 +556,7 @@ MATCHED_SKILLS=$(echo "${MATCHED_SKILLS[@]}" | tr ' ' '\n' | head -5)
 ```
 Phase N Complete → graduation_scan() [post-phase hook]
     │
-    ├─→ Collect LEARNINGS.md from last N phases
+    ├─→ Collect LEARNINGS.md from last 3 phases (N = 3 fixed; graduated patterns scanned only after completing at least 3 waves)
     │
     ├─→ Jaccard Similarity Clustering (threshold=0.25)
     │   - Group similar lessons by semantic similarity
@@ -667,6 +688,8 @@ Your choice: _
 - Default to P1 for any file write failure (LESSONS.md or domain-skill)
 - Escalate from P2→P0 only when new domain skill directly contradicts existing ≥3yr-old practice
 - Never demote: once P0 assigned, requires manual Orchestrator override to resume graduation
+
+**Retry Chain (RECOVERABLE failures)**: Retry chain: first attempt after 3s, second after 7s (exponential backoff with 2s jitter), max 3 retries. If all retries exhausted and skill still not recovered, escalate to P0 and create incident ticket.
 
 **Deduplication Protocol**: When extracting lessons across waves, merge entries with same root cause into single `[UPDATE]` entry with list of wave sources (e.g., "[UPDATED by Wave 1 + Wave 3]").
 

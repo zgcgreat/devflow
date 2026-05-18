@@ -441,7 +441,7 @@ If threshold met, create `.specs/skills/microservices-adoption.md`:
 | **P0** | BLOCKING | ≥2 agents give conflicting recommendations with no clear consensus after 3 rounds | Escalate to user for final decision; document all agent positions + confidence scores | Discussion halts, user must resolve conflict |
 | **P1** | RECOVERABLE | Single agent times out (2 min) or throws error during round | Use default confidence 5/10 for this agent's vote; continue with remaining agents | Partial result but discussion continues |
 | **P2** | WARNING | Agent provides vague recommendation without justification (e.g., "just do X") | Flag as `[WEAK: no rationale]`, give half-weight in final confidence calculation | Result diluted slightly but still usable |
-| **P3** | INFO | Decision resolved in <2 rounds with unanimous agreement (>7/10 consensus) | Log as quick-win, no further analysis needed | Discussion completes efficiently |
+| **P3** | INFO | Agent opinion divergence on low-impact details (no consensus needed) | Log divergence, continue with majority decision | Non-blocking observation logged, execution continues |
 
 **Severity Assignment Rules**:
 - Default to P1 for any agent timeout (system health issue, not discussion problem)

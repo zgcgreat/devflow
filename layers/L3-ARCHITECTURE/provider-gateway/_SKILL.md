@@ -52,7 +52,7 @@ Before starting provider routing, verify ALL of the following:
 
 1. **Task-Type Matching**: Different tasks require different model strengths (coding → logic, design → vision, review → analysis)
 2. **Cost-Aware Downgrade**: Automatically use cheaper models for simple tasks when reliability proven (≥95% success rate)
-3. **Fallback Chain with Backoff**: Every primary provider has 2 fallbacks with exponential backoff (5s → 10s → 20s)
+3. **Fallback Chain with Backoff + Jitter**: Every primary provider has 2 fallbacks with exponential backoff + random jitter [0, backoff/4] to prevent thundering herd (5-6.5s → 10-12.5s → 20-25s)
 4. **Performance Logging**: Log every provider call (success/failure, latency, tokens) for data-driven optimization
 
 ### When to Activate
@@ -259,8 +259,10 @@ async def execute_with_fallback(task, provider_chain):
             log_provider_performance(provider, success=False, reason="timeout")
             
             if attempt_idx < len(provider_chain) - 1:
-                wait_time = 2 ** attempt_idx * 5  # 5s, 10s, 20s...
-                print(f"[provider-gateway] ⏱️ {provider.name} timeout, retry in {wait_time}s")
+                base_wait = 2 ** attempt_idx * 5  # 5s, 10s, 20s...
+                jitter = random.uniform(0, base_wait / 4)  # prevent thundering herd
+                wait_time = base_wait + jitter
+                print(f"[provider-gateway] ⏱️ {provider.name} timeout, retry in {wait_time:.1f}s")
                 await asyncio.sleep(wait_time)
             continue
             
@@ -320,13 +322,15 @@ def is_hallucination(content, requirements):
     return False
 ```
 
-**Exponential backoff schedule**:
+**Exponential backoff schedule** (with jitter to prevent thundering herd):
 
-| Attempt | Wait Time | Scenario |
-|---------|-----------|----------|
-| 1st fallback | 5 seconds | Timeout on primary |
-| 2nd fallback | 10 seconds | Timeout on 1st fallback |
-| 3rd fallback | 20 seconds | Timeout on 2nd fallback |
+| Attempt | Wait Time (base + jitter) | Jitter Range | Scenario |
+|---------|---------------------------|--------------|----------|
+| 1st fallback | 5s + random(0, 1.5s) → 5-6.5s | [0, backoff/4] | Timeout on primary |
+| 2nd fallback | 10s + random(0, 2.5s) → 10-12.5s | [0, backoff/4] | Timeout on 1st fallback |
+| 3rd fallback | 20s + random(0, 5s) → 20-25s | [0, backoff/4] | Timeout on 2nd fallback |
+
+**Jitter rule**: each retry adds a random delay in range [0, backoff/4] seconds to prevent thundering herd.
 
 **Rate limit handling**:
 - Respect `Retry-After` header if provided

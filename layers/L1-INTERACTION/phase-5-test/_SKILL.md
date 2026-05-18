@@ -18,7 +18,7 @@ allowed-tools:
 > **Layer**: L1-INTERACTION (SuperCorp 交互层) → Layer 3 QA 介入
 > **前置产物**: `03-tasks.md` Phase 4 所有 Wave 完成
 > **后置产物**: `.specs/test/05-test-results.md` (标准化路径,统一命名为 `05-test-results.md`)
-> **门控**: G5 — Test Quality Gate（通过才能进入 Phase 6 审查）
+> **门控**: G5-PHASE5 — Test Quality Gate（通过才能进入 Phase 6 审查）
 
 ## 输入
 
@@ -77,7 +77,7 @@ allowed-tools:
 - **并发场景**: 多用户同时操作同一资源
 - **大文件**: 文件上传的大小限制边界
 
-### Step 5: G5 门控检查
+### Step 5: G5-PHASE5 门控检查
 
 | 检查项 | 通过条件 | 失败处理 |
 |--------|---------|----------|
@@ -98,7 +98,7 @@ allowed-tools:
 
 | Level | Name | Symptom | Recovery Action | Wave Impact |
 |-------|------|---------|-----------------|-------------|
-| P0 | AC_UNCOVERED | ≥10% AC lacks test case → G3 FAIL threshold exceeded | Generate missing test cases, re-execute Phase 4 verification | Blocks Phase 6 Review; return to Phase 4 for fixes |
+| P0 | AC_UNCOVERED | ≥10% AC lacks test case → G5-PHASE5 FAIL threshold exceeded | Generate missing test cases, re-execute Phase 4 verification | Blocks Phase 6 Review; return to Phase 4 for fixes |
 | P1 | CROSS_WAVE_REGRESSION | Wave N+1 module breaks due to Wave N change | Isolate breaking commit, revert, create T-fix task | No cross-wave impact beyond Wave N-1 |
 | P2 | EDGE_CASE_GAP | Missing boundary scenario (>3 confirmed gaps) | Add targeted test cases for null/empty/concurrent | Continue to Phase 6 with known gaps documented |
 | P3 | TEST_FLAKY | Intermittent fail rate >5% in repeat runs | Flag as flaky, run 3x isolation test, defer if unresolved | No blocking; log as technical debt |
@@ -106,7 +106,7 @@ allowed-tools:
 ## Boundary Conditions (Phase 5 Test)
 
 ### Thresholds
-- **AC Coverage**: ≥90% AC必须有对应测试用例（G5 FAIL if <90%）
+- **AC Coverage**: ≥90% AC必须有对应测试用例（G5-PHASE5 FAIL if <90%）
 - **Verify Re-run**: Phase 4所有verify命令必须重新执行通过（100% pass率）
 - **Boundary Testing**: ≥3个边界场景已验证（空值/异常路径/并发/大文件）
 - **Regression Scope**: Wave N+1依赖模块必须回归测试

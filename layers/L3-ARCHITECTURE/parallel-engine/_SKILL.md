@@ -43,6 +43,12 @@ source: DAG-based wave scheduling from L2 wave-executor + L3 dag-router, error r
 dependencies:
   - dag-router (input: WAVE-PLAN.md with parallelism classifications)
   - provider-gateway (input: per-task provider assignments)
+allowed-tools:
+  - Read
+  - Write
+  - Bash
+  - Glob
+  - Edit
 v3_upgrade:
   target_acceleration: ~5x vs sequential execution
   partial_failure_handling: true (proceed with next wave, log failures)
