@@ -679,13 +679,29 @@ Your choice: _
 
 ---
 
+### Graduation Write-Fail Recovery Protocol
+
+When domain-skill directory write fails during Step 5-6 graduation:
+
+1. **First attempt**: Retry with 1s backoff — `mkdir -p domains/ && cp /tmp/{id}.md domains/{id}/_SKILL.md`
+2. **Second attempt**: If first fails, retry with 2s backoff (filesystem may be syncing)
+3. **Third attempt**: If second fails, retry with 4s backoff (disk I/O contention)
+4. **Fallback**: If all 3 retries fail, write to `/tmp/learning-workflow-{timestamp}.md` and emit warning: "⚠️ Domain skill graduation failed after 3 retries — output to temp dir for manual copy"
+5. **Notification**: Update `.specs/waves/current/heartbeat.log` with graduation-fail entry including retry count and fallback path
+
+**Root Cause Analysis**: After write-fail, determine why:
+- Permission denied → `chmod` directory ownership fix
+- Disk full → cleanup old domain skills or request storage increase
+- File in use → wait 1s and retry (file handle held by another process)
+
 ## Error Taxonomy (P0 → P3)
 
 | Level | Name | Definition | Action | Workflow Impact |
 |-------|------|------------|--------|-----------------|
 | **P0** | BLOCKING | Domain skill promotion creates contradictory best practice (conflicts with existing domain skill ≥2yrs old) | Halt graduation, flag for manual review by Orchestrator with side-by-side comparison | Learning pipeline blocked until conflict resolved |
-| **P1** | RECOVERABLE | LESSONS.md write fails OR domain-skill directory permission denied | Retry once; if still fails, output to `/tmp/learning-workflow-{timestamp}.md` and warn user | Knowledge not persisted — cross-session learning loss |
+| **P1** | RECOVERABLE | LESSONS.md write fails OR domain-skill directory permission denied | See Graduation Write-Fail Recovery Protocol below (3 retries with 1s→2s→4s backoff) | Knowledge not persisted — cross-session learning loss |
 | **P2** | WARNING | Pattern appears 2-3 times (below ≥3 graduation threshold) | Mark as `[NEEDS MORE DATA]` in domain-skill draft, don't promote to full domain-skill yet | Graduation deferred until pattern frequency confirmed ≥3 times |
+| **P2** | DOMAIN_WRITE_FAIL | Domain skill directory write fail during graduation Step 5-6 | 1s→2s→4s backoff, max 3 retries | Write to /tmp/{timestamp}.md + heartbeat.log notification |
 | **P3** | INFO | Temporary note written but no cross-session value | Log info message, no action needed — normal for first-time requirements | No impact on learning completeness |
 
 **Severity Assignment Rules**:
@@ -693,7 +709,7 @@ Your choice: _
 - Escalate from P2→P0 only when new domain skill directly contradicts existing ≥3yr-old practice
 - Never demote: once P0 assigned, requires manual Orchestrator override to resume graduation
 
-**Retry Chain (RECOVERABLE failures)**: Retry chain: first attempt after 3s, second after 7s (exponential backoff with 2s jitter), max 3 retries. If all retries exhausted and skill still not recovered, escalate to P0 and create incident ticket.
+**Retry Chain (RECOVERABLE failures)**: For LESSONS.md write fails, use 1s→2s→4s backoff chain per Graduation Write-Fail Recovery Protocol above. For other recoverable failures: exponential backoff starting at 3s, second at 7s (with 2s jitter), max 3 retries. If all retries exhausted and skill still not recovered, escalate to P0 and create incident ticket.
 
 **Deduplication Protocol**: When extracting lessons across waves, merge entries with same root cause into single `[UPDATE]` entry with list of wave sources (e.g., "[UPDATED by Wave 1 + Wave 3]").
 
