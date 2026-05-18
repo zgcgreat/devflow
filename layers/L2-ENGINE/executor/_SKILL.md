@@ -27,6 +27,8 @@ allowed-tools:
 
 # Executor — TDD Implementation & Wave Parallel Execution
 
+> **DEPRECATION NOTE**: `dev-log.md` is deprecated. All heartbeat checkpoints now use the canonical location `.specs/waves/wave-${WAVE_NUM}/heartbeat.log` (unified with wave-executor). Old `dev-log.md` references are retained in comments for backwards compatibility only.
+
 Implement features using Test-Driven Development (TDD) within Wave-based parallel execution framework. Write failing tests first, then minimal code to pass, then refactor. Execute tasks in dependency-aware parallel waves for maximum throughput.
 
 **Core philosophy**: Red → Green → Refactor. Never skip tests. Parallelize where safe, serialize where required. Commit atomically with meaningful messages.
@@ -122,7 +124,7 @@ fi
 for task in $(yq '.wave_plan[] | select(.wave_number == '$WAVE_NUM') | .tasks[].id' wave-plan.yaml); do
   deps=$(yq '.wave_plan[].tasks[] | select(.id == "'$task'") | .deps[]' wave-plan.yaml)
   for dep in $deps; do
-    if ! grep -q "\[checkpoint\].*\[task:${dep}\].*✓" dev-log.md; then
+    if ! grep -q "\[checkpoint\].*\[task:${dep}\].*✓" .specs/waves/wave-${WAVE_NUM}/heartbeat.log; then
       echo "❌ Task $task depends on $dep, which is not complete."
       exit 1
     fi
@@ -478,7 +480,7 @@ git log -1 --stat
 
 **Heartbeat checkpoint**:
 ```bash
-echo "[checkpoint][wave:${WAVE_NUM}][task:${TASK_ID}] ✓ (25min)" >> dev-log.md
+echo "[checkpoint][wave:${WAVE_NUM}][task:${TASK_ID}] ✓ (25min)" >> .specs/waves/wave-${WAVE_NUM}/heartbeat.log
 ```
 
 ---
@@ -507,18 +509,18 @@ done
 for pid in "${TASK_PIDS[@]}"; do
   wait $pid
   if [ $? -ne 0 ]; then
-    echo "❌ Task failed. See dev-log.md for details."
+    echo "❌ Task failed. See .specs/waves/wave-${WAVE_NUM}/heartbeat.log for details."
     FAILED_TASKS+=($task)
   fi
 done
 
 # If any failures → stop Wave, don't proceed to next
 if [ ${#FAILED_TASKS[@]} -gt 0 ]; then
-  echo "[checkpoint][wave:${WAVE_NUM}][all-done] ✗ → fix required" >> dev-log.md
+  echo "[checkpoint][wave:${WAVE_NUM}][all-done] ✗ → fix required" >> .specs/waves/wave-${WAVE_NUM}/heartbeat.log
   exit 1
 fi
 
-echo "[checkpoint][wave:${WAVE_NUM}][all-done] ✓" >> dev-log.md
+echo "[checkpoint][wave:${WAVE_NUM}][all-done] ✓" >> .specs/waves/wave-${WAVE_NUM}/heartbeat.log
 ```
 
 **Context isolation enforcement**:
@@ -576,8 +578,8 @@ Each task runs in isolated Execution Agent context (~200K tokens):
 Trigger post-wave lesson extraction:
 
 ```bash
-# Extract lessons from dev-log entries in this Wave
-grep "Wave ${WAVE_NUM}" dev-log.md | grep -E "LESSONS|ISSUES" > /tmp/wave-lessons.txt
+# Extract lessons from heartbeat log entries in this Wave
+grep "Wave ${WAVE_NUM}" .specs/waves/wave-${WAVE_NUM}/heartbeat.log | grep -E "LESSONS|ISSUES" > /tmp/wave-lessons.txt
 
 # Feed to LearningWorkflow
 learning-workflow extract --from /tmp/wave-lessons.txt --output .specs/memory/LESSONS.md
@@ -897,7 +899,7 @@ git add {files} && git commit -m "{caveman-commit-message}"
 git log -1 --stat
 
 # Heartbeat checkpoint
-echo "[checkpoint][wave:{N}][task:{id}] ✓ ({time})" >> dev-log.md
+echo "[checkpoint][wave:{N}][task:{id}] ✓ ({time})" >> .specs/waves/wave-${N}/heartbeat.log
 ```
 
 ### Optional Tools

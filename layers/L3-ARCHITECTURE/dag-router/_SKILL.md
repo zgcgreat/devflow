@@ -171,10 +171,11 @@ class Task:
         self.shared_resources = shared_resources
 
 class Wave:
-    def __init__(self, number: int, tasks: List[Task], parallelism: str):
+    def __init__(self, number: int, tasks: List[Task], parallelism: str, priority: str):
         self.number = number
         self.tasks = tasks
         self.parallelism = parallelism  # HIGH/MEDIUM/LOW/NONE
+        self.priority = priority  # P0/P1/P2 auto-assigned by depth
 
 def kahn_topological_sort(tasks: List[Task]) -> List[Wave]:
     """
@@ -222,10 +223,19 @@ def kahn_topological_sort(tasks: List[Task]) -> List[Wave]:
         # Step 4: Classify parallelism for this wave
         parallelism = classify_wave_parallelism(wave_tasks)
         
+        wave_num = len(waves) + 1
+
+        # Auto-assign priorities based on topological depth:
+        #   depth 0 (wave 1, no deps)       → P0 (critical path start)
+        #   depth 1 (wave 2, depends on P0) → P1
+        #   depth ≥2 (wave ≥3)              → P2
+        priority = "P0" if wave_num == 1 else ("P1" if wave_num == 2 else "P2")
+
         waves.append(Wave(
-            number=len(waves) + 1,
+            number=wave_num,
             tasks=wave_tasks,
-            parallelism=parallelism
+            parallelism=parallelism,
+            priority=priority
         ))
         
         queue = next_queue
@@ -425,10 +435,10 @@ git worktree add wt/shared main
 - **Strategy**: Per-task worktrees
 - **Estimated Time**: 3min
 
-| Task ID | Name | Depends On | Worktree | Shared Resources |
-|---------|------|------------|----------|------------------|
-| auth-model | Create User auth model | — | wt/auth-model | src/models/ |
-| constants | Define app constants | — | wt/constants | src/constants/ |
+| Task ID | Name | Depends On | Priority | Worktree | Shared Resources |
+|---------|------|------------|----------|----------|------------------|
+| auth-model | Create User auth model | — | P0 | wt/auth-model | src/models/ |
+| constants | Define app constants | — | P0 | wt/constants | src/constants/ |
 
 ### Wave 2
 - **Parallelism**: MEDIUM
@@ -436,10 +446,10 @@ git worktree add wt/shared main
 - **Strategy**: Clustered worktrees (shared resources)
 - **Estimated Time**: 8min
 
-| Task ID | Name | Depends On | Worktree | Shared Resources |
-|---------|------|------------|----------|------------------|
-| auth-service | Implement auth service | auth-model, constants | wt/cluster-0 | src/services/, api/auth/ |
-| api-routes | Setup API routes | auth-service | wt/cluster-0 | api/auth/ |
+| Task ID | Name | Depends On | Priority | Worktree | Shared Resources |
+|---------|------|------------|----------|----------|------------------|
+| auth-service | Implement auth service | auth-model, constants | P1 | wt/cluster-0 | src/services/, api/auth/ |
+| api-routes | Setup API routes | auth-service | P2 | wt/cluster-0 | api/auth/ |
 
 ## Resource Conflict Analysis
 
@@ -713,9 +723,9 @@ exit 0
 - **Strategy**: {per-task|clustered|shared|none}
 - **Estimated Time**: {minutes}
 
-| Task ID | Name | Depends On | Worktree | Shared Resources |
-|---------|------|------------|----------|------------------|
-| {id} | {name} | {deps} | {worktree} | {resources} |
+| Task ID | Name | Depends On | Priority | Worktree | Shared Resources |
+|---------|------|------------|----------|----------|------------------|
+| {id} | {name} | {deps} | {priority} | {worktree} | {resources} |
 
 ## Resource Conflict Analysis
 - **HIGH**: {list or "None"}
