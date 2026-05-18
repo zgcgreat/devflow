@@ -617,6 +617,17 @@ If 3 consecutive waves have ≥50% agent failures → OPEN circuit → skip rema
 If 1 wave completes fully → CLOSE circuit → resume normal execution
 ```
 
+### Unified Parallelism Level Definitions
+
+The following classification is **canonical** across the entire workflow system. All layers defer to this table for parallelism level semantics. See [wave-executor](../../L2-ENGINE/wave-executor/_SKILL.md) for concrete execution examples mapped to these levels.
+
+| Level | Strategy | Description |
+|-------|----------|-------------|
+| **HIGH** | Independent worktrees | Each task in `wt/{task-id}`, no merge needed — true parallelism with zero shared resources |
+| **MEDIUM** | Lock-based coordinated merge | Shared resources protected by file locks, last-write-wins or merge driver — pairwise resource conflicts within a wave |
+| **LOW** | Sequential commit | Tasks run sequentially within a wave, simple merge at end — multiple tasks share same resources |
+| **NONE** | Atomic single task | Single task only, no parallelism overhead |
+
 ### File Merge Strategy per Parallelism Level
 
 | Parallelism | Merge Strategy | Conflict Resolution | Rollback Support |
