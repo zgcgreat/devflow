@@ -315,13 +315,14 @@ done
 
 ## LESSONS Nomination
 
-Extracted from execution logs:
-- **[NEW]** React useEffect Infinite Loop → Wave {N}, Task: user-profile
+Extracted from execution logs. Each lesson gets a temporary L-{ID} placeholder; the actual L-XXX number is assigned during learning-workflow Step 2 (LESSONS.md consolidation). Format: **L-{ID} [NEW/UPDATE]**.
+
+- **L-101 [NEW] React useEffect Infinite Loop** → Wave {N}, Task: user-profile
   - Root cause: Missing dependency array
   - Fix: Add `[userId]` to useEffect dependencies
   - Reusability: ⭐⭐⭐⭐ (common in React projects)
 
-- **[UPDATE]** Token Bucket Rate Limiter → Wave {N}, Task: api-rate-limiter
+- **L-102 [UPDATE] Token Bucket Rate Limiter** → Wave {N}, Task: api-rate-limiter
   - Added Redis backend support
   - Improved concurrent request handling
 
@@ -805,10 +806,12 @@ python3 scripts/validate-dag.py --input .ultimate-workflow/wave-plan.yaml
 | {task_2} | ❌ FAIL | {time} | {passed}/{total} | {error} |
 
 ## LESSONS Nomination
-- **[NEW]** {lesson_name} → Wave {N}, Task: {task_id}
+- **L-{ID} [NEW/UPDATE]** {lesson_name} → Wave {N}, Task: {task_id}
   - Root cause: {description}
   - Fix: {solution}
   - Reusability: ⭐{rating}
+
+> Note: L-{ID} is a temporary placeholder assigned during wave execution. The learning-workflow Step 2 assigns the final canonical L-XXX number during LESSONS.md consolidation (see learning-workflow/_SKILL.md §Step 2 Numbering rules).
 
 ## Breaking Changes
 - None / {list of breaking changes}

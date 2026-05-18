@@ -101,17 +101,29 @@ Phase 8 是 v3.0 **LearningWorkflow自动进化**的核心入口——将本次�
 
 ### Step 1: Wave SUMMARY 聚合
 
-遍历 Phase 4 所有 Wave，提取关键指标：
+遍历 Phase 4 所有 Wave，提取关键指标 from canonical SUMMARIES (see [wave-executor/_SKILL.md](../L2-ENGINE/wave-executor/_SKILL.md) for field definitions). Consume these canonical fields:
+
+- `Tasks Executed` → task count
+- `Success Rate` → parsed as {passed}/{total}
+- `Result` → PASS / NEEDS_WORK / BLOCKED
+- `LESSONS Nomination` section → extract L-XXX entries
+- `Breaking Changes` section → list migration requirements
 
 ```markdown
 # Wave Summaries
 
-| Wave | 任务数 | 成功 | 失败 | 耗时 | LESSONS提名 |
-|------|--------|------|------|------|------------|
-| Wave 1 | 3 | 3 | 0 | 15min | auth-retry-pattern (NEW) |
-| Wave 2 | 2 | 2 | 0 | 8min | — |
-| Wave 3 | 4 | 3 | 1 | 20min | file-upload-concurrent (NEW), api-timeout-stale (UPDATE) |
+| Wave | Tasks Executed | Success Rate | Result | LESSONS Nominated |
+|------|---------------|--------------|--------|-------------------|
+| Wave 1 | 3 | 3/3 (100%) | PASS | auth-retry-pattern (L-NEW) |
+| Wave 2 | 2 | 2/2 (100%) | PASS | — |
+| Wave 3 | 4 | 3/4 (75%) | NEEDS_WORK | file-upload-concurrent (L-NEW), api-timeout-stale (L-UPDATE) |
 ```
+
+**Field mapping rules**:
+- `Tasks Executed` = count from SUMMARY header
+- `Success Rate` = parsed from `{passed}/{total}` format
+- `Result` = read from `**Result**: {value}` line at bottom of SUMMARY
+- LESSONS nominations = extract all `L-XXX [CATEGORY]` entries from LESSONS section
 
 ### Step 2: LESSONS 提名 + 去重
 
@@ -120,23 +132,25 @@ Phase 8 是 v3.0 **LearningWorkflow自动进化**的核心入口——将本次�
 ```markdown
 ## LESSONS Nomination Protocol
 
-### [NEW] auth-retry-pattern (来自 Wave 1)
+### L-NEW [FAILURE] auth-retry-pattern → Wave 1
 - **场景**: JWT token刷新时并发竞争导致401错误
 - **根因**: 多个请求同时检测token过期 → 同时发起刷新 → race condition
 - **解决方案**: Single-flight模式，加锁确保只有一个刷新请求
 - **复用性**: ⭐⭐⭐⭐ (可复用到所有API调用场景)
 
-### [NEW] file-upload-concurrent (来自 Wave 3)
+### L-NEW [FAILURE] file-upload-concurrent → Wave 3
 - **场景**: 多文件并发上传时顺序错乱
 - **根因**: Promise.all并行无order保证，后端按到达顺序处理
 - **解决方案**: 添加fileIndex字段 + 后端按index排序
 - **复用性**: ⭐⭐⭐ (通用文件上传模式)
 
-### [UPDATE] api-timeout-stale (来自 Wave 3, updated from Wave 1)
+### L-UPDATE [FAILURE] api-timeout-stale → Wave 3 (updated from Wave 1)
 - **原记录**: API超时未配置 → 用户无限等待
 - **本次观察**: 已添加5s timeout + retry，但retry策略过于激进(立即重试)
 - **改进**: 改为exponential backoff (base=500ms, max=5s, multiplier=2)
 ```
+
+Note: All L-XXX entries must use the `L-{NEW|UPDATE} [{CATEGORY}] {title} → Wave {N}` prefix format for cross-file consistency. This is enforced by wave-executor and executor templates.
 
 ### Step 3: Domain Skills Promotion
 

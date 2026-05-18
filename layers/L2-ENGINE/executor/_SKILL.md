@@ -445,8 +445,14 @@ Document implementation decisions and issues:
 - Email validation edge case: "user@localhost" rejected → Acceptable (require valid domain)
 
 **LESSONS Nomination**:
-- L-NEW [SUCCESS] bcrypt default salt rounds (10) sufficient for most apps
-- L-NEW [INSIGHT] Type-first development catches interface mismatches early
+- L-NEW [SUCCESS] bcrypt default salt rounds (10) sufficient for most apps → Wave {N}, Task: auth-model
+  - Root cause: Verified via testing, no issues found
+  - Fix: Confirmed best practice
+  - Reusability: ⭐⭐⭐
+- L-NEW [INSIGHT] Type-first development catches interface mismatches early → Wave {N}, Task: auth-model
+  - Root cause: Catched TS2307 errors before runtime
+  - Fix: Define types/contracts first, implementation second
+  - Reusability: ⭐⭐⭐⭐
 ```
 
 #### Step 1.10: Atomic Commit (caveman-commit)
@@ -539,39 +545,76 @@ Each task runs in isolated Execution Agent context (~200K tokens):
 
 #### Generate Wave SUMMARY
 
+See canonical template in [wave-executor/_SKILL.md](../wave-executor/_SKILL.md#step-2-post-wave-actions) for the authoritative Wave SUMMARY format. The executor follows that same structure with these executor-specific notes:
+
+- **Tasks Executed**: count of tasks completed within this wave
+- **Success Rate**: {passed}/{total} ({percentage}%) based on TDD cycle pass/fail
+- **LESSONS Nomination**: use `L-XXX` prefix format (see below)
+- **Breaking Changes**: list any API/schema changes affecting downstream waves
+
 ```markdown
 # Wave {N} Summary — [req-id]
 
-## Basic Info
+## Basic Information
 - **Wave Number**: {N}
 - **Tasks Executed**: {count}
 - **Success Rate**: {passed}/{total} ({percentage}%)
 - **Total Time**: {duration}
 - **Commit Hashes**: [{hash1}, {hash2}, ...]
+- **Started At**: {YYYY-MM-DD HH:mm:ss}
+- **Completed At**: {YYYY-MM-DD HH:mm:ss}
 
 ## Task Details
-| Task | Status | Time | Tests | Coverage | Issues |
-|------|--------|------|-------|----------|--------|
-| auth-model | ✅ PASS | 25min | 3/3 ✓ | 85% | — |
-| constants | ✅ PASS | 8min | 2/2 ✓ | 90% | — |
-| api-service | ❌ FAIL | 15min | 1/3 ✗ | 40% | TypeScript compile error TS2307 |
+
+| Task ID | Status | Duration | Tests Passed | Issues |
+|---------|--------|----------|--------------|--------|
+| auth-model | ✅ PASS | 25min | 3/3 | — |
+| api-service | ❌ FAIL | 15min | 1/3 | TypeScript compile error TS2307 |
 
 ## LESSONS Nomination
-- L-NEW [SUCCESS] bcrypt salt rounds 10 sufficient for most apps
-- L-NEW [FAILURE] Missing type import causes TS2307 (always check imports)
+- L-NEW [SUCCESS] bcrypt salt rounds 10 sufficient for most apps → Wave {N}, Task: auth-model
+  - Root cause: Verified via testing, no issues found
+  - Fix: Confirmed best practice
+  - Reusability: ⭐⭐⭐
+
+- L-NEW [FAILURE] Missing type import causes TS2307 → Wave {N}, Task: api-service
+  - Root cause: Import path incorrect or file not exported
+  - Fix: `import { AuthConfig } from './types'`
+  - Reusability: ⭐⭐
 
 ## Breaking Changes
-- None / {list of breaking API changes}
+
+- None / {list of breaking API/schema changes}
+- Migration required: YES/NO
+- Rollback plan: {steps to revert if needed}
 
 ## Next Wave Dependencies
-- Wave {N+1} depends on: auth-model (completed ✓), api-service (failed ✗)
 
-## Action Required
-⚠️ **Fix api-service before proceeding to Wave {N+1}**:
-1. Add missing import: `import { AuthConfig } from './types'`
-2. Re-run tests
-3. Update SUMMARY
+Wave {N+1} depends on:
+- {task names from Wave N that provide interfaces/APIs}
+- Ensure these are stable before proceeding
+
+## Quality Gates
+
+- [ ] All tasks PASSED or documented failures
+- [ ] No BREAKING changes without migration plan
+- [ ] LearningWorkflow hook executed
+- [ ] SUMMARY.md written to `.specs/waves/wave-{N}/`
+
+**Result**: [PASS / NEEDS WORK / BLOCKED]
 ```
+
+#### LESSONS Nomination Format (executor-specific)
+
+All lesson nominations in executor MUST use the `L-XXX` prefix format for cross-file consistency:
+
+- `L-NEW [{CATEGORY}] {lesson_title} → Wave {N}, Task: {task_id}` — new lesson nominated from this wave
+- `L-UPDATE [{CATEGORY}] {lesson_title} → Wave {N}, Task: {task_id}` — existing lesson updated with new observation
+  - Root cause: {description}
+  - Fix: {solution}
+  - Reusability: ⭐{rating}
+
+Categories: `[SUCCESS]`, `[FAILURE]`, `[INSIGHT]`, `[PERFORMANCE]`, `[ARCHITECTURE]`
 
 #### LearningWorkflow Hook
 
@@ -816,43 +859,11 @@ When some tasks in a wave succeed and others fail:
 
 ### Standard Wave SUMMARY
 
-```markdown
-# Wave {N} Summary — {project-id}
+See canonical template in [wave-executor/_SKILL.md](../wave-executor/_SKILL.md#step-2-post-wave-actions). This section retains executor-specific field notes:
 
-## Basic Information
-- **Wave Number**: {N}
-- **Tasks Executed**: {count}
-- **Success Rate**: {passed}/{total} ({percentage}%)
-- **Total Time**: {duration} (avg {avg_time} per task)
-- **Commit Hashes**: [{hash1}, {hash2}, ...]
-
-## Task Details
-| Task | Status | Time | Tests | Coverage | Issues |
-|------|--------|------|-------|----------|--------|
-| {task_1} | ✅ PASS | {time} | {tests} | {coverage} | — |
-| {task_2} | ✅ PASS | {time} | {tests} | {coverage} | — |
-| {task_3} | ❌ FAIL | {time} | {tests} | {coverage} | {error_summary} |
-
-## LESSONS Nomination
-- L-XXX [SUCCESS] {lesson_title}: {description}
-- L-YYY [FAILURE] {lesson_title}: {description}
-
-## Breaking Changes
-- None / {list breaking API changes with migration guide}
-
-## Next Wave Dependencies
-- Wave {N+1} depends on: {task_list_from_wave_N}
-- Status: {READY / BLOCKED (fix {failing_task} first)}
-
-## Quality Metrics
-- **Test Coverage**: {overall_coverage}% (target: 80%)
-- **Lint Errors**: {count} (target: 0)
-- **TypeScript Errors**: {count} (target: 0)
-- **Build Status**: {PASS/FAIL}
-
-## Recommendations
-{advice for next wave based on this wave's experience}
-```
+- **Task Details table**: include Coverage column (executor-relevant metric)
+- **LESSONS Nomination**: use `L-XXX` prefix format consistently
+- **Quality Gates** section mandatory (includes SUMMARY.md write verification)
 
 ---
 

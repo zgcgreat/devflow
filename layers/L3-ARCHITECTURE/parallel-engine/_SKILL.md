@@ -10,7 +10,7 @@ description: |
 layer: L3-ARCHITECTURE
 source: DAG-based wave scheduling from L2 wave-executor + L3 dag-router, inherited from SEP Wave Engine
 dependencies:
-  - dag-router (input: WAVE-PLAN.md with parallelism classifications per wave)
+  - dag-router (input: wave-plan.yaml with parallelism classifications per wave)
   - provider-gateway (input: per-task provider chains)
   - wave-executor (downstream consumer — receives Parallel Execution Plan)
 triggers:
@@ -29,7 +29,7 @@ allowed-tools:
 # L3-Parallel Engine — Wave N 并行编排引擎
 
 > **Layer**: L3-ARCHITECTURE (全局协调层)  
-> **前置**: WAVE-PLAN.md 已生成 (由 dag-router 输出), Provider Assignment 已完成  
+> **前置**: wave-plan.yaml 已生成 (由 dag-router 输出), Provider Assignment 已完成  
 > **后置产物**: Parallel Execution Plan per wave, Error Recovery Report on partial failure  
 > **门控**: R11 — Wave Dependency Verification Gate
 
@@ -41,7 +41,7 @@ version: 3.0
 layer: L3-ARCHITECTURE
 source: DAG-based wave scheduling from L2 wave-executor + L3 dag-router, error recovery from GSD
 dependencies:
-  - dag-router (input: WAVE-PLAN.md with parallelism classifications)
+  - dag-router (input: wave-plan.yaml with parallelism classifications)
   - provider-gateway (input: per-task provider assignments)
 allowed-tools:
   - Read
@@ -61,7 +61,7 @@ v3_upgrade:
 
 ### What I Am / What I'm Not
 
-**I am**: The L3 parallel orchestration engine that takes WAVE-PLAN.md from dag-router and dispatches agents to execute tasks concurrently within waves, with coordination points, resource contention resolution, and partial failure handling.
+**I am**: The L3 parallel orchestration engine that takes wave-plan.yaml from dag-router and dispatches agents to execute tasks concurrently within waves, with coordination points, resource contention resolution, and partial failure handling.
 
 **I'm not**: A task splitter (that's dag-router), a task executor (that's wave-executor/Phase 4), or a code linter. I schedule and coordinate parallelism — nothing more, nothing less.
 
@@ -69,7 +69,7 @@ v3_upgrade:
 
 Before starting parallel execution, verify ALL of the following:
 
-- [ ] WAVE-PLAN.md exists and has valid per-wave parallelism classifications (HIGH/MEDIUM/LOW/NONE)
+- [ ] wave-plan.yaml exists and has valid per-wave parallelism classifications (HIGH/MEDIUM/LOW/NONE)
 - [ ] Provider Assignment Table is complete (every task has a provider chain)
 - [ ] DAG validation passed — no cycles detected by dag-router
 - [ ] All task IDs are unique across all waves
@@ -89,7 +89,7 @@ Before starting parallel execution, verify ALL of the following:
 ### When to Activate
 
 **Automatic triggers**:
-- dag-router outputs WAVE-PLAN.md with parallelism classifications
+- dag-router outputs wave-plan.yaml with parallelism classifications
 - Phase 4 begins execution cycle
 - Complex feature requiring coordinated multi-agent changes
 
@@ -102,7 +102,7 @@ Before starting parallel execution, verify ALL of the following:
 
 ## 输入
 
-- WAVE-PLAN.md — per-wave task list with parallelism classification (HIGH/MEDIUM/LOW/NONE)
+- wave-plan.yaml — per-wave task list with parallelism classification (HIGH/MEDIUM/LOW/NONE)
 - Provider Assignment Table — per-task provider chains
 - Resource constraints (optional): shared DBs, APIs, file patterns
 
@@ -117,7 +117,7 @@ Before starting parallel execution, verify ALL of the following:
 ## Core Scheduling Algorithm: Dependency-Aware Parallel Optimization
 
 ```python
-# Input: WAVE-PLAN.md output from dag-router
+# Input: wave-plan.yaml output from dag-router
 # Output: Parallel Execution Plan with coordination points
 
 def schedule_parallel_execution(wave_plan):
@@ -497,7 +497,7 @@ def handle_contention(wave_number, resource_key, conflicts):
 
 | Step | Context Size | Tokens Est. | Notes |
 |------|-------------|-------------|-------|
-| Wave Plan Analysis | WAVE-PLAN.md (compressed) | ~3K | Parse all waves + parallelism levels |
+| Wave Plan Analysis | wave-plan.yaml (compressed) | ~3K | Parse all waves + parallelism levels |
 | Task Duration Estimation | Heuristic model | ~200 | Read-only estimation, no LLM call |
 | Coordination Point Generation | Per-wave output | ~500/wave | Low overhead markdown generation |
 | **Total per feature** | | **~4-8K** | **Negligible vs parallel speedup value** |
@@ -589,7 +589,7 @@ def detect_parallel_errors(wave_results):
 
 | Resource | Limit | Threshold | Overbehavior |
 |----------|-------|-----------|--------------|
-| Parallel Engine context (WAVE-PLAN.md parsing) | ~150K tokens max | Warning at >120K (80%) | Compress wave plan to task IDs + parallelism tags only; drop verbose descriptions |
+| Parallel Engine context (wave-plan.yaml parsing) | ~150K tokens max | Warning at >120K (80%) | Compress wave plan to task IDs + parallelism tags only; drop verbose descriptions |
 | Per-wave scheduling overhead | ~10K tokens per wave | No warning — always under budget | If exceeds → use minimal scheduler mode (task ID list only) |
 | Total context for multi-wave planning | ~50K tokens (pre-scan all waves) | Hard cap at 30K before dispatching | Skip pre-scan; schedule waves incrementally one-by-one |
 
@@ -641,7 +641,7 @@ The following classification is **canonical** across the entire workflow system.
 
 | Coordination Point | Trigger | Validation | Failure Behavior |
 |-------------------|---------|-----------|-----------------|
-| **Pre-wave dispatch** | WAVE-PLAN.md loaded + all gates PASS | Every task has provider chain, DAG valid, no cycles | Pause → fix identified issue → retry gate |
+| **Pre-wave dispatch** | wave-plan.yaml loaded + all gates PASS | Every task has provider chain, DAG valid, no cycles | Pause → fix identified issue → retry gate |
 | **Intra-wave barrier** (MEDIUM/LOW) | First agent finishes | All agents in conflict cluster started within stagger window (5s × conflict count) | Wait up to 60s for lagging agents; if exceeded → mark P1, proceed |
 | **Inter-wave barrier** | Wave N all tasks complete | Wave N Summary exists + Result = PASS + no missing artifacts | BLOCKED → re-run failed tasks → regenerate Summary → verify again |
 | **Final integration gate** | All waves complete | All wave Summaries exist + no P0 unresolved errors | FAIL → report to Orchestrator with full error summary |
@@ -654,7 +654,7 @@ The following classification is **canonical** across the entire workflow system.
 | **Some agents fail, no downstream dependency blocked** | Proceed + log for post-wave fix | PASS (with notes) | Continue; repair in Phase 4 |
 | **Blocking agent fails, fallback provider available** | Auto-retry with next provider (≤2x) | RE-WORK | Retry → re-verify dependents |
 | **Blocking agent fails, no fallback provider** | Pause, prompt user for decision | FAIL → User Gate | User chooses: retry manual / skip / abort |
-| **All agents in wave fail** | Roll back worktree changes, return to planning | FAIL → Re-plan | Regenerate WAVE-PLAN.md |
+| **All agents in wave fail** | Roll back worktree changes, return to planning | FAIL → Re-plan | Regenerate wave-plan.yaml |
 | **>50% agents fail in single wave** | Flag as planning problem, escalate to Orchestrator | P0 | May require re-split at Phase 3 (dag-router) |
 
 ---

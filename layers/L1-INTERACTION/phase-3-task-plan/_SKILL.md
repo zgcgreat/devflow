@@ -82,14 +82,16 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 按模板 `templates/03-tasks.md` 输出每个 Task：
 
 ```markdown
-### Task ID: T<NN>
+### Task ID: {kebab-case-id}
 **描述**: <一句话说明做什么>
-**前置**: [T<MM>] (如无条件为空)
+**前置**: [{dep-task-id}] (如无条件为空)
 **Read Files**: [<path1>, <path2>]
 **Write Files**: [<path1>, <path2>]
 **Verify**: `<command>`
 **Done 判定**: <具体的验收标准>
 ```
+
+**Task ID convention**: Use descriptive kebab-case IDs that reflect the task's domain/module (e.g., `user-auth-model`, `payment-webhook-handler`). This aligns with dag-router and executor expectations which use kebab-case identifiers. The legacy `T<NN>` format (e.g., `T01`) is still accepted for backward compatibility but kebab-case is canonical.
 
 ### Step 4: G4 门控检查
 
