@@ -1,9 +1,57 @@
+---
+name: phase-1b-discuss
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Decision capture engine that identifies implementation ambiguities from Phase 1 analysis,
+  conducts interactive Q&A with the user, and generates CONTEXT.md as constraints for Phase 2.
+  Use when: "discuss phase 1", "capture decisions", "clarify requirements", "decision gate". (ultimate-workflow)
+layer: L1-INTERACTION
+source: get-shit-done /gsd-discuss-phase
+dependencies:
+  - context-engineering
+triggers:
+  - discuss phase 1
+  - capture decisions
+  - clarify requirements
+  - decision gate
+  - G2.5
+---
+
 # Phase 1b: 决策捕获（Discuss）
 
 > **Layer**: L1-INTERACTION (SuperCorp 交互层)  
 > **前置产物**: `01-analysis.md` (Phase 1 通过 G2)  
 > **后置产物**: `.ultimate-workflow/<req-id>/CONTEXT.md`  
 > **门控**: G2.5 — Decision Clarity Gate
+
+## Preamble
+
+### What I Am / What I'm Not
+
+**I am**: The decision capture engine that turns ambiguous requirements into concrete implementation constraints. I identify grey areas in Phase 1 output, conduct interactive Q&A with the user, and produce CONTEXT.md for Phase 2 design.
+
+**I'm not**: A requirement gathering tool (that's Phase 0/1), a technical design doc (that's Phase 2a), or a decision log (that's Phase 8 archive). My sole purpose is to eliminate ambiguity before design begins.
+
+### Pre-Requisite Gate Checklist
+
+Before starting discuss phase, verify ALL of the following:
+
+- [ ] Phase 1 `01-analysis.md` exists and has passed G2 (Actionability Gate)
+- [ ] At least one ambiguity area detected (≥3 technical selection ambiguities OR user explicitly requests `/discuss`)
+- [ ] Project context available (`.ultimate-workflow/memory/PROJECT_CONTEXT.md` or fallback to default assumptions)
+- [ ] Team preferences available (`.ultimate-workflow/memory/TEAM_PREFERENCES.md` or fallback to best practices)
+
+**Gate Result**: `[PASS / FAIL]` — If any item FAILS, address before starting. This gate MUST pass for every new requirement.
+
+### Key Principles
+
+1. **Ambiguity Detection First**: Systematically scan Phase 1 output for underspecified technical decisions — don't rely on user to know what's missing
+2. **Option-Based Q&A**: Present options with pros/cons, not yes/no questions. User decides; I facilitate.
+3. **CONTEXT.md is Contract**: Every decision in CONTEXT.md becomes a constraint for Phase 2. Changes require explicit re-discussion.
+4. **70% Rule**: Don't wait for 100% clarity. If ≥70% of key implementation decisions are captured, proceed with remaining items marked [NEEDS CLARIFICATION].
+
+---
 
 ## Skill元信息
 
@@ -364,6 +412,69 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 | 无CONTEXT.md | 自动生成，填充合理默认值 |
 | 已有CONTEXT.md | 增量更新，保留历史决策 |
 | Fast模式 | 跳过Discuss，使用默认决策 |
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Discuss Impact |
+|-------|------|------------|--------|----------------|
+| **P0** | BLOCKING | User disagrees with a critical decision already in CONTEXT.md, or Phase 1 analysis has fundamental misreading of requirements | Rollback affected decisions from CONTEXT.md, re-run Step 1-2 for that area only | Blocks Phase 2 design until resolved |
+| **P1** | RECOVERABLE | User unable to decide between options (says "whatever you think" for ≥2 consecutive questions) | Provide recommendation with rationale, mark as `[RECOMMENDED]`, proceed if user confirms or says no objection | Delays discussion but does not block; proceed after 3 attempts |
+| **P2** | WARNING | Decision has low impact on architecture (e.g., specific CSS framework choice, minor naming convention) | Apply best practice default, document in CONTEXT.md with `[DEFAULT: best practice]` | No impact, proceed normally |
+| **P3** | INFO | Question answered with non-standard response that needs interpretation | Re-phrase question once; if still ambiguous, use P2 default handling | No impact, continue |
+
+**Severity Assignment Rules**:
+- Default to P1 for any undecidable technical selection (API design, data storage, auth method)
+- Escalate from P1→P0 only when user explicitly overrides a previously captured decision OR Phase 1 requirements changed materially since discussion
+- Never demote: once P0 assigned, require explicit user confirmation before proceeding past G2.5
+
+**Auto-Resolution Rules** (no user input needed):
+- If question relates to project-specific concern with clear precedent in CONTEXT.md → auto-resolve with `[PREVIOUS DECISION: see CONTEXT.md line N]`
+- If question is about external dependency version (e.g., "React 18 vs 19") with no breaking changes → auto-resolve with `[DEFAULT: latest stable LTS]`
+
+---
+
+## Boundary Conditions
+
+### Discussion Depth Limits
+
+| Parameter | Limit | Rationale |
+|-----------|-------|-----------|
+| Max decisions to capture per session | 15 items | Beyond 15 → user fatigue increases, diminishing returns on decision quality; if >15 detected, split into two sessions |
+| Max options per question | 3 choices (A/B/C) | More than 3 options causes decision paralysis; group similar options or use follow-up questions |
+| Max follow-up rounds per decision | 2 rounds | Round 1: present options → Round 2: if ambiguous, provide recommendation → Done |
+| Total discussion time estimate | ~10-20 minutes for typical project | If exceeds 30 min, flag as P0 and suggest splitting requirement into sub-components |
+
+### Decision Coverage Thresholds
+
+| Metric | Threshold | Action if Below Threshold |
+|--------|-----------|---------------------------|
+| Key decisions captured | ≥70% of total | Allow proceeding to Phase 2 with remaining marked [NEEDS CLARIFICATION] |
+| Critical area coverage | 100% (API design, data storage, auth) | Block Phase 2 until all critical areas resolved |
+| User confirmation rate | ≥90% of captured decisions explicitly confirmed | If <90%, re-run undecided items with revised options |
+
+### CONTEXT.md Validity Constraints
+
+| Constraint | Rule | Validation |
+|------------|------|------------|
+| File location | Must be at `.ultimate-workflow/<req-id>/CONTEXT.md` | Check existence before Phase 2 starts |
+| Format compliance | Must include all sections from Step 3 template (API Design, Data Storage, Error Handling, etc.) | Phase 2 designer validates schema acceptance |
+| Staleness | Max 7 days between discussion and Phase 2 start | If >7 days, re-verify critical decisions with user |
+
+### Escalation Triggers
+
+**Escalate to Orchestrator (skip normal flow) if**:
+- User requests `/discuss` but Phase 1 has 0 ambiguities detected → phase skipping, proceed directly to Phase 2
+- CONTEXT.md already exists for req-id → incremental update mode (preserve existing decisions, only modify changed areas)
+- User provides contradictory decisions in different questions (e.g., "use REST" then "need GraphQL-like flexibility") → present conflict table, ask user to resolve
+- Project context file missing AND team preferences file missing → proceed with best-practice defaults, document assumptions in CONTEXT.md under `[ASSUMPTIONS]` section
+
+### Provider Routing
+
+- Phase 1b → **高创造力模型** (需要引导用户思考多种可能性，推荐 Claude 3 Opus / GPT-4 Turbo)
+- When user is non-technical → use model with better explanation capability, avoid jargon-heavy options
+- For technical teams comfortable with trade-off analysis → any high-capability model suffices
 
 ---
 

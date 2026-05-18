@@ -1,3 +1,18 @@
+---
+name: phase-2-design
+preamble-tier: 2
+version: 3.0-draft
+layer: L1-INTERACTION (SuperCorp 交互层)
+source: SuperCorp Phase 2 + Mega-Workflow DAG Routing
+dependencies:
+  - writing-plans
+allowed-tools:
+  - Read
+  - Bash
+  - Write
+  - Edit
+---
+
 # Phase 2: 方案设计
 
 > **Layer**: L1-INTERACTION (SuperCorp 交互层)

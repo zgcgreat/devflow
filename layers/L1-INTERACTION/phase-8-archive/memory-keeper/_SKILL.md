@@ -1,3 +1,14 @@
+---
+name: phase-8-memory-keeper
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Knowledge distillation and archival specialist for Phase 8 Archive.
+  Systematically captures, organizes, and preserves project knowledge for cross-session reuse. (ultimate-workflow)
+layer: L1-INTERACTION
+parent: phase-8-archive
+---
+
 # Memory Keeper — Knowledge Distillation & Archival
 
 Systematically capture, organize, and preserve project knowledge for cross-session reuse. Transform raw execution data into structured lessons, domain skills, and decision records.
@@ -551,6 +562,26 @@ grep -A5 "react" .specs/memory/KEYWORD_INDEX.json >> .ultimate-workflow/CONTEXT.
   2. Diff with old index to find missing entries
   3. Update JSON manually or via script
 - **Prevention**: Automate index rebuild on every lesson addition (Git hook)
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Impact |
+|-------|------|------------|--------|--------|
+| **P0** | BLOCKING | DOMAIN SKILL extraction fails (same pattern <3 occurrences, or promoted skill fails on 2nd project), or LESSONS.md numbering sequence broken with >5 gaps/duplicates | Demote skill to [EXPERIMENTAL], rebuild lesson numbers from L-XXX max+1, verify with full index scan before re-promotion attempt | Blocks domain skill adoption; falls back to raw lessons only |
+| **P1** | RECOVERABLE | Lesson extracted without confirmed root cause (premature extraction), keyword index missing entries for ≥20% of lessons, archive checksum mismatch on ≥1 file | Flag [INCOMPLETE], link to ongoing investigation; rebuild index from full LESSONS.md scan; re-archive verified files only | Delays archival but does not block project completion |
+| **P2** | WARNING | Domain skill maturity set to "Established" with exactly 3 occurrences (fragile threshold), lesson applicability scope too broad (>50% of codebase), decision record missing dissenting opinion | Note threshold fragility, narrow applicability definition, request team confirmation for dissenting opinions | No blocking impact, proceed normally |
+| **P3** | INFO | Lesson captured from single wave without cross-project validation, compression reduced file size <20%, related lesson references stale (referenced lesson deleted/rewritten in append-only mode) | Log limitation note, schedule re-evaluation at next project milestone | No impact, continue |
+
+**Severity Assignment Rules**:
+- Default to P0 when domain skill promotion violates ≥3 threshold OR LESSONS.md numbering has non-incremental gaps (>1 skipped number)
+- Escalate from P1→P0 only when archive corruption affects >2 files OR keyword index completely unusable (index rebuild returns 0 entries)
+- Never auto-resolve: domain skills promoted to "Established" must be explicitly confirmed by ≥3 independent project instances
+
+**Auto-Resolution Rules** (no user input needed):
+- If new lesson number = existing max + 1 and file append succeeds → auto-increment counter, no validation delay
+- If compression verification returns >98% information preservation but <100% → proceed with note [COMPRESSION: 98% fidelity], do not block
 
 ---
 

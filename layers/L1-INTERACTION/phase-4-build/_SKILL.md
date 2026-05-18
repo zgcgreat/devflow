@@ -1,3 +1,18 @@
+---
+name: phase-4-build
+preamble-tier: 2
+version: 3.0-draft
+layer: L1-INTERACTION (协调), L2-ENGINE (执行)
+source: SuperCorp Phase 4 + SEP Wave Executor
+dependencies:
+  - subagent-driven-development
+allowed-tools:
+  - Read
+  - Bash
+  - Write
+  - Edit
+---
+
 # Phase 4: 实施 (Wave 并行执行)
 
 > **Layer**: L1-INTERACTION (SuperCorp 交互层) → Layer 2 SEP Engine 介入
@@ -5,21 +20,6 @@
 > **前置产物(消费)**: `.specs/waves/wave-{N}/SUMMARY.md` (Wave Executor L2-ENGINE 写入,Phase 4 直接消费)
 > **后置产物**: Phase 4 自身不写 summary,仅编排和消费;最终汇总在 Phase 8 archive
 > **门控**: G5 — Integration Gate（Phase 6/7/8 前置）
-
-## Skill元信息
-
-```yaml
-name: phase-4-build
-version: 3.0-draft
-layer: L1-INTERACTION (协调), L2-ENGINE (执行)
-source: SuperCorp Phase 4 + SEP Wave Executor
-dependencies:
-  - subagent-driven-development
-v3_upgrade:
-  wave_executor: true (Kahn DAG → parallel waves)
-  learning_workflow: true (Phase complete → LESSONS)
-  party_mode: true (complex decisions → multi-agent consensus)
-```
 
 ## 输入
 

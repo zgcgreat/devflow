@@ -1,3 +1,27 @@
+---
+name: dag-router
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Dependency-aware task router using Kahn's topological sort to group tasks into parallel waves.
+  Classifies waves by resource overlap (HIGH/MEDIUM/LOW/NONE) for worktree isolation.
+  Use when: "route tasks", "create wave plan", "DAG analysis", "topological sort". (ultimate-workflow)
+layer: L3-ARCHITECTURE
+source: SEP DAG Router + Kahn's Algorithm + Mega-Workflow Task Splitter
+dependencies:
+  - phase-3-task-plan (input: task list with dependency annotations)
+  - wave-executor (output: WAVE-PLAN.md for Wave scheduling)
+triggers:
+  - route tasks
+  - create wave plan
+  - DAG analysis
+  - topological sort
+allowed-tools:
+  - Read
+  - Write
+  - Bash
+---
+
 # DAG Router — Task Dependency Analysis → Wave Grouping
 
 Analyze task dependencies using Kahn's topological sort algorithm to group tasks into dependency-aware waves. Maximize parallelism while preventing conflicts through resource overlap detection.
@@ -7,6 +31,23 @@ Analyze task dependencies using Kahn's topological sort algorithm to group tasks
 ---
 
 ## Preamble
+
+### What I Am / What I'm Not
+
+**I am**: The dependency-aware task router that takes Phase 3 task lists and produces optimized Wave Plans using Kahn's topological sort. I determine which tasks can run in parallel, which must be serial, and where to draw worktree boundaries for safety.
+
+**I'm not**: A task generator (Phase 3 creates the tasks), a code executor (Wave Executor runs the tasks), or a priority assigner (I focus on dependency ordering, not business priority). My sole purpose is dependency analysis → wave grouping with parallelism classification.
+
+### Pre-Requisite Gate Checklist
+
+Before starting DAG routing, verify ALL of the following:
+
+- [ ] Phase 3 task plan exists (`03-tasks.md` or `tasks.json`)
+- [ ] Each task has dependency annotations (`depends_on: []` or equivalent)
+- [ ] Task list is non-empty (≥1 task to route)
+- [ ] No duplicate task IDs in the input
+
+**Gate Result**: `[PASS / FAIL]` — If any item FAILS, fix identified issue before starting. This gate MUST pass for every Phase 3 output.
 
 ### Key Principles
 
@@ -563,6 +604,46 @@ exit 0
   3. Re-create worktrees
   4. Add cleanup step to deployment script
 - **Prevention**: Automated worktree cleanup in CI/CD pipeline
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Routing Impact |
+|-------|------|------------|--------|----------------|
+| **P0** | BLOCKING | DAG contains cycle involving ≥5 tasks (fundamental architecture issue) | Halt routing, report cycle path to user with suggestion to split feature | Wave plan not generated — Phase 3 must revise task dependencies |
+| **P1** | RECOVERABLE | Cycle involves <5 tasks OR all tasks have LOW parallelism | Break cycle by removing one dependency edge (prefer last-added); if LOW parallelism → document assumption in WAVE-PLAN.md | Routing continues with manual intervention for cycle break |
+| **P2** | WARNING | Dynamic dependencies detected (runtime-determined, can't be known statically) | Use conservative estimation (assume worst-case deps), document assumptions in WAVE-PLAN.md | Routing proceeds with runtime adjustment allowance |
+| **P3** | INFO | Single task or all tasks independent (trivial DAG) | Skip to-phase 4 directly, generate placeholder WAVE-PLAN.md for consistency | No impact — routing completes immediately |
+
+**Severity Assignment Rules**:
+- Default to P1 for any cycle involving <5 tasks (routable with manual fix)
+- Escalate from P2→P0 only if dynamic dependency turns out to be critical path blocker in Phase 4 execution
+- Never demote: once P0 assigned, requires user to manually revise task dependencies before re-routing
+
+**Cycle Detection Algorithm**: Kahn's topological sort fails → identify cycle nodes → report path (e.g., "cycle detected: auth-model→api-service→auth-controller→auth-model"). User breaks cycle by removing weakest dependency edge.
+
+### Parallelism Classification Criteria
+
+| Classification | Criterion | Worktree Strategy |
+|----------------|-----------|-------------------|
+| HIGH | No shared resources across tasks within wave | Single worktree, parallel execution |
+| MEDIUM | Some shared resources (e.g., same directory) | Single worktree with lock-based serialization for conflicting files |
+| LOW | All tasks share ≥1 common resource | Separate worktrees per task within wave |
+| NONE | No parallelism possible (all tasks dependent) | Serial execution in single wave, no parallelization |
+
+**Classification Rule**: Use most restrictive classification among all task pairs in wave. If any pair shares a mutable resource → at minimum MEDIUM.
+
+### Resource Overlap Detection
+
+| Shared Resource Type | Detection Method | Conflict Risk |
+|---------------------|------------------|---------------|
+| File path overlap | `shared_resources: ["src/models/"]` annotations in task list | HIGH — must serialize |
+| Directory-level overlap | Both tasks modify files within same directory prefix (e.g., `src/auth/*`) | MEDIUM — lock-based coordination |
+| Database schema | Task modifies same table/column (detected via code scan) | HIGH — migration ordering required |
+| Configuration file | Task reads/writes same config key | LOW — typically read-only conflict |
+
+**Over-Threshold**: If task count >50 → flag as P0 escalation, recommend splitting into multiple features before DAG routing.
 
 ---
 

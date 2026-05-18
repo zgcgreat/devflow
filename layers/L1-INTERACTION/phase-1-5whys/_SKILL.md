@@ -1,3 +1,14 @@
+---
+name: phase-1-5whys
+version: 2.0
+layer: L1-INTERACTION
+phase: 1
+description: Apply the "5 Whys" root cause analysis technique to uncover true user needs beneath surface-level requests
+requires: [g1-gate-decision, strategy-document]
+provides: [user-stories, acceptance-criteria, glossary, scope-boundaries, g2-gate-decision]
+gate: G2
+---
+
 # Phase 1: 5 Whys Deep Dive — Requirements Clarification
 
 Apply the "5 Whys" root cause analysis technique to uncover true user needs beneath surface-level requests. Transform vague requirements into testable acceptance criteria with clear scope boundaries. Prevents building solutions to wrong problems.
@@ -726,7 +737,27 @@ echo "✅ STATE.md updated with Phase 1 results"
 
 ---
 
+## Error Taxonomy
+
+| Priority | Condition | Detection Method | Recovery Action |
+|----------|-----------|------------------|-----------------|
+| **P0** | Root cause sits above requirements layer (architectural/infra issue) | 5th "why" yields "because the framework is bad" or "needs new server" | Redirect to Phase 2 (Design), flag as infra refactor ticket, close requirement with P0 label |
+| **P1** | Chain of 5 whys does not converge on single root cause | ≥3 distinct root causes identified at step 5 | Split into parallel requirement branches, each gets own user story set |
+| **P2** | Answer to a "why" is ambiguous (multiple valid interpretations) | Any answer contains "or", "maybe", or spans >2 paragraphs without clear focus | Ask follow-up question to disambiguate before proceeding to next why |
+| **P3** | A branch marked as "closed/defunct" but still active in analysis | A past decision (e.g., "using PostgreSQL") treated as open question mid-chain | Cross-reference with PROJECT_CONTEXT.md, close defunct branches early |
+
+---
+
 ## Boundary Conditions
+
+### Analysis Thresholds
+
+| Parameter | Value/Condition | Rationale | Enforcement |
+|-----------|-----------------|-----------|-------------|
+| Whys depth limit | Maximum 5 layers deep | Beyond 5 whys → diminishing returns, cognitive overload | Stop at step ≤4 if root cause identified; note "chain incomplete — manual review needed" |
+| Per-step timeout | ≤3 min per "why" question | Prevents analysis paralysis on single requirement branch | Auto-advance with "[ASSUMED] next why based on best available info" if exceeded |
+| Convergence condition | Single root cause at final step OR ≥2 parallel branches clearly labeled | Multiple root causes → multi-pronged solution; none → analysis not deep enough | G2 gate validates: "≥1 root cause identified and actionable" or fail |
+| Stakeholder alignment | All named stakeholders agree on ≥4 of 5 whys answers before proceeding to user stories | Prevents requirement rework when stakeholder expectations diverge | Disputed "why" → mark "[DISPUTED by {role}] — requires consensus" |
 
 ### When to Escalate Immediately
 

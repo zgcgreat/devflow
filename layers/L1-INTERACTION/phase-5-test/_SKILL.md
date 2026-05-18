@@ -1,22 +1,24 @@
+---
+name: phase-5-test
+preamble-tier: 2
+version: 3.0-draft
+layer: L1-INTERACTION (协调), L3-ARCHITECTURE (QA)
+source: SuperCorp Phase 5 + Mega-Workflow QA
+dependencies:
+  - writing-plans
+allowed-tools:
+  - Read
+  - Bash
+  - Write
+  - Edit
+---
+
 # Phase 5: 测试 (浏览器 QA + 交叉波测试矩阵)
 
 > **Layer**: L1-INTERACTION (SuperCorp 交互层) → Layer 3 QA 介入
 > **前置产物**: `03-tasks.md` Phase 4 所有 Wave 完成
 > **后置产物**: `.specs/test/05-test-results.md` (标准化路径,统一命名为 `05-test-results.md`)
 > **门控**: G5 — Test Quality Gate（通过才能进入 Phase 6 审查）
-
-## Skill元信息
-
-```yaml
-name: phase-5-test
-version: 3.0-draft
-layer: L1-INTERACTION (协调), L3-ARCHITECTURE (QA)
-source: SuperCorp Phase 5 + Mega-Workflow QA
-dependencies:
-  - writing-plans
-v3_upgrade:
-  cross_wave_matrix: true (Wave N tests → Wave N+1 coverage check)
-```
 
 ## 输入
 

@@ -1,3 +1,15 @@
+---
+name: orchestrator
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Workflow pipeline manager and agent coordinator for Phase 0 YC Strategy.
+  Autonomously manages complete development pipelines from specification to production.
+  Coordinates specialist agents, enforces quality gates, maintains project state throughout multi-phase workflows. (ultimate-workflow)
+layer: L1-INTERACTION
+parent: phase-0-yc-strategy
+---
+
 # Orchestrator — Workflow Pipeline Manager & Agent Coordinator
 
 Autonomously manage complete development pipelines from specification to production. Coordinate specialist agents, enforce quality gates, and maintain project state throughout multi-phase workflows.
@@ -516,6 +528,26 @@ jq '.current_phase = "Complete" | .phases_completed += ["Integration", "Canary"]
   2. Use reference links instead of inline content: "See wave-summary-N.md"
   3. Compress context using distillator if available
 - **Prevention**: Implement sliding window context (only recent 3-5 tasks in full detail)
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Impact |
+|-------|------|------------|--------|--------|
+| **P0** | BLOCKING | Pipeline state inconsistent (task marked complete but not in quality_gates_passed), or >50% tasks blocked after max retries | Halt pipeline, rebuild state from source of truth (task list + wave summaries), verify consistency before resuming | Blocks all downstream work until resolved |
+| **P1** | RECOVERABLE | Agent spawn fails, QA feedback vague (no specific issues listed), single task reaches 3-retry limit | Retry agent spawn up to 2 times; if still failing, mark task BLOCKED and continue pipeline; re-spawn Reviewer with stricter template | Delays current task but does not block entire pipeline |
+| **P2** | WARNING | Integration test FAILS due to non-critical issues (missing optional dependency, cosmetic mismatch), blocked tasks <10% of total | Continue integration, document failures, proceed to canary with warnings | No blocking impact, proceed normally |
+| **P3** | INFO | Minor context accumulation after 20+ tasks, skipped phase has valid justification, one task escalated without cascading risk | Log event in pipeline-activity.md for audit trail | No impact, continue |
+
+**Severity Assignment Rules**:
+- Default to P0 when pipeline state JSON is corrupted (write to temp, mv operation failed mid-write)
+- Escalate from P1→P0 only when retry threshold exceeded AND task has downstream dependents (other tasks blocked waiting for it)
+- Never auto-resolve blocked tasks: blocked status requires Orchestrator confirmation before proceeding past integration phase
+
+**Auto-Resolution Rules** (no user input needed):
+- If a task completes on second retry with identical QA feedback → auto-mark PASS (feedback was likely stale/cached issue, not current code problem)
+- If canary deployment error rate <1% at 10% batch → auto-promote to next batch without re-evaluation
 
 ---
 

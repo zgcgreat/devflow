@@ -1,3 +1,15 @@
+---
+name: phase-6-reviewer
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Three-layer adversarial code review specialist for Phase 6 Review.
+  Blind Hunter / Edge Case Hunter / Acceptance Auditor pipeline.
+  Defaults to "NEEDS WORK" unless overwhelming evidence proves readiness. (ultimate-workflow)
+layer: L1-INTERACTION
+parent: phase-6-review
+---
+
 # Reviewer — Three-Layer Adversarial Code Review
 
 Perform comprehensive code review through three specialized layers: Blind Hunter (fresh eyes), Edge Case Hunter (boundary analysis), and Acceptance Auditor (requirements compliance). Each layer uses distinct methodology to catch different classes of issues.
@@ -561,6 +573,27 @@ echo "  ❓ Questions: ${QUESTION_COUNT}"
   3. If verified → mark finding as "RESOLVED (handled elsewhere)"
   4. Don't delete finding — keep for audit trail
 - **Prevention**: Provide full context when possible (not just diff hunk)
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Impact |
+|-------|------|------------|--------|--------|
+| **P0** | BLOCKING | ≥1 🔴 CRITICAL finding (crash, security vuln, data loss), or Layer 3 shows AC coverage <50% | Block merge, list required fixes, loop back to Executor with specific feedback | Prevents PR/branch from merging until fixed |
+| **P1** | RECOVERABLE | ≥3 🟡 HIGH findings (logic errors, race conditions, leaks) but no CRITICAL, or R6 violations >2 (files outside TASK.md, unapproved dependencies) | NEEDS WORK verdict, list fixes by priority, Executor re-implements with targeted QA pass | Delays merge but does not block; proceed after fixes verified |
+| **P2** | WARNING | 1-2 🟡 HIGH findings acceptably minor, 🔵 MEDIUM count >5 (code smell accumulation), scope creep on non-critical files | CONDITIONAL PASS — merge allowed after high-severity fixes applied, medium issues post-merge | No blocking impact, proceed normally |
+| **P3** | INFO | Zero findings for trivial diff (<10 LOC), edge case gap is theoretical unlikely scenario, reviewer confidence LOW due to single-file scope only | Proceed with caution, note confidence caveats in report, suggest human spot-check if critical path | No impact, continue |
+
+**Severity Assignment Rules**:
+- 🔴 CRITICAL (P0): Must cause runtime error, security breach, or data loss when triggered — not theoretical risk
+- 🟡 HIGH (P1): Likely to fail in production but may require specific conditions to trigger — fix before merge if ≥3
+- 🔵 MEDIUM (P2): Maintainability or readability impact, no functional risk — address post-merge if P0/P1 priority higher
+- ❓ QUESTION (P3): No clear right/wrong answer, needs author clarification only — never blocks merge
+
+**Auto-Resolution Rules** (no user input needed):
+- If all 🔴 findings reference same code location → merge into single finding with comprehensive fix covering entire region
+- If Edge Case Hunter JSON output has 0 unhandled paths AND Blind Hunter found <5 issues → flag as suspicious, request Layer 2 re-run
 
 ---
 

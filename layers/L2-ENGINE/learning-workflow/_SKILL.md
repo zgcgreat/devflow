@@ -1,3 +1,27 @@
+---
+name: learning-workflow
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Automatic evolution engine that extracts lessons from execution data, promotes high-frequency
+  patterns (≥3 occurrences) to domain skills, and injects relevant knowledge into future waves.
+  Use when: "extract lessons", "learn from wave", "domain skill promotion", "knowledge consolidation". (ultimate-workflow)
+layer: L2-ENGINE
+source: SEP LearningWorkflow + Mega-Workflow Memory Manager
+dependencies:
+  - phase-8-archive (post-archive: LESSONS update + domain skill graduation)
+triggers:
+  - extract lessons
+  - learn from wave
+  - domain skill promotion
+  - knowledge consolidation
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+---
+
 # LearningWorkflow — Automatic Evolution Engine
 
 Extract lessons from execution data, promote high-frequency patterns to domain skills, and inject relevant experience into future waves. Makes the system progressively smarter with each use.
@@ -7,6 +31,22 @@ Extract lessons from execution data, promote high-frequency patterns to domain s
 ---
 
 ## Preamble
+
+### What I Am / What I'm Not
+
+**I am**: The automatic evolution engine that turns execution data (Wave failures, task successes, review findings) into durable domain skills and cross-wave injected knowledge. I make the system progressively smarter with each requirement processed.
+
+**I'm not**: A test runner (I don't execute tests, I learn from their results), a report generator (I extract patterns, not summaries), or a Git commit tool. My sole purpose is closed-loop learning: Lessons → Domain Skills → Wave Injection.
+
+### Pre-Requisite Gate Checklist
+
+Before starting learning workflow, verify ALL of the following:
+
+- [ ] At least one Wave SUMMARY.md exists (`/specs/waves/wave-{N}/SUMMARY.md`) with task results
+- [ ] Phase 6 review report available (`06-review.md`) — for edge case extraction
+- [ ] memory/ directory exists and is writable (or create it)
+
+**Gate Result**: `[PASS / FAIL]` — If any item FAILS, address before starting. This gate MUST pass for every learning extraction cycle.
 
 ### Key Principles
 
@@ -611,6 +651,39 @@ Your choice: _
   2. Use TF-IDF weighting instead of raw word counts
   3. Manual review before promoting clusters
 - **Prevention**: Pre-filter common stopwords, use semantic embeddings if available
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Workflow Impact |
+|-------|------|------------|--------|-----------------|
+| **P0** | BLOCKING | Domain skill promotion creates contradictory best practice (conflicts with existing domain skill ≥2yrs old) | Halt graduation, flag for manual review by Orchestrator with side-by-side comparison | Learning pipeline blocked until conflict resolved |
+| **P1** | RECOVERABLE | LESSONS.md write fails OR domain-skill directory permission denied | Retry once; if still fails, output to `/tmp/learning-workflow-{timestamp}.md` and warn user | Knowledge not persisted — cross-session learning loss |
+| **P2** | WARNING | Pattern appears 2-3 times (below ≥3 graduation threshold) | Mark as `[NEEDS MORE DATA]` in domain-skill draft, don't promote to full domain-skill yet | Graduation deferred until pattern frequency confirmed ≥3 times |
+| **P3** | INFO | Temporary note written but no cross-session value | Log info message, no action needed — normal for first-time requirements | No impact on learning completeness |
+
+**Severity Assignment Rules**:
+- Default to P1 for any file write failure (LESSONS.md or domain-skill)
+- Escalate from P2→P0 only when new domain skill directly contradicts existing ≥3yr-old practice
+- Never demote: once P0 assigned, requires manual Orchestrator override to resume graduation
+
+**Deduplication Protocol**: When extracting lessons across waves, merge entries with same root cause into single `[UPDATE]` entry with list of wave sources (e.g., "[UPDATED by Wave 1 + Wave 3]").
+
+### Domain Skill Graduation Criteria
+
+| Criterion | Requirement | Verification |
+|-----------|-------------|--------------|
+| Pattern frequency | ≥3 occurrences across different waves/requirements | Count entries in LESSONS.md matching domain trigger_patterns |
+| Cross-project relevance | Applicable to ≥2 different requirements/projects | Manual review or semantic similarity check (cosine similarity >0.7) |
+| Stability over time | No contradicting examples in 60 days | Check reverse_matches in lessons, reject if contradiction_rate >10% |
+| Implementation completeness | Contains trigger_patterns + best_practices + implementation example | Schema validation against domain-skill SKILL.md template |
+
+**Graduation Failure Handling**: If any criterion fails:
+- Freq <3 → `[NEEDS MORE DATA]` draft, wait for more occurrences
+- Cross-project <2 → Keep as temporary note in TEMPORARY.md only
+- Stability <60 days → Add to domain-skill with `[RECENT: verify after 60 days]` marker
+- Incomplete → Create draft with placeholder sections, prompt user to fill gaps
 
 ---
 

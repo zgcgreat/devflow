@@ -424,6 +424,40 @@ If threshold met, create `.specs/skills/microservices-adoption.md`:
 
 ---
 
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Party Mode Impact |
+|-------|------|------------|--------|-------------------|
+| **P0** | BLOCKING | ≥2 agents give conflicting recommendations with no clear consensus after 3 rounds | Escalate to user for final decision; document all agent positions + confidence scores | Discussion halts, user must resolve conflict |
+| **P1** | RECOVERABLE | Single agent times out (2 min) or throws error during round | Use default confidence 5/10 for this agent's vote; continue with remaining agents | Partial result but discussion continues |
+| **P2** | WARNING | Agent provides vague recommendation without justification (e.g., "just do X") | Flag as `[WEAK: no rationale]`, give half-weight in final confidence calculation | Result diluted slightly but still usable |
+| **P3** | INFO | Decision resolved in <2 rounds with unanimous agreement (>7/10 consensus) | Log as quick-win, no further analysis needed | Discussion completes efficiently |
+
+**Severity Assignment Rules**:
+- Default to P1 for any agent timeout (system health issue, not discussion problem)
+- Escalate from P2→P0 only when ≥3 agents give mutually exclusive recommendations
+- Never demote: once P0 assigned, user must make final call before proceeding
+
+### Consensus Calculation Algorithm
+
+| Round | Action | Threshold |
+|-------|--------|-----------|
+| Round 1 | All agents vote (1-10 confidence) with brief rationale | — |
+| Round 2 | If max-min >4 → agents justify position to lowest-highest gap | Conflict detected if gap >4 |
+| Round 3 | Lowest-confidence agent asks highest-confidence for counter-example | Escalation point: still no convergence after round 3 → P0 |
+| Final | Calculate weighted average (confidence as weight); if ≥7/10 → PASS | Otherwise → escalate to user |
+
+**Consensus Example**:
+```yaml
+# Round 1 votes: [8, 6, 5, 9, 7] → max=9, min=5, gap=4 (conflict)
+# Round 2 agent-3 (5) justifies position to agent-4 (9)
+# Round 3 agent-3 asks for counter-example from agent-4
+# Final: agent-4 provides example showing case where approach fails → agent-3 updates to 7
+# New votes: [8, 7, 7, 8, 7] → weighted_avg = (8*8+7*6+7*5+8*9+7*7)/(8+6+5+9+7) = 7.4/10 → PASS
+```
+
+---
+
 ## Boundary Conditions
 
 ### When to Escalate Immediately

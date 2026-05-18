@@ -1,3 +1,14 @@
+---
+name: phase-7-canary
+version: 2.0
+layer: L1-INTERACTION
+phase: 7
+description: Deploy changes in staged batches (10% → 50% → 100%) with automatic health checks and rollback on threshold breach
+requires: [g3-gate, all-tests-passed]
+provides: [canary-report, rollback-report, g5-gate-decision]
+gate: G5
+---
+
 # Phase 7: Canary Gradual Rollout — Zero-Downtime Deployment
 
 Deploy changes in staged batches (10% → 50% → 100%) with automatic health checks and rollback on threshold breach. Ensures production stability while minimizing user impact.
@@ -450,7 +461,27 @@ New connection pool settings incompatible with existing DB proxy.
 
 ---
 
+## Error Taxonomy
+
+| Priority | Condition | Detection Method | Recovery Action |
+|----------|-----------|------------------|-----------------|
+| **P0** | Canary error rate exceeds threshold (≥5%) | `error_rate` metric breach in health check monitor | Auto rollback to previous version, generate rollback report with root cause analysis |
+| **P1** | Canary deployment timeout (>15 minutes total observation) | Total elapsed time from Canary-1 start to decision >15 min | Force decision: if metrics inconclusive → hold at current stage + escalate to on-call |
+| **P2** | Feature flag configuration inconsistency across canary stages | Flags active in Canary-1 but not Canary-2 (or vice versa) | Sync flag values across all stages, re-validate before continuing rollout |
+| **P3** | Rollback report contains unresolved warnings | Non-critical alerts pending in rollback-report.md | Log warnings, schedule follow-up investigation within next sprint, continue monitoring |
+
+---
+
 ## Boundary Conditions
+
+### Deployment Thresholds
+
+| Parameter | Value/Condition | Rationale | Enforcement |
+|-----------|-----------------|-----------|-------------|
+| Canary window per stage | ≥48h for production, ≥2h for staging | Allows observation of different usage patterns (business hours + off-hours) | Total deployment duration logged in canary report |
+| Error rate threshold | ≤5% across all stages | Industry standard for acceptable error budget consumption | Auto-rollback triggered if breached for ≥3 consecutive health checks |
+| Rollback condition | error_rate ≥5% OR latency_p99 ≥2x baseline | Rapid detection of performance regression | Auto-executed via rollback script; manual confirmation within 1 min |
+| Observability coverage | All stages must have metrics, logs, traces | Blind deployments increase mean-time-to-detection (MTTD) | Missing any observability pillar → canary runs at half-traffic until added |
 
 ### When to Escalate Immediately
 

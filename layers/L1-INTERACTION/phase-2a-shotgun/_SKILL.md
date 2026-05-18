@@ -1,3 +1,14 @@
+---
+name: phase-2a-shotgun
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Multi-variant design generation specialist for Phase 2a.
+  Generates 4-6 design variants with clear trade-offs and AI recommendation based on maintainability/cost/UX scoring. (ultimate-workflow)
+layer: L1-INTERACTION
+parent: phase-2a-shotgun
+---
+
 # Phase 2a: Design Shotgun — Multi-Variant Design Generation
 
 Generate 4-6 design variants with clear trade-offs, AI recommendation based on maintainability/cost/UX scoring, and user selection workflow. Prevents decision fatigue by providing structured comparison rather than open-ended options.
@@ -740,6 +751,26 @@ echo "✅ Final design specification generated"
   2. Filter variants to only use available components
   3. If no match → flag as "requires custom development"
 - **Prevention**: Step 0 loads UI guidelines, constrains generation
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Impact |
+|-------|------|------------|--------|--------|
+| **P0** | BLOCKING | All 5 variants eliminated (each has ≥2 critical cons, or scoring variance <0.2 indicating no meaningful differentiation), or user rejects top variant twice | Regenerate with expanded dimensions, or recommend hybrid of top 2 variants' strongest features | Blocks Phase 3 until viable design selected |
+| **P1** | RECOVERABLE | Insufficient variant diversity (≥3 variants share identical layout pattern), recommendation lacks weighted score calculation, development time estimates vary >50% across variants | Re-generate with forced dimension diversity, add missing scoring math, provide time range (min/max) instead of point estimate | Delays selection but does not block design |
+| **P2** | WARNING | One variant scores <3/5 on maintainability (acceptable trade-off if UX is superior), user prefers higher-cost variant within budget tolerance | Document trade-off in decision rationale, proceed with selected variant | No blocking impact, proceed normally |
+| **P3** | INFO | Minor scoring sensitivity (<0.1 weight change flips ranking), alternative visual style not explored, one dimension under-specified by user | Note limitation in report, recommend validation during implementation phase | No impact, continue |
+
+**Severity Assignment Rules**:
+- Default to P0 when weighted scores of top 2 variants differ by <0.15 (indicates equivalent options without clear winner)
+- Escalate from P1→P0 only if re-generation still produces <3 distinct variants meeting minimum quality threshold (maintainability ≥3, cost ≤Medium)
+- Never auto-resolve: user must explicitly approve selected variant before proceeding to Phase 3
+
+**Auto-Resolution Rules** (no user input needed):
+- If variant dev time exceeds budget by >2x → auto-evaluate as "not viable" regardless of other scores
+- If user accepts recommendation without selecting alternative → auto-proceed with recommended variant, log decision in design-final.md
 
 ---
 

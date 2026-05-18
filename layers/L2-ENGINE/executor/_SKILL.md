@@ -1,3 +1,29 @@
+---
+name: executor
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  TDD implementation engine operating within Wave-based parallel execution framework.
+  Implements tasks with Red→Green→Refactor cycle, R6 anti-hallucination checks,
+  and atomic commits. Use when: "implement feature", "TDD development", "execute wave tasks",
+  "run tests first". (ultimate-workflow)
+layer: L2-ENGINE
+source: SEP Executor + Wave Engine + TDD Workflow
+dependencies:
+  - dag-router (input: wave-plan.yaml with task dependencies)
+  - wave-executor (runs executor per wave in dependency order)
+triggers:
+  - implement feature
+  - TDD development
+  - execute wave tasks
+  - run tests first
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+---
+
 # Executor — TDD Implementation & Wave Parallel Execution
 
 Implement features using Test-Driven Development (TDD) within Wave-based parallel execution framework. Write failing tests first, then minimal code to pass, then refactor. Execute tasks in dependency-aware parallel waves for maximum throughput.
@@ -7,6 +33,24 @@ Implement features using Test-Driven Development (TDD) within Wave-based paralle
 ---
 
 ## Preamble
+
+### What I Am / What I'm Not
+
+**I am**: The TDD implementation engine that executes Phase 3 task plans using test-driven development within Wave-based parallel execution. I write failing tests first (Red), minimal code to pass (Green), then refactor — all within dependency-aware parallel waves.
+
+**I'm not**: A design tool (Phase 2a produces the spec), a documentation writer, a configuration manager, or a UI painter. My sole purpose is TDD-based code implementation with strict adherence to R6 anti-hallucination rules.
+
+### Pre-Requisite Gate Checklist
+
+Before starting executor, verify ALL of the following:
+
+- [ ] Phase 3 DAG Router complete — wave-plan.yaml exists at `.ultimate-workflow/wave-plan.yaml`
+- [ ] Wave plan validated — no cycles detected (DAG validation exits 0)
+- [ ] All task IDs unique — no duplicates in wave plan
+- [ ] Task priorities assigned (P0/P1/P2) — no unassigned tasks
+- [ ] Previous Wave SUMMARY is PASS (or this is Wave 1 with no dependency)
+
+**Gate Result**: `[PASS / FAIL]` — If any item FAILS, fix identified issue before starting. This gate MUST pass for every new wave.
 
 ### Key Principles
 
@@ -617,6 +661,59 @@ npm run build
   2. Compress dev-log entries (remove verbose explanations)
   3. If still overflowing → split Wave into smaller sub-waves
 - **Prevention**: Monitor token count every 3 tasks, warn at 150K
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Task fails TDD cycle and ≥1 dependent task in same wave depends on this task's output | Immediate rollback (git reset --hard), fix root cause, re-run failed task + all dependents | Blocks downstream tasks until resolved |
+| **P1** | RECOVERABLE | Single task fails TDD but has no dependents in current wave | Retry 3x with exponential backoff (1s→2s→4s); if still fails → document in SUMMARY, mark NEEDS_WORK | No cross-task impact if no dependents blocked |
+| **P2** | WARNING | Task passes TDD but with warnings (lint errors, deprecation notices, edge case uncovered) | Document in SUMMARY, do NOT block execution | Continue normally |
+| **P3** | INFO | Heartbeat timeout or slow task (>50% of allocated timeout) | Log warning, continue | No impact |
+
+**Severity Assignment Rules**:
+- Default to P1 for any TDD failure unless known dependency exists (then escalate to P0)
+- Escalate from P1→P0 only if retry exhaustion OR dependent task in same wave has not started
+- Never demote: once P0 assigned, only PASS or manual override by Wave Executor can clear
+
+**R6 Violation Escalation**: If R6 anti-hallucination violation repeated 3+ times → escalate to P1 and halt execution for Architect review.
+
+### Retry Chain (Exponential Backoff with Jitter)
+
+For P1 recoverable errors, apply this retry chain:
+
+```yaml
+retry_chain:
+  attempt_1:
+    wait: 1s
+    action: "Re-run entire task from start (stateless retry)"
+    
+  attempt_2:
+    wait: 2s
+    action: "Clear partial state, re-run from last checkpoint"
+    
+  attempt_3:
+    wait: 4s
+    action: "Isolated retry with fresh Executor context (~200K tokens cleared)"
+
+max_retries: 3
+timeout_per_attempt: "10min default (configurable per task complexity, max 30min)"
+```
+
+**Backoff Jitter Formula**: `jitter = random(0, min(backoff_wait * 0.5, max_jitter))` — prevents thundering herd when multiple tasks retry simultaneously.
+
+### Partial Success Rules
+
+When some tasks in a wave succeed and others fail:
+
+| Scenario | Action | Wave Result |
+|----------|--------|-------------|
+| **No dependencies between failed/successful tasks** | Successful tasks commit, failed tasks documented in SUMMARY | NEEDS_WORK — proceed to next wave with partial results |
+| **Failed task has dependents in same wave** | Wait for all dependents to finish (may also fail), then retry failed task + dependents together | BLOCKED until fix |
+| **>50% tasks fail in single wave** | Flag as potential planning problem, escalate to Architect with analysis | P0 — may require re-split at Phase 3 |
+| **Single task fails, all others PASS** | Continue normally, retry 3x before marking NEEDS_WORK | Proceed if retries exhausted and no dependents blocked |
 
 ---
 

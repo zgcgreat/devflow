@@ -1,23 +1,19 @@
-# Phase 3: 任务拆分 (DAG + 拓扑排序)
-
-> **Layer**: L1-INTERACTION (SuperCorp 交互层) → Layer 3 架构层介入
-> **前置产物**: `02-design.md` 或 `02a-ui-design.md` (Phase 2/2a 通过 G3)
-> **后置产物**: `.ultimate-workflow/<req-id>/03-tasks.md`
-> **门控**: G4 — Task Plan Quality Gate
-
-## Skill元信息
-
-```yaml
+---
 name: phase-3-task-plan
+preamble-tier: 2
 version: 3.0-draft
 layer: L1-INTERACTION (DAG), L3-ARCHITECTURE (执行)
 source: SuperCorp Phase 3 + Mega-Workflow DAG Router
 dependencies:
   - writing-plans
-v3_upgrade:
-  dag_router: true (Kahn topological sort)
-  agent_isolation: Research ~200K / Execution ~200K per Agent
-```
+allowed-tools:
+  - Read
+  - Bash
+  - Write
+  - Edit
+---
+
+# Phase 3: 任务拆分 (DAG + 拓扑排序)
 
 ## 输入
 

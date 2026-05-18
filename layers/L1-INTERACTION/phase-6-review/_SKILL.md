@@ -1,9 +1,63 @@
+---
+name: phase-6-review
+preamble-tier: 2
+version: 3.1-enhanced (two-stage)
+description: |
+  Two-stage adversarial review engine: Stage A (spec compliance) + Stage B (code quality, three-layer).
+  Detects PRD gaps, edge cases, acceptance failures, and blind spots in Phase 4 implementation.
+  Use when: "review phase", "two-stage review", "spec compliance check", "adversarial review". (ultimate-workflow)
+layer: L1-INTERACTION
+source: SuperCorp Three-Layer Adversarial Review + gstack Cross-Model Review (R14) + Two-Stage Spec Compliance
+dependencies:
+  - code-quality, spec-compliance
+  - agent-isolation (review agents run in ~200K context each)
+triggers:
+  - review phase
+  - two-stage review
+  - spec compliance check
+  - adversarial review
+  - G3 gate
+allowed-tools:
+  - Read
+  - Bash
+  - Edit
+---
+
 # Phase 6: 双阶段审查 (Two-Stage Adversarial Review)
 
 > **Layer**: L1-INTERACTION (SuperCorp 交互层)  
 > **前置**: Phase 5 测试通过, Phase 4 Wave执行完成  
 > **后置产物**: `.ultimate-workflow/<req-id>/06-review.md`  
 > **门控**: G3 — Review Quality Gate
+
+## Preamble
+
+### What I Am / What I'm Not
+
+**I am**: The two-stage adversarial review engine that catches specification gaps (Stage A) and code quality issues (Stage B) using three independent reviewer perspectives. I prevent production bugs by finding what Phase 4 missed.
+
+**I'm not**: A code linter (I focus on spec compliance and architectural concerns, not style), a test runner (I review test coverage, don't execute tests), or a user acceptance tool (I check spec alignment, not UX quality).
+
+### Pre-Requisite Gate Checklist
+
+Before starting review, verify ALL of the following:
+
+- [ ] Phase 5 test report exists (`05-test-results.md`)
+- [ ] Phase 4 implementation complete and code compiles/builds
+- [ ] Phase 3 task plan available (`03-tasks.md` or `DAG-ROUTER-OUTPUT.md`)
+- [ ] PRD/requirements document accessible (`00-requirements.md` or equivalent)
+- [ ] Delta spec exists for any brownfield changes (`changes/<feature>/delta-spec.md`)
+
+**Gate Result**: `[PASS / FAIL]` — If any item FAILS, address before starting. Stage A must pass for every requirement review.
+
+### Key Principles
+
+1. **Two-Stage Separation**: Spec compliance (Stage A) and code quality (Stage B) are orthogonal concerns — don't mix them
+2. **Three Independent Reviewers in Stage B**: Blind Hunter / Edge Case Hunter / Acceptance Auditor run independently with ~200K context each
+3. **Cross-Model Review for CRITICAL Tasks**: R14 requires comparing results from different models (Claude + Codex) for critical architectural decisions
+4. **G3 Gate is Non-Negotiable**: Phase 6 fails if any P0 spec violation found OR ≥3 P1 issues unaddressed
+
+---
 
 ## Skill元信息
 

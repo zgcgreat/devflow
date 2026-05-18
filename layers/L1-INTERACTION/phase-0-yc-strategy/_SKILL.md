@@ -1,3 +1,14 @@
+---
+name: phase-0-yc-strategy
+version: 2.0
+layer: L1-INTERACTION
+phase: 0
+description: Apply Y Combinator's due diligence framework to validate project viability before implementation
+requires: [project-context]
+provides: [g1-gate-decision, strategy-document, follow-up-queue]
+gate: G1
+---
+
 # Phase 0: YC Six Questions — Strategic Assessment
 
 Apply Y Combinator's due diligence framework to validate project viability before implementation. Answer 6 critical questions about pain point, competition, advantage, acquisition, monetization, and acceleration. Ensures strategic alignment before tactical execution.
@@ -774,7 +785,25 @@ echo "✅ STATE.md updated with Phase 0 results"
 
 ---
 
+## Error Taxonomy
+
+| Priority | Condition | Detection Method | Recovery Action |
+|----------|-----------|------------------|-----------------|
+| **P0** | User not YC target customer (non-starter, non-scalable, non-urgent) | Q1 pain score <2 AND Q6 2x speed = "no clear bottleneck" | Return to Phase 1: explore adjacent markets or pivot problem space |
+| **P1** | Value proposition unclear (can't articulate why users care) | Q1 score ≥3 but Q4 CAC >$300 OR payback >24 months | Return to Phase 1: run deeper user interviews, test messaging variants |
+| **P2** | Problem definition ambiguous ("we'll fix it later" for ≥2 questions) | ≥2 questions scored <3 AND no evidence provided | Enforce Phase 1: require specific answers before proceeding |
+| **P3** | Information incomplete (missing context, stale benchmarks) | CONFIDENCE=LOW OR industry data >6 months old | Mark as "UNSUBSTANTIATED", proceed with assumption tracking |
+
 ## Boundary Conditions
+
+### Phase Thresholds
+
+| Parameter | Value | Rationale | Enforcement |
+|-----------|-------|-----------|-------------|
+| YC questions answered | 6/6 mandatory | All 6 questions required for complete strategic assessment | G1 gate blocks progress if <4 answers with substantive content |
+| Assessment completion time | ~5 min minimum, ≤30 min recommended | Too fast = superficial, too slow = over-analysis of simple project | Time tracking logged in STATE.md for continuous improvement |
+| Evidence coverage | ≥4 of 6 questions have data-backed answers (not assumptions) | Minimum validation bar for G1 pass | Each evidence-backed answer must cite source (user quote, benchmark, metric) |
+| Confidence level | HIGH required to skip Phase 1; MEDIUM triggers optional follow-up; LOW requires Phase 1 | Low confidence on problem/competition → deep dive needed | CONFIDENCE field in PROJECT_CONTEXT.md updated after assessment |
 
 ### When to Escalate Immediately
 

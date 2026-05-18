@@ -1,3 +1,26 @@
+---
+name: provider-gateway
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Intelligent model routing engine that selects optimal AI providers based on task type,
+  complexity, and cost constraints with fallback chains (exponential backoff).
+  Use when: "route to provider", "select model", "provider fallback", "cost-aware routing". (ultimate-workflow)
+layer: L3-ARCHITECTURE
+source: SEP Provider Gateway + Cost-Aware Model Router
+dependencies:
+  - dag-router (input: task types from WAVE-PLAN.md)
+  - agent-isolation (output: provider-assigned tasks run in isolated context)
+triggers:
+  - route to provider
+  - select model
+  - provider fallback
+  - cost-aware routing
+allowed-tools:
+  - Read
+  - Bash
+---
+
 # Provider Gateway — Intelligent Model Routing & Fallback
 
 Route tasks to optimal AI providers based on task type, complexity, and cost constraints. Implement fallback chains with exponential backoff for reliability. Track performance metrics for continuous optimization.
@@ -7,6 +30,23 @@ Route tasks to optimal AI providers based on task type, complexity, and cost con
 ---
 
 ## Preamble
+
+### What I Am / What I'm Not
+
+**I am**: The intelligent model routing engine that selects optimal AI providers based on task type (coding/design/review), complexity, and cost constraints. I implement fallback chains with exponential backoff to ensure reliability even when primary providers fail.
+
+**I'm not**: A task splitter (that's DAG Router), a code executor (that's Executor), or a test runner. My sole purpose is provider selection + fallback management based on task characteristics and historical performance metrics.
+
+### Pre-Requisite Gate Checklist
+
+Before starting provider routing, verify ALL of the following:
+
+- [ ] WAVE-PLAN.md exists with task type annotations (`type: coding|design|review|research`)
+- [ ] At least one provider is available (API keys configured or local model detected)
+- [ ] Provider performance logs accessible (`.ultimate-workflow/provider-metrics.json` or create empty)
+- [ ] Task complexity estimates available (from DAG Router)
+
+**Gate Result**: `[PASS / FAIL]` — If any item FAILS, fix identified issue before starting. This gate MUST pass for every wave execution cycle.
 
 ### Key Principles
 
@@ -556,6 +596,62 @@ optimization_schedule:
   3. Add output length constraint: `max_tokens: 2000`
   4. Enable response compression (distillator)
 - **Prevention**: Estimate token requirements upfront, add 20% buffer
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Routing Impact |
+|-------|------|------------|--------|----------------|
+| **P0** | BLOCKING | All providers exhausted for critical task (security/auth related with ≥2 fallback failures) | Escalate to user with provider outage report; use cached/local LLM as emergency | Task blocked until primary provider recovers or user provides alternative |
+| **P1** | RECOVERABLE | Primary provider returns error (timeout, rate limit, auth failure) but fallbacks available | Auto-rotate to next fallback in chain with exponential backoff (5s→10s→20s); log failure reason | Routing continues with degraded provider; update success-rate metrics |
+| **P2** | WARNING | Hallucination rate >30% for assigned provider on current task type | Flag output as `[SUSPECT: high hallucination]`, recommend manual verification before commit | Task completes but marked for review by Acceptance Auditor in Phase 6 |
+| **P3** | INFO | Provider cost exceeds per-task budget estimate by <20% (within buffer zone) | Log cost variance, no action needed — normal fluctuation | No impact on routing or task execution |
+
+**Severity Assignment Rules**:
+- Default to P1 for any provider error with available fallback (auto-recoverable)
+- Escalate from P1→P0 only when ≥2 fallbacks also fail OR critical path task blocked
+- Never demote: once P0 assigned, requires manual user intervention to resume
+
+### Provider Selection Matrix
+
+| Task Type | Preferred Model Tier | Fallback Tier | Cost Threshold | Success Rate Requirement |
+|-----------|---------------------|---------------|----------------|--------------------------|
+| Coding (standard) | Standard ($0.01-0.03/token) | Budget (<$0.01/token) | <$0.50/task | ≥95% over last 50 attempts |
+| Coding (complex/architectural) | Premium ($0.03-0.10/token) | Standard | $2.00/task | ≥90% over last 50 attempts |
+| Design/Vision | Premium or Vision-capable | Standard + multi-modal | $1.00/task | ≥85% (vision harder to predict) |
+| Review/Analysis | Standard | Budget | $0.75/task | ≥95% over last 50 attempts |
+| Research/Synthesis | Premium (strong reasoning) | Standard | $1.50/task | ≥90% over last 50 attempts |
+
+**Cost-Aware Downgrade Rule**: If provider's success rate for task type ≥95% over last 50 attempts → automatically downgrade one tier next time (e.g., Premium→Standard), log cost savings to metrics.
+
+### Fallback Chain Configuration
+
+| Primary Provider | Fallback 1 | Fallback 2 | Max Retry Attempts |
+|-----------------|------------|------------|-------------------|
+| Claude 3 Opus | GPT-4 Turbo | Gemini Pro | 2 (1st fallback + 2nd fallback) |
+| GPT-4 Turbo | Claude 3 Haiku | Ollama local | 2 |
+| Gemini Pro | Claude 3 Haiku | LM Studio local | 2 |
+| Any cloud provider | Local LLM (Ollama/LM Studio) | Cached response (if available) | 1 (local only, no further fallback) |
+
+**Fallback Failure Handling**: If all 2 fallbacks also fail → escalate to P0, output `[CRITICAL: All providers exhausted for {task-id}]` with timing and error details.
+
+### Performance Metrics Logging Format
+
+| Metric | Field Name | Purpose |
+|--------|------------|---------|
+| Provider name | `provider_id` | Track which provider was used |
+| Task type | `task_type` | Correlate success rate by task category |
+| Timestamp | `timestamp` (ISO 8601) | Calculate hourly/daily failure rates |
+| Success/Failure | `status` (success/fallback/retry/max_exhausted) | Measure fallback chain effectiveness |
+| Latency in ms | `latency_ms` | Identify slow providers for optimization |
+| Tokens used | `tokens_used` | Monitor cost and budget adherence |
+| Fallback chain index | `fallback_level` (0=primary, 1=fallback1, 2=fallback2) | Calculate average fallback distance |
+
+**Metrics Update Command**: After each provider call, append to `.ultimate-workflow/provider-metrics.json`:
+```json
+{"provider_id": "claude-3-opus", "task_type": "coding", "timestamp": "2026-05-18T10:30:00Z", "status": "success", "latency_ms": 4500, "tokens_used": 12000, "fallback_level": 0}
+```
 
 ---
 

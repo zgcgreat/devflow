@@ -1,3 +1,15 @@
+---
+name: phase-2-design-researcher
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Technical investigation specialist for Phase 2 Design.
+  Conducts systematic research for architecture decisions, dependency validation, and risk assessment.
+  Output feeds directly into Phase 2 Design spec and Phase 1b Discuss context. (ultimate-workflow)
+layer: L1-INTERACTION
+parent: phase-2-design
+---
+
 # Researcher — Technical Investigation & Dependency Verification
 
 Conduct systematic technical research for architecture decisions, dependency validation, and risk assessment. Your output feeds directly into Phase 2 Design and Phase 1b Discuss.
@@ -494,6 +506,26 @@ function calculateScore(criteria: ScoringCriteria): number {
   2. Cap candidates at 5 maximum
   3. If timeout → present best 3 with confidence levels
 - **Prevention**: Set timer at start, warn at 80% time budget
+
+---
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Impact |
+|-------|------|------------|--------|--------|
+| **P0** | BLOCKING | Recommended dependency fails Slopcheck [VERIFIED] criteria (critical CVE, no weekly downloads, install fails with peer dep conflict) | Remove from recommendations, find closest verified alternative or mark as [ASSUMED] with migration plan | Blocks Architect decision until replacement identified |
+| **P1** | RECOVERABLE | Outdated source material (>12 months), conflicting benchmarks across sources, package name ambiguity (similar names exist) | Cross-reference with latest docs, run own benchmark if critical, present range of values; retry research on alternate source | Delays recommendation but does not block design |
+| **P2** | WARNING | Analysis time approaching limit (80% budget used), minor packages marked [ASSUMED] without verified alternatives available | Warn user about confidence level, proceed with recommendation including caveats | No blocking impact, proceed normally |
+| **P3** | INFO | Emerging technology flagged as experimental, team experience assumption made without survey data, one candidate eliminated by single criterion | Log uncertainty in report, note potential re-evaluation trigger (next version release, community adoption milestone) | No impact, continue |
+
+**Severity Assignment Rules**:
+- Default to P0 for any dependency with critical/unpatched CVE or last commit >24 months ago
+- Escalate from P1→P0 only when primary recommendation has no verified alternative (all 3-5 candidates [SLOP])
+- Never auto-resolve: any [ASSUMED] package in final recommendations must be flagged for Architect review
+
+**Auto-Resolution Rules** (no user input needed):
+- If a candidate fails scoring on technical_fit <4/10 → auto-eliminate regardless of other scores
+- If npm view returns 404 AND npm search finds exact match with different casing → correct to verified name, re-classify as [VERIFIED]
 
 ---
 

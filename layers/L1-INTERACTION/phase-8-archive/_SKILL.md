@@ -1,9 +1,65 @@
+---
+name: phase-8-archive
+preamble-tier: 2
+version: 3.0-draft
+description: |
+  Knowledge archival engine that aggregates Wave SUMMARYs, promotes lessons learned
+  to LESSONS.md, creates/updates domain skills from high-frequency patterns (≥3),
+  and archives session state. Use when: "archive phase", "knowledge consolidation",
+  "LESSONS nomination", "domain skill promotion". (ultimate-workflow)
+layer: L1-INTERACTION
+source: SuperCorp Phase 8 + SEP LearningWorkflow + Mega-Workflow Memory Manager
+dependencies:
+  - wave-executor (input: per-wave SUMMARY.md files)
+  - learning-workflow (post-archive: LESSONS update + domain skill graduation)
+triggers:
+  - archive phase
+  - knowledge consolidation
+  - LESSONS nomination
+  - domain skill promotion
+  - G8 gate
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+---
+
 # Phase 8: 知识归档 (Knowledge Archival)
 
 > **Layer**: L1-INTERACTION (SuperCorp交互层) + L2-ENGINE (LearningWorkflow) + L3-ARCHITECTURE (Memory Manager)  
 > **前置**: G5 集成通过, Phase 7 Canary发布完成  
 > **后置产物**: `memory/LESSONS.md` + `memory/domain-skills/*.md` + `STATE.md`归档  
 > **门控**: G8 — Archive Quality Gate
+
+## Preamble
+
+### What I Am / What I'm Not
+
+**I am**: The knowledge archival engine that turns completed workflow experience into reusable assets — lessons learned, domain skills, and state summaries. I enable cross-session learning by ensuring Phase 9+ inherits wisdom from every completed requirement.
+
+**I'm not**: A report generator (that's Phase 6 review output), a code linter, a test runner, or a Git commit tool. My sole purpose is knowledge preservation and reuse preparation.
+
+### Pre-Requisite Gate Checklist
+
+Before starting archive phase, verify ALL of the following:
+
+- [ ] G5 Integration Gate has passed
+- [ ] Phase 7 Canary release completed (or no canary if non-production)
+- [ ] All Wave SUMMARY.md files accessible at `.specs/waves/wave-{N}/SUMMARY.md`
+- [ ] Phase 6 review report exists (`06-review.md`) — for edge case extraction
+- [ ] memory/ directory exists and is writable (or create it)
+
+**Gate Result**: `[PASS / FAIL]` — If any item FAILS, address before starting. This gate MUST pass for every requirement archive.
+
+### Key Principles
+
+1. **LESSONS Must Nominate**: Every failed task across all waves nominates to LESSONS.md; duplicate root causes merge into single update entry
+2. **Domain Skill Threshold ≥3**: Same domain pattern appears ≥3 times → create/update domain-skill file with best practices
+3. **TEMPORARY Cleanup Required**: Clear session-specific temporary notes, keep only cross-session valuable information
+4. **STATE.md Must Record Archive Metrics**: total_waves, tasks_succeeded/failed, lessons_nominated, domain_skills_created — enables progress tracking
+
+---
 
 ## Skill元信息
 
@@ -198,10 +254,82 @@ next_session:
   inject_amount: "<5 skills per wave, max ~200K tokens"
 ```
 
-## Phase 8 向后兼容
+## Error Taxonomy (P0 → P3)
 
-| v1.0 产物 | Phase 8 处理 |
-|-----------|-------------|
-| `memory/DECISIONS.md` | 保留不变，追加最终决策摘要 |
-| `memory/KNOWN_FAILURES.md` | 保留不变，Phase 6发现的Edge Case补充到此文件 |
-| `<req-id>/07-integration.md` | Phase 8产物合并到此文件 |
+| Level | Name | Definition | Action | Archive Impact |
+|-------|------|------------|--------|----------------|
+| **P0** | BLOCKING | LESSONS.md write fails OR domain-skill directory permission denied | Retry once; if still fails, output to `/tmp/phase8-archive-{req-id}.md` and warn user | Knowledge not persisted — critical for cross-session learning loss |
+| **P1** | RECOVERABLE | Wave SUMMARY.md missing (file doesn't exist at expected path) | Skip missing wave, document skipped waves in archive report | Partial knowledge loss but archive continues |
+| **P2** | WARNING | Domain skill pattern appears 2-3 times (below ≥3 graduation threshold) | Mark as `[NEEDS MORE DATA]` in domain-skill draft, don't promote to full domain-skill yet | Graduation deferred until pattern frequency confirmed ≥3 times |
+| **P3** | INFO | TEMPORARY.md is empty or has no cross-session entries | Log info message, no action needed — normal for first-time requirements | No impact on archive completeness |
+
+**Severity Assignment Rules**:
+- Default to P1 for any missing Wave SUMMARY (should be caught by pre-requisite gate but allow gap)
+- Escalate from P2→P0 only when domain-skill promotion would lose critical project-specific knowledge
+- Never demote: once P0 assigned, archive fails and requires manual intervention
+
+**Automated Deduplication**: When processing LESSONS nominations across waves, merge entries with same root cause into single `[UPDATE]` entry with list of wave sources (e.g., "[UPDATED by Wave 1 + Wave 3]").
+
+---
+
+## Boundary Conditions
+
+### Archive Completeness Thresholds
+
+| Parameter | Limit/Threshold | Rationale | Action if Below Threshold |
+|-----------|-----------------|-----------|---------------------------|
+| Wave SUMMARY files scanned | 100% of waves completed | Any wave without summary = knowledge gap | Log skipped wave with reason, proceed with remaining |
+| LESSONS nominations per failed task | ≥1 nomination per P1/P0 task failure | Each failure must contribute to cross-session learning | Auto-nominate with `[AUTO: insufficient details from wave log]` |
+| Domain skill pattern frequency | ≥3 occurrences across waves/requirements | Threshold for reusable best practice confirmation | Create draft domain-skill with `[NEEDS MORE DATA]` marker |
+| TEMPORARY.md entries pruned | Entries >7 days old removed | Prevent memory bloat from stale session data | Archive old entries to `memory/TEMPORARY-{date}.bak.md` before purge |
+
+### State Archive Requirements
+
+| Field | Required | Validation Rule |
+|-------|----------|-----------------|
+| archive.status | ✅ Must be "complete" | No other values accepted (FAIL/UNKNOWN invalid) |
+| archive.completed_at | ✅ ISO 8601 datetime | Must match actual archive execution timestamp |
+| archive.req_id | ✅ Matches original requirement ID | Cross-reference with `.ultimate-workflow/req-id` file |
+| archive.total_waves | ✅ Non-negative integer | Must equal count of actual WAVE-N-SUMMARY.md files processed |
+| archive.total_tasks | ✅ Sum of tasks_succeeded + tasks_failed | Arithmetic consistency check: succeeded + failed = total |
+| archive.g8_gate | ✅ PASS or FAIL | If FAIL, must have reason in archive.report section |
+
+### Memory File Size Constraints
+
+| File | Max Size | Compression Action |
+|------|----------|-------------------|
+| LESSONS.md | ≤50KB per file | If >50KB: move entries older than 30 days to `memory/LESSONS-YYYY-MM-bak.md` |
+| domain-skill/*.md | Each ≤5KB | Truncate implementation examples if too long, keep trigger_patterns + best_practices |
+| TEMPORARY.md | ≤10KB | Prune entries >7 days old, keep only cross-session valuable notes |
+| STATE.md | ≤2KB | Only archive section needs persistence; progress/decision sections can be compacted |
+
+### Cross-Session Knowledge Injection Rules
+
+| Rule | Constraint | Rationale |
+|------|------------|-----------|
+| Domain skills per wave | ≤5 skills injected | Beyond 5 → context window bloat, diminishing relevance |
+| Skill injection token budget | ≤120K tokens (90% of domain skill allocation) | Remaining 10% reserved for other L2/L3 content |
+| Match priority | Highest-frequency patterns first | Most proven practices have higher expected value |
+| Stale skill eviction | Skills not referenced in 60 days → removed from rotation | Prevents dead knowledge accumulation |
+
+### G8 Gate Fail Scenarios
+
+**Skip archive, escalate to Orchestrator if**:
+- ≥2 consecutive Wave SUMMARY files missing (indicates Wave Executor failed to write)
+- Domain skill promotion creates file that conflicts with existing git-tracked skill
+- STATE.md is read-only and can't be updated (permission denied after retry)
+- LESSONS nomination contains >10 entries in single archive (suggests systematic problem, not individual task failure)
+
+### Provider Routing
+
+- Phase 8 → **Any capable model** (knowledge extraction doesn't require special capabilities, standard coding model suffices)
+- For large requirements with >20 tasks across waves → prefer model with larger context window to process all Wave SUMMARIES in single pass
+- If memory compression needed → use model with good summarization capability for LESSONS deduplication
+
+---
+
+## 参考文件
+
+- `references/RULES-v3.md` R1-R20
+- `layers/L2-ENGINE/learning-workflow/_SKILL.md` (post-archive: domain skill graduation)
+- `layers/L2-ENGINE/wave-executor/_SKILL.md` (input: per-wave SUMMARY.md files)
