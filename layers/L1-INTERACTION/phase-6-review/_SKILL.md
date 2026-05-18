@@ -1,7 +1,7 @@
 ---
 name: phase-6-review
 preamble-tier: 2
-version: 3.1-enhanced (two-stage)
+version: 3.0-draft
 description: |
   Two-stage adversarial review engine: Stage A (spec compliance) + Stage B (code quality, three-layer).
   Detects PRD gaps, edge cases, acceptance failures, and blind spots in Phase 4 implementation.

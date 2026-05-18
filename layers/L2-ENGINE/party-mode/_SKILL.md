@@ -1,6 +1,6 @@
 ---
 name: party-mode
-version: 3.1-enhanced
+version: 3.0-draft
 layer: L2-ENGINE
 source: SuperCorp PartyMode + Cavecrew sub-agent delegation
 dependencies: []
