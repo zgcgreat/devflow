@@ -298,11 +298,47 @@ G3-PHASE6判定: FAIL → 退回 Wave 修复 R2 后重审
 
 ### Exit Criteria (Quantitative)
 
-- [ ] ≥90% of identified issues have severity P1 or lower
-- [ ] All P0 issues resolved before Phase 7 approval
-- [ ] No unresolved TODO/FIXME in implementation files (grep verification)
-- [ ] Review report written to `.specs/reviews/phase-6-review.md`
-- [ ] Minimum review duration met: Phase 4 tasks → ≥30 min review time
+| # | Criterion | Verification Method | Pass Threshold |
+|---|-----------|---------------------|---------------|
+| 1 | Issue severity distribution | Review report severity count | ≥90% of issues are P1 or lower |
+| 2 | P0 resolution status | grep "P0" in review findings | All P0 resolved before Phase 7 |
+| 3 | TODO/FIXME cleanup | `grep -rE "TODO|FIXME" src/` | Zero matches in implementation files |
+| 4 | Review report completeness | Check output exists | Written to `.specs/reviews/phase-6-review.md` |
+| 5 | Minimum review duration | Timestamps in gate check log | ≥30 min for Phase 4 tasks |
+
+```bash
+# Automated exit criteria verification (run before G3-PHASE6 approval)
+echo "=== Phase 6 Exit Criteria Check ==="
+
+# 1. Severity distribution from review report
+severity_p1=$(grep -c "(P1\|high)" .specs/reviews/phase-6-review.md 2>/dev/null || echo 0)
+severity_p0=$(grep -c "(P0\|critical)" .specs/reviews/phase-6-review.md 2>/dev/null || echo 0)
+total_issues=$((severity_p1 + severity_p0))
+echo "Severity: P0=$severity_p0, P1+=$severity_p1 (total=$total_issues)"
+
+# 2. TODO/FIXME grep verification in implementation files
+unresolved=$(grep -rEc "TODO|FIXME" src/ lib/ app/ 2>/dev/null | awk -F: '{s+=$NF}END{print s+0}')
+if [ "$unresolved" -gt 0 ]; then
+    echo "FAIL: $unresolved unresolved TODO/FIXME found:"
+    grep -rn "TODO|FIXME" src/ lib/ app/ 2>/dev/null
+else
+    echo "PASS: No unresolved TODO/FIXME in implementation files"
+fi
+
+# 3. Review report existence check
+if [ -f ".specs/reviews/phase-6-review.md" ] && [ "$(wc -l < .specs/reviews/phase-6-review.md)" -gt 10 ]; then
+    echo "PASS: Review report exists and is substantive ($((wc -l < .specs/reviews/phase-6-review.md)) lines)"
+else
+    echo "FAIL: Review report missing or too short"
+fi
+
+# 4. Gate decision summary present
+if grep -qE "G3-PHASE6.*(PASS|FAIL|CONDITIONAL)" .specs/reviews/phase-6-review.md 2>/dev/null; then
+    echo "PASS: G3-PHASE6 gate decision recorded"
+else
+    echo "WARN: G3-PHASE6 gate decision not explicitly stated in report"
+fi
+```
 
 ## Phase 6 → Phase 7 衔接
 

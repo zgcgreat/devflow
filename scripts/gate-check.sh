@@ -26,8 +26,9 @@ Gate IDs:
   G2          Design quality gate — check structural requirements
   G3-PHASE6   Review quality gate — spec compliance + code review
   G4          Execution readiness gate — wave-plan validation
-  G6-PHASE6   Phase 5→6 artifact validation — test report existence and content
-  CUSTOM      Run custom gate script from scripts/gates/ directory
+  G6-PHASE6             Phase 5→6 artifact validation — test report existence and content
+  G3-PHASE6-CRITERIA    Phase 6 exit criteria — severity, P0 resolution, TODO/FIXME, report completeness
+  CUSTOM                Run custom gate script from scripts/gates/ directory
 
 Options:
   --help       Show this help message
