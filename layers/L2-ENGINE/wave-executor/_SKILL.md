@@ -578,6 +578,57 @@ timeout_per_attempt: "10min default (configurable per task complexity, max 30min
 
 **Backoff Jitter Formula**: `jitter = random(0, min(backoff_wait * 0.5, max_jitter))` — prevents thundering herd when multiple tasks retry simultaneously.
 
+### Graceful Degradation Fallback
+
+When prerequisite gate FAILS or task execution encounters partial failure, attempt fallback strategies before total wave fail:
+
+1. **Critical Task Fail** (P0): Retry once with sequential mode, then mark wave PARTIAL_PASS if other tasks completed
+2. **Non-Critical Task Fail** (P1/P2): Log warning, continue to next wave, add to NEXT_WAVE_QUEUE for deferred execution
+3. **All Tasks Fail**: Fall back to full sequential execution, if still fail → FAIL with detailed report
+
+**Fallback execution order**:
+- Identify which tasks have no dependencies on failed tasks
+- Run independent tasks in parallel (MEDIUM/LOW parallelism)
+- Defer dependent tasks to next wave via NEXT_WAVE_QUEUE section
+
+```markdown
+### Graceful Degradation Protocol
+
+When prerequisite gate FAILS, attempt sequential execution as fallback before total fail:
+
+1. **Critical Task Fail** (P0): Retry once with sequential mode, then mark wave PARTIAL_PASS
+2. **Non-Critical Task Fail** (P1/P2): Log warning, continue to next wave, add to NEXT_WAVE_QUEUE
+3. **All Tasks Fail**: Fall back to full sequential execution, if still fail → FAIL with detailed report
+
+Fallback execution order:
+- Identify which tasks have no dependencies on failed tasks
+- Run independent tasks in parallel (MEDIUM/LOW parallelism)
+- Defer dependent tasks to next wave via NEXT_WAVE_QUEUE section
+```
+
+**NEXT_WAVE_QUEUE handling**:
+```bash
+# Queue deferred tasks for next wave
+if [ "$TASK_PRIORITY" = "P1" ] || [ "$TASK_PRIORITY" = "P2" ]; then
+  echo "${TASK_ID}" >> .specs/waves/wave-${WAVE_NUM}/NEXT_WAVE_QUEUE
+  log_warning "Task ${TASK_ID} (${TASK_PRIORITY}) deferred to next wave"
+  log_detail "Reason: Non-critical task failed, dependent tasks queued separately"
+fi
+
+# When starting Wave N+1, load deferred tasks first
+if [ -f ".specs/waves/wave-${CURRENT_WAVE}/NEXT_WAVE_QUEUE" ]; then
+  echo "⚠️ Loading ${TASK_COUNT} deferred tasks from previous wave queue"
+  while read TASK_ID; do
+    # Verify dependencies now met
+    if check_deps_met $TASK_ID; then
+      add_to_wave $NEXT_WAVE $TASK_ID
+    else
+      log_error "Task ${TASK_ID} still has unmet deps, keep in queue"
+    fi
+  done < .specs/waves/wave-${CURRENT_WAVE}/NEXT_WAVE_QUEUE
+fi
+```
+
 ### Partial Success Rules
 
 When some tasks in a wave succeed and others fail:

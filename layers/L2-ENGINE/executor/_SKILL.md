@@ -721,7 +721,7 @@ npm run build
 | **P0** | BLOCKING | Task fails TDD cycle and ≥1 dependent task in same wave depends on this task's output | Immediate rollback (git reset --hard), fix root cause, re-run failed task + all dependents | Blocks downstream tasks until resolved |
 | **P1** | RECOVERABLE | Single task fails TDD but has no dependents in current wave | Retry 3x with exponential backoff (1s→2s→4s); if still fails → document in SUMMARY, mark NEEDS_WORK | No cross-task impact if no dependents blocked |
 | **P2** | WARNING | Task passes TDD but with warnings (lint errors, deprecation notices, edge case uncovered) | Document in SUMMARY, do NOT block execution | Continue normally |
-| **P3** | INFO | Heartbeat timeout or slow task (>50% of allocated timeout) | Log warning, continue | No impact |
+| **P3** | TASK_TIMEOUT | Task exceeds 30-minute total execution time (circuit breaker triggered) | Cancel all sub-tasks, mark PARTIAL_PASS if progress made, log to heartbeat | Cancels current task but allows next wave to proceed; escalate if circuit breaker stays OPEN across waves |
 
 **Severity Assignment Rules**:
 - Default to P1 for any TDD failure unless known dependency exists (then escalate to P0)
@@ -753,6 +753,35 @@ timeout_per_attempt: "10min default (configurable per task complexity, max 30min
 ```
 
 **Backoff Jitter Formula**: `jitter = random(0, min(backoff_wait * 0.5, max_jitter))` — prevents thundering herd when multiple tasks retry simultaneously.
+
+### Task Timeout (Circuit Breaker)
+
+Maximum **30 minutes per task** from first attempt to final retry exhaustion. This is the circuit breaker — prevents infinite retry loops from masking deeper issues in the build/test chain.
+
+```bash
+TASK_START=$(date +%s)
+TOTAL_TIMEOUT=1800  # 30 minutes in seconds
+
+# Before each retry attempt:
+ELAPSED=$(( $(date +%s) - TASK_START ))
+if [ $ELAPSED -gt $TOTAL_TIMEOUT ]; then
+  echo "🔴 Task TIMEOUT after ${ELAPSED}s — circuit breaker OPEN"
+  echo "Canceling all sub-task processes..."
+  kill -- -$PROCESS_GROUP_ID 2>/dev/null || true
+  echo "[checkpoint][wave:${WAVE_NUM}][task:${TASK_ID}] ✗ (CIRCUIT_BREAKER: 30min timeout)" >> .specs/waves/wave-${WAVE_NUM}/heartbeat.log
+  # Mark as P1 RECOVERABLE with circuit breaker flag — escalate to Architect if repeated
+  exit 1
+fi
+
+# Standard retry logic continues...
+```
+
+**Circuit Breaker Rules**:
+- OPEN: Task exceeds 30min total → cancel sub-tasks, mark PARTIAL_PASS if some progress made
+- HALF-OPEN: After circuit opens, next wave attempts task once — if passes → CLOSE, if fails → stay OPEN
+- CLOSED: Normal retry operation
+
+**Task Timeout Guard**: Maximum 30 minutes per task. If exceeded, cancel all sub-tasks and advance to next wave. This is the circuit breaker — prevents infinite retry loops from masking deeper issues.
 
 ### Partial Success Rules
 
