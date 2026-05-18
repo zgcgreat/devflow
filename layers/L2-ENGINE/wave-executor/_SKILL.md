@@ -526,8 +526,25 @@ fi
 **Monitoring dashboard** (optional):
 ```bash
 # Real-time wave progress monitor
-watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
+watch -n 5 'grep "checkpoint" .specs/waves/wave-*/scripts/gate-check.sh G4 waves/wave-*/heartbeat.log | tail -20'
 ```
+
+#### G4 Gate Data Source Priority (F-P2-3 Fix)
+
+**⚠️ MANDATORY**: G4 execution readiness gate uses the following data source hierarchy:
+
+| Priority | Data Source | Purpose | Validation |
+|----------|-------------|---------|------------|
+| **1 (Primary)** | `.specs/waves/wave-{N}/heartbeat.log` | Real-time execution truth | `[all-done]` checkpoint existence and consistency |
+| **2 (Derived)** | `.specs/waves/wave-{N}/SUMMARY.md` | Final status aggregation | `status: PASS/FAIL` field cross-validated against heartbeat |
+
+**Cross-validation Rules**:
+1. If `heartbeat.log` has `[all-done]` AND `SUMMARY.md` shows `status: PASS` → **PASS** (consistent)
+2. If `heartbeat.log` lacks `[all-done]` AND `SUMMARY.md` shows `status: FAIL` → **PASS** (consistent failure)
+3. If `heartbeat.log` has `[all-done]` BUT `SUMMARY.md` shows `status: FAIL` → **WARN** (inconsistency, needs manual review)
+4. If no `SUMMARY.md` exists → G4 validates against heartbeat.log only (partial gate, acceptable for pre-execution)
+
+**Implementation**: See `scripts/gate-check.sh` `check_g4()` function for the cross-validation logic.
 
 ---
 

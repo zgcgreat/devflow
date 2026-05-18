@@ -307,6 +307,76 @@ check_g4() {
         warn "No explicit dependencies found (tasks may be flat — acceptable for simple projects)"
     fi
 
+    # --- Additional Check 6: Heartbeat-log Cross-validation (F-P2-3 Fix) ----
+    # Verify that heartbeat.log has all-done checkpoint AND matches SUMMARY.md status.
+    _total_checks=$((_total_checks + 1))
+    _heartbeat_ok=0
+    _summary_ok=0
+
+    # Locate heartbeat.log for the latest wave
+    _wave_dir=""
+    for d in "${ABSOLUTE_ROOT}/.specs/waves" "${ABSOLUTE_ROOT}/waves"; do
+        if [ -d "$d" ]; then
+            _wave_dir="$d"
+            break
+        fi
+    done
+
+    if [ -n "$_wave_dir" ]; then
+        # Find the latest wave directory (highest numbered)
+        _latest_wave=$(find "$_wave_dir" -maxdepth 1 -name "wave-*" -type d 2>/dev/null | sort | tail -1)
+        if [ -n "$_latest_wave" ] && [ -f "${_latest_wave}/heartbeat.log" ]; then
+            heartbeat_log="${_latest_wave}/heartbeat.log"
+
+            # Check for all-done checkpoint
+            if grep -q "\[all-done\]" "$heartbeat_log" 2>/dev/null; then
+                _heartbeat_ok=1
+                info "Heartbeat log found with [all-done] checkpoint: $heartbeat_log"
+            else
+                warn "Heartbeat log exists but missing [all-done] checkpoint: $heartbeat_log"
+            fi
+
+            # Cross-validate with SUMMARY.md if it exists
+            summary_file="${_latest_wave}/SUMMARY.md"
+            if [ -f "$summary_file" ]; then
+                _total_checks=$((_total_checks + 1))
+                # Extract status from SUMMARY.md (e.g., "status: PASS" or "## Summary")
+                _summary_status=$(grep -iE "^\s*status:\s*(PASS|FAIL)" "$summary_file" 2>/dev/null | head -1 || echo "")
+                if [ -n "$_summary_status" ]; then
+                    # If heartbeat has all-done, SUMMARY should show PASS
+                    if [ "$_heartbeat_ok" -eq 1 ] && grep -qi "status:\s*PASS" "$summary_file" 2>/dev/null; then
+                        _summary_ok=1
+                        info "Cross-validation PASSED: heartbeat [all-done] matches SUMMARY PASS status"
+                        checks_passed=$((checks_passed + 1))
+                    elif [ "$_heartbeat_ok" -eq 0 ] && grep -qi "status:\s*FAIL" "$summary_file" 2>/dev/null; then
+                        _summary_ok=1
+                        info "Cross-validation PASSED: heartbeat no [all-done] matches SUMMARY FAIL status"
+                        checks_passed=$((checks_passed + 1))
+                    elif [ "$_heartbeat_ok" -eq 1 ] && grep -qi "status:\s*FAIL" "$summary_file" 2>/dev/null; then
+                        # Mismatch: all-done but FAIL
+                        warn "Cross-validation MISMATCH: heartbeat has [all-done] but SUMMARY shows FAIL — manual review needed"
+                        checks_passed=$((checks_passed + 1))  # Still pass with warning
+                    else
+                        failed="${failed}\n  - Cross-validation inconclusive: heartbeat/summary mismatch (missing status field)"
+                    fi
+                else
+                    warn "SUMMARY.md found but lacks structured status field — partial validation"
+                    checks_passed=$((checks_passed + 1))  # Pass with warning
+                fi
+            else
+                info "No SUMMARY.md in wave dir — heartbeat-only validation (partial gate)"
+                if [ "$_heartbeat_ok" -eq 1 ]; then
+                    checks_passed=$((checks_passed + 1))
+                fi
+            fi
+        else
+            warn "No heartbeat.log found for latest wave — pre-execution gate check"
+            # Not a failure: G4 runs before execution, so no heartbeat may exist yet
+        fi
+    else
+        info "No waves/ directory found — pre-execution context, no heartbeat validation needed"
+    fi
+
     if [ "$DETAIL" -eq 1 ]; then
         echo ""
         printf "  Checks passed: %d / %d\n" "$checks_passed" "$((_total_checks))"
