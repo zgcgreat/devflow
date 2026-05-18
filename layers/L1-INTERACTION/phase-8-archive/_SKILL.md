@@ -101,6 +101,44 @@ Phase 8 是 v3.0 **LearningWorkflow自动进化**的核心入口——将本次�
 
 ### Step 1: Wave SUMMARY 聚合
 
+**Canary Stability Priority**: If Phase 7 completed and `.ultimate-workflow/canary-report.md` exists, parse its stability score. Waves with canary failures get LESSONS priority boost (P1→P0). Flag any lessons from unstable waves in `LESSONS.md` as `[CANARY-FAILED]`.
+
+**Pre-aggregation gate-check**: Run this before proceeding:
+```bash
+if [ -f ".ultimate-workflow/canary-report.md" ]; then
+  echo "✅ Canary report found — applying stability priority to LESSONS nominations"
+  CANARY_STABILITY=$(grep -i "stability\|final.result\|PASS\|FAIL" .ultimate-workflow/canary-report.md | tail -5)
+else
+  echo "⚠️ No canary report — normal LESSONS priority ordering"
+fi
+
+# Canary gate-check reference: custom validation for canary-report existence
+if [ ! -f ".ultimate-workflow/canary-report.md" ] && [ -f ".ultimate-workflow/g5-gate-decision" ]; then
+  G5_RESULT=$(grep "G5 Result:" .ultimate-workflow/g5-gate-decision 2>/dev/null || echo "UNKNOWN")
+  echo "Canary report missing but G5 gate exists: $G5_RESULT — verify Phase 7 output before aggregation"
+fi
+```
+
+**Aggregation Limits**:
+- Read at most 10 most recent waves (or ALL if total ≤10 waves)
+- Total processing time cap: 20 minutes / 50 waves max per batch
+- Skip waves where `wave_number < current - 10` unless explicitly requested
+
+Iteration limit logic:
+```bash
+TOTAL_WAVES=$(ls .specs/waves/wave-*/SUMMARY.md 2>/dev/null | wc -l)
+if [ "$TOTAL_WAVES" -le 10 ]; then
+  WAVE_START=1
+else
+  WAVE_START=$((TOTAL_WAVES - 9))
+fi
+for i in $(seq $WAVE_START $TOTAL_WAVES); do
+  SUMMARY=".specs/waves/wave-${i}/SUMMARY.md"
+  [ -f "$SUMMARY" ] || continue
+  # process $SUMMARY...
+done
+```
+
 遍历 Phase 4 所有 Wave，提取关键指标 from canonical SUMMARIES (see [wave-executor/_SKILL.md](../L2-ENGINE/wave-executor/_SKILL.md) for field definitions). Consume these canonical fields:
 
 - `Tasks Executed` → task count
