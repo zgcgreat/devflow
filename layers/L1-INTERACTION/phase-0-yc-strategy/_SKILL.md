@@ -814,7 +814,7 @@ echo "✅ STATE.md updated with Phase 0 results"
 | Parameter | Value | Rationale | Enforcement |
 |-----------|-------|-----------|-------------|
 | YC questions answered | 6/6 mandatory | All 6 questions required for complete strategic assessment | G1 gate blocks progress if <4 answers with substantive content |
-| Assessment completion time | ~5 min minimum, ≤30 min recommended | Too fast = superficial, too slow = over-analysis of simple project | Time tracking logged in STATE.md for continuous improvement |
+| Assessment completion time | Two-tiered: (a) Initial YC-style interview: ≤30 min per session (recommended max); (b) Full strategic deep-dive (if needed): ≤2 h total across multiple sessions | Too fast = superficial, too slow = over-analysis of simple project | Time tracking logged in STATE.md for continuous improvement |
 | Evidence coverage | ≥4 of 6 questions have data-backed answers (not assumptions) | Minimum validation bar for G1 pass | Each evidence-backed answer must cite source (user quote, benchmark, metric) |
 | Confidence level | HIGH required to skip Phase 1; MEDIUM triggers optional follow-up; LOW requires Phase 1 | Low confidence on problem/competition → deep dive needed | CONFIDENCE field in PROJECT_CONTEXT.md updated after assessment |
 

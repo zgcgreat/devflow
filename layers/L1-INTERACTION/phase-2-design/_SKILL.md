@@ -101,6 +101,24 @@ v3_upgrade:
 
 ---
 
+### 可执行命令示例
+
+```bash
+# Create design directory and initial spec
+mkdir -p .ultimate-workflow/<req-id>
+
+# Validate design document exists and has required sections
+grep -c "## ADR" .ultimate-workflow/<req-id>/02-design.md
+
+# Check all AC are mapped to API definitions
+while read ac; do grep -q "$ac" .ultimate-workflow/<req-id>/02-design.md && echo "$ac: covered" || echo "$ac: MISSING"; done < ac-list.txt
+
+# Verify ADR count meets minimum (≥3)
+adr_count=$(grep -c "^ADR-" .ultimate-workflow/<req-id>/02-design.md || true); test "$adr_count" -ge 3 && echo "G2-ADR PASS" || echo "G2-ADR FAIL: need $((3 - adr_count)) more ADRs"
+```
+
+---
+
 ## Error Taxonomy (Phase 2 Design 专属)
 
 | Level | Name | Symptom | Recovery Action | Wave Impact |

@@ -313,6 +313,12 @@ next_session:
 | Match priority | Highest-frequency patterns first | Most proven practices have higher expected value |
 | Stale skill eviction | Skills not referenced in 60 days → removed from rotation | Prevents dead knowledge accumulation |
 
+### Timeout Constraints
+
+| Constraint | Detail | Fallback Behavior |
+|------------|--------|-------------------|
+| Timeout | Wave SUMMARY aggregation + LESSONS.md update | ≤20 min for ≤50 waves; linear extrapolation beyond that | If >60 waves: process in batches of 10 with intermediate commits |
+
 ### G8 Gate Fail Scenarios
 
 **Skip archive, escalate to Orchestrator if**:

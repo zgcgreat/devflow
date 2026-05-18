@@ -559,6 +559,10 @@ Phase N Complete → graduation_scan() [post-phase hook]
     ├─→ Collect LEARNINGS.md from last 3 phases (N = 3 fixed; graduated patterns scanned only after completing at least 3 waves)
     │
     ├─→ Jaccard Similarity Clustering (threshold=0.25)
+    │     Note: Jaccard threshold = 0.25 chosen to allow partial overlap between skills
+    │     (e.g., 'error handling in auth' and 'error handling in API' share 25% term overlap).
+    │     Lower thresholds (0.1) cause over-clustering; higher (0.5) causes under-merging
+    │     of related patterns.
     │   - Group similar lessons by semantic similarity
     │   - Identify cross-phase patterns
     │

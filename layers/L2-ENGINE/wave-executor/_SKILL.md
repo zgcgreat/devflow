@@ -224,11 +224,15 @@ For each task in wave (parallel if no shared resources):
 **Priority**: {P0|P1|P2}  
 **Dependencies**: [{dep1}, {dep2}] (already completed in previous waves)
 
-**Execution Steps**:
-1. Spawn Executor Agent with task spec
-2. Executor runs TDD cycle (RED → GREEN → REFACTOR)
-3. R6 anti-hallucination check
-4. Commit changes atomically
+**Atomic Execution Steps**:
+
+1. Read `wave-plan.yaml` to extract the task list for this wave and confirm dependency ordering from dag-router output
+2. Create the wave working directory `.specs/waves/wave-{N}/` (if not already created by pre-flight)
+3. Validate all prerequisites from previous waves are met (Wave N-1 SUMMARY exists with Result: PASS)
+4. Spawn Executor Agent with task spec, injecting only the matched domain skills and Wave N-1 summary (~200K tokens max)
+5. Executor runs TDD cycle (RED → GREEN → REFACTOR) with heartbeat emitted every 30s
+6. Run R6 anti-hallucination check on generated code against task spec requirements
+7. Commit changes atomically with descriptive message referencing task ID and req-id
 
 **Monitoring**:
 - Heartbeat emitted every 30s: `[checkpoint][wave:{N}][task:{id}] IN_PROGRESS`

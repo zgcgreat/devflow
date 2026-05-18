@@ -94,6 +94,42 @@ allowed-tools:
 
 ---
 
+### 可执行命令示例
+
+```bash
+# Run verify commands from each wave's summary and check pass rate
+for wave_summary in .specs/waves/wave-*/SUMMARY.md; do
+    echo "=== $wave_summary ==="
+    grep -A1 "verify:" "$wave_summary" || echo "  No verify commands found"
+done
+
+# Calculate AC coverage percentage (need ≥90%)
+python -c "
+import re
+with open('03-tasks.md') as f:
+    ac_count = len(re.findall(r'AC-\d+', f.read()))
+test_count = sum(1 for line in open('05-test-results.md') if 'PASS' in line)
+coverage = test_count / ac_count * 100 if ac_count else 0
+print(f'AC Coverage: {coverage:.1f}% ({test_count}/{ac_count})')
+assert coverage >= 90, f'Coverage {coverage:.1f}% below 90% threshold'
+"
+
+# Validate no Critical items in known issues list
+python -c "
+with open('05-test-results.md') as f:
+    content = f.read()
+issues = re.findall(r'\[Critical\]', content) if '遗留问题' in content else []
+print(f'Known critical issues: {len(issues)}')
+"
+
+# Check all wave summaries have valid verify status
+for f in .specs/waves/wave-*/SUMMARY.md; do
+    grep -q "all verified" "$f" || echo "WARN: $f missing 'all verified' status"
+done
+```
+
+---
+
 ## Error Taxonomy (Phase 5 Test 专属)
 
 | Level | Name | Symptom | Recovery Action | Wave Impact |

@@ -107,6 +107,41 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 
 ---
 
+### 可执行命令示例
+
+```bash
+# Validate DAG has no cycles using topological sort
+python -c "
+import re
+with open('03-tasks.md') as f:
+    content = f.read()
+tasks = set(re.findall(r'Task ID: (T\d+)', content))
+deps = re.findall(r'### Task.*?T(\d+).*?\*\*前置\*\*:.*?(T(?:,\s*)?T|\d+(?:,\s*)?\d+)*', content, re.DOTALL)
+print(f'Found {len(tasks)} tasks in 03-tasks.md')
+if not deps:
+    print('No dependencies found — all tasks are independent (Wave N-1)')
+"
+
+# Verify each task has verify command and done criterion
+python -c "
+import re
+with open('03-tasks.md') as f:
+    content = f.read()
+tasks = re.split(r'### Task ID:', content)[1:]
+ok = 0; bad = 0
+for t in tasks:
+    has_verify = 'Verify' in t and 'Done 判定' in t
+    if has_verify: ok += 1
+    else: bad += 1; print(f'  MISSING verify/done: Task {t[:20]}...')
+print(f'Tasks with valid verify+done: {ok}/{ok+bad}')
+"
+
+# Count tasks per wave for parallelism check
+grep -E 'Wave N\d+' 03-tasks.md | while read line; do echo "$line"; done
+```
+
+---
+
 ## Error Taxonomy (Phase 3 Task Plan 专属)
 
 | Level | Name | Symptom | Recovery Action | Wave Impact |

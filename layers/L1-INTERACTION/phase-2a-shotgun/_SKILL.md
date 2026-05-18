@@ -803,6 +803,12 @@ echo "✅ Final design specification generated"
 - Timeline <1 day (no time for exploration)
 - Backend-only feature (no UI)
 
+### Timeout Constraints
+
+| Constraint | Detail | Fallback Behavior |
+|------------|--------|-------------------|
+| Timeout | variant generation + scoring loop | ≤15 min per batch (5 variants); total ≤45 min across all batches | Abort on timeout; fallback to best-so-far with warning |
+
 ### Edge Cases
 
 **Conflicting Stakeholder Preferences**:
