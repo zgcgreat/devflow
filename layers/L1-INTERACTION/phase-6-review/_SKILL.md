@@ -42,7 +42,7 @@ allowed-tools:
 
 Before starting review, verify ALL of the following:
 
-- [ ] Phase 5 test report exists (`05-test-results.md`)
+- [ ] Phase 5 test report exists (`.specs/test/05-test-results.md`)
 - [ ] Phase 4 implementation complete and code compiles/builds
 - [ ] Phase 3 task plan available (`03-tasks.md` or `DAG-ROUTER-OUTPUT.md`)
 - [ ] PRD/requirements document accessible (`00-requirements.md` or equivalent)
@@ -57,6 +57,21 @@ Before starting review, verify ALL of the following:
 ./scripts/gate-check.sh G3-PHASE6 "$PROJECT_ROOT" --detail
 # Exit 0 = all prerequisite checks passed, proceed to Stage A
 # Exit 1 = failed, address missing artifacts before starting review
+```
+
+### Phase 5→6 Artifact Validation Gate
+
+Verify that the Phase 5 test output artifact is present and valid before starting review:
+
+- [ ] Phase 5 output file exists: `.specs/test/05-test-results.md`
+- [ ] File is non-empty (>10 lines)
+- [ ] Contains test summary indicators (PASS/FAIL or ✓/✗)
+
+```bash
+# Run Phase 5→6 artifact validation gate
+./scripts/gate-check.sh G6-PHASE6 "$PROJECT_ROOT" --detail
+# Exit 0 = phase 5 output validated, proceed to Stage A review
+# Exit 1 = phase 5 artifact missing or invalid, address before starting review
 ```
 
 ### Key Principles
@@ -280,6 +295,14 @@ review_agents:
 G3-PHASE6判定: FAIL → 退回 Wave 修复 R2 后重审
 预计修复时间: ~15分钟
 ```
+
+### Exit Criteria (Quantitative)
+
+- [ ] ≥90% of identified issues have severity P1 or lower
+- [ ] All P0 issues resolved before Phase 7 approval
+- [ ] No unresolved TODO/FIXME in implementation files (grep verification)
+- [ ] Review report written to `.specs/reviews/phase-6-review.md`
+- [ ] Minimum review duration met: Phase 4 tasks → ≥30 min review time
 
 ## Phase 6 → Phase 7 衔接
 

@@ -26,6 +26,7 @@ Gate IDs:
   G2          Design quality gate — check structural requirements
   G3-PHASE6   Review quality gate — spec compliance + code review
   G4          Execution readiness gate — wave-plan validation
+  G6-PHASE6   Phase 5→6 artifact validation — test report existence and content
   CUSTOM      Run custom gate script from scripts/gates/ directory
 
 Options:
@@ -387,6 +388,68 @@ check_g3_phase6() {
     return 0
 }
 
+check_g6_phase6() {
+    # G6-PHASE6 — Phase 5→6 Artifact Validation Gate
+    # Verifies that Phase 5 test output exists and is valid before Phase 6 review.
+    _gate_name="G6-PHASE6 (Phase 5→6 Artifact Validation)"
+
+    checks_passed=0
+    _total_checks=3
+    failed=""
+
+    # Check 1: Phase 5 output artifact exists (.specs/test/05-test-results.md)
+    test_report="${ABSOLUTE_ROOT}/.specs/test/05-test-results.md"
+    _total_checks=$((_total_checks + 1))
+    if [ -f "$test_report" ]; then
+        checks_passed=$((checks_passed + 1))
+        info "Phase 5 test artifact found: $test_report"
+    else
+        failed="$_failed\n  - Phase 5 output missing (expected .specs/test/05-test-results.md)"
+    fi
+
+    # Check 2: File is non-empty (>10 lines)
+    _total_checks=$((_total_checks + 1))
+    if [ -f "$test_report" ]; then
+        line_count=$(wc -l < "$test_report")
+        if [ "$line_count" -gt 10 ]; then
+            checks_passed=$((checks_passed + 1))
+            info "Phase 5 output is substantive: $line_count lines (>10)"
+        else
+            failed="$_failed\n  - Phase 5 output too short: $line_count lines (need >10)"
+        fi
+    else
+        failed="$_failed\n  - Cannot check line count: file missing"
+    fi
+
+    # Check 3: Contains test summary indicators (PASS/FAIL or ✓/✗)
+    _total_checks=$((_total_checks + 1))
+    if [ -f "$test_report" ]; then
+        if grep -qE "PASS|FAIL|✓|✗" "$test_report" 2>/dev/null; then
+            checks_passed=$((checks_passed + 1))
+            info "Phase 5 output contains test summary indicators (PASS/FAIL or ✓/✗)"
+        else
+            failed="$_failed\n  - Phase 5 output lacks PASS/FAIL or ✓/✗ indicators"
+        fi
+    else
+        failed="$_failed\n  - Cannot check content: file missing"
+    fi
+
+    if [ "$DETAIL" -eq 1 ]; then
+        echo ""
+        printf "  Checks passed: %d / %d\n" "$checks_passed" "$((_total_checks))"
+        if [ -n "$failed" ]; then
+            printf "  Failures:%s\n" "$failed"
+        fi
+    fi
+
+    if [ "$STRICT" -eq 1 ] && [ "$checks_passed" -lt "$_total_checks" ]; then
+        fail "$_gate_name"
+        return 1
+    fi
+    pass "$_gate_name"
+    return 0
+}
+
 check_custom() {
     # CUSTOM — Look for a custom gate script in scripts/gates/
     _custom_gate="${2:-default}"
@@ -428,8 +491,9 @@ case "$GATE_ID" in
     G2)           check_g2 "$@" ;;
     G4)           check_g4 "$@" ;;
     G3-PHASE6|G3) check_g3_phase6 "$@" ;;
+    G6-PHASE6)    check_g6_phase6 "$@" ;;
     CUSTOM)       check_custom "$@" ;;
     *)
-        die "Unknown gate ID: $GATE_ID. Use G1, G2, G4, G3-PHASE6, or CUSTOM."
+        die "Unknown gate ID: $GATE_ID. Use G1, G2, G4, G3-PHASE6, G6-PHASE6, or CUSTOM."
         ;;
 esac

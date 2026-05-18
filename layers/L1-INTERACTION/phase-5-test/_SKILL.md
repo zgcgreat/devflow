@@ -87,7 +87,26 @@ allowed-tools:
 | 回归测试 | Wave N+1 依赖模块已回归 | 补充回归测试 |
 | 遗留问题清单 | 所有已知问题已记录并分级 | Critical 项必须修复 |
 
-### Step 6: 输出完成声明，停等用户确认
+### Step 6: Post-Wave File Existence Verification
+
+Before declaring Phase 5 complete, verify the output artifact exists:
+
+```bash
+# Verify Phase 5 output file was created
+if [ -f ".specs/test/05-test-results.md" ] && [ "$(wc -l < .specs/test/05-test-results.md)" -gt 10 ]; then
+    echo "PASS: Phase 5 output artifact verified (.specs/test/05-test-results.md, $(wc -l < .specs/test/05-test-results.md) lines)"
+else
+    echo "FAIL: Phase 5 output artifact missing or empty"
+    exit 1
+fi
+
+# Validate test content has summary indicators
+grep -qE "PASS|FAIL|✓|✗" ".specs/test/05-test-results.md" || {
+    echo "WARN: No PASS/FAIL indicators found in test results"
+}
+```
+
+### Step 7: 输出完成声明，停等用户确认
 
 - **全部通过** → 标记 Phase 5 completed，进入 Phase 6
 - **有失败** → 创建修复 Task（T<NN>-fix），回退到 Phase 4
