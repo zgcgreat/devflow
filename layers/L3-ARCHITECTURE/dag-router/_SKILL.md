@@ -712,20 +712,20 @@ exit 0
 
 **Single Wave with All Tasks**:
 
-- Still generate WAVE-PLAN.md for consistency
+- Still generate wave-plan.yaml for consistency
 - Mark parallelism based on resource overlap
 - Execute normally
 
 **Dynamic Dependencies** (runtime-determined):
 
 - Use conservative estimation (assume worst-case dependencies)
-- Document assumptions in WAVE-PLAN.md
+- Document assumptions in wave-plan.yaml
 - Allow runtime adjustment during Phase 4 execution
 
 **Cross-Project Dependencies**:
 
 - Treat external project tasks as "already completed"
-- Document external dependencies in WAVE-PLAN.md
+- Document external dependencies in wave-plan.yaml
 - Verify external artifacts exist before starting
 
 ---
@@ -806,7 +806,7 @@ git worktree prune
 # Run Kahn's algorithm
 python3 scripts/kahn-sort.py \
   --input .ultimate-workflow/<req-id>/03-tasks.md \
-  --output .ultimate-workflow/<req-id>/WAVE-PLAN.md
+  --output .ultimate-workflow/<req-id>/wave-plan.yaml
 ```
 
 ### Optional Tools
@@ -844,7 +844,7 @@ During DAG routing:
 - [ ] Worktrees assigned based on parallelism level
 
 After DAG routing:
-- [ ] WAVE-PLAN.md generated with all sections
+- [ ] wave-plan.yaml generated with all sections
 - [ ] G4 gate validation passed
 - [ ] Resource conflicts documented
 - [ ] Execution order clearly defined

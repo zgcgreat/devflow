@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0-draft
 description: |
   Dependency-aware wave scheduling engine for parallel task orchestration.
-  Takes WAVE-PLAN.md from dag-router and dispatches agents to execute tasks
+  Takes wave-plan.yaml from dag-router and dispatches agents to execute tasks
   concurrently within waves, with coordination points and error recovery.
   Use when: "schedule parallel tasks", "execute wave plan", "dispatch agents". (ultimate-workflow)
 layer: L3-ARCHITECTURE
