@@ -375,6 +375,172 @@ If threshold met, create `.specs/skills/microservices-adoption.md`:
 
 ---
 
+### Step 5: Consensus Gate Validation (PASS/FAIL)
+
+**Structured quality gate executed after Step 4 documentation.** Before the consensus output is considered final, it MUST pass the following validation checks. This gate ensures party-mode produces actionable, auditable decisions — not just discussion transcripts.
+
+#### GATE CHECKLIST: `consensus-gate.sh`
+
+```bash
+#!/usr/bin/env bash
+# consensus-gate-validation.sh
+# Validates party-mode output passes quality gates before finalization
+
+CONSENSUS_LEVEL="${1:-0}"       # e.g., 76 (percent)
+WEIGHTED_SCORE="${2:-0}"        # e.g., 7.6 (out of 10)
+P0_CONFLICTS="${3:-0}"          # Number of P0 blocking conflicts
+TOTAL_AGENTS="${4:-0}"          # Total agents participating
+AGREED_AGENTS="${5:-0}"         # Agents fully agreeing with decision
+ROUNDS_CONDUCTED="${6:-0}"      # Number of debate rounds executed
+
+# === PASS Conditions (all must be true) ===
+PASS_MIN_CONSENSUS=70            # ≥70% agents agree
+PASS_MIN_WEIGHTED_SCORE=6.5      # Weighted average ≥6.5/10
+PASS_MAX_P0_CONFLICTS=0          # No P0 blocking conflicts (≥2 agents conflict 3 rounds)
+PASS_MAX_ROUNDS=7                # Extended debate ≤7 rounds total
+
+# === Validation Logic ===
+GATE_STATUS="PASS"
+VIOLATIONS=""
+
+if [ "$CONSENSUS_LEVEL" -lt "$PASS_MIN_CONSENSUS" ]; then
+    GATE_STATUS="FAIL"
+    VIOLATIONS="${VIOLATIONS}  ❌ Consensus ${CONSENSUS_LEVEL}% < ${PASS_MIN_CONSENSUS}% threshold\n"
+fi
+
+# Weighted score check (multiply by 10 for integer comparison)
+WEIGHTED_INT=$((WEIGHTED_SCORE * 10))
+MIN_WEIGHTED_INT=$((PASS_MIN_WEIGHTED_SCORE * 10))
+if [ "$WEIGHTED_INT" -lt "$MIN_WEIGHTED_INT" ]; then
+    GATE_STATUS="FAIL"
+    VIOLATIONS="${VIOLATIONS}  ❌ Weighted score ${WEIGHTED_SCORE}/10 < ${PASS_MIN_WEIGHTED_SCORE}/10 threshold\n"
+fi
+
+if [ "$P0_CONFLICTS" -gt "$PASS_MAX_P0_CONFLICTS" ]; then
+    GATE_STATUS="FAIL"
+    VIOLATIONS="${VIOLATIONS}  ❌ P0 conflicts: ${P0_CONFLICTS} (max ${PASS_MAX_P0_CONFLICTS})\n"
+fi
+
+if [ "$ROUNDS_CONDUCTED" -gt "$PASS_MAX_ROUNDS" ]; then
+    GATE_STATUS="FAIL"
+    VIOLATIONS="${VIOLATIONS}  ❌ Rounds: ${ROUNDS_CONDUCTED} > ${PASS_MAX_ROUNDS} limit\n"
+fi
+
+# Output gate result
+echo "=== Consensus Gate Validation ==="
+echo "Status: ${GATE_STATUS}"
+if [ -n "$VIOLATIONS" ]; then
+    echo "Violations:"
+    echo -e "$VIOLATIONS"
+fi
+echo "================================="
+exit 0
+```
+
+#### PASS Criteria (all must be satisfied)
+
+| Gate | Condition | Threshold | Failure Action |
+|------|-----------|-----------|----------------|
+| **G1: Consensus Coverage** | ≥70% of agents fully agree with the decision | ≥70% of total_agents | FAIL → see GATE FALLBACK below |
+| **G2: Weighted Confidence** | Weighted average confidence score (confidence × weight / sum_weights) | ≥6.5/10 | FAIL → see GATE FALLBACK below |
+| **G3: No P0 Blocking Conflict** | No pair of agents with conflicting recommendations after 3 debate rounds | 0 P0 conflicts | FAIL → immediate escalation |
+| **G4: Round Limit** | Total debate rounds within extended budget | ≤7 rounds (5 base + 2 extended) | FAIL → forced decision by Architect |
+
+#### GATE FALLBACK Protocol (on FAIL)
+
+Execute fallback in strict priority order. Each level adds a remediation step before re-checking the gate.
+
+```
+FAILLVL-1: Extended Debate (max 2 additional rounds)
+├─ Trigger: G1 or G2 failed (insufficient consensus/weight)
+├─ Action: Target lowest-confidence agents for clarification
+├─ Each agent must state: "What evidence would move me to ≥70% agreement?"
+└─ Re-run gate check with updated scores from Step 3 formula
+│
+FAILLVL-2: Executor Arbitration (L2-ENGINE/executor)
+├─ Trigger: GATE still FAIL after FAULLVL-1 extended debate
+├─ Action: Delegate to executor with party-mode summary + all agent positions
+├─ Executor applies R6 token compression on discussion transcript
+└─ Executor returns decision within 30s timeout; documented in DECISIONS.md
+│
+FAILLVL-3: Forced Architect Decision
+├─ Trigger: G3 failed (P0 blocking conflict persists) OR G4 failed (round limit hit)
+├─ Action: Architect (weight 1.5x) makes binding decision with rationale
+├─ Must document: "Why Architect override was necessary"
+└─ All P0 dissenting views preserved in DECISIONS.md as conditions
+```
+
+#### Gate Validation Output Format
+
+```markdown
+## Consensus Gate Validation Report
+
+**Gate Result**: ✅ PASS / ❌ FAIL (with fallback level)
+
+### Gate Checks
+| Gate | Condition | Actual | Result |
+|------|-----------|--------|--------|
+| G1: Consensus Coverage | ≥70% agree | 3/4 = 75% | ✅ PASS |
+| G2: Weighted Confidence | ≥6.5/10 score | 7.4/10 | ✅ PASS |
+| G3: No P0 Conflict | 0 conflicts | 0 conflicts | ✅ PASS |
+| G4: Round Limit | ≤7 rounds | 4 rounds | ✅ PASS |
+
+### Fallback History (if any)
+- Gate passed on first check — no fallback needed.
+
+### Post-Gate Action
+Decision is now final. Proceed to Step 6: Memory Update & Domain Skill Extraction.
+```
+
+**Gate validation MUST complete before decision is marked final.** No consensus output is valid without a passing gate report.
+
+---
+
+### Step 6: Memory Update & Domain Skill Extraction
+
+**Finalize decision in memory system** (executed after Gate PASS):
+
+Update `.specs/memory/DECISIONS.md`:
+```markdown
+## [YYYY-MM-DD] {decision_topic} — Gate {PASS|FAIL-LVL-N}
+
+**Category**: {Technical Architecture | Business Logic | Risk Assessment | Quality Gate}  
+**Participants**: {agent_list_with_weights}  
+**Outcome**: {decision_summary}  
+**Confidence**: {weighted_avg}/10  
+**Consensus**: {consensus_pct}% ({agreed}/{total})  
+**Gate Result**: PASS (no fallback) / FAIL → LVL-1 extended debate resolved / FAIL → LVL-2 executor arbitration
+
+### Gate Validation
+{Summary of gate check table from Step 5}
+
+### Context
+{Problem context from Step 1}
+
+### Decision Rationale
+{Key reasoning from consensus output}
+
+### Dissenting Opinions
+{All P0/P1 dissenting views preserved verbatim}
+
+### Lessons Learned
+{Insights extracted for LearningWorkflow}
+
+### Review Date
+Revisit in {3 months | milestone_trigger}
+```
+
+If gate failed and fallback was used, append to `DECISIONS.md`:
+```markdown
+## Fallback Record: {YYYY-MM-DD}-{topic-slug}
+
+**Fallback Level**: LVL-{N} ({extended_debate | executor_arbitration | forced_architect})  
+**Trigger Gate**: G{1-4} failed after initial check  
+**Resolution**: {how fallback resolved the issue}
+```
+
+---
+
 ## Error Handling
 
 ### Common Issues and Fixes
