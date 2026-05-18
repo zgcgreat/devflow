@@ -26,6 +26,16 @@ Deploy changes in staged batches (10% → 50% → 100%) with automatic health ch
 
 **Core philosophy**: Never deploy blindly. Every batch has a safety net. If something breaks, roll back automatically before users notice.
 
+### Script Lifecycle Management
+
+All inline shell scripts in this skill are managed by the wrapper skill `canary-wrapper/_SKILL.md`. The wrapper handles:
+- Script discovery and extraction (from this parent file or standalone)
+- Parameter validation before execution
+- Execution monitoring and timeout handling
+- Post-execution reporting and log aggregation
+
+Refer to `canary-wrapper/_SKILL.md` for the full error taxonomy, boundary conditions, and lifecycle reports.
+
 ---
 
 ## Preamble
@@ -136,7 +146,10 @@ health_check_canary_1:
   auto_rollback_on_fail: true
 ```
 
-**Monitoring script**:
+**Monitoring script** (managed by `canary-wrapper/_SKILL.md`):
+
+This inline script is extracted and managed by the canary wrapper. All invocations should pass through:
+`canary-wrapper run-health-check $STAGE $DURATION_MINUTES $THRESHOLD_ERROR_RATE`
 
 ```bash
 #!/bin/bash
@@ -334,7 +347,10 @@ rollback_decision:
     action: continue_monitoring
 ```
 
-#### Rollback Execution
+#### Rollback Execution (managed by `canary-wrapper/_SKILL.md`)
+
+This inline script is extracted and managed by the canary wrapper. All invocations should pass through:
+`canary-wrapper run-rollback $STAGE "$REASON"`
 
 ```bash
 #!/bin/bash
