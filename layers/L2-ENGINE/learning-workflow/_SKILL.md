@@ -621,6 +621,41 @@ python3 scripts/cluster-lessons.py \
 Your choice: _
 ```
 
+### Domain Skill Compilation Token Cost Budget Check
+
+Before promoting lessons to domain skills in Steps 5-6, estimate compilation token cost:
+
+1. **Input size estimation**: Count total tokens from all candidate lessons (roughly: word_count / 0.75 for English, or character_count / 1.5 for Chinese)
+2. **Clustering cost**: Jaccard similarity calculation on N lessons ≈ N * avg_lesson_tokens tokens
+3. **Total budget limit**: ≤50K tokens per graduation scan (10% of ~200K agent budget)
+
+**Budget enforcement logic**:
+```bash
+# Budget check before graduation processing
+TOTAL_CANDIDATE_TOKENS=$(wc -c .specs/memory/LESSONS.md 2>/dev/null | awk '{print $1}' || echo 0)
+MAX_ALLOWED=$((50 * 1024))  # 50K tokens ≈ 50K * ~1.3 chars per token
+
+if [ "$TOTAL_CANDIDATE_TOKENS" -gt "$MAX_ALLOWED" ]; then
+    echo "⚠️ Lesson corpus too large ($TOTAL_CANDIDATE_TOKENS bytes), processing max 50K tokens worth"
+    # Take only most recent lessons to stay within budget
+    tail -c $MAX_ALLOWED .specs/memory/LESSONS.md > /tmp/lessons-truncated.md
+fi
+
+# After clustering, check output size
+DOMAIN_SKILL_SIZE=$(wc -c domain-skills/{domain}/_SKILL.md 2>/dev/null | awk '{print $1}' || echo 0)
+if [ "$DOMAIN_SKILL_SIZE" -gt 30720 ]; then  # 30K tokens ~ 30K * ~1.3 bytes
+    echo "⚠️ Generated domain skill exceeds 30K token budget, truncating to core patterns only"
+    # Keep only bullet points and actionable items, remove verbose examples
+fi
+```
+
+**Overflow behavior**:
+- If total cost >50K tokens: process only most recent N lessons that fit within budget, skip older ones with note "[SKIPPED — token budget limit]"
+- If individual domain skill >30K tokens: truncate to core patterns only, add comment "Truncated from X tokens (budget: 30K)"
+- Log compilation cost in heartbeat.log: `graduation_cost_tokens: {estimated}`
+
+**Why this matters**: Without budget tracking, a large project with 100+ waves and hundreds of lessons could spend 200K+ tokens just on graduation, leaving nothing for actual execution agents. Budget caps ensure LearningWorkflow remains fraction of total workflow cost.
+
 ---
 
 ## Error Handling
