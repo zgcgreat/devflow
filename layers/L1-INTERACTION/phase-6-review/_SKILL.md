@@ -83,6 +83,68 @@ Verify that the Phase 5 test output artifact is present and valid before startin
 
 ---
 
+### Step 0: 触发式参考加载（flow-kit UI 反模式）
+
+> 来源: `references/flow-kit-reference/ui-anti-patterns.md` — 8 类 UI 反模式审查清单。
+> **触发条件**: Phase 6 审查涉及前端 UI 代码时（Stage B 质量审查阶段）。
+> **跳过条件**: 纯后端/CLI/SDK 项目无 UI → 跳过本步。
+
+**判定**: 检查 Phase 4 实施代码是否包含前端 UI 文件（`.tsx/.ts/.jsx/.js/.vue/.html/.css/.scss`）。
+- **涉及 UI** → 加载以下参考文件到 Stage B 审查清单
+- **纯后端** → 跳过 Step 0，Stage B 执行标准代码审查
+
+**加载流程**:
+
+1. **读取 `references/flow-kit-reference/ui-anti-patterns.md`** — 8 类反模式:
+   - 布局反模式（全宽容器/固定宽度/响应式断点）
+   - 色彩反模式（未对齐设计令牌/暗色模式对比度 <4.5:1）
+   - 间距反模式（魔法数字/8pt 网格）
+   - 字体反模式（字重/字号/行高未使用设计令牌）
+   - 交互反模式（悬停状态/过渡动画/点击区域 <44×44）
+   - 响应式反模式（断点跳跃/内容溢出/横滑）
+   - 无障碍反模式（ARIA/键盘导航/屏幕阅读器）
+   - 移动端反模式（触控区域/视口/meta 标签/横屏适配）
+
+2. **在 Stage B 审查时，按以下顺序逐项检查**:
+   ```bash
+   # grep 自检 — 布局反模式
+   grep -rn "width: 1200px" src/          # 固定宽度容器
+   grep -rn "overflow: hidden" src/       # 可能截断内容
+
+   # 色彩反模式
+   grep -rn "color: #[0-9a-fA-F]\{3,6\}" src/ | grep -v "var("  # 硬编码颜色
+
+   # 间距反模式
+   grep -rn "padding: 1[3-7]px" src/     # 非 8pt 网格
+   grep -rn "margin: 7px" src/            # 魔法数字
+
+   # 交互反模式 — 点击区域检查（需视觉审查）
+   ```
+
+3. **Stage B 审查报告中追加 UI 反模式检查结果段**:
+   ```markdown
+   ## UI Anti-Pattern Scan
+
+   | 类别 | 检查结果 | 涉及文件 |
+   |------|---------|---------|
+   | 布局 | ✅ 通过 | — |
+   | 色彩 | ⚠️ 发现 2 处硬编码颜色 | `src/components/Header.tsx:45` |
+   | 间距 | ✅ 通过 | — |
+   | 字体 | ❌ 发现 3 处未使用 CSS 变量 | `src/styles/main.css` |
+   | 交互 | ⚠️ 点击区域 <44×44 | `src/components/IconBtn.tsx` |
+   | 响应式 | ✅ 通过 | — |
+   | 无障碍 | ❌ 缺少 ARIA label | `src/components/Sidebar.tsx` |
+   | 移动端 | ⚠️ 视口 meta 缺失 | `index.html` |
+   ```
+
+4. **严重等级判定**:
+   - **P0**: 色彩对比度 <4.5:1（可访问性强制）、响应式横滑（移动端不可用）
+   - **P1**: 硬编码颜色、非 8pt 间距、点击区域 <44×44
+   - **P2**: 悬停状态缺失（仅桌面端）、过渡动画不流畅
+   - **P3**: 字体未使用设计令牌（可后续优化）
+
+---
+
 ## 输入
 
 - Phase 4 实施代码
@@ -424,6 +486,54 @@ Stage A PASS → Stage B FAIL (G3-PHASE6):
 
 Stage A PASS → Stage B PASS (G3-PHASE6):
     └─→ Phase 7 Canary发布
+```
+
+---
+
+## 用户确认（多问题确认模式）
+
+> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+
+输出完成声明后，使用多问题确认格式与用户交互：
+
+```markdown
+📍 当前阶段: Phase 6 · Review — Code Review & Spec Compliance
+🎯 本步目标: 确认审查结果和修复建议
+
+---
+**问题 1**: 审查结果是否符合预期？
+[1] ✅ 全部通过/可接受 ← 推荐
+[2] 有需要修复的项
+[3] 查看详细报告
+
+**问题 2**: 修复建议是否合理？
+[1] ✅ 建议合理，同意修复 ← 推荐
+[2] 需要调整修复方案
+[3] 查看详细建议
+
+**问题 3**: 是否同意进入下一阶段？
+[1] ✅ 同意，继续 Phase 7 Canary ← 推荐
+[2] 需要修改后重试
+[3] 回退到 Phase 4
+
+请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
+```
+
+**用户回复后确认**:
+
+```markdown
+✅ 收到你的选择：
+- 问题 1：<选项A>
+- 问题 2：<选项B>
+- 问题 3：<选项A>
+
+---
+**确认以上选择：**
+
+[1] ✅ 确认无误，继续 ← 推荐
+[2] 需要修改
+
+请回复 1/2。
 ```
 
 ---

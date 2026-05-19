@@ -1,0 +1,16 @@
+{
+  "devflow": {
+    "enabled": true,
+    "autoInject": true,
+    "bridgePath": "../shared/core-bridge.js",
+    "memoryPath": ".devflow/memory",
+    "statePath": ".devflow/STATE.md",
+    "compressionLevel": "full",
+    "gateChecking": true,
+    "statusline": {
+      "enabled": true,
+      "showPhase": true,
+      "showProgress": true
+    }
+  }
+}

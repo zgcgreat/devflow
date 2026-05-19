@@ -43,7 +43,54 @@ allowed-tools:
 
 ## 执行流程
 
-### Step 0: Brownfield Detection (Pre-Wave Analysis)
+### Step 0: 触发式参考加载（flow-kit 前端硬规则 + UI 反模式）
+
+> 来源: `references/flow-kit-reference/frontend-engineer-rules.md` + `references/flow-kit-reference/ui-anti-patterns.md`。
+> **触发条件**: 本项目涉及 HTML/CSS/JS/React/Vue/Svelte 等前端技术栈实施。
+> **跳过条件**: 纯后端/CLI/SDK/数据库/基础设施项目 → 跳过本步。
+
+**判定**: 检查当前任务是否涉及浏览器端 UI 代码（`.tsx/.ts/.jsx/.js/.vue/.html/.css/.scss`）。
+- **涉及前端** → 加载以下参考文件
+- **纯后端/后端工具** → 跳过 Step 0，直接进入 Step 1
+
+**加载流程**:
+
+1. **读取 `references/flow-kit-reference/frontend-engineer-rules.md`** — 前端硬规则（不可协商）:
+   - React+Babel 硬规则（禁止解构 spread、必须 import 类型、`.tsx` 文件规范）
+   - CSS 硬规则（`.module.css`/`.module.scss` 命名、CSS 变量、`rem`/`vh`/`vw` 使用）
+   - 交付前清单（`git diff --cached` 自检项）
+
+2. **读取 `references/flow-kit-reference/ui-anti-patterns.md`** — 8 类强制禁忌:
+   - **字体类**: Inter/Roboto/Arial/Helvetica/system-ui 作主字体、Space Grotesk display、Display/body 同字体
+   - **颜色类**: 纯黑/纯白、紫色渐变 on 白底、霓虹青 on 黑底、彩色背景灰文字、≥2 强调色、gradient text
+   - **阴影类**: 静态卡片 drop shadow、Shadow alpha >0.15、装饰性彩色阴影、Inset shadow + glow 同时用
+   - **边框类**: border-left/right >1px 作彩色侧条、渐变边框、玻璃拟态
+   - **动效类**: Bounce/elastic 缓动、animate width/height/padding/margin、散落微交互、不支持 prefers-reduced-motion、滚动劫持
+   - **布局类**: 卡片嵌套卡片、统一大小卡片网格+图标+标题、Hero 大数字+小标签+副指标+渐变、统一 4/8/12/16/20 间距
+   - **文案类**: "Boost your productivity"类空话、hedging 句式、Lorem ipsum、"Submit"/"Click here"/"Learn more"
+   - **组件类**: 圆角矩形+drop shadow button、placeholder 替代 label、tooltip 依赖 hover、模态框无 escape 键、skeleton 纯灰条
+
+3. **执行 grep 自检（Phase 4 实现前）**:
+   ```bash
+   # 检查字体禁忌
+   grep -rn "Inter\|Roboto\|Arial\|Helvetica" src/           # AI-slop 字体
+   # 检查颜色禁忌
+   grep -rn "#000\|#fff\|gradient.*purple\|neon.*cyan" src/  # 纯黑/纯白/紫渐变/霓虹青
+   # 检查边框禁忌
+   grep -rn "border-left.*\|border-right.*\|gradient.*border" src/  # 彩色侧条/渐变边框
+   # 检查阴影禁忌
+   grep -rn "box-shadow.*0.1[5-9]\|box-shadow.*0\.2" src/   # Shadow alpha >0.15
+   # 检查动效禁忌
+   grep -rn "bounce\|elastic\|animate.*width\|animate.*height" src/  #过时缓动/性能差动画
+   # 检查布局禁忌
+   grep -rn "card.*card\|nested.*card" src/                  # 卡片嵌套卡片
+   ```
+
+4. **Phase 4 实现过程中**: 每条前端代码变更后，对照 `frontend-engineer-rules.md` 交付前清单逐项检查。
+
+---
+
+### Step 1: Brownfield Detection (Pre-Wave Analysis)
 
 Before executing waves, detect existing codebase state to handle incremental changes:
 
@@ -268,7 +315,53 @@ wave_plan:
 
 > **修复 (2024-05-17)**: Phase 4 不再每 Wave 都触发 LearningWorkflow(避免与 Phase 8 archive 冲突),由 Orchestrator 统一聚合。
 
-### Step 5: PartyMode 共识（复杂决策时触发）
+### Step 5: 用户确认（多问题确认模式）
+
+> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+
+输出完成声明后，使用多问题确认格式与用户交互：
+
+```markdown
+📍 当前阶段: Phase 4 · Build — Code Implementation
+🎯 本步目标: 确认代码实现质量和 Wave 执行结果
+
+---
+**问题 1**: Wave 执行结果是否符合预期？
+[1] ✅ 全部通过/可接受 ← 推荐
+[2] 有失败需要修复
+[3] 查看详细结果
+
+**问题 2**: 代码质量是否达标？
+[1] ✅ 代码规范，无警告 ← 推荐
+[2] 有警告需要处理
+[3] 查看代码详情
+
+**问题 3**: 是否同意进入下一阶段？
+[1] ✅ 同意，继续 Phase 5 ← 推荐
+[2] 需要修改后重试
+[3] 回退到 Phase 3
+
+请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
+```
+
+**用户回复后确认**:
+
+```markdown
+✅ 收到你的选择：
+- 问题 1：<选项A>
+- 问题 2：<选项B>
+- 问题 3：<选项A>
+
+---
+**确认以上选择：**
+
+[1] ✅ 确认无误，继续 ← 推荐
+[2] 需要修改
+
+请回复 1/2。
+```
+
+### Step 6: PartyMode 共识（复杂决策时触发）
 
 当 Phase 4 遇到需要跨 Agent 共识的决策：
 1. 识别决策点（技术选型冲突、架构权衡）

@@ -792,3 +792,51 @@ Quality gates:
 
 ### Sprint 10 Audit
 - **F-P1-2**: Phase 7 external scripts lifecycle defined ✅ — `canary-health-check.sh` (lines 154-184) and `auto-rollback.sh` (lines 355-405) managed by `canary-wrapper/_SKILL.md`, with invocation parameters documented (STAGE, DURATION_MINUTES, THRESHOLD_ERROR_RATE, REASON), ownership via wrapper skill, versioning alongside phase-7-canary
+
+---
+
+## 用户确认（多问题确认模式）
+
+> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+
+输出完成声明后，使用多问题确认格式与用户交互：
+
+```markdown
+📍 当前阶段: Phase 7 · Canary — Gradual Rollout
+🎯 本步目标: 确认部署健康和回滚决策
+
+---
+**问题 1**: Canary 部署是否健康？
+[1] ✅ 所有阶段通过 ← 推荐
+[2] 有指标异常
+[3] 查看详细监控
+
+**问题 2**: 回滚阈值设置是否合理？
+[1] ✅ 阈值合理，无需回滚 ← 推荐
+[2] 需要调整阈值
+[3] 查看阈值详情
+
+**问题 3**: 是否同意全量发布？
+[1] ✅ 同意全量发布 ← 推荐
+[2] 推迟发布
+[3] 回滚到上一版本
+
+请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
+```
+
+**用户回复后确认**:
+
+```markdown
+✅ 收到你的选择：
+- 问题 1：<选项A>
+- 问题 2：<选项B>
+- 问题 3：<选项A>
+
+---
+**确认以上选择：**
+
+[1] ✅ 确认无误，继续 ← 推荐
+[2] 需要修改
+
+请回复 1/2。
+```

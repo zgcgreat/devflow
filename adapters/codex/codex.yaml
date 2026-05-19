@@ -1,0 +1,29 @@
+# OpenAI Codex 配置
+
+model: o3
+sandbox: true
+
+instructions: |
+  This project uses devflow v3.0 phased workflow.
+  
+  ## Core Rules
+  - Read `.devflow/STATE.md` for current phase
+  - Respect gate checks — do not skip phases
+  - Load memory from `.devflow/memory/`
+  - Record decisions in `.devflow/memory/DECISIONS.md`
+  - Record lessons in `.devflow/memory/LESSONS.md`
+  
+  ## Phase Gates
+  - Phase 1: needs 00-requirements.md
+  - Phase 2: needs 01-analysis.md
+  - Phase 3: needs 02-design.md + 03-tasks.md
+  - Phase 4: needs 03-tasks.md
+  - Phase 5: needs 04-dev-log.md
+  - Phase 6: needs 05-test-report.md
+  - Phase 7: needs 06-code-review.md
+  - Phase 8: needs 07-release-checklist.md
+
+hooks:
+  pre_prompt:
+    - command: "node $DEVFLOW_HOME/adapters/shared/core-bridge.js read-state ."
+      description: "Load current devflow phase state"

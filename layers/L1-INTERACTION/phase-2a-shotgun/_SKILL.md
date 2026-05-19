@@ -59,6 +59,52 @@ Generate 4-6 design variants with clear trade-offs, AI recommendation based on m
 
 ## Step-by-step Workflow
 
+### Step -1: 触发式参考加载（flow-kit UI 美学原则）
+
+> 来源: `references/flow-kit-reference/ui-aesthetics.md` — 9 种调性卡片 + 5 美学维度实施指南。
+> **触发条件**: Phase 2a 生成 UI 设计变体前（前端项目必选）。
+> **跳过条件**: 纯后端/CLI/SDK 项目 → 跳过本步。
+
+**判定**: 检查当前项目是否涉及用户界面设计（前端 SaaS / 移动端 / 桌面端）。
+- **涉及 UI 设计** → 加载以下参考文件
+- **纯后端** → 跳过 Step -1，直接进入 Step 0
+
+**加载流程**:
+
+1. **读取 `references/flow-kit-reference/ui-aesthetics.md`** — 9 种 UI 调性卡片:
+   - 极简主义（Minimalist）— 大量留白、单一强调色
+   - 新拟态（Neumorphism）— 柔和阴影凸起/凹陷效果
+   - 玻璃拟态（Glassmorphism）— 毛玻璃模糊 + 半透明层叠
+   - 深色专业（Dark Professional）— 深色背景 + 高对比度强调色
+   - 大胆现代（Bold & Modern）— 渐变、大字体、动画
+   - 卡通插画（Playful Illustration）— 圆角、插画、活泼配色
+   - 杂志排版（Editorial/杂志）— 不对称布局、衬线字体
+   - 数据密集型（Data Dense）— 紧凑表格、高信息密度
+   - 游戏化（Gamification）— 进度条、徽章、动画反馈
+
+2. **从 9 种调性中挑 2-3 种作为变体设计的视觉方向参考**:
+   - 每种变体指定一个主调性（不要全部变体用同一风格）
+   - 记录选择理由（结合用户画像 + 品牌调性）
+
+3. **使用 5 美学维度评估每个变体**（来自 ui-aesthetics.md 实施指南）:
+   - **一致性**: 变体内组件风格统一
+   - **层次性**: 信息层级清晰（字号/颜色/间距区分）
+   - **呼吸感**: 留白充足，不拥挤
+   - **可访问性**: 对比度 ≥4.5:1（WCAG AA）
+   - **情感匹配**: 视觉调性符合产品定位
+
+4. **在 Variant Template 中追加美学评估段**:
+   ```markdown
+   ### Visual Aesthetics
+   - **Style Direction**: {调性名称}
+   - **Consistency**: {高/中/低}
+   - **Hierarchy**: {清晰/一般/模糊}
+   - **Breathing Room**: {充足/一般/拥挤}
+   - **Accessibility**: {AA compliant / 需调整}
+   ```
+
+---
+
 ### Step 0: Load Phase 2 Design Specification
 
 **Read base design**:
@@ -991,6 +1037,52 @@ Quality gates:
 ✅ **Fix**: Always present options, let user make final call
 
 ---
+
+## 用户确认（多问题确认模式）
+
+> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+
+输出设计方案变体后，使用多问题确认格式与用户交互：
+
+```markdown
+📍 当前阶段: Phase 2a · Design Shotgun — UI Design Variants
+🎯 本步目标: 确认设计变体评估和用户选择
+
+---
+**问题 1**: 设计变体多样性是否足够？
+[1] ✅ 变体差异明显，足够选择 ← 推荐
+[2] 需要更多差异化变体
+[3] 查看变体对比
+
+**问题 2**: 加权评分是否合理？
+[1] ✅ 评分合理，推荐选项正确 ← 推荐
+[2] 需要调整评分权重
+[3] 查看评分详情
+
+**问题 3**: 是否同意进入下一阶段？
+[1] ✅ 同意，继续 Phase 3 ← 推荐
+[2] 需要修改设计方案
+[3] 回退到 Phase 2
+
+请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
+```
+
+**用户回复后确认**:
+
+```markdown
+✅ 收到你的选择：
+- 问题 1：<选项A>
+- 问题 2：<选项B>
+- 问题 3：<选项A>
+
+---
+**确认以上选择：**
+
+[1] ✅ 确认无误，继续 ← 推荐
+[2] 需要修改
+
+请回复 1/2。
+```
 
 ## Version History
 

@@ -413,6 +413,54 @@ next_session:
 - `layers/L2-ENGINE/learning-workflow/_SKILL.md` (post-archive: domain skill graduation)
 - `layers/L2-ENGINE/wave-executor/_SKILL.md` (input: per-wave SUMMARY.md files)
 
+## 用户确认（多问题确认模式）
+
+> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+
+输出完成声明后，使用多问题确认格式与用户交互：
+
+```markdown
+📍 当前阶段: Phase 8 · Archive — Lessons Learned & Domain Skills
+🎯 本步目标: 确认归档完整性和经验沉淀
+
+---
+**问题 1**: LESSONS.md 是否完整记录了所有经验？
+[1] ✅ 经验记录完整 ← 推荐
+[2] 需要补充经验
+[3] 查看详细记录
+
+**问题 2**: Domain Skills 提名是否合理？
+[1] ✅ 提名合理，同意提名 ← 推荐
+[2] 需要调整提名
+[3] 查看提名详情
+
+**问题 3**: 是否同意项目归档完成？
+[1] ✅ 归档完成，项目结束 ← 推荐
+[2] 需要补充归档内容
+[3] 回退到 Phase 7
+
+请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
+```
+
+**用户回复后确认**:
+
+```markdown
+✅ 收到你的选择：
+- 问题 1：<选项A>
+- 问题 2：<选项B>
+- 问题 3：<选项A>
+
+---
+**确认以上选择：**
+
+[1] ✅ 确认无误，继续 ← 推荐
+[2] 需要修改
+
+请回复 1/2。
+```
+
+---
+
 ## Sprint 10 Audit: C-P2-3 Phase 8 Archive Token Usage Unbounded 修复确认
 
 **Issue**: Phase 8 archive 聚合所有 wave SUMMARY 时未限制读取量
