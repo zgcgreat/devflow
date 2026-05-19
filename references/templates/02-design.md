@@ -1,7 +1,10 @@
 ﻿# DESIGN: <req-id>
 
-- **Req ID**: <id>
-- **关联**: `@.devflow-kit/<id>/01-analysis.md`、`@.devflow-kit/CONTEXT.md`、`@devflow-kit/references/reference/tech-stacks.md`
+- **Req ID**: `<req-id>`
+- **创建日期**: `<YYYY-MM-DD>`
+- **版本**: `<v1.0>`
+- **状态**: `待确认 / 已确认 / 已关闭`
+- **关联**: `@.ultimate-workflow/<req-id>/00-requirements.md`、`@.ultimate-workflow/<req-id>/01-analysis.md`
 - **作者**: AI（Architect 角色）+ 人工 review
 
 ---
@@ -22,6 +25,7 @@
 □ 5. 关键决策（ADR）
 □ 6. 风险与缓解
 □ 7. 测试策略
+□ 8. 部署与运维
 □ 9. 本次需求设计决策沉淀
 ```
 
@@ -95,7 +99,7 @@
 ## 宪法检查 (Constitution Gate · 融合 spec-kit)
 
 > 来源: 融合 spec-kit Constitutional Foundation
-> 强制门禁: 所有技术决策必须符合 `.devflow-kit/constitution.md`
+> 强制门禁: 所有技术决策必须符合 `.ultimate-workflow/memory/constitution.md`（新项目首次创建后生效）
 
 ### Phase -1: 实现前门禁
 
@@ -163,7 +167,7 @@
 ## 4. ADR 索引
 
 凡 D1~Dn 中可逆性低的，单独写 ADR：
-- `@.devflow-kit/adr/001-theme-storage.md`
+- `@.ultimate-workflow/adr/001-theme-storage.md`
 - ……
 
 ## 5. 风险
@@ -181,11 +185,33 @@
 
 ---
 
+## 7. 测试策略
+
+- **测试类型**：<单元/集成/E2E/性能/安全>
+- **测试框架**：<Jest/Playwright/Pytest/其他>
+- **覆盖率目标**：<行覆盖率/分支覆盖率/函数覆盖率，百分比>
+- **关键测试场景**：<对应 AC 的核心场景列表>
+- **Mock/Stub 策略**：<哪些外部依赖需要 mock>
+- **CI 集成**：<测试命令、触发条件、失败策略>
+
+---
+
+## 8. 部署与运维
+
+- **部署方式**：<Docker/K8s/Vercel/其他>
+- **环境变量**：<关键 env vars 列表>
+- **健康检查**：<health check endpoint 或方式>
+- **日志/监控**：<日志级别、监控指标>
+- **回滚策略**：<快速回滚方案>
+- **数据迁移**：<如有数据库变更，迁移方向>
+
+---
+
 ## 9. 架构沉淀建议（本需求 完成后供 `A-evolve` 同步用 · 软约束）
 
 > 这是**给未来的礼物**，不是必填。AI 写 DESIGN 时如果发现本需求 引入了"项目级有复用价值"的东西，列在这里。
 > 没引入新东西就整段写 `本需求 无架构层面沉淀建议`。
-> 后续用户跑 `@devflow-kit/references/prompts/A-evolve.md` 会扫这段，逐项 review，批准的内容 patch 到 `.devflow-kit/CONTEXT.md`。
+> 后续用户跑 `@.ultimate-workflow/references/prompts/A-evolve.md` 会扫这段，逐项 review，批准的内容 patch 到 `.ultimate-workflow/memory/CONTEXT.md`。
 
 ### 9.1 新增的可复用抽象（建议 append 到 CONTEXT 「既有抽象索引」段）
 
