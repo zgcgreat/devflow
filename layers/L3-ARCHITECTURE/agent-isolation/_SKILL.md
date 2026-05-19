@@ -189,7 +189,7 @@ def enforce_budget(agent_context):
     overflow = total_tokens - 200_000
     
     # Step 1: Compress LESSONS-PREVIOUS (already compressed, try harder)
-    if agent_context.lessons_compressed_ratio < 95%:
+    if agent_context.lessons_compressed_ratio < 0.95:
         agent_context.lessons = aggressive_compress(agent_context.lessons)
         overflow -= saved_tokens
     
@@ -203,8 +203,6 @@ def enforce_budget(agent_context):
     
     return agent_context
 ```
-
----
 
 ---
 

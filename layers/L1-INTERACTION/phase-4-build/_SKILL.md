@@ -15,7 +15,7 @@ allowed-tools:
 
 # Phase 4: 实施 (Wave 并行执行)
 
-> **Layer**: L1-INTERACTION (交互层 交互层) → Layer 2 引擎层 Engine 介入
+> **Layer**: L1-INTERACTION (交互层) → Layer 2 引擎层 Engine 介入
 > **前置产物**: `03-tasks.md` (Phase 3 通过 G4)
 > **前置产物(消费)**: `.specs/waves/wave-{N}/SUMMARY.md` (Wave Executor L2-ENGINE 写入,Phase 4 直接消费)
 > **后置产物**: Phase 4 自身不写 summary,仅编排和消费;最终汇总在 Phase 8 archive

@@ -25,7 +25,7 @@ allowed-tools:
 
 # Phase 6: 双阶段审查 (Two-Stage Adversarial Review)
 
-> **Layer**: L1-INTERACTION (交互层 交互层)  
+> **Layer**: L1-INTERACTION (交互层)  
 > **前置**: Phase 5 测试通过, Phase 4 Wave执行完成  
 > **后置产物**: `.devflow/<req-id>/06-review.md`  
 > **门控**: G3-PHASE6 — Review Quality Gate
@@ -82,22 +82,6 @@ Verify that the Phase 5 test output artifact is present and valid before startin
 4. **G3-PHASE6 Gate is Non-Negotiable**: Phase 6 fails if any P0 spec violation found OR ≥3 P1 issues unaddressed
 
 ---
-
-## Skill元信息
-
-```yaml
-name: phase-6-review
-version: 3.1-enhanced (two-stage)
-layer: L1-INTERACTION
-source: 交互层 Three-Layer Adversarial Review + gstack Cross-Model Review (R14) + Two-Stage Spec Compliance
-dependencies:
-  - code-quality, spec-compliance
-v3_upgrade:
-  two_stage_separation: true (Stage A spec compliance → Stage B code quality)
-  three_layer_adversarial: true (Blind Hunter / Edge Case Hunter in Stage B only)
-  cross_model_review: R14 (CRITICAL tasks → Claude+Codex comparison)
-  agent_isolation: Review Agents run in isolated ~200K context each
-```
 
 ## 输入
 
@@ -345,19 +329,6 @@ fi
 - G3-PHASE6 PASS → 进入 Phase 7 (Canary发布)
 - G3-PHASE6 FAIL → 退回对应 Wave 修复，重新执行 Phase 4→5→6
 - Stage A NOT_PASS → 直接退回 Phase 3/4，不执行 Stage B
-
----
-
-## Stage Separation Benefits
-
-| 指标 | 单阶段审查 (旧) | 双阶段审查 (新) | 改进 |
-|------|----------------|----------------|------|
-| **优先级清晰度** | 低 (所有问题混排) | 高 (spec → code 分离) | ✅ |
-| **Agent context 污染** | 高 (100K+ 混合上下文) | 低 (各 ~200K 独立) | ✅ |
-| **修复闭环明确性** | 中 (不知退回 Phase 3/4/6) | 高 (Stage A FAIL → Phase 3, Stage B FAIL → Phase 4-6) | ✅ |
-| **Token 效率** | ~50K (一次性读 PRD+代码) | ~25K × 2 (Stage A 读 PRD, Stage B 读代码) | ✅ 约 10% 节省（Stage A 可 skip 已覆盖的 AC） |
-
----
 
 ---
 

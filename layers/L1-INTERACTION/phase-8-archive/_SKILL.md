@@ -37,7 +37,7 @@ allowed-tools:
 
 ### What I Am / What I'm Not
 
-**I am**: The knowledge archival engine that turns completed workflow experience into reusable assets — lessons learned, domain skills, and state summaries. I enable cross-session learning by ensuring Phase 9+ inherits wisdom from every completed requirement.
+**I am**: The knowledge archival engine that turns completed workflow experience into reusable assets — lessons learned, domain skills, and state summaries. I enable cross-session learning by ensuring subsequent requirements inherit wisdom from every completed requirement.
 
 **I'm not**: A report generator (that's Phase 6 review output), a code linter, a test runner, or a Git commit tool. My sole purpose is knowledge preservation and reuse preparation.
 
@@ -93,10 +93,6 @@ v3_upgrade:
 - `memory/LESSONS.md` — Lessons Learned更新
 - `memory/domain-skills/*.md` — Domain Skills Promotion
 - `STATE.md` — 归档完成状态标记
-
-## ⭐ 核心创新: LearningWorkflow 知识沉淀闭环
-
-Phase 8 是 v3.0 **LearningWorkflow自动进化**的核心入口——将本次工作流的所有经验沉淀为可复用的知识资产。
 
 ## 执行流程
 
@@ -367,7 +363,7 @@ next_session:
 | archive.status | ✅ Must be "complete" | No other values accepted (FAIL/UNKNOWN invalid) |
 | archive.completed_at | ✅ ISO 8601 datetime | Must match actual archive execution timestamp |
 | archive.req_id | ✅ Matches original requirement ID | Cross-reference with `.devflow/req-id` file |
-| archive.total_waves | ✅ Non-negative integer | Must equal count of actual WAVE-N-SUMMARY.md files processed |
+| archive.total_waves | ✅ Non-negative integer | Must equal count of actual `.specs/waves/wave-{N}/SUMMARY.md` files processed |
 | archive.total_tasks | ✅ Sum of tasks_succeeded + tasks_failed | Arithmetic consistency check: succeeded + failed = total |
 | archive.g8_gate | ✅ PASS or FAIL | If FAIL, must have reason in archive.report section |
 

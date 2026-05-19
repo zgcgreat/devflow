@@ -2,7 +2,7 @@
 name: phase-2-design
 preamble-tier: 2
 version: 3.0-draft
-layer: L1-INTERACTION (交互层 交互层)
+layer: L1-INTERACTION (交互层)
 source: 交互层 Phase 2 + 架构层 DAG Routing
 dependencies:
   - writing-plans
@@ -16,7 +16,7 @@ allowed-tools:
 
 # Phase 2: 方案设计
 
-> **Layer**: L1-INTERACTION (交互层 交互层)
+> **Layer**: L1-INTERACTION (交互层)
 > **前置产物**: `01-analysis.md` (Phase 1 通过 G2)
 > **后置产物**: `.devflow/<req-id>/02-design.md`
 > **门控**: G2-PHASE2 — Design Quality Gate

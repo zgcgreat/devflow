@@ -21,7 +21,7 @@ token_budget: "~200K per execution agent"
 
 # Phase 1b: 决策捕获（Discuss）
 
-> **Layer**: L1-INTERACTION (交互层 交互层)  
+> **Layer**: L1-INTERACTION (交互层)  
 > **前置产物**: `01-analysis.md` (Phase 1 通过 G2)  
 > **后置产物**: `.devflow/<req-id>/CONTEXT.md`  
 > **门控**: G2.5 — Decision Clarity Gate

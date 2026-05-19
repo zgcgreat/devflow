@@ -617,8 +617,7 @@ Phase 4: + dev-*.md + Developer persona (按需加载)
 | R16 | 原子提交 | 每Wave一个commit，可追溯 |
 | R17 | Heartbeat检查点 | [checkpoint][wave:N][task:X] |
 | R18 | Domain Skills Promotion | LESSONS→domain-skills/持久化 |
-| R19 | 产物模板强制 | 所有输出严格按模板；Phase 结束前必须输出合规检查报告（逐项确认 12/7/3 个必填段落） |
-| R19.1 | 合规验证 | Phase 4/5/6 结束时必须运行产物合规检查：读取对应模板，逐项确认必填段落存在、元数据块完整、占位符已替换 |
+| R19 | 产物模板强制 | 所有输出严格按模板；Phase 4/5/6 结束前必须运行合规检查：读取对应模板，逐项确认必填段落存在、元数据块完整、占位符已替换 |
 | R20 | 向后兼容 | v1.0产物零改动迁移 |
 | R21 | Path Standardization | 产物路径统一为 `.devflow/`，旧 `.devflow-kit/` 兼容迁移 |
 | R21.2 | 目录结构保持与 .devflow 兼容 |
@@ -635,7 +634,7 @@ Phase 4: + dev-*.md + Developer persona (按需加载)
 - **五大独有能力**: LearningWorkflow自进化 / Provider路由 / Agent隔离 / 设计枪战 / Canary发布
 - **零配置入口**: 加载SKILL.md → 一句话需求 → 自动执行
 - **GitNexus可选检测**: detect → prompt → grep fallback
-- **20条规则集**: R1-R20，覆盖全流程
+- **24条规则集**: R1-R24，覆盖全流程
 - **向后兼容**: v1.0产物零改动迁移
 
 ### v1.0 (previous)
