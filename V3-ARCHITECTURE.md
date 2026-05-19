@@ -2,7 +2,7 @@
 
 > **版本**: v3.0-draft  
 > **创建日期**: 2026-05-17  
-> **融合来源**: SuperCorp (交互层) + SEP (引擎层) + Mega-Workflow v2.0 (架构层)  
+> 架构说明文档
 > **核心理念**: 零配置、零门槛、零依赖，GitNexus 可选检测
 
 ---
@@ -46,11 +46,11 @@
 
 ### 分层职责矩阵
 
-| 层 | 来源项目 | 职责 | 技术形态 | 配置要求 |
-|---|---------|------|---------|---------|
-| **交互层** | SuperCorp | Phase 0-8全流程、角色调度、质量控制 | Markdown Skill | 零配置（加载即生效） |
-| **引擎层** | SEP | LearningWorkflow自进化、Wave并行、PartyMode共识 | TypeScript库 + Markdown接口 | 零配置（可选npm install扩展） |
-| **架构层** | Mega-Workflow | DAG路由、Provider编排、Agent隔离 | Hybrid (JS+Markdown+YAML) | 零配置（内置默认值） |
+| 层 | 职责 | 技术形态 | 配置要求 |
+|---|------|---------|---------|
+| **交互层** | Phase 0-8全流程、角色调度、质量控制 | Markdown Skill | 零配置（加载即生效） |
+| **引擎层** | LearningWorkflow自进化、Wave并行、PartyMode共识 | TypeScript库 + Markdown接口 | 零配置（可选npm install扩展） |
+| **架构层** | DAG路由、Provider编排、Agent隔离 | Hybrid (JS+Markdown+YAML) | 零配置（内置默认值） |
 
 ### 为什么三层互补？
 

@@ -145,16 +145,16 @@ Use devflow-kit. 鍋氫釜鐧诲綍鍔熻兘
 **瀹為檯鎿嶄綔** (AI閫氳繃鏂囦欢绯荤粺鎿嶄綔):
 ```python
 # AI 搴旇鎵ц鐨勬搷浣?浼唬鐮?
-copy_directory("E:/LLM/skills/devflow-kit/flow", "./flow")
-copy_directory("E:/LLM/skills/devflow-kit/skills", "./skills")
-copy_directory("E:/LLM/skills/devflow-kit/agent-skills", "./agent-skills")
-copy_directory("E:/LLM/skills/devflow-kit/adapters", "./adapters")
-copy_directory("E:/LLM/skills/devflow-kit/scripts", "./scripts")
-copy_directory("E:/LLM/skills/devflow-kit/docs", "./docs")
-copy_file("E:/LLM/skills/devflow-kit/SKILL.md", "./SKILL.md")
-copy_file("E:/LLM/skills/devflow-kit/AGENTS.md", "./AGENTS.md")
-copy_file("E:/LLM/skills/devflow-kit/README.md", "./README.md")
-copy_file("E:/LLM/skills/devflow-kit/LICENSE", "./LICENSE")
+copy_directory("${DEVFLOW_KIT_ROOT}/flow", "./flow")
+copy_directory("${DEVFLOW_KIT_ROOT}/skills", "./skills")
+copy_directory("${DEVFLOW_KIT_ROOT}/agent-skills", "./agent-skills")
+copy_directory("${DEVFLOW_KIT_ROOT}/adapters", "./adapters")
+copy_directory("${DEVFLOW_KIT_ROOT}/scripts", "./scripts")
+copy_directory("${DEVFLOW_KIT_ROOT}/docs", "./docs")
+copy_file("${DEVFLOW_KIT_ROOT}/SKILL.md", "./SKILL.md")
+copy_file("${DEVFLOW_KIT_ROOT}/AGENTS.md", "./AGENTS.md")
+copy_file("${DEVFLOW_KIT_ROOT}/README.md", "./README.md")
+copy_file("${DEVFLOW_KIT_ROOT}/LICENSE", "./LICENSE")
 ```
 
 ---
@@ -364,7 +364,7 @@ AI浼?
 1. flow/ 鐩綍鏄惁瀛樺湪
 2. GO.md 鏂囦欢鏄惁鍦?flow/ 涓?
 淇:
-鎵嬪姩澶嶅埗: E:/LLM/skills/devflow-kit/flow/ 鈫?./flow/
+鎵嬪姩澶嶅埗: ${DEVFLOW_KIT_ROOT}/flow/ 鈫?./flow/
 ```
 
 ### 闂3: 璁板繂绯荤粺鏈敓鏁?
@@ -461,7 +461,7 @@ AI浼?
 ## 瀹炵幇璇存槑
 
 姝kill渚濊禆AI鐨勬枃浠舵搷浣滆兘鍔?
-- 璇诲彇婧愭枃浠?(浠?E:/LLM/skills/devflow-kit/)
+- 璇诲彇婧愭枃浠?(浠?${DEVFLOW_KIT_ROOT}/)
 - 澶嶅埗鍒扮洰鏍囬」鐩?- 鍒涘缓鐩綍鍜屾枃浠?- 楠岃瘉鏂囦欢瀛樺湪鎬?
 濡傛灉AI鏃犳硶鐩存帴鎿嶄綔鏂囦欢绯荤粺,鍙互鎻愪緵:
 1. PowerShell/Bash鍛戒护璁╃敤鎴峰鍒剁矘璐?2. 鎴栬€呭垱寤轰竴涓畝鍖栫殑 `install.ps1/sh` 鑴氭湰渚涚敤鎴蜂竴閿墽琛?
