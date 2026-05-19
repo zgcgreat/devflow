@@ -7,14 +7,14 @@
 | 同步日期 | `<YYYY-MM-DD>` |
 | 起始范围 | `<last_evolve_at 或首次全量>` |
 | 扫描 req | `<N>` 个 |
-| 目标文档 | `.devflow-kit/CONTEXT.md`、`.devflow-kit/system-architecture.md`（如存在） |
+| 目标文档 | `.ultimate-workflow/CONTEXT.md`、`.ultimate-workflow/system-architecture.md`（如存在） |
 | 处理方式 | `<直接应用 / 暂存 patch / 部分应用 / 取消>` |
 
 ## 扫描范围
 
 | Req ID | 路径 | 状态 | §9 结果 |
 |---|---|---|---|
-| `<req-id>` | `.devflow-kit/archive/<date>-<req-id>/02-design.md` | `<已扫描>` | `<有候选 / 无建议 / 跳过理由>` |
+| `<req-id>` | `.ultimate-workflow/archive/<date>-<req-id>/02-design.md` | `<已扫描>` | `<有候选 / 无建议 / 跳过理由>` |
 
 ## 候选汇总
 
@@ -94,8 +94,8 @@
 
 | 文件 | 备份路径 | 状态 |
 |---|---|---|
-| `.devflow-kit/CONTEXT.md` | `.devflow-kit/CONTEXT.md.bak-<YYYY-MM-DD>` | `<已备份 / N/A>` |
-| `.devflow-kit/system-architecture.md` | `.devflow-kit/system-architecture.md.bak-<YYYY-MM-DD>` | `<已备份 / N/A>` |
+| `.ultimate-workflow/CONTEXT.md` | `.ultimate-workflow/CONTEXT.md.bak-<YYYY-MM-DD>` | `<已备份 / N/A>` |
+| `.ultimate-workflow/system-architecture.md` | `.ultimate-workflow/system-architecture.md.bak-<YYYY-MM-DD>` | `<已备份 / N/A>` |
 
 ## 状态更新
 

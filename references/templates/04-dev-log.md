@@ -1,7 +1,7 @@
 ﻿# 04-dev-log：<req-id>
 
 - **Req ID**: <id>
-- **关联**: `@.devflow-kit/<req-id>/03-tasks.md`、各 `*-dev-log.md`
+- **关联**: `@.ultimate-workflow/<req-id>/03-tasks.md`、各 `*-dev-log.md`
 - **完成时间**: <YYYY-MM-DD HH:mm>
 
 ---
