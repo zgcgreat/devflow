@@ -11,9 +11,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const STATE_FILE = '.ultimate-workflow/STATE.md';
-const CONFIG_FILE = '.ultimate-workflow/config.yaml';
-const MEMORY_DIR = '.ultimate-workflow/memory';
+const STATE_FILE = '.devflow/STATE.md';
+const CONFIG_FILE = '.devflow/config.yaml';
+const MEMORY_DIR = '.devflow/memory';
 
 // ANSI 颜色
 const colors = {
@@ -45,11 +45,11 @@ function logCheck(name, passed, details = '') {
 }
 
 /**
- * 检查 .ultimate-workflow 目录
+ * 检查 .devflow 目录
  */
 function checkWorkflowDir(projectDir) {
-  const dirExists = fs.existsSync(path.join(projectDir, '.ultimate-workflow'));
-  logCheck('.ultimate-workflow 目录', dirExists, 
+  const dirExists = fs.existsSync(path.join(projectDir, '.devflow'));
+  logCheck('.devflow 目录', dirExists, 
     dirExists ? '目录已存在' : '目录不存在，将自动创建');
   return dirExists;
 }

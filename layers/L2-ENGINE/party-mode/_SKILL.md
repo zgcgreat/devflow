@@ -2,7 +2,7 @@
 name: party-mode
 preamble-tier: 2
 version: 3.0-draft
-description: Multi-agent roundtable consensus protocol for complex decisions requiring diverse perspectives and structured debate. Use when "technical debate", "multi-agent consensus", "architectural decision". (ultimate-workflow)
+description: Multi-agent roundtable consensus protocol for complex decisions requiring diverse perspectives and structured debate. Use when "technical debate", "multi-agent consensus", "architectural decision". (devflow)
 layer: L2-ENGINE
 source: SuperCorp PartyMode + Cavecrew sub-agent delegation
 dependencies: []
@@ -71,7 +71,7 @@ AskUserQuestion: "What type of decision needs consensus?"
 
 **Select agent roster**:
 
-Load configuration from `.ultimate-workflow/config/party-agents.yaml` if exists. Otherwise use default pool:
+Load configuration from `.devflow/config/party-agents.yaml` if exists. Otherwise use default pool:
 
 | Role | Specialty | Weight |
 |------|-----------|--------|
@@ -806,10 +806,10 @@ If gate failed and fallback was used, append to `DECISIONS.md`:
 **Configuration Management**:
 ```bash
 # Load agent roster
-cat .ultimate-workflow/config/party-agents.yaml
+cat .devflow/config/party-agents.yaml
 
 # Check if config exists, fallback to defaults
-test -f .ultimate-workflow/config/party-agents.yaml || echo "Using default agent pool"
+test -f .devflow/config/party-agents.yaml || echo "Using default agent pool"
 ```
 
 **Context Gathering**:

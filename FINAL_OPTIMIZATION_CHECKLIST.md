@@ -1,7 +1,7 @@
-# Ultimate-Workflow 终极优化清单 v3.1
+# devflow 终极优化清单 v3.1
 
 **对比对象**: supercorp-ultimate + unified-platform  
-**目标**: 确保ultimate-workflow在所有维度超越其他AI方案  
+**目标**: 确保devflow在所有维度超越其他AI方案  
 **时间**: 2026-05-17
 
 ---
@@ -24,7 +24,7 @@
 
 ---
 
-## ✅ ultimate-workflow 实际状态检查
+## ✅ devflow 实际状态检查
 
 ### 已具备的能力（另一个AI遗漏）
 
@@ -41,7 +41,7 @@ bin/
 
 **对比**:
 - supercorp-ultimate: 6个脚本（未说明功能）
-- ultimate-workflow: 6个脚本（功能明确，代码完整）
+- devflow: 6个脚本（功能明确，代码完整）
 - **结论**: ✅ 已具备，且更完善
 
 ---
@@ -54,14 +54,14 @@ references/
 ```
 
 **能力对比**:
-| 特性 | supercorp-ultimate | ultimate-workflow |
+| 特性 | supercorp-ultimate | devflow |
 |------|-------------------|------------------|
 | 压缩级别 | 7级（声称） | 4级（lite/full/ultra/extreme） |
 | 预算估算 | ❌ | ✅ token-budget.md详细表格 |
 | 自动监控 | ⚠️ 提及 | ✅ R1.9强制规则 |
 | 按节读取 | ❌ | ✅ R1.12强制规则 |
 
-**结论**: ✅ ultimate-workflow更实用（有预算估算+按节读取）
+**结论**: ✅ devflow更实用（有预算估算+按节读取）
 
 ---
 
@@ -80,8 +80,8 @@ SKILL.md:
 
 **对比**:
 - unified-platform: 声明式（仅文档）
-- ultimate-workflow: 实现式（R1.12强制规则+GO.md路由）
-- **结论**: ✅ ultimate-workflow更彻底（强制执行）
+- devflow: 实现式（R1.12强制规则+GO.md路由）
+- **结论**: ✅ devflow更彻底（强制执行）
 
 ---
 
@@ -101,8 +101,8 @@ references/RULES.md R6 (R6.1-R6.9)
 
 **对比**:
 - unified-platform: R6 (5条)
-- ultimate-workflow: R6 (9条，融合MEGA-WORKFLOW实践)
-- **结论**: ✅ ultimate-workflow更全面（9条 vs 5条）
+- devflow: R6 (9条，融合MEGA-WORKFLOW实践)
+- **结论**: ✅ devflow更全面（9条 vs 5条）
 
 ---
 
@@ -118,8 +118,8 @@ references/SECURITY.md (9.7KB)
 
 **对比**:
 - supercorp-ultimate: 提及但未详述
-- ultimate-workflow: 完整9.7KB规范
-- **结论**: ✅ ultimate-workflow更详细
+- devflow: 完整9.7KB规范
+- **结论**: ✅ devflow更详细
 
 ---
 
@@ -135,8 +135,8 @@ bin/hook-manager.js (8.0KB)    ← 钩子管理器
 
 **对比**:
 - supercorp-ultimate: hooks/目录（空或未实现）
-- ultimate-workflow: 3个钩子脚本+管理器
-- **结论**: ✅ ultimate-workflow已实现
+- devflow: 3个钩子脚本+管理器
+- **结论**: ✅ devflow已实现
 
 ---
 
@@ -181,7 +181,7 @@ bin/hook-manager.js (8.0KB)    ← 钩子管理器
 
 ---
 
-## 🚀 ultimate-workflow 的真正优势
+## 🚀 devflow 的真正优势
 
 ### 1. LearningWorkflow 自动进化 ⭐⭐⭐⭐⭐
 **独有**: supercorp-ultimate和unified-platform均无此能力
@@ -195,7 +195,7 @@ Phase 4 Wave执行 → 提取失败教训
 → 系统越用越强
 ```
 
-**价值**: 这是ultimate-workflow的**核心竞争力**，其他两个项目完全缺失。
+**价值**: 这是devflow的**核心竞争力**，其他两个项目完全缺失。
 
 ---
 
@@ -280,7 +280,7 @@ Acceptance Auditor: AC符合性审计
 #### 1. Team-Skills记忆系统（来自supercorp-ultimate）
 **价值**: ⭐⭐⭐⭐⭐  
 **工作量**: 低  
-**理由**: ultimate-workflow的memory/只有基础文件，缺少：
+**理由**: devflow的memory/只有基础文件，缺少：
 - memory-index.yaml（健康监控）
 - DECISIONS.md（ADR标准化）
 - KNOWN_FAILURES.md（失败模式库）
@@ -289,17 +289,17 @@ Acceptance Auditor: AC符合性审计
 **集成方案**:
 ```bash
 # 复制11个记忆文件
-cp supercorp-ultimate/memory-index.yaml .ultimate-workflow/
-cp supercorp-ultimate/PROJECT_CONTEXT.md .ultimate-workflow/memory/
-cp supercorp-ultimate/CURRENT_STATE.md .ultimate-workflow/memory/
-cp supercorp-ultimate/DECISIONS.md .ultimate-workflow/memory/
-cp supercorp-ultimate/KNOWN_FAILURES.md .ultimate-workflow/memory/
-cp supercorp-ultimate/LEARNING_BACKLOG.md .ultimate-workflow/memory/
-cp supercorp-ultimate/TEAM_PREFERENCES.md .ultimate-workflow/memory/
-cp supercorp-ultimate/USER_PROFILE.md .ultimate-workflow/memory/
-cp supercorp-ultimate/AGENT_NOTES.md .ultimate-workflow/memory/
-cp supercorp-ultimate/SESSION_CLOSE_CHECKLIST.md .ultimate-workflow/memory/
-cp supercorp-ultimate/VERIFICATION_BASELINE.md .ultimate-workflow/memory/
+cp supercorp-ultimate/memory-index.yaml .devflow/
+cp supercorp-ultimate/PROJECT_CONTEXT.md .devflow/memory/
+cp supercorp-ultimate/CURRENT_STATE.md .devflow/memory/
+cp supercorp-ultimate/DECISIONS.md .devflow/memory/
+cp supercorp-ultimate/KNOWN_FAILURES.md .devflow/memory/
+cp supercorp-ultimate/LEARNING_BACKLOG.md .devflow/memory/
+cp supercorp-ultimate/TEAM_PREFERENCES.md .devflow/memory/
+cp supercorp-ultimate/USER_PROFILE.md .devflow/memory/
+cp supercorp-ultimate/AGENT_NOTES.md .devflow/memory/
+cp supercorp-ultimate/SESSION_CLOSE_CHECKLIST.md .devflow/memory/
+cp supercorp-ultimate/VERIFICATION_BASELINE.md .devflow/memory/
 ```
 
 ---
@@ -307,12 +307,12 @@ cp supercorp-ultimate/VERIFICATION_BASELINE.md .ultimate-workflow/memory/
 #### 2. 37个产物模板（来自supercorp-ultimate）
 **价值**: ⭐⭐⭐⭐⭐  
 **工作量**: 低  
-**理由**: ultimate-workflow缺少实际模板文件，AI需从零生成。
+**理由**: devflow缺少实际模板文件，AI需从零生成。
 
 **集成方案**:
 ```bash
 # 完整复制templates目录
-cp -r supercorp-ultimate/templates/ .ultimate-workflow/templates/
+cp -r supercorp-ultimate/templates/ .devflow/templates/
 ```
 
 **分类整理**:
@@ -332,7 +332,7 @@ templates/
 #### 3. 入场检测协议增强（来自supercorp-ultimate）
 **价值**: ⭐⭐⭐⭐  
 **工作量**: 低  
-**理由**: ultimate-workflow已有R1.11入场检测，但可增强为6种情况判定。
+**理由**: devflow已有R1.11入场检测，但可增强为6种情况判定。
 
 **集成方案**:
 在SKILL.md Phase 0开头添加：
@@ -356,7 +356,7 @@ templates/
 #### 4. 7级Token压缩（来自supercorp-ultimate）
 **价值**: ⭐⭐⭐  
 **工作量**: 低  
-**理由**: ultimate-workflow当前4级，可扩展为7级更精细控制。
+**理由**: devflow当前4级，可扩展为7级更精细控制。
 
 **集成方案**:
 扩展token-budget.md：
@@ -435,7 +435,7 @@ templates/
 
 ## 📊 终极对比表
 
-| 维度 | ultimate-workflow | supercorp-ultimate | unified-platform |
+| 维度 | devflow | supercorp-ultimate | unified-platform |
 |------|------------------|-------------------|------------------|
 | **架构完整性** | ⭐⭐⭐⭐⭐ (3层) | ⭐⭐⭐⭐ (模糊) | ⭐⭐⭐ (2层) |
 | **核心能力** | ⭐⭐⭐⭐⭐ (12/14) | ⭐⭐⭐⭐ (6/14) | ⭐⭐⭐ (4/14) |
@@ -492,7 +492,7 @@ templates/
 
 ## 💡 结论
 
-### ultimate-workflow 的真正优势
+### devflow 的真正优势
 
 1. **核心能力最强**: 12/14完整实现（86%），其他两个分别6/14和4/14
 2. **独有特性最多**: 6个独有特性（LearningWorkflow、Provider路由、Agent隔离、设计枪战、Canary发布、三层对抗审查）
@@ -508,7 +508,7 @@ templates/
 
 ### 最终建议
 
-**保持ultimate-workflow为主**，因为：
+**保持devflow为主**，因为：
 - ✅ 核心能力最强（12/14）
 - ✅ 独有特性最多（6个）
 - ✅ 架构最清晰（三层金字塔）
@@ -526,4 +526,4 @@ templates/
 
 ---
 
-**ultimate-workflow已经是最好的方案，只需少量集成即可成为真正的终极工程平台！**
+**devflow已经是最好的方案，只需少量集成即可成为真正的终极工程平台！**

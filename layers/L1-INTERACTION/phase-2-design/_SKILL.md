@@ -18,7 +18,7 @@ allowed-tools:
 
 > **Layer**: L1-INTERACTION (SuperCorp 交互层)
 > **前置产物**: `01-analysis.md` (Phase 1 通过 G2)
-> **后置产物**: `.ultimate-workflow/<req-id>/02-design.md`
+> **后置产物**: `.devflow/<req-id>/02-design.md`
 > **门控**: G2-PHASE2 — Design Quality Gate
 
 ## Skill元信息
@@ -38,7 +38,7 @@ v3_upgrade:
 ## 输入
 
 - `01-analysis.md` — 需求分析 + AC
-- `.ultimate-workflow/CONTEXT.md` — 项目上下文
+- `.devflow/CONTEXT.md` — 项目上下文
 - LESSONS.md — 过往架构决策经验
 
 ## 输出
@@ -57,13 +57,13 @@ v3_upgrade:
 
 > 来源: 问题 5 修复 — 确保 Phase 2 设计决策符合项目宪法约束。
 
-**读取** `.ultimate-workflow/memory/constitution.md`
+**读取** `.devflow/memory/constitution.md`
 
 **不存在时** → 使用默认模板创建新项目宪法：
 1. 读取 `references/templates/constitution-template.md`
 2. 基于 Phase 0/1 的输出填充宪法内容
 3. 展示给用户确认
-4. 用户确认后写入 `.ultimate-workflow/memory/constitution.md`
+4. 用户确认后写入 `.devflow/memory/constitution.md`
 
 **已存在时** → 读取现有宪法，Phase 2 所有设计决策必须符合宪法约束。
 
@@ -127,16 +127,16 @@ v3_upgrade:
 
 ```bash
 # Create design directory and initial spec
-mkdir -p .ultimate-workflow/<req-id>
+mkdir -p .devflow/<req-id>
 
 # Validate design document exists and has required sections
-grep -c "## ADR" .ultimate-workflow/<req-id>/02-design.md
+grep -c "## ADR" .devflow/<req-id>/02-design.md
 
 # Check all AC are mapped to API definitions
-while read ac; do grep -q "$ac" .ultimate-workflow/<req-id>/02-design.md && echo "$ac: covered" || echo "$ac: MISSING"; done < ac-list.txt
+while read ac; do grep -q "$ac" .devflow/<req-id>/02-design.md && echo "$ac: covered" || echo "$ac: MISSING"; done < ac-list.txt
 
 # Verify ADR count meets minimum (≥3)
-adr_count=$(grep -c "^ADR-" .ultimate-workflow/<req-id>/02-design.md || true); test "$adr_count" -ge 3 && echo "G2-ADR PASS" || echo "G2-ADR FAIL: need $((3 - adr_count)) more ADRs"
+adr_count=$(grep -c "^ADR-" .devflow/<req-id>/02-design.md || true); test "$adr_count" -ge 3 && echo "G2-ADR PASS" || echo "G2-ADR FAIL: need $((3 - adr_count)) more ADRs"
 ```
 
 ### G2 Automated Structural Checks (Sprint 9 Addition)
@@ -155,7 +155,7 @@ adr_count=$(grep -c "^ADR-" .ultimate-workflow/<req-id>/02-design.md || true); t
 ```bash
 #!/bin/bash
 # G2-PHASE2 automated structural check (Sprint 9 addition)
-# Usage: ./g2-structural-check.sh .ultimate-workflow/<req-id>/02-design.md
+# Usage: ./g2-structural-check.sh .devflow/<req-id>/02-design.md
 
 DESIGN_DOC=$1
 PASS_COUNT=0

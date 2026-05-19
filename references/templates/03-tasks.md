@@ -4,7 +4,7 @@
 - **创建日期**: `<YYYY-MM-DD>`
 - **版本**: `<v1.0>`
 - **状态**: `待确认 / 已确认 / 已关闭`
-- **关联**: `@.ultimate-workflow/<req-id>/00-requirements.md`、`@.ultimate-workflow/<req-id>/01-analysis.md`、`@.ultimate-workflow/<req-id>/02-design.md`
+- **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/<req-id>/01-analysis.md`、`@.devflow/<req-id>/02-design.md`
 - **作者**: AI（Planner 角色）+ 人工 review
 
 ---

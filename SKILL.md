@@ -1,20 +1,20 @@
 ---
-name: ultimate-workflow
+name: devflow
 version: 3.0-draft
 description: |
-  Ultimate AI programming workflow v3.0 — zero-config, zero-threshold, zero-dependency.
+  AI programming workflow v3.0 — zero-config, zero-threshold, zero-dependency.
   Three-layer pyramid: SuperCorp (interaction) + SEP (engine) + Mega-Workflow (architecture).
 
-  Use when: (1) Starting any dev task, (2) User says "use ultimate-workflow" or "v3",
+  Use when: (1) Starting any dev task, (2) User says "use devflow" or "v3",
   (3) Need structured workflow with auto-routing, learning evolution, and parallel execution.
 
   Core: Load this file once → read GO.md for routing → execute layered pipeline.
   GitNexus optional: detect → install prompt → grep fallback if missing.
 
-Architecture: Skill in E:\LLM\skills\ultimate-workflow, projects only get .ultimate-workflow/ artifacts.
+Architecture: Skill in E:\LLM\skills\devflow, projects only get .devflow/ artifacts.
 ---
 
-# Ultimate Workflow v3.0 — 终极融合工作流系统
+# Devflow v3.0 — AI 编程工作流系统
 
 > **零配置 · 零门槛 · 零依赖**  
 > 三层架构：SuperCorp(交互层) → SEP(引擎层) → Mega-Workflow(架构层)  
@@ -406,7 +406,7 @@ AI启动5 Whys追问流程，挖掘真实需求。
 
 ## 📦 架构说明
 
-### Skill 位置（`E:\LLM\skills\ultimate-workflow`）
+### Skill 位置（`E:\LLM\skills\devflow`）
 
 ```
 SKILL.md          ← 本文件，v3零配置入口（你正在读的）
@@ -423,7 +423,7 @@ memory/           ← 记忆系统 (PROJECT_CONTEXT/DECISIONS/LESSONS等)
 docs/             ← 扩展功能文档 (SDD/Surface Budget/多项目/插件)
 ```
 
-### 项目产物（`<project>/.ultimate-workflow/`）
+### 项目产物（`<project>/.devflow/`）
 
 ```
 STATE.md                  ← 跨会话状态追踪
@@ -436,7 +436,7 @@ memory/
 <req-id>/                 ← 需求产物 (00-requirements→07-integration)
 ```
 
-> **关键原则**: AI从 `E:\LLM\skills\ultimate-workflow` 读取逻辑，在项目中只生成 `.ultimate-workflow/` 产物。
+> **关键原则**: AI从 `E:\LLM\skills\devflow` 读取逻辑，在项目中只生成 `.devflow/` 产物。
 
 ---
 
@@ -480,24 +480,24 @@ memory/
 
 ### 场景1: 开发新功能
 ```
-Use ultimate-workflow.
+Use devflow.
 帮我做一个用户登录功能，支持邮箱密码和JWT认证
 ```
 
 ### 场景2: Fast模式修复
 ```
-Use ultimate-workflow. Fast模式: 修复settings页面按钮文案typo
+Use devflow. Fast模式: 修复settings页面按钮文案typo
 ```
 
 ### 场景3: 架构重构（Strict模式）
 ```
-Use ultimate-workflow. Strict模式。
+Use devflow. Strict模式。
 把单体应用拆分成微服务，先做用户模块
 ```
 
 ### 场景4: 健康检查
 ```
-Use ultimate-workflow. 健康检查
+Use devflow. 健康检查
 ```
 
 ---
@@ -517,7 +517,7 @@ Use ultimate-workflow. 健康检查
 | Stage Skills | `skills/stage-skills/` (向后兼容) |
 | 快速上手 | `SKILL.md`「三步启动」 |
 | 模板版本规则 | `references/templates/` 下带 `-delta` 后缀的变体仅增量变更使用，主模板（无后缀）为默认消费源 |
-| 宪法模板 | `references/templates/constitution-template.md` → Phase 0/1 后写入 `.ultimate-workflow/memory/constitution.md` |
+| 宪法模板 | `references/templates/constitution-template.md` → Phase 0/1 后写入 `.devflow/memory/constitution.md` |
 
 ---
 
@@ -620,8 +620,8 @@ Phase 4: + dev-*.md + Developer persona (按需加载)
 | R19 | 产物模板强制 | 所有输出严格按模板；Phase 结束前必须输出合规检查报告（逐项确认 12/7/3 个必填段落） |
 | R19.1 | 合规验证 | Phase 4/5/6 结束时必须运行产物合规检查：读取对应模板，逐项确认必填段落存在、元数据块完整、占位符已替换 |
 | R20 | 向后兼容 | v1.0产物零改动迁移 |
-| R21 | Path Standardization | 产物路径统一为 `.ultimate-workflow/`，旧 `.devflow-kit/` 兼容迁移 |
-| R21.2 | 目录结构保持与 .ultimate-workflow 兼容 |
+| R21 | Path Standardization | 产物路径统一为 `.devflow/`，旧 `.devflow-kit/` 兼容迁移 |
+| R21.2 | 目录结构保持与 .devflow 兼容 |
 | R22 | Quality Scoring | Phase 6 输出质量评分报告（详见 references/RULES-v3.md） |
 | R23 | Stage-Skills Sync | Stage Skills 与 Core Skills 同步维护，≥7 天差异报 P2 |
 | R24 | Call Chain Ownership | L1→L2/L3 调用链必须在 call-chain-inventory.md 注册 |

@@ -19,22 +19,22 @@ dependencies:
 
 ## 输入
 
-- `.ultimate-workflow/<req-id>/03-tasks.md`
+- `.devflow/<req-id>/03-tasks.md`
 - 要执行的 task id（用户指定，如 T03）
-- `.ultimate-workflow/<req-id>/02-design.md`（必读 `## 0. 技术栈选定` + `## 0.5 既有架构对齐`）
-- `.ultimate-workflow/CONTEXT.md`
-- `.ultimate-workflow/lessons-learned.md`
+- `.devflow/<req-id>/02-design.md`（必读 `## 0. 技术栈选定` + `## 0.5 既有架构对齐`）
+- `.devflow/CONTEXT.md`
+- `.devflow/lessons-learned.md`
 
 ## 输出
 
 - 代码文件（按任务的write_files）
-- `.ultimate-workflow/<req-id>/04-dev-log.md`
+- `.devflow/<req-id>/04-dev-log.md`
 
 ## 入口门禁
 
 **必须满足以下条件之一**：
 
-1. **正式流程**：存在 `.ultimate-workflow/<req-id>/03-tasks.md`，且包含指定的task
+1. **正式流程**：存在 `.devflow/<req-id>/03-tasks.md`，且包含指定的task
 2. **单点调用**：用户提供临时最小TASK（必须包含7字段：id/name/read_files/write_files/action/verify/done）
 
 **前端项目额外检查**：
@@ -295,7 +295,7 @@ if template_exists("flow/templates/XX-dev-log.md"):
 
 ### Step 9: 生成dev-log并逐项核对
 
-创建 `.ultimate-workflow/<req-id>/<task-id>-dev-log.md`：
+创建 `.devflow/<req-id>/<task-id>-dev-log.md`：
 - **必须包含所有6个章节**（见 Step 8 提取的清单）
 - **所有占位符必须替换为实际值**
 - **Verify输出必须是真实执行结果**
@@ -426,7 +426,7 @@ feat: <简短描述>
 
 1. 从 dev-log 提取实现决策
 
-2. 追加到 `.ultimate-workflow/memory/DECISIONS.md`：n
+2. 追加到 `.devflow/memory/DECISIONS.md`：n
 ```markdown
 ### 实施决策
 
@@ -435,7 +435,7 @@ feat: <简短描述>
 | <决策1> | <选择> | <理由> |
 ```
 
-3. 如遇到失败模式，追加到 `.ultimate-workflow/memory/KNOWN_FAILURES.md`
+3. 如遇到失败模式，追加到 `.devflow/memory/KNOWN_FAILURES.md`
 
 ## 自检清单
 

@@ -32,7 +32,7 @@
 
 ### 方式2: 配置文件
 
-**位置**: `.ultimate-workflow/config/budget.yaml`
+**位置**: `.devflow/config/budget.yaml`
 
 ```yaml
 # Token预算管理配置

@@ -5,7 +5,7 @@ version: 3.0-draft
 description: |
   Two-stage adversarial review engine: Stage A (spec compliance) + Stage B (code quality, three-layer).
   Detects PRD gaps, edge cases, acceptance failures, and blind spots in Phase 4 implementation.
-  Use when: "review phase", "two-stage review", "spec compliance check", "adversarial review". (ultimate-workflow)
+  Use when: "review phase", "two-stage review", "spec compliance check", "adversarial review". (devflow)
 layer: L1-INTERACTION
 source: SuperCorp Three-Layer Adversarial Review + gstack Cross-Model Review (R14) + Two-Stage Spec Compliance
 dependencies:
@@ -27,7 +27,7 @@ allowed-tools:
 
 > **Layer**: L1-INTERACTION (SuperCorp 交互层)  
 > **前置**: Phase 5 测试通过, Phase 4 Wave执行完成  
-> **后置产物**: `.ultimate-workflow/<req-id>/06-review.md`  
+> **后置产物**: `.devflow/<req-id>/06-review.md`  
 > **门控**: G3-PHASE6 — Review Quality Gate
 
 ## Preamble

@@ -2,7 +2,7 @@
 name: security-reviewer
 preamble-tier: 2
 version: 3.0-draft
-description: Security Specialist for Phase 6+ code review — input validation, auth bypass, injection vectors, crypto misuse, secrets exposure. Use when "security review", "penetration test", "trust boundary". (ultimate-workflow)
+description: Security Specialist for Phase 6+ code review — input validation, auth bypass, injection vectors, crypto misuse, secrets exposure. Use when "security review", "penetration test", "trust boundary". (devflow)
 layer: L1-INTERACTION
 source: mega-workflow / supercorp-ultimate fusion
 dependencies:

@@ -1,4 +1,4 @@
-# Ultimate Workflow v3.0 — 完整文件清单
+# Devflow v3.0 — 完整文件清单
 
 > **统计时间**: 2026-05-17
 > **总文件数**: 256
@@ -10,7 +10,7 @@
 ## 目录架构
 
 ```
-ultimate-workflow/
+devflow/
 ├── SKILL.md                          # v3 零配置入口 (20KB)
 ├── GO.md                             # v3 12步路由器 (20KB)
 ├── V3-ARCHITECTURE.md                # 三层架构设计 (15KB)

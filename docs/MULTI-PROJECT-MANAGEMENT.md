@@ -1,7 +1,7 @@
 # 多项目管理规范
 
 > **来源**: unified-platform  
-> **集成位置**: `.ultimate-workflow/workspace/`  
+> **集成位置**: `.devflow/workspace/`  
 > **核心价值**: 支持同时管理多个项目，快速切换，状态同步，知识共享
 
 ---
@@ -24,19 +24,19 @@ workspace/
 │       └── project-c.yaml
 │
 ├── project-a/                    # 项目A
-│   └── .ultimate-workflow/
+│   └── .devflow/
 │       ├── state.md
 │       ├── memory/
 │       └── ...
 │
 ├── project-b/                    # 项目B
-│   └── .ultimate-workflow/
+│   └── .devflow/
 │       ├── state.md
 │       ├── memory/
 │       └── ...
 │
 └── project-c/                    # 项目C
-    └── .ultimate-workflow/
+    └── .devflow/
         ├── state.md
         ├── memory/
         └── ...
@@ -128,10 +128,10 @@ metadata:
 **初始预算**: 300K  
 
 **已创建文件**:
-- ✅ `.ultimate-workflow/state.md`
-- ✅ `.ultimate-workflow/memory/PROJECT_CONTEXT.md`
-- ✅ `.ultimate-workflow/memory/DECISIONS.md`
-- ✅ `.ultimate-workflow/memory/KNOWN_FAILURES.md`
+- ✅ `.devflow/state.md`
+- ✅ `.devflow/memory/PROJECT_CONTEXT.md`
+- ✅ `.devflow/memory/DECISIONS.md`
+- ✅ `.devflow/memory/KNOWN_FAILURES.md`
 
 **已注册到工作区**: `.ultimate-workspace/projects/project-d.yaml`
 

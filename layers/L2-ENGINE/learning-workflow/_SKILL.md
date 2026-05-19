@@ -5,7 +5,7 @@ version: 3.0-draft
 description: |
   Automatic evolution engine that extracts lessons from execution data, promotes high-frequency
   patterns (≥3 occurrences) to domain skills, and injects relevant knowledge into future waves.
-  Use when: "extract lessons", "learn from wave", "domain skill promotion", "knowledge consolidation". (ultimate-workflow)
+  Use when: "extract lessons", "learn from wave", "domain skill promotion", "knowledge consolidation". (devflow)
 layer: L2-ENGINE
 source: SEP LearningWorkflow + Mega-Workflow Memory Manager
 dependencies:
@@ -92,7 +92,7 @@ Before starting learning workflow, verify ALL of the following:
 |----------|---------|-----------|------------------|
 | **Durable Facts** | Domain knowledge reusable across sessions | Permanent (until superseded by newer evidence) | `memory/domain-skills/{domain}/SKILL.md` |
 | **Temporary Notes** | Session-specific observations, not reusable | Current session / cleared at Phase 8 Archive | `memory/TEMPORARY.md` |
-| **Session State** | Request-level workflow tracking | Per req-id, never cross-request reuse | `.ultimate-workflow/<req-id>/STATE.md` |
+| **Session State** | Request-level workflow tracking | Per req-id, never cross-request reuse | `.devflow/<req-id>/STATE.md` |
 
 #### Classification Decision Tree
 

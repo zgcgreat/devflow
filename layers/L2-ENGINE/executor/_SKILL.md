@@ -6,7 +6,7 @@ description: |
   TDD implementation engine operating within Wave-based parallel execution framework.
   Implements tasks with Red→Green→Refactor cycle, R6 anti-hallucination checks,
   and atomic commits. Use when: "implement feature", "TDD development", "execute wave tasks",
-  "run tests first". (ultimate-workflow)
+  "run tests first". (devflow)
 layer: L2-ENGINE
 source: SEP Executor + Wave Engine + TDD Workflow
 dependencies:
@@ -47,7 +47,7 @@ Implement features using Test-Driven Development (TDD) within Wave-based paralle
 
 Before starting executor, verify ALL of the following:
 
-- [ ] Phase 3 DAG Router complete — wave-plan.yaml exists at `.ultimate-workflow/wave-plan.yaml`
+- [ ] Phase 3 DAG Router complete — wave-plan.yaml exists at `.devflow/wave-plan.yaml`
 - [ ] Wave plan validated — no cycles detected (DAG validation exits 0)
 - [ ] All task IDs unique — no duplicates in wave plan
 - [ ] Task priorities assigned (P0/P1/P2) — no unassigned tasks
@@ -89,7 +89,7 @@ Before starting executor, verify ALL of the following:
 
 ```bash
 # Read Wave allocation plan
-cat .ultimate-workflow/wave-plan.yaml
+cat .devflow/wave-plan.yaml
 
 # Example structure:
 # wave_plan:

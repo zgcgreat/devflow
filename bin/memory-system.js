@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const MEMORY_DIR = '.ultimate-workflow/memory';
+const MEMORY_DIR = '.devflow/memory';
 
 const c = {
   green: '\x1b[32m',

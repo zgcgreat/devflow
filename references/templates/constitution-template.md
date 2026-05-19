@@ -2,7 +2,7 @@
 
 > 由 Phase 0/1 生成，Phase 2 读取并校验，后续所有 Phase 执行时遵循。
 > 新项目首次启动时 AI 根据需求自动创建，brownfield 项目由用户确认。
-> 路径: `.ultimate-workflow/memory/constitution.md`
+> 路径: `.devflow/memory/constitution.md`
 
 ## 创建时机
 - **新项目**: Phase 0 YC 评估通过后，Phase 1 需求分析前自动生成

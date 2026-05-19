@@ -11,8 +11,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const STATE_FILE = '.ultimate-workflow/STATE.md';
-const CONTEXT_FILE = '.ultimate-workflow/CONTEXT.md';
+const STATE_FILE = '.devflow/STATE.md';
+const CONTEXT_FILE = '.devflow/CONTEXT.md';
 
 // ANSI 颜色
 const colors = {

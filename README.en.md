@@ -53,7 +53,7 @@ DevFlow Kit (formerly DevFlow / SuperFlow) is a comprehensive workflow framework
 
 ### 🧠 Cross-Session Memory
 - Remembers project context, decisions, and failures across sessions
-- Automatic state tracking with `.ultimate-workflow/STATE.md`
+- Automatic state tracking with `.devflow/STATE.md`
 - Session journals for auditing
 
 ### 🚪 Stage Gates

@@ -1,7 +1,7 @@
 ﻿# TEST: <req-id>
 
 - **Req ID**: <id>
-- **关联**: `@.ultimate-workflow/<req-id>/01-analysis.md`、`@.ultimate-workflow/references/reference/test-pyramid.md`
+- **关联**: `@.devflow/<req-id>/01-analysis.md`、`@.devflow/references/reference/test-pyramid.md`
 - **项目类型**: <Web 前端 / 后端 API / 全栈 / 移动 / CLI / 库>
 
 ---

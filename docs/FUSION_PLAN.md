@@ -1,4 +1,4 @@
-# Ultimate Workflow 融合方案说明
+# Devflow 融合方案说明
 
 ## 🎯 融合目标
 
@@ -27,7 +27,7 @@
 
 ```
 Layer 0: 用户交互层
-  - 统一入口: Use ultimate-workflow
+  - 统一入口: Use devflow
   
 Layer 1: 智能路由层 (来自 flow-kit)
   - GO.md 统一路由器
@@ -87,7 +87,7 @@ Layer 7: 专业技能层 (来自 agent-skills)
    - 存在 → 导入 spec-kit 生成的 PRD/Plan/Tasks
    - 不存在 → 调用 /speckit.specify 生成
 2. 补充 Brainstorming 澄清环节（来自 superpowers）
-3. 更新 .ultimate-workflow/memory/DECISIONS.md
+3. 更新 .devflow/memory/DECISIONS.md
 ```
 
 ### 3. stage-1-analysis 代码理解
@@ -129,7 +129,7 @@ stage-4-dev:
 ```
 1. 创建 openspec/changes/[req-id]/
    - proposal.md (来自 specs/spec.md)
-   - design.md (来自 .ultimate-workflow/[req-id]/02-design.md)
+   - design.md (来自 .devflow/[req-id]/02-design.md)
    - tasks.md (来自 specs/tasks.md)
 2. 执行 /opsx:archive 归档
 3. 更新 openspec/specs/ 主规格
@@ -141,7 +141,7 @@ stage-4-dev:
 ## 📁 目录结构
 
 ```
-ultimate-workflow/
+devflow/
 ├── GO.md                      # 统一路由器 (flow-kit + devflow-kit)
 ├── SKILL.md                   # 主 skill 定义 (融合版)
 ├── README.md                  # 使用文档
@@ -238,7 +238,7 @@ ultimate-workflow/
 | 专业能力 | ❌ | ❌ | ✅ (14个) | ✅ (23个) |
 | Token优化 | ❌ | ❌ | ❌ | ✅ |
 
-**Ultimate Workflow = 所有最佳实践的集大成者**
+**Devflow = 所有最佳实践的集大成者**
 
 ---
 
@@ -293,7 +293,7 @@ ultimate-workflow/
 
 ```bash
 # 更新 Stage Skills
-cd ultimate-workflow
+cd devflow
 git pull origin main --submodule
 
 # 或手动复制
@@ -312,7 +312,7 @@ cp -r ../agent-skills/skills/* agent-skills/skills/
 
 ## 🤝 贡献指南
 
-欢迎提交 PR 改进 Ultimate Workflow！
+欢迎提交 PR 改进 Devflow！
 
 ### 贡献方向
 

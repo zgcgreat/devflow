@@ -5,7 +5,7 @@ version: 3.0-draft
 description: |
   Technical investigation specialist for Phase 2 Design.
   Conducts systematic research for architecture decisions, dependency validation, and risk assessment.
-  Output feeds directly into Phase 2 Design spec and Phase 1b Discuss context. (ultimate-workflow)
+  Output feeds directly into Phase 2 Design spec and Phase 1b Discuss context. (devflow)
 layer: L1-INTERACTION
 parent: phase-2-design
 ---

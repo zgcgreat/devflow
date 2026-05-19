@@ -50,7 +50,7 @@ Apply the "5 Whys" root cause analysis technique to uncover true user needs bene
 
 **Manual trigger**:
 ```
-/requirements analyze --input .ultimate-workflow/<req-id>/00-strategy.md
+/requirements analyze --input .devflow/<req-id>/00-strategy.md
 ```
 
 **When NOT to use**:
@@ -69,29 +69,29 @@ Apply the "5 Whys" root cause analysis technique to uncover true user needs bene
 
 ```bash
 # Load Phase 0 output
-cat .ultimate-workflow/<req-id>/00-strategy.md
+cat .devflow/<req-id>/00-strategy.md
 
 # Extract key decisions
-YC_PAIN=$(grep -A 3 "Q1:" .ultimate-workflow/<req-id>/00-strategy.md | grep "Answer:")
-YC_COMPETITION=$(grep -A 3 "Q2:" .ultimate-workflow/<req-id>/00-strategy.md | grep "Answer:")
-YC_ADVANTAGE=$(grep -A 3 "Q3:" .ultimate-workflow/<req-id>/00-strategy.md | grep "Answer:")
+YC_PAIN=$(grep -A 3 "Q1:" .devflow/<req-id>/00-strategy.md | grep "Answer:")
+YC_COMPETITION=$(grep -A 3 "Q2:" .devflow/<req-id>/00-strategy.md | grep "Answer:")
+YC_ADVANTAGE=$(grep -A 3 "Q3:" .devflow/<req-id>/00-strategy.md | grep "Answer:")
 
 echo "✅ Loaded YC assessment: Pain=$YC_PAIN, Competition=$YC_COMPETITION"
 
 # Load project context
-if [ -f ".ultimate-workflow/CONTEXT.md" ]; then
-  cat .ultimate-workflow/CONTEXT.md
+if [ -f ".devflow/CONTEXT.md" ]; then
+  cat .devflow/CONTEXT.md
   
   # Extract glossary terms
-  TERMS=$(grep "^- " .ultimate-workflow/CONTEXT.md | wc -l)
+  TERMS=$(grep "^- " .devflow/CONTEXT.md | wc -l)
   echo "✅ Context loaded: $TERMS terms defined"
 else
   echo "⚠️ No CONTEXT.md found, will create glossary from scratch"
 fi
 
 # Load relevant lessons
-if [ -f ".ultimate-workflow/memory/LESSONS.md" ]; then
-  grep -A 5 "related:.*$(basename $(pwd))" .ultimate-workflow/memory/LESSONS.md
+if [ -f ".devflow/memory/LESSONS.md" ]; then
+  grep -A 5 "related:.*$(basename $(pwd))" .devflow/memory/LESSONS.md
   echo "✅ Relevant lessons loaded"
 else
   echo "⚠️ No LESSONS.md found"
@@ -361,7 +361,7 @@ SUCCESS_METRIC=$2
 python3 scripts/generate-stories.py \
   --root-cause "$ROOT_CAUSE" \
   --success-metric "$SUCCESS_METRIC" \
-  --output .ultimate-workflow/<req-id>/01-analysis.md
+  --output .devflow/<req-id>/01-analysis.md
 
 echo "✅ User stories generated"
 ```
@@ -423,7 +423,7 @@ def add_new_terms(root_cause_analysis):
     pass
 
 # Merge and deduplicate
-existing = extract_terms_from_context('.ultimate-workflow/CONTEXT.md')
+existing = extract_terms_from_context('.devflow/CONTEXT.md')
 new = add_new_terms(analysis_result)
 all_terms = merge_and_deduplicate(existing, new)
 
@@ -627,7 +627,7 @@ If PASS:
 #!/bin/bash
 # g2-validation.sh
 
-ANALYSIS_FILE=".ultimate-workflow/<req-id>/01-analysis.md"
+ANALYSIS_FILE=".devflow/<req-id>/01-analysis.md"
 
 # Check AC testability
 AC_COUNT=$(grep -c "^AC-" $ANALYSIS_FILE)
@@ -680,14 +680,14 @@ exit 0
 
 ```bash
 # Update state file
-cat >> .ultimate-workflow/STATE.md << EOF
+cat >> .devflow/STATE.md << EOF
 
 ## Phase 1 Results ($(date))
 current_phase: phase-1-complete
 g2_result: PASS
-user_stories_count: $(grep -c "^### Story US-" .ultimate-workflow/<req-id>/01-analysis.md)
-acceptance_criteria_count: $(grep -c "^AC-" .ultimate-workflow/<req-id>/01-analysis.md)
-glossary_terms: $(grep -c "^|" .ultimate-workflow/<req-id>/01-analysis.md | head -1)
+user_stories_count: $(grep -c "^### Story US-" .devflow/<req-id>/01-analysis.md)
+acceptance_criteria_count: $(grep -c "^AC-" .devflow/<req-id>/01-analysis.md)
+glossary_terms: $(grep -c "^|" .devflow/<req-id>/01-analysis.md | head -1)
 next_phase: phase-2-design
 EOF
 
@@ -900,7 +900,7 @@ echo "✅ STATE.md updated with Phase 1 results"
 python3 scripts/generate-stories.py \
   --root-cause "Checkout form too long" \
   --success-metric "Abandonment <30%" \
-  --output .ultimate-workflow/<req-id>/01-analysis.md
+  --output .devflow/<req-id>/01-analysis.md
 ```
 
 **G2 Validation**:
@@ -915,7 +915,7 @@ bash scripts/g2-validation.sh
 # Test checkout page performance
 lighthouse http://localhost:3000/checkout \
   --output=json \
-  --output-path=.ultimate-workflow/<req-id>/lighthouse-report.json
+  --output-path=.devflow/<req-id>/lighthouse-report.json
 ```
 
 **A/B Test Setup** (for success metric tracking):
@@ -944,7 +944,7 @@ During analysis:
 - [ ] ≥1 v2 opportunity AND ≥1 out-of-scope risk identified
 
 After analysis:
-- [ ] 01-analysis.md written to .ultimate-workflow/<req-id>/
+- [ ] 01-analysis.md written to .devflow/<req-id>/
 - [ ] G2 gate validation passed (all 5 checks)
 - [ ] STATE.md updated with results
 - [ ] User confirmation received (R8.2 stop-and-wait)

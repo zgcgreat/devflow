@@ -31,16 +31,16 @@ Architect-Evolver。**只读 archived 需求的 02-design.md § 9，聚合分类
 - **里程碑后**：版本发布或大功能完成后，把这一阶段的沉淀凝固到项目层
 - **上下文 失准信号**：4-dev 阶段连续多次发现 AI 没沿用既有抽象（说明索引漏了）
 - **`STATE.md` `last_evolve_at` 字段为空 或 距今 > 60 天**：GO.md 在路由时会主动提示
-- **M-health 冗余巡检留的尾巴**：若 `.ultimate-workflow/CONTEXT.md`「清理窗口专列」或「技术债」段有标记，A-evolve 扫描时**主动把对应的「既有抽象索引」条目拎出来让用户确认是否删**（闭环 M-health 步骤 5 的"下次同步主动提醒"）
+- **M-health 冗余巡检留的尾巴**：若 `.devflow/CONTEXT.md`「清理窗口专列」或「技术债」段有标记，A-evolve 扫描时**主动把对应的「既有抽象索引」条目拎出来让用户确认是否删**（闭环 M-health 步骤 5 的"下次同步主动提醒"）
 
 ## 输入
 
-- `@.ultimate-workflow/STATE.md`（读 `last_evolve_at` 字段，决定从哪个时间点之后的 req 开始扫）
-- `@.ultimate-workflow/CONTEXT.md`（当前快照，patch 目标 · rules 层）
-- `@.ultimate-workflow/system-architecture.md`（如存在，则同时是 patch 目标 · structure 层）
-- `@.ultimate-workflow/archive/<YYYY-MM-DD>-<req-id>/02-design.md`（已归档 需求的设计文档 · 只读 § 9 段）
-- `@.ultimate-workflow/<active-id>/02-design.md`（当前活跃 req 也算，但仅在 4-dev 完成 / 7-integration 之后才纳入 · 否则跳过）
-- `@.ultimate-workflow/需求LOG.md`（看 req 元信息，做 cross-check）
+- `@.devflow/STATE.md`（读 `last_evolve_at` 字段，决定从哪个时间点之后的 req 开始扫）
+- `@.devflow/CONTEXT.md`（当前快照，patch 目标 · rules 层）
+- `@.devflow/system-architecture.md`（如存在，则同时是 patch 目标 · structure 层）
+- `@.devflow/archive/<YYYY-MM-DD>-<req-id>/02-design.md`（已归档 需求的设计文档 · 只读 § 9 段）
+- `@.devflow/<active-id>/02-design.md`（当前活跃 req 也算，但仅在 4-dev 完成 / 7-integration 之后才纳入 · 否则跳过）
+- `@.devflow/需求LOG.md`（看 req 元信息，做 cross-check）
 
 ---
 
@@ -51,7 +51,7 @@ Architect-Evolver。**只读 archived 需求的 02-design.md § 9，聚合分类
 读 `STATE.md`：
 
 - 有 `last_evolve_at: <YYYY-MM-DD>` 字段 → 只扫该日期**之后**归档的 req
-- 无字段（首次跑）→ 扫所有 `.ultimate-workflow/archive/*` 的 02-design.md
+- 无字段（首次跑）→ 扫所有 `.devflow/archive/*` 的 02-design.md
 - 有 `last_evolve_promoted: [<list of req-ids>]` → 这些 需求的 § 9 已处理过，跳过
 
 输出范围声明：
@@ -249,7 +249,7 @@ Schema 变更：
 
 确认应用？
 1. ✅ 应用两边
-2. ⏸️ 暂存 patch 为 .ultimate-workflow/evolve/<YYYY-MM-DD>-EVOLVE-PATCH.md，我手动合
+2. ⏸️ 暂存 patch 为 .devflow/evolve/<YYYY-MM-DD>-EVOLVE-PATCH.md，我手动合
 3. ✅ 只应用 上下文 不应用 ARCHITECTURE
 4. ✅ 只应用 ARCHITECTURE 不应用 上下文
 5. ❌ 取消，啥都不动
@@ -260,17 +260,17 @@ Schema 变更：
 **安全要求**：
 
 - 写入前先备份（双选动则两份都备）：
-  - `cp .ultimate-workflow/CONTEXT.md .ultimate-workflow/CONTEXT.md.bak-<YYYY-MM-DD>`
-  - `cp .ultimate-workflow/system-architecture.md .ultimate-workflow/system-architecture.md.bak-<YYYY-MM-DD>`（如存在）
+  - `cp .devflow/CONTEXT.md .devflow/CONTEXT.md.bak-<YYYY-MM-DD>`
+  - `cp .devflow/system-architecture.md .devflow/system-architecture.md.bak-<YYYY-MM-DD>`（如存在）
 - 用 `edit` 工具按段 append / update（**不要整文件 rewrite**，避免破坏未涉及的内容）
 - 每段 append 在末尾加注释：`<!-- A-evolve YYYY-MM-DD: from <req-id> -->`
 - ADR 编号**顺接现有最大值**（grep `^### ADR-\d+` system-architecture.md 取 max + 1）
 
 ### 步骤 7 · 输出 EVOLVE 报告 + 更新 STATE
 
-#### 7.1 报告写入 `.ultimate-workflow/evolve/<YYYY-MM-DD>-EVOLVE.md`
+#### 7.1 报告写入 `.devflow/evolve/<YYYY-MM-DD>-EVOLVE.md`
 
-使用 `@devflow-kit/templates/architecture-evolution.md` 模板，**⚠️ 强制要求**：必须严格按模板完整结构输出，写入 `.ultimate-workflow/evolve/<YYYY-MM-DD>-EVOLVE.md`。**不得省略或改写任何段落**。
+使用 `@devflow-kit/templates/architecture-evolution.md` 模板，**⚠️ 强制要求**：必须严格按模板完整结构输出，写入 `.devflow/evolve/<YYYY-MM-DD>-EVOLVE.md`。**不得省略或改写任何段落**。
 
 必须填齐：元信息、扫描范围、候选汇总、五类候选明细、应用 patch、跳过项与理由、备份记录、状态更新、下次同步建议。步骤 5 的最终 patch 原样贴入模板的「应用 patch」段。
 
@@ -289,15 +289,15 @@ last_evolve_promoted:
 
 ## 输出
 
-- `.ultimate-workflow/CONTEXT.md`（patch 后 · 用户选 1/3 时）
-- `.ultimate-workflow/system-architecture.md`（patch 后 · 用户选 1/4 时且文件存在）
+- `.devflow/CONTEXT.md`（patch 后 · 用户选 1/3 时）
+- `.devflow/system-architecture.md`（patch 后 · 用户选 1/4 时且文件存在）
 - 备份文件（二者之一或两者都有）
-- `.ultimate-workflow/evolve/<YYYY-MM-DD>-EVOLVE.md`（报告 · 必产，**必须严格按 `@devflow-kit/templates/architecture-evolution.md` 模板完整结构输出**）
-- 更新的 `.ultimate-workflow/STATE.md`（`last_evolve_at` + `last_evolve_promoted`）
+- `.devflow/evolve/<YYYY-MM-DD>-EVOLVE.md`（报告 · 必产，**必须严格按 `@devflow-kit/templates/architecture-evolution.md` 模板完整结构输出**）
+- 更新的 `.devflow/STATE.md`（`last_evolve_at` + `last_evolve_promoted`）
 
 ## 约束
 
-- **不动业务代码**：本工作流只 patch `.ultimate-workflow/` 内的项目级文档，禁止改 `src/` / `tests/` / `package.json`
+- **不动业务代码**：本工作流只 patch `.devflow/` 内的项目级文档，禁止改 `src/` / `tests/` / `package.json`
 - **逐项 review 强制**：批量 promote 是禁的（容易把烂决策固化进 上下文）
 - **冲突必显式问**：标了 ⚠️ 的项不允许默默走「接受」分支
 - **备份必跑**：写任何项目级文档前必须先 `cp` 备份
@@ -316,7 +316,7 @@ last_evolve_promoted:
 - ⏳ 最终 patch 已让用户一次性确认（可选 1/2/3/4/5 任一）
 - ⏳ 写任何文档前都备份了
 - ⏳ ADR 编号顺接现有 max + 1，未二次使用已有编号
-- ⏳ EVOLVE 报告已归入 `.ultimate-workflow/evolve/`
+- ⏳ EVOLVE 报告已归入 `.devflow/evolve/`
 - ⏳ STATE.md `last_evolve_at` + `last_evolve_promoted` 已更新
 - ⏳ 遇到架构级冲突未自作主张，已指引用户跑 A-architect
 

@@ -5,7 +5,7 @@ version: 3.0-draft
 description: |
   Workflow pipeline manager and agent coordinator for Phase 0 YC Strategy.
   Autonomously manages complete development pipelines from specification to production.
-  Coordinates specialist agents, enforces quality gates, maintains project state throughout multi-phase workflows. (ultimate-workflow)
+  Coordinates specialist agents, enforces quality gates, maintains project state throughout multi-phase workflows. (devflow)
 layer: L1-INTERACTION
 parent: phase-0-yc-strategy
 token_budget: "~200K per execution agent"
@@ -66,7 +66,7 @@ grep "^Scope:" project-specs/${PROJECT_ID}-setup.md
 grep "^Timeline:" project-specs/${PROJECT_ID}-setup.md
 
 # Initialize pipeline state tracker
-cat > .ultimate-workflow/pipeline-state.json <<EOF
+cat > .devflow/pipeline-state.json <<EOF
 {
   "project_id": "${PROJECT_ID}",
   "current_phase": "PM",
@@ -144,8 +144,8 @@ done
 
 ```bash
 jq '.current_phase = "ArchitectUX" | .phases_completed += ["PM"]' \
-  .ultimate-workflow/pipeline-state.json > /tmp/state.json && \
-  mv /tmp/state.json .ultimate-workflow/pipeline-state.json
+  .devflow/pipeline-state.json > /tmp/state.json && \
+  mv /tmp/state.json .devflow/pipeline-state.json
 ```
 
 **Output format**:
@@ -207,8 +207,8 @@ grep -q "Technology Stack" project-docs/${PROJECT_ID}-architecture.md || {
 
 ```bash
 jq '.current_phase = "DevQALoop" | .phases_completed += ["ArchitectUX"]' \
-  .ultimate-workflow/pipeline-state.json > /tmp/state.json && \
-  mv /tmp/state.json .ultimate-workflow/pipeline-state.json
+  .devflow/pipeline-state.json > /tmp/state.json && \
+  mv /tmp/state.json .devflow/pipeline-state.json
 ```
 
 **Output format**:
@@ -297,8 +297,8 @@ for task_num in $(seq 1 $TOTAL_TASKS); do
       # Update pipeline state
       COMPLETED_TASKS=$((COMPLETED_TASKS + 1))
       jq ".current_task = \"${TASK_ID}\" | .quality_gates_passed += [\"${TASK_ID}\"]" \
-        .ultimate-workflow/pipeline-state.json > /tmp/state.json && \
-        mv /tmp/state.json .ultimate-workflow/pipeline-state.json
+        .devflow/pipeline-state.json > /tmp/state.json && \
+        mv /tmp/state.json .devflow/pipeline-state.json
       
     else
       echo "❌ Task ${TASK_ID} failed QA (attempt $((RETRY_COUNT + 1)))"
@@ -313,7 +313,7 @@ for task_num in $(seq 1 $TOTAL_TASKS); do
         sed -i "s/^### \[ \] ${TASK_ID}/### [!] ${TASK_ID} BLOCKED/" project-tasks/${PROJECT_ID}-tasklist.md
         
         # Log escalation
-        echo "- $(date -Iseconds): Task ${TASK_ID} blocked after ${MAX_RETRIES} failed attempts" >> .ultimate-workflow/escalations.log
+        echo "- $(date -Iseconds): Task ${TASK_ID} blocked after ${MAX_RETRIES} failed attempts" >> .devflow/escalations.log
         
         # Continue to next task (don't block entire pipeline)
         break
@@ -449,8 +449,8 @@ fi
 
 ```bash
 jq '.current_phase = "Complete" | .phases_completed += ["Integration", "Canary"] | .completed_at = "'$(date -Iseconds)'"' \
-  .ultimate-workflow/pipeline-state.json > /tmp/state.json && \
-  mv /tmp/state.json .ultimate-workflow/pipeline-state.json
+  .devflow/pipeline-state.json > /tmp/state.json && \
+  mv /tmp/state.json .devflow/pipeline-state.json
 ```
 
 **Output format**:
@@ -702,7 +702,7 @@ jq '.current_phase = "Complete" | .phases_completed += ["Integration", "Canary"]
 **Pipeline State Management**:
 ```bash
 # Initialize state
-cat > .ultimate-workflow/pipeline-state.json <<EOF
+cat > .devflow/pipeline-state.json <<EOF
 {
   "project_id": "{id}",
   "current_phase": "PM",
@@ -714,11 +714,11 @@ cat > .ultimate-workflow/pipeline-state.json <<EOF
 EOF
 
 # Atomic update (write to tmp, then mv)
-jq '.current_phase = "ArchitectUX"' .ultimate-workflow/pipeline-state.json > /tmp/state.json && \
-  mv /tmp/state.json .ultimate-workflow/pipeline-state.json
+jq '.current_phase = "ArchitectUX"' .devflow/pipeline-state.json > /tmp/state.json && \
+  mv /tmp/state.json .devflow/pipeline-state.json
 
 # Read current state
-jq '.current_phase, .current_task' .ultimate-workflow/pipeline-state.json
+jq '.current_phase, .current_task' .devflow/pipeline-state.json
 ```
 
 **Agent Spawning**:
@@ -780,7 +780,7 @@ distillator verify wave-summary-1.md wave-summary-1.compressed.md
 
 Before pipeline start:
 - [ ] Project spec file exists and is valid
-- [ ] Pipeline state initialized (.ultimate-workflow/pipeline-state.json)
+- [ ] Pipeline state initialized (.devflow/pipeline-state.json)
 - [ ] Agent tools available (researcher, architect, executor, reviewer)
 - [ ] Directory structure created (project-tasks/, project-docs/)
 

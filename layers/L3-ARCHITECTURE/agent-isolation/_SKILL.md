@@ -380,7 +380,7 @@ fi
 **Usage**:
 ```bash
 # Run before proceeding to next wave
-./context-budget-validation.sh .ultimate-workflow/wave-plan.yaml .specs/waves/
+./context-budget-validation.sh .devflow/wave-plan.yaml .specs/waves/
 
 # Integrate into G4 gate validation
 if ./context-budget-validation.sh "$WAVE_PLAN" "$AGENT_LOGS"; then

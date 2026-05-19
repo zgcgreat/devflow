@@ -134,7 +134,7 @@
 time ./bin/wave-executor --wave=N
 
 # Token消耗统计
-grep "tokens_used" .ultimate-workflow/STATE.md | awk '{sum+=$2} END {print sum}'
+grep "tokens_used" .devflow/STATE.md | awk '{sum+=$2} END {print sum}'
 
 # Provider容错测试
 ./bin/provider-gateway --test-failover

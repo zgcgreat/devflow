@@ -95,7 +95,7 @@
 
 ```markdown
 ✅ <阶段名称> 完成
-📝 产物：.ultimate-workflow/<req-id>/<产物文件>
+📝 产物：.devflow/<req-id>/<产物文件>
 📊 STATE.md 阶段进度已更新：[x] <阶段> → <产物>
 
 请确认产物内容：

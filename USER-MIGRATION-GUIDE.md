@@ -1,8 +1,8 @@
 # 用户迁移指南 — v1.0 → v3.0
 
-> **阅读对象**：当前已在使用 `ultimate-workflow` v1.0 的用户
+> **阅读对象**：当前已在使用 `devflow` v1.0 的用户
 > 
-> **核心承诺**：**零配置升级**。v3.0 自动读取 v1.0 `.ultimate-workflow/` 产物，无需手动迁移。
+> **核心承诺**：**零配置升级**。v3.0 自动读取 v1.0 `.devflow/` 产物，无需手动迁移。
 
 ---
 
@@ -10,11 +10,11 @@
 
 ### Step 1：备份（可选但推荐）
 ```bash
-cp -r .ultimate-workflow .ultimate-workflow.bak
+cp -r .devflow .devflow.bak
 ```
 
 ### Step 2：替换文件
-将 v3.0 的新文件覆盖到现有 `.ultimate-workflow/` 目录。
+将 v3.0 的新文件覆盖到现有 `.devflow/` 目录。
 
 **新增的核心文件**（直接复制即可）：
 - `SKILL.md` — v3 入口，零配置，向后兼容
@@ -62,7 +62,7 @@ ls -la layers/
 | v1.0 概念 | v3.0 对应位置 | 用户感知变化 |
 |-----------|---------------|-------------|
 | Stage Skills (`skills/stage-skills/`) | 内部重新路由到三层架构 | 无变化，`stage-4-dev`等命令仍可用 |
-| `.ultimate-workflow/STATE.md` | 直接读取，不变 | 无变化 |
+| `.devflow/STATE.md` | 直接读取，不变 | 无变化 |
 | `references/caveman-rules.md` (Token压缩) | 升级为4级支持 (RULES-v3.md R6) | `/caveman lite/full` → 自动检测 |
 | Memory system (`memory/`) | 扩展为 LESSONS + domain-skills | 新增自进化能力，旧产物兼容 |
 | Spec-Kit 集成 (Phase 2输入) | Phase 2 design skill 保留 | 无变化 |
@@ -75,11 +75,11 @@ ls -la layers/
 
 ### v1.0 调用方式
 ```
-@ultimate-workflow/SKILL.md + 需求描述
+@devflow/SKILL.md + 需求描述
 ```
 
 ### v3.0 调用方式（向后兼容）
-**相同**：`@ultimate-workflow/SKILL.md + 一句话需求` — **零配置自动路由**
+**相同**：`@devflow/SKILL.md + 一句话需求` — **零配置自动路由**
 
 **增强**：v3.0 SKILL.md 新增三层架构感知，AI自动选择最优路径。
 
@@ -93,7 +93,7 @@ ls -la layers/
 ### v3.0 路由流程（12步）
 ```
 Layer 1: 交互层
-Step 1 · 读取项目状态 (.ultimate-workflow/STATE.md)
+Step 1 · 读取项目状态 (.devflow/STATE.md)
 Step 2 · 入场检测 (entry-check.md, brownfield/greenfield)
 Step 3 · GitNexus可选检测 (detect → prompt → grep fallback)
 
@@ -126,8 +126,8 @@ Step 12 · Phase 7-8: Canary发布 + 知识归档
 ### Q1: v1.0的Stage Skills命令（如`stage-4-dev`）在v3.0还能用吗？
 **A**: ✅ **可以**。v3.0保留`skills/stage-skills/`目录，内部自动重新路由到三层架构。
 
-### Q2: `.ultimate-workflow/` 产物目录需要迁移吗？
-**A**: ❌ **不需要**。v3.0直接读取现有 `.ultimate-workflow/STATE.md`、LESSONS.md 等文件。
+### Q2: `.devflow/` 产物目录需要迁移吗？
+**A**: ❌ **不需要**。v3.0直接读取现有 `.devflow/STATE.md`、LESSONS.md 等文件。
 
 ### Q3: Token压缩（caveman）用法有变化吗？
 **A**: ⚠️ **自动增强**。4级压缩 (lite/full/ultra/extreme) 在 RULES-v3.md R6 中定义，AI自动检测选择。手动调用仍有效。
@@ -138,7 +138,7 @@ Step 12 · Phase 7-8: Canary发布 + 知识归档
 ### Q5: 如何确认升级成功？
 **A**: 
 1. 检查三层目录存在：`ls layers/L1-INTERACTION/ layers/L2-ENGINE/ layers/L3-ARCHITECTURE/`
-2. 运行SKILL.md入口测试：`@ultimate-workflow/SKILL.md + "帮我做一个XX功能"`
+2. 运行SKILL.md入口测试：`@devflow/SKILL.md + "帮我做一个XX功能"`
 3. 观察输出中是否包含路由声明（Layer 1 → Layer 3 → Layer 2）
 
 ---
@@ -159,7 +159,7 @@ Step 12 · Phase 7-8: Canary发布 + 知识归档
 如果v3.0遇到问题，执行：
 ```bash
 # 恢复备份
-mv .ultimate-workflow.bak .ultimate-workflow
+mv .devflow.bak .devflow
 # 使用v1.0 SKILL.md
 # (从git或下载页获取旧版SKILL.md)
 ```

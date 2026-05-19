@@ -19,7 +19,7 @@ allowed-tools:
 
 - `02-design.md` — 技术方案设计文档
 - `02a-ui-design.md` — UI设计方案（如有）
-- `.ultimate-workflow/CONTEXT.md` — 项目上下文
+- `.devflow/CONTEXT.md` — 项目上下文
 - LESSONS.md — 过往任务拆分经验
 
 ## 输出
@@ -37,7 +37,7 @@ allowed-tools:
 **1.1 读取 Phase 2 产物**:
 - `02-design.md` — 技术方案设计文档(必需)
 - `02a-ui-design.md` — UI设计方案(如有)
-- **ADR (架构决策记录)** — 如果存在 `.ultimate-workflow/adr/*.md` 或 `layers/L3-ARCHITECTURE/schema-definitions/DECISIONS.md`,必须解析
+- **ADR (架构决策记录)** — 如果存在 `.devflow/adr/*.md` 或 `layers/L3-ARCHITECTURE/schema-definitions/DECISIONS.md`,必须解析
 
 **1.2 ADR 解析步骤**:
 ```markdown

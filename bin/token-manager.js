@@ -223,7 +223,7 @@ function analyzeDirectory(dirPath) {
       
       // 跳过特定目录
       if (entry.isDirectory()) {
-        if (['node_modules', '.git', '.ultimate-workflow', 'dist', 'build'].includes(entry.name)) {
+        if (['node_modules', '.git', '.devflow', 'dist', 'build'].includes(entry.name)) {
           continue;
         }
         walk(fullPath);
@@ -306,7 +306,7 @@ Token Manager - 7级 Token 压缩管理
 
 操作:
   status                    显示 Token 使用状态
-  analyze [dir]             分析目录 (默认: .ultimate-workflow)
+  analyze [dir]             分析目录 (默认: .devflow)
   compress <level> [dir]    压缩目录中的文件
   suggest                   显示压缩建议
 
@@ -319,8 +319,8 @@ Token Manager - 7级 Token 压缩管理
 
 示例:
   node bin/token-manager.js status
-  node bin/token-manager.js analyze .ultimate-workflow
-  node bin/token-manager.js compress 3 .ultimate-workflow
+  node bin/token-manager.js analyze .devflow
+  node bin/token-manager.js compress 3 .devflow
 `);
     process.exit(0);
   }
@@ -333,7 +333,7 @@ Token Manager - 7级 Token 压缩管理
       break;
     
     case 'analyze':
-      const analyzeDir = args[1] || '.ultimate-workflow';
+      const analyzeDir = args[1] || '.devflow';
       showAnalysis(analyzeDir);
       break;
     

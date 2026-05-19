@@ -6,7 +6,7 @@ description: |
   Dependency-aware wave scheduling engine for parallel task orchestration.
   Takes wave-plan.yaml from dag-router and dispatches agents to execute tasks
   concurrently within waves, with coordination points and error recovery.
-  Use when: "schedule parallel tasks", "execute wave plan", "dispatch agents". (ultimate-workflow)
+  Use when: "schedule parallel tasks", "execute wave plan", "dispatch agents". (devflow)
 layer: L3-ARCHITECTURE
 source: DAG-based wave scheduling from L2 wave-executor + L3 dag-router, inherited from SEP Wave Engine
 dependencies:

@@ -2,7 +2,7 @@
 
 > **阶段定位**：为每个任务提供详细技术方案
 > **前置条件**：03-tasks.md 已完成
-> **后置产物**：`.ultimate-workflow/<req-id>/03a-implementation-plan.md`
+> **后置产物**：`.devflow/<req-id>/03a-implementation-plan.md`
 
 ## Skill元信息
 
@@ -17,13 +17,13 @@ dependencies:
 
 ## 输入
 
-- `.ultimate-workflow/<req-id>/03-tasks.md`（必读全部任务）
-- `.ultimate-workflow/<req-id>/02-design.md`（必读 `## 0` + `## 9`）
-- `.ultimate-workflow/CONTEXT.md`
+- `.devflow/<req-id>/03-tasks.md`（必读全部任务）
+- `.devflow/<req-id>/02-design.md`（必读 `## 0` + `## 9`）
+- `.devflow/CONTEXT.md`
 
 ## 输出
 
-- `.ultimate-workflow/<req-id>/03a-implementation-plan.md`
+- `.devflow/<req-id>/03a-implementation-plan.md`
 
 ## 入口门禁
 

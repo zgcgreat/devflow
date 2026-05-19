@@ -6,7 +6,7 @@ description: |
   Knowledge archival engine that aggregates Wave SUMMARYs, promotes lessons learned
   to LESSONS.md, creates/updates domain skills from high-frequency patterns (≥3),
   and archives session state. Use when: "archive phase", "knowledge consolidation",
-  "LESSONS nomination", "domain skill promotion". (ultimate-workflow)
+  "LESSONS nomination", "domain skill promotion". (devflow)
 layer: L1-INTERACTION
 source: SuperCorp Phase 8 + SEP LearningWorkflow + Mega-Workflow Memory Manager
 dependencies:
@@ -80,7 +80,7 @@ v3_upgrade:
 
 ## 输入
 
-- 所有 Phase 产物 (`.ultimate-workflow/<req-id>/`)
+- 所有 Phase 产物 (`.devflow/<req-id>/`)
 - **Wave SUMMARY.md 文件** — `.specs/waves/wave-{N}/SUMMARY.md` (Wave Executor L2-ENGINE 写入,Phase 4 已在此路径统一输出)
 - Phase 6 审查报告 (`06-review.md`)
 - Phase 7 Canary报告 (`07-canary.md`)
@@ -102,20 +102,20 @@ Phase 8 是 v3.0 **LearningWorkflow自动进化**的核心入口——将本次�
 
 ### Step 1: Wave SUMMARY 聚合
 
-**Canary Stability Priority**: If Phase 7 completed and `.ultimate-workflow/canary-report.md` exists, parse its stability score. Waves with canary failures get LESSONS priority boost (P1→P0). Flag any lessons from unstable waves in `LESSONS.md` as `[CANARY-FAILED]`.
+**Canary Stability Priority**: If Phase 7 completed and `.devflow/canary-report.md` exists, parse its stability score. Waves with canary failures get LESSONS priority boost (P1→P0). Flag any lessons from unstable waves in `LESSONS.md` as `[CANARY-FAILED]`.
 
 **Pre-aggregation gate-check**: Run this before proceeding:
 ```bash
-if [ -f ".ultimate-workflow/canary-report.md" ]; then
+if [ -f ".devflow/canary-report.md" ]; then
   echo "✅ Canary report found — applying stability priority to LESSONS nominations"
-  CANARY_STABILITY=$(grep -i "stability\|final.result\|PASS\|FAIL" .ultimate-workflow/canary-report.md | tail -5)
+  CANARY_STABILITY=$(grep -i "stability\|final.result\|PASS\|FAIL" .devflow/canary-report.md | tail -5)
 else
   echo "⚠️ No canary report — normal LESSONS priority ordering"
 fi
 
 # Canary gate-check reference: custom validation for canary-report existence
-if [ ! -f ".ultimate-workflow/canary-report.md" ] && [ -f ".ultimate-workflow/g5-gate-decision" ]; then
-  G5_RESULT=$(grep "G5 Result:" .ultimate-workflow/g5-gate-decision 2>/dev/null || echo "UNKNOWN")
+if [ ! -f ".devflow/canary-report.md" ] && [ -f ".devflow/g5-gate-decision" ]; then
+  G5_RESULT=$(grep "G5 Result:" .devflow/g5-gate-decision 2>/dev/null || echo "UNKNOWN")
   echo "Canary report missing but G5 gate exists: $G5_RESULT — verify Phase 7 output before aggregation"
 fi
 ```
@@ -366,7 +366,7 @@ next_session:
 |-------|----------|-----------------|
 | archive.status | ✅ Must be "complete" | No other values accepted (FAIL/UNKNOWN invalid) |
 | archive.completed_at | ✅ ISO 8601 datetime | Must match actual archive execution timestamp |
-| archive.req_id | ✅ Matches original requirement ID | Cross-reference with `.ultimate-workflow/req-id` file |
+| archive.req_id | ✅ Matches original requirement ID | Cross-reference with `.devflow/req-id` file |
 | archive.total_waves | ✅ Non-negative integer | Must equal count of actual WAVE-N-SUMMARY.md files processed |
 | archive.total_tasks | ✅ Sum of tasks_succeeded + tasks_failed | Arithmetic consistency check: succeeded + failed = total |
 | archive.g8_gate | ✅ PASS or FAIL | If FAIL, must have reason in archive.report section |

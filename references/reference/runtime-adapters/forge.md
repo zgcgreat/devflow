@@ -62,7 +62,7 @@ Forge adapter 不要求 flow-kit 改变产物格式。推荐只写一条轻量 r
 }
 ```
 
-这些字段只给 Forge runtime gate 使用，不替代 `.ultimate-workflow/<req-id>/*.md` 工件。
+这些字段只给 Forge runtime gate 使用，不替代 `.devflow/<req-id>/*.md` 工件。
 
 ## 使用建议
 

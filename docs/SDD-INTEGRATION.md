@@ -289,7 +289,7 @@ async function sendMessage(message: string) {
 
 ---
 
-## 🔧 集成到Ultimate-Workflow
+## 🔧 集成到devflow
 
 ### 触发方式
 

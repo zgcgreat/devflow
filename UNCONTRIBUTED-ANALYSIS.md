@@ -2,13 +2,13 @@
 
 > **生成时间**: 2026-05-17  
 > **分析范围**: mega-workflow, caveman, get-shit-done, devflow-kit, supercorp-ultimate  
-> **目标**: 识别各项目中尚未被整合到 ultimate-workflow 但有高借鉴价值的内容
+> **目标**: 识别各项目中尚未被整合到 devflow 但有高借鉴价值的内容
 
 ---
 
 ## 📊 总览排名：最有价值的20项未贡献内容
 
-按"适合借鉴到ultimate-workflow的程度"排序：
+按"适合借鉴到devflow的程度"排序：
 
 | 排名 | 来源项目 | 内容 | 核心单行价值 |
 |------|---------|------|-------------|
@@ -44,7 +44,7 @@
 
 **核心价值**: 在phase过渡时自动扫描最近N个阶段的LEARNINGS.md文件，使用Jaccard相似度对recurring items进行聚类。当某类问题在多个phase出现达到阈值时，向开发者呈现"升级候选"—可以将知识点提升到PROJECT.md或PATTERNS.md中成为项目级知识。
 
-**为什么是LearningWorkflow闭环的关键缺环**: ultimate-workflow的LearningWorkflow负责提取LESSONS(记录教训)，但缺少自动发现跨phase模式并提升的能力。Graduation填补了"记录教训→识别规律→提升到项目级知识"的完整闭环。特别是Jaccard相似度聚类和HITL(Human-in-the-Loop)确认流程的设计非常精妙。
+**为什么是LearningWorkflow闭环的关键缺环**: devflow的LearningWorkflow负责提取LESSONS(记录教训)，但缺少自动发现跨phase模式并提升的能力。Graduation填补了"记录教训→识别规律→提升到项目级知识"的完整闭环。特别是Jaccard相似度聚类和HITL(Human-in-the-Loop)确认流程的设计非常精妙。
 
 **与LearningWorkflow的关系**:
 ```
@@ -61,7 +61,7 @@
 
 **核心价值**: discuss-phase有两种模式—默认"访谈式问答"和创新"假设模式"。在假设模式中，Claude先深度分析代码库（读5-15个相关文件），然后主动提出实现假设（每个包含证据、错误后果、置信度），用户只需要确认或纠正—通常只需2-4轮交互而非访谈模式的15-20轮。
 
-**适合借鉴原因**: ultimate-workflow的Phase 1b Discuss主要采用问答式歧义捕获，缺少假设模式这一高效变体。假设模式特别适合已有清晰代码模式的成熟项目场景。其置信度标注(Confident/Likely/Unclear)、证据引用(文件路径)、错误后果说明的设计可立即增强discuss-phase的灵活性。
+**适合借鉴原因**: devflow的Phase 1b Discuss主要采用问答式歧义捕获，缺少假设模式这一高效变体。假设模式特别适合已有清晰代码模式的成熟项目场景。其置信度标注(Confident/Likely/Unclear)、证据引用(文件路径)、错误后果说明的设计可立即增强discuss-phase的灵活性。
 
 ---
 
@@ -72,7 +72,7 @@
 
 **核心价值**: "前瞻性想法捕获"概念模型。将未来可能需要的想法记录为结构化种子文件，定义触发条件(trigger_when)，在new-milestone时自动匹配并浮现。比传统deferred items优越—保留"为什么重要"(WHY)和"何时浮现"(WHEN)。
 
-**适合借鉴原因**: ultimate-workflow有Phase 1b Discuss的`<deferred>` section但只有静态记录能力。Seeds引入的是自动触发机制—当用户进入新Milestone/Phase时，与当前范围匹配的seed自动呈现给开发者，形成"想法池→自动浮现→采纳为任务"的完整生命周期。
+**适合借鉴原因**: devflow有Phase 1b Discuss的`<deferred>` section但只有静态记录能力。Seeds引入的是自动触发机制—当用户进入新Milestone/Phase时，与当前范围匹配的seed自动呈现给开发者，形成"想法池→自动浮现→采纳为任务"的完整生命周期。
 
 ---
 
@@ -86,7 +86,7 @@
 2) 上下文退化四级(PEAK/GOOD/DEGRADING/POOR)和对应行为策略
 3) **独特洞察**: MCP Tool Schema Cost—每个启用的MCP server每轮注入tool schema，重型server每轮消耗20k+ tokens。提出"Phase前MCP审计"四步检查清单
 
-**适合借鉴原因**: ultimate-workflow的Provider Gateway有路由逻辑但没有context-aware prompt enrichment机制。Context Budget的按context window缩放策略和MCP schema cost审计是token经济性方面的深度工程实践，可补充到token-budget.md或provider-gateway中。
+**适合借鉴原因**: devflow的Provider Gateway有路由逻辑但没有context-aware prompt enrichment机制。Context Budget的按context window缩放策略和MCP schema cost审计是token经济性方面的深度工程实践，可补充到token-budget.md或provider-gateway中。
 
 ---
 
@@ -101,7 +101,7 @@
 - **Escalation Gate**: 无法自动解决的议题升级给人(安全阀)
 - **Abort Gate**: 终止操作防止损害或浪费资源
 
-**适合借鉴原因**: ultimate-workflow的Wave Executor有checkpoint protocol但缺少统一的gate分类体系。gates.md提供了一种设计原则级的框架—任何验证点都可归类到这四种门之一，选择逻辑是"先pre-flight→后产出用revision→无法自动解决则escalate→继续会损害则abort"。
+**适合借鉴原因**: devflow的Wave Executor有checkpoint protocol但缺少统一的gate分类体系。gates.md提供了一种设计原则级的框架—任何验证点都可归类到这四种门之一，选择逻辑是"先pre-flight→后产出用revision→无法自动解决则escalate→继续会损害则abort"。
 
 ---
 
@@ -109,7 +109,7 @@
 
 ### P0: Systematic Debugging全套 (~1000行)
 
-这是devflow-kit中最为成熟和实战验证的技能体系，包含了调试"宪法"—填补了ultimate-workflow在"发现问题→定位原因→验证修复"全链路上的方法论空白。目前工作流中有开发(Wave执行)、测试、审查三个阶段，但没有专门针对调试阶段的指导。
+这是devflow-kit中最为成熟和实战验证的技能体系，包含了调试"宪法"—填补了devflow在"发现问题→定位原因→验证修复"全链路上的方法论空白。目前工作流中有开发(Wave执行)、测试、审查三个阶段，但没有专门针对调试阶段的指导。
 
 #### 2.1 systematic-debugging/SKILL.md (~297行)
 **核心价值**: 四阶段法(观察→分析→假设→验证)+"铁律"约束。包含真实世界影响数据(15-30分钟vs 2-3小时)。直接集成到Phase 4和Phase 5之间。
@@ -141,7 +141,7 @@ devflow-kit的记忆系统有6个文件未被PROVENANCE-REPORT追踪，它们覆
 | memory/VERIFICATION_BASELINE.md | ~33 | 验证基线—定义团队认可的验证命令和证据标准，记录已知盲点 |
 | memory/memory-index.yaml | ~28 | 记忆索引—维护所有记忆文件的健康度指标、validator版本、learning_backlog统计 |
 
-**为什么适合**: ultimate-workflow只有LESSONS.md。这6个补充维度覆盖了"Agent端学习"(AGENT_NOTES)、"用户偏好"(USER_PROFILE/TEAM_PREFERENCES)、"验证基线"(VERIFICATION_BASELINE)、"会话质量保障"(SESSION_CLOSE_CHECKLIST)等空白。
+**为什么适合**: devflow只有LESSONS.md。这6个补充维度覆盖了"Agent端学习"(AGENT_NOTES)、"用户偏好"(USER_PROFILE/TEAM_PREFERENCES)、"验证基线"(VERIFICATION_BASELINE)、"会话质量保障"(SESSION_CLOSE_CHECKLIST)等空白。
 
 ---
 
@@ -149,7 +149,7 @@ devflow-kit的记忆系统有6个文件未被PROVENANCE-REPORT追踪，它们覆
 
 ### P0: Cavecrew子代理体系(5个核心文件, ~300行合计)
 
-这是caveman最独特的设计—比ultimate-workflow的L2-ENGINE并行Agent更轻量、更可组合。定义了三个只读/最小变更子代理：
+这是caveman最独特的设计—比devflow的L2-ENGINE并行Agent更轻量、更可组合。定义了三个只读/最小变更子代理：
 
 | 子代理 | 行数 | 核心价值 |
 |--------|------|---------|
@@ -157,7 +157,7 @@ devflow-kit的记忆系统有6个文件未被PROVENANCE-REPORT追踪，它们覆
 | cavecrew-builder.md | 48行 | 手术式单文件编辑，硬限制1-2个文件范围，4种终端状态(tiny-big/needs-confirm/ambiguous/regressed) |
 | cavecrew-reviewer.md | 49行 | Diff/分支审查器，四级严重度体系(红色bug/黄色风险/蓝色瑕疵/问号疑问) |
 
-**关键洞察**: 子代理输出被注入主上下文时压缩60%=主会话寿命延长数倍。与ultimate-workflow的Wave Executor中"最小变更Agent模板"高度互补。
+**关键洞察**: 子代理输出被注入主上下文时压缩60%=主会话寿命延长数倍。与devflow的Wave Executor中"最小变更Agent模板"高度互补。
 
 ---
 
@@ -179,7 +179,7 @@ devflow-kit的记忆系统有6个文件未被PROVENANCE-REPORT追踪，它们覆
 ---
 
 ### P1: JS轻量压缩器(compress.js, 119行)
-**核心价值**: 纯Node.js文本压缩函数—零外部依赖，专为MCP tool description等safe string fields设计。可直接嵌入ultimate-workflow的Provider路由和Agent描述中减少上下文加载量。
+**核心价值**: 纯Node.js文本压缩函数—零外部依赖，专为MCP tool description等safe string fields设计。可直接嵌入devflow的Provider路由和Agent描述中减少上下文加载量。
 
 ---
 
@@ -251,7 +251,7 @@ AGENT_NOTES.md, CURRENT_STATE.md, LEARNING_BACKLOG.md, SESSION_CLOSE_CHECKLIST.m
 **完整路径**: `E:/LLM/skills/mega-workflow/layer-2-gsd/get-shit-done/workflows/`
 new-project, plan-phase, execute-phase, verify-phase, remove-phase, insert-phase, discuss-phase(含9种mode), do, quick, fast, autonomous, code-review, eval-review, review, ship, pr-branch, graduation, debug, diagnose-issues, forensics, cleanup, audit-fix, sync-skills, docs-update
 
-**适合借鉴**: 完整的项目生命周期操作命令库，可作为ultimate-workflow的"扩展技能包"。
+**适合借鉴**: 完整的项目生命周期操作命令库，可作为devflow的"扩展技能包"。
 
 ---
 

@@ -11,8 +11,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const STATE_FILE = '.ultimate-workflow/STATE.md';
-const CONFIG_FILE = '.ultimate-workflow/config.yaml';
+const STATE_FILE = '.devflow/STATE.md';
+const CONFIG_FILE = '.devflow/config.yaml';
 
 // ANSI 颜色
 const colors = {
@@ -302,7 +302,7 @@ function validateArtifacts(projectDir) {
   
   for (const { phase, file } of artifacts) {
     const reqId = content.match(/当前Req[:\s]*([^\n]+)/i)?.[1] || 'default';
-    const filePath = path.join(projectDir, '.ultimate-workflow', reqId, file);
+    const filePath = path.join(projectDir, '.devflow', reqId, file);
     
     if (!fs.existsSync(filePath)) {
       missing.push({ phase, file });

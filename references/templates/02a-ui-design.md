@@ -225,7 +225,7 @@ shadow:
 
 ## 9. 反 AI-slop 自检结果
 
-逐条对照 `@.ultimate-workflow/references/reference/ui-anti-patterns.md` 的"强制禁忌"段：
+逐条对照 `@.devflow/references/reference/ui-anti-patterns.md` 的"强制禁忌"段：
 
 - ⏳ 字体类禁忌：未命中
 - ⏳ 颜色类禁忌：未命中

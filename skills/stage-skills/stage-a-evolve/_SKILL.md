@@ -1,8 +1,8 @@
 ﻿# devflow-kit Stage: A-Evolve（架构演进）
 
 > **阶段定位**：从历史需求中提取架构级经验，同步到上下文
-> **前置条件**：`.ultimate-workflow/system-architecture.md` 存在
-> **后置产物**：更新的 `.ultimate-workflow/CONTEXT.md` + `.ultimate-workflow/system-architecture.md`
+> **前置条件**：`.devflow/system-architecture.md` 存在
+> **后置产物**：更新的 `.devflow/CONTEXT.md` + `.devflow/system-architecture.md`
 
 ## Skill元信息
 
@@ -17,21 +17,21 @@ dependencies:
 
 ## 输入
 
-- `.ultimate-workflow/STATE.md`
-- `.ultimate-workflow/CONTEXT.md`
-- `.ultimate-workflow/system-architecture.md`
-- `.ultimate-workflow/archive/<req-id>/02-design.md` 的 `§ 9` 段（仅扫last_evolve_at之后的需求）
+- `.devflow/STATE.md`
+- `.devflow/CONTEXT.md`
+- `.devflow/system-architecture.md`
+- `.devflow/archive/<req-id>/02-design.md` 的 `§ 9` 段（仅扫last_evolve_at之后的需求）
 
 ## 输出
 
-- 更新的 `.ultimate-workflow/CONTEXT.md`
-- 更新的 `.ultimate-workflow/system-architecture.md`
-- 更新 `.ultimate-workflow/STATE.md` 的 `last_evolve_at`
+- 更新的 `.devflow/CONTEXT.md`
+- 更新的 `.devflow/system-architecture.md`
+- 更新 `.devflow/STATE.md` 的 `last_evolve_at`
 
 ## 入口门禁
 
 ```markdown
-IF 缺 .ultimate-workflow/system-architecture.md:
+IF 缺 .devflow/system-architecture.md:
   输出: "⚠️ 项目无system-architecture文档，请先执行 @A-architect 建立架构基线。"
   STOP
 ```
@@ -40,7 +40,7 @@ IF 缺 .ultimate-workflow/system-architecture.md:
 
 ### Step 1: 读取上次演进时间
 
-从 `.ultimate-workflow/STATE.md` 读取 `last_evolve_at`：
+从 `.devflow/STATE.md` 读取 `last_evolve_at`：
 
 ```markdown
 last_evolve_at: 2026-01-10T14:30:00Z
@@ -54,14 +54,14 @@ last_evolve_at: 2026-01-10T14:30:00Z
 
 ```bash
 # 列出归档目录
-ls -la .ultimate-workflow/archive/
+ls -la .devflow/archive/
 
 # 过滤出last_evolve_at之后的需求
 # （按目录名或文件修改时间）
 ```
 
 **对每个需求**：
-- 读取 `.ultimate-workflow/archive/<req-id>/02-design.md` 的 `## 9. 架构沉淀建议` 段
+- 读取 `.devflow/archive/<req-id>/02-design.md` 的 `## 9. 架构沉淀建议` 段
 - **禁止**读取§9以外的内容（避免越界）
 
 ### Step 3: 提取架构级经验
@@ -94,9 +94,9 @@ REQ-012 §9:
 
 ### Step 4: 合并到上下文
 
-**⚠️ 强制规则**：如存在 `.ultimate-workflow/CONTEXT.md`，必须先读取再追加。
+**⚠️ 强制规则**：如存在 `.devflow/CONTEXT.md`，必须先读取再追加。
 
-将提取的经验追加到 `.ultimate-workflow/CONTEXT.md`：
+将提取的经验追加到 `.devflow/CONTEXT.md`：
 - **必须保持原有结构完整**
 - **不得覆盖已有章节**
 - **所有占位符必须替换为实际值**
@@ -119,7 +119,7 @@ REQ-012 §9:
 
 ### Step 5: 更新system-architecture
 
-**⚠️ 强制规则**：必须先读取 `.ultimate-workflow/system-architecture.md`，再按模板结构更新。
+**⚠️ 强制规则**：必须先读取 `.devflow/system-architecture.md`，再按模板结构更新。
 
 **§2 模块清单**：
 - 新增模块加入表格
@@ -194,7 +194,7 @@ REQ-012 §9:
 - 需求描述："修复架构债务：<具体问题>"
 
 **选项2**：仅记录
-- 将债务清单追加到 `.ultimate-workflow/system-architecture.md` 末尾
+- 将债务清单追加到 `.devflow/system-architecture.md` 末尾
 - 标记为「待优化」
 
 **选项3**：查看详情

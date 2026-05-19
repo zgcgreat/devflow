@@ -4,7 +4,7 @@
 - **创建日期**: `<YYYY-MM-DD>`
 - **版本**: `<v1.0>`
 - **状态**: `待确认 / 已确认 / 已关闭`
-- **关联**: `@.ultimate-workflow/<req-id>/00-requirements.md`、`@.ultimate-workflow/<req-id>/01-analysis.md`
+- **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/<req-id>/01-analysis.md`
 - **作者**: AI（Architect 角色）+ 人工 review
 
 ---
@@ -101,7 +101,7 @@
 ## 宪法检查 (Constitution Gate · 融合 spec-kit)
 
 > 来源: 融合 spec-kit Constitutional Foundation
-> 强制门禁: 所有技术决策必须符合 `.ultimate-workflow/memory/constitution.md`（新项目首次创建后生效）
+> 强制门禁: 所有技术决策必须符合 `.devflow/memory/constitution.md`（新项目首次创建后生效）
 
 ### Phase -1: 实现前门禁
 
@@ -169,7 +169,7 @@
 ## 4. ADR 索引
 
 凡 D1~Dn 中可逆性低的，单独写 ADR：
-- `@.ultimate-workflow/adr/001-theme-storage.md`
+- `@.devflow/adr/001-theme-storage.md`
 - ……
 
 ## 5. 风险
@@ -213,7 +213,7 @@
 
 > 这是**给未来的礼物**，不是必填。AI 写 DESIGN 时如果发现本需求 引入了"项目级有复用价值"的东西，列在这里。
 > 没引入新东西就整段写 `本需求 无架构层面沉淀建议`。
-> 后续用户跑 `@.ultimate-workflow/references/prompts/A-evolve.md` 会扫这段，逐项 review，批准的内容 patch 到 `.ultimate-workflow/memory/CONTEXT.md`。
+> 后续用户跑 `@.devflow/references/prompts/A-evolve.md` 会扫这段，逐项 review，批准的内容 patch 到 `.devflow/memory/CONTEXT.md`。
 
 ### 9.1 新增的可复用抽象（建议 append 到 CONTEXT 「既有抽象索引」段）
 

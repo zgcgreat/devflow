@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const STATE_FILE = '.ultimate-workflow/STATE.md';
+const STATE_FILE = '.devflow/STATE.md';
 
 const c = {
   green: '\x1b[32m',
@@ -165,7 +165,7 @@ function checkGates(projectDir, stage) {
   
   for (const gate of gates) {
     // 简化检查：实际应该检查 reqs/<req-id>/<gate>
-    const gatePath = path.join(projectDir, '.ultimate-workflow', 'reqs', gate);
+    const gatePath = path.join(projectDir, '.devflow', 'reqs', gate);
     const exists = fs.existsSync(gatePath);
     results.push({ gate, passed: exists });
   }

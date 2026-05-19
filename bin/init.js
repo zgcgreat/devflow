@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Ultimate Workflow Init Script
+ * Devflow Init Script
  * 
  * 用途: 零配置初始化项目工作流
  * 用法: node bin/init.js [--project-dir <path>] [--mode <fast|standard|strict>]
@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const WORKFLOW_DIR = '.ultimate-workflow';
+const WORKFLOW_DIR = '.devflow';
 const STATE_FILE = `${WORKFLOW_DIR}/STATE.md`;
 const CONFIG_FILE = `${WORKFLOW_DIR}/config.yaml`;
 const MEMORY_DIR = `${WORKFLOW_DIR}/memory`;
@@ -111,7 +111,7 @@ function createConfig(projectDir, mode = 'standard') {
   };
   
   const configPath = path.join(projectDir, CONFIG_FILE);
-  fs.writeFileSync(configPath, `# Ultimate Workflow Config
+  fs.writeFileSync(configPath, `# Devflow Config
 # Mode: ${mode}
 
 ${JSON.stringify(config, null, 2)}`);
@@ -125,7 +125,7 @@ ${JSON.stringify(config, null, 2)}`);
 function createState(projectDir, mode = 'standard') {
   logStep(3, '创建状态文件');
   
-  const stateContent = `# Ultimate Workflow State
+  const stateContent = `# Devflow State
 
 ## 基本信息
 
@@ -384,8 +384,8 @@ function createGitignore(projectDir) {
   logStep(5, '创建 .gitignore');
   
   const gitignorePath = path.join(projectDir, '.gitignore');
-  const gitignoreContent = `# Ultimate Workflow
-.ultimate-workflow/
+  const gitignoreContent = `# Devflow
+.devflow/
 
 # 环境变量
 .env
@@ -424,11 +424,11 @@ npm-debug.log*
   } else {
     // 追加内容
     const existing = fs.readFileSync(gitignorePath, 'utf8');
-    if (!existing.includes('.ultimate-workflow/')) {
-      fs.appendFileSync(gitignorePath, '\n# Ultimate Workflow\n.ultimate-workflow/\n');
-      logSuccess('追加: .ultimate-workflow/ 到 .gitignore');
+    if (!existing.includes('.devflow/')) {
+      fs.appendFileSync(gitignorePath, '\n# Devflow\n.devflow/\n');
+      logSuccess('追加: .devflow/ 到 .gitignore');
     } else {
-      logSkip('.gitignore 已包含 .ultimate-workflow/');
+      logSkip('.gitignore 已包含 .devflow/');
     }
   }
 }
@@ -442,7 +442,7 @@ function createReadme(projectDir) {
   const readmePath = path.join(projectDir, 'README.md');
   const readmeContent = `# ${path.basename(projectDir)}
 
-> 使用 Ultimate Workflow v3.0 管理
+> 使用 Devflow v3.0 管理
 
 ## 快速开始
 
@@ -472,7 +472,7 @@ node bin/statusline.js
 ## 目录结构
 
 \`\`\`
-.ultimate-workflow/
+.devflow/
 ├── STATE.md          # 跨会话状态
 ├── config.yaml       # 配置
 ├── memory/           # 记忆文件
@@ -490,7 +490,7 @@ node bin/statusline.js
 
 ## 文档
 
-- [Ultimate Workflow SKILL.md](${path.join(path.dirname(require.main.filename), '..', 'SKILL.md')})
+- [Devflow SKILL.md](${path.join(path.dirname(require.main.filename), '..', 'SKILL.md')})
 - [架构设计](../V3-ARCHITECTURE.md)
 - [路由入口](../GO.md)
 `;
@@ -535,7 +535,7 @@ function verifyInstall(projectDir) {
  */
 function showWelcome(projectDir, mode) {
   console.log('\n' + '='.repeat(60));
-  log('  Ultimate Workflow v3.0 初始化完成!', 'green');
+  log('  Devflow v3.0 初始化完成!', 'green');
   console.log('='.repeat(60));
   
   console.log(`
@@ -581,7 +581,7 @@ async function main() {
     }
     if (args[i] === '--help') {
       console.log(`
-Ultimate Workflow Init Script
+Devflow Init Script
 
 用法: node bin/init.js [选项]
 
@@ -606,7 +606,7 @@ Ultimate Workflow Init Script
   }
   
   console.log('\n' + '='.repeat(60));
-  log('  Ultimate Workflow v3.0 初始化', 'blue');
+  log('  Devflow v3.0 初始化', 'blue');
   console.log('='.repeat(60));
   console.log(`\n📁 项目目录: ${projectDir}`);
   console.log(`⚙️  模式: ${mode}`);

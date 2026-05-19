@@ -1,5 +1,5 @@
 #!/bin/sh
-# gate-check.sh — Shared gate validation utility for ultimate-workflow
+# gate-check.sh — Shared gate validation utility for devflow
 # Usage: ./gate-check.sh <G1|G2|G4|G3-PHASE6|CUSTOM> <project-root> [options]
 # Exit codes: 0 = pass, 1 = fail, 2 = error
 
@@ -225,7 +225,7 @@ check_g2() {
 
     # Check 5: ADR completeness (if ADR directory exists, all decisions referenced)
     _total_checks=$((_total_checks + 1))
-    _adr_dir="${ABSOLUTE_ROOT}/.ultimate-workflow/adr"
+    _adr_dir="${ABSOLUTE_ROOT}/.devflow/adr"
     if [ -d "$_adr_dir" ]; then
         _adr_count=$(find "$_adr_dir" -name "*.md" -type f 2>/dev/null | wc -l || echo 0)
         if [ "$_adr_count" -gt 0 ] 2>/dev/null; then
@@ -272,7 +272,7 @@ check_g4() {
     # Try multiple possible wave-plan locations
     wave_plan=""
     for candidate in \
-        "${ABSOLUTE_ROOT}/.ultimate-workflow/wave-plan.yaml" \
+        "${ABSOLUTE_ROOT}/.devflow/wave-plan.yaml" \
         "${ABSOLUTE_ROOT}/.specs/wave-plan.yaml" \
         "${ABSOLUTE_ROOT}/wave-plan.yaml" \
         "${ABSOLUTE_ROOT}/03-tasks.md"; do

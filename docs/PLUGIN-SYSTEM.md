@@ -1,7 +1,7 @@
 # 插件系统规范
 
 > **来源**: unified-platform  
-> **集成位置**: `.ultimate-workflow/plugins/`  
+> **集成位置**: `.devflow/plugins/`  
 > **核心价值**: 可扩展Phase、Gate、Agent、Template、Command，沙箱隔离，签名验证
 
 ---
@@ -57,8 +57,8 @@ plugins/<plugin-name>/
     "dependencies": ["phase-8"]
   },
   "permissions": {
-    "read_files": ["*.md", ".ultimate-workflow/state.md"],
-    "write_files": [".ultimate-workflow/plugins/custom-phase-9/output/*"],
+    "read_files": ["*.md", ".devflow/state.md"],
+    "write_files": [".devflow/plugins/custom-phase-9/output/*"],
     "execute_commands": ["npm test", "git log"],
     "network_access": false
   },
@@ -94,7 +94,7 @@ plugins/<plugin-name>/
 
 ### 1. 发现 (Discovery)
 
-**本地插件目录**: `.ultimate-workflow/plugins/`
+**本地插件目录**: `.devflow/plugins/`
 
 **远程插件市场**（未来）:
 ```bash
@@ -118,7 +118,7 @@ plugins/<plugin-name>/
 1. 验证 `plugin.json` 格式
 2. 检查权限声明合理性
 3. 验证签名（如有）
-4. 复制到 `.ultimate-workflow/plugins/<plugin-name>/`
+4. 复制到 `.devflow/plugins/<plugin-name>/`
 5. 注册到插件索引
 6. 加载插件配置
 
@@ -195,7 +195,7 @@ plugins/<plugin-name>/
 
 **自动更新配置**:
 ```yaml
-# .ultimate-workflow/config.yaml
+# .devflow/config.yaml
 plugins:
   auto_update: true
   update_frequency: "weekly"  # daily | weekly | monthly
@@ -370,7 +370,7 @@ plugins:
 4. 生成反馈报告
 
 ## 输出
-- `.ultimate-workflow/plugins/my-phase/feedback-report.md`
+- `.devflow/plugins/my-phase/feedback-report.md`
 ```
 
 **步骤4: 添加钩子（可选）**

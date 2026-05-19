@@ -28,7 +28,7 @@
 
 | 路由目标 | 必须存在的前置产物 | 缺失时处理 |
 |---|-------------------|---|
-| 1-analysis | `.ultimate-workflow/<id>/00-requirements.md` | 先走 0-confirm |
+| 1-analysis | `.devflow/<id>/00-requirements.md` | 先走 0-confirm |
 | 2-design | `00-requirements.md` + `01-analysis.md` | 先补缺失的阶段 |
 | 2a-ui-design | 上面 + `02-design.md` | 先走 2-design |
 | 3-task | `00` + `01` + `02`（前端项目 + `02a`） | 先补缺失的阶段 |

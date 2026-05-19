@@ -1,6 +1,6 @@
-# Ultimate Workflow
+# Devflow
 
-> **装好就用的最强AI编程工作流系统** - 整合规格驱动、结构化流程、工程纪律、变更管理、代码理解
+> **装好就用的AI编程工作流系统** - 整合规格驱动、结构化流程、工程纪律、变更管理、代码理解
 
 ## 🚀 5分钟快速上手
 
@@ -9,7 +9,7 @@
 在你的AI编程工具中说：
 
 ```
-Use ultimate-workflow.
+Use devflow.
 
 我要做一个用户登录功能，支持邮箱密码和JWT认证
 ```
@@ -20,7 +20,7 @@ AI会自动：
 3. 调用 spec-kit 生成规格（PRD → Plan → Tasks）
 4. 判定模式（Fast/Standard/Strict）
 5. 启动 7阶段流程
-6. 所有产物保存到 `.ultimate-workflow/<req-id>/`
+6. 所有产物保存到 `.devflow/<req-id>/`
 7. 归档到 OpenSpec 变更管理系统
 8. 更新记忆系统
 
@@ -68,7 +68,7 @@ AI会自动：
 ## 📦 包内有什么
 
 ```
-ultimate-workflow/
+devflow/
 ├── GO.md                      # 统一路由器
 ├── SKILL.md                   # 主 skill 定义
 ├── README.md                  # 本文档
@@ -92,26 +92,26 @@ ultimate-workflow/
 
 ### 场景1: 开发新功能
 ```
-Use ultimate-workflow.
+Use devflow.
 
 在账号设置页增加已保存支付方式管理，支持信用卡和PayPal
 ```
 
 ### 场景2: 快速修复Bug
 ```
-Use ultimate-workflow. Fast模式: 修复settings页面按钮文案typo
+Use devflow. Fast模式: 修复settings页面按钮文案typo
 ```
 
 ### 场景3: 探索代码结构
 ```
-Use ultimate-workflow.
+Use devflow.
 
 哪些函数调用了 auth.verify()？修改它会影响到什么？
 ```
 
 ### 场景4: 架构重构
 ```
-Use ultimate-workflow.
+Use devflow.
 
 把单体应用拆分成微服务，先做用户模块
 ```
@@ -123,14 +123,14 @@ Use ultimate-workflow.
 ### 方式1: AI自动安装（推荐）
 
 ```
-Use install-ultimate-workflow.
+Use install-devflow.
 ```
 
 ### 方式2: 手动安装
 
 ```bash
 # 复制整个文件夹到项目根目录
-cp -r ultimate-workflow/ your-project/
+cp -r devflow/ your-project/
 ```
 
 ---
@@ -145,10 +145,10 @@ cp -r ultimate-workflow/ your-project/
 
 ---
 
-## 🌟 为什么选择 Ultimate Workflow？
+## 🌟 Devflow 整合了哪些项目？
 
-| 特性 | Ultimate | spec-kit | devflow-kit | superpowers |
-|------|----------|----------|-------------|-------------|
+| 特性 | Devflow | spec-kit | devflow-kit | superpowers |
+|------|---------|----------|-------------|-------------|
 | 规格生成 | ✅ | ✅ | ❌ | ❌ |
 | 阶段流程 | ✅ | ❌ | ✅ | ❌ |
 | 工程纪律 | ✅ | ❌ | ❌ | ✅ |
@@ -158,13 +158,13 @@ cp -r ultimate-workflow/ your-project/
 | 专业能力 | ✅ (23个) | ❌ | ❌ | ✅ (14个) |
 | Token优化 | ✅ | ❌ | ❌ | ❌ |
 
-**Ultimate Workflow = 所有最佳实践的集大成者**
+**Devflow = 所有最佳实践的集大成者**
 
 ---
 
 ## 版本
 
-v1.0 - 终极融合版
+v3.0 - AI 编程工作流系统
 - 整合 6 大开源项目核心能力
 - 统一入口 GO.md 自动路由
 - 跨会话记忆系统

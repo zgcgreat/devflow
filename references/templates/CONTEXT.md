@@ -74,7 +74,7 @@
 ├── <packages|shared/>           # 前后端共享类型、SDK、工具
 ├── <migrations|prisma|alembic/>  # 数据库 schema / migration
 ├── <scripts/>                   # 本地脚本 / 运维脚本
-└── <docs|.ultimate-workflow/>               # 项目文档与 flow-kit 产物
+└── <docs|.devflow/>               # 项目文档与 flow-kit 产物
 ```
 
 ### 结构说明
@@ -99,7 +99,7 @@
 - **数据库**: <如有>
 - **测试**: <例如 frontend: vitest + playwright；backend: pytest>
 - **构建/部署**: <例如 frontend: Vite + Vercel；backend: Docker + Railway>
-- **栈卡片编号**（来自 `@.ultimate-workflow/references/reference/tech-stacks.md`）: <如 5 FastAPI + React>
+- **栈卡片编号**（来自 `@.devflow/references/reference/tech-stacks.md`）: <如 5 FastAPI + React>
 
 ## 域语言（术语表）
 
@@ -114,7 +114,7 @@
 
 按时间倒序追加：
 
-- `[YYYY-MM-DD]` <决策内容> — 来自 `@.ultimate-workflow/<req-id>/02-design.md`
+- `[YYYY-MM-DD]` <决策内容> — 来自 `@.devflow/<req-id>/02-design.md`
 - ……
 
 ## 默认偏好（AI 在缺省时按此决策）
@@ -252,4 +252,4 @@
 
 ---
 
-> 此文件长度建议 ≤ 300 行（含 intel-scan 自动填的字段）；超出时把陈旧条目归档到 `.ultimate-workflow/archive/CONTEXT-history.md`。
+> 此文件长度建议 ≤ 300 行（含 intel-scan 自动填的字段）；超出时把陈旧条目归档到 `.devflow/archive/CONTEXT-history.md`。

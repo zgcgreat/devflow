@@ -2,7 +2,7 @@
 
 > **阶段定位**：工作流入口，澄清需求并判定执行模式
 > **前置条件**：无
-> **后置产物**：`.ultimate-workflow/<req-id>/00-requirements.md`
+> **后置产物**：`.devflow/<req-id>/00-requirements.md`
 
 ## Skill元信息
 
@@ -19,13 +19,13 @@ dependencies:
 ## 输入
 
 - 用户原始需求描述
-- `.ultimate-workflow/STATE.md`（如存在）
-- `.ultimate-workflow/CONTEXT.md`（如存在）
+- `.devflow/STATE.md`（如存在）
+- `.devflow/CONTEXT.md`（如存在）
 
 ## 输出
 
-- `.ultimate-workflow/<req-id>/00-requirements.md`
-- 更新 `.ultimate-workflow/STATE.md`
+- `.devflow/<req-id>/00-requirements.md`
+- 更新 `.devflow/STATE.md`
 
 ## 入口门禁
 
@@ -243,7 +243,7 @@ read_file("flow/templates/00-requirements.md")
 
 ### Step 6: 生成产物并逐项核对
 
-按模板生成 `.ultimate-workflow/<req-id>/00-requirements.md`：
+按模板生成 `.devflow/<req-id>/00-requirements.md`：
 - **必须包含所有12个必填段落**（见 Step 5 提取的清单）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **不得省略或改写任何段落**

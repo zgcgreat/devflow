@@ -6,12 +6,12 @@
 
 ## R1 · 状态管理与恢复
 
-- **R1.1** 以下情况必须读取 `.ultimate-workflow/STATE.md`：进入 Standard / Strict、用户说"继续 / 下一阶段 / 执行 Txx"、阶段切换、会话恢复、发现上下文与产物不一致。
-- **R1.2** `.ultimate-workflow/STATE.md` 使用明确状态机：`当前阶段` 表示正在处理或等待确认的阶段；`阶段状态` 表示 `not_started / in_progress / waiting_user_confirmation / completed / blocked / skipped`；`上次完成阶段` 和 `下一阶段` 用于恢复。
-- **R1.3** 换 req / 回旧阶段 / 跳阶段前必须先读 `.ultimate-workflow/STATE.md` 并比对会话上下文；不一致 → 优先信任项目状态文件的内容
-- **R1.4** 每次阶段切换必须先更新 `.ultimate-workflow/STATE.md`：完成当前阶段、设置阶段状态、写入上次完成阶段和下一阶段，再进入新阶段。
+- **R1.1** 以下情况必须读取 `.devflow/STATE.md`：进入 Standard / Strict、用户说"继续 / 下一阶段 / 执行 Txx"、阶段切换、会话恢复、发现上下文与产物不一致。
+- **R1.2** `.devflow/STATE.md` 使用明确状态机：`当前阶段` 表示正在处理或等待确认的阶段；`阶段状态` 表示 `not_started / in_progress / waiting_user_confirmation / completed / blocked / skipped`；`上次完成阶段` 和 `下一阶段` 用于恢复。
+- **R1.3** 换 req / 回旧阶段 / 跳阶段前必须先读 `.devflow/STATE.md` 并比对会话上下文；不一致 → 优先信任项目状态文件的内容
+- **R1.4** 每次阶段切换必须先更新 `.devflow/STATE.md`：完成当前阶段、设置阶段状态、写入上次完成阶段和下一阶段，再进入新阶段。
 - **R1.5** 中断重启协议（会话压缩/清窗后必须执行）：
-  1. 用户说"继续"或"下一阶段" → 先读 `.ultimate-workflow/STATE.md`
+  1. 用户说"继续"或"下一阶段" → 先读 `.devflow/STATE.md`
   2. 对到 `活跃 req` + `当前阶段` + `当前 Task`
   3. **按STATE.md「🔄 压缩恢复指引」执行恢复步骤**
   4. 读当前阶段的前置产物文件（见STATE.md「恢复时必须加载的文件」表）
@@ -20,7 +20,7 @@
   7. 从最后一个已完成阶段的下一步继续，不跳过、不重做已完成的
 - **R1.6** 反重复检查：恢复中断任务时，必须读 `<task-id>-dev-snapshot.md` 的「已排除方案」段，确认下一步不与已排除方案撞车
 - **R1.7** 任务过大拆分：若执行中发现 task 体量明显过大（单 task 改动 > 10 文件 / > 500 行），应在 `03-tasks.md` 里就地拆为子任务后再继续
-- **R1.8** 经验扫描：每个 DEV 任务开工前必须扫 `.ultimate-workflow/lessons-learned.md`，检查是否有可复用经验；INTEGRATION 阶段必须提名新条目
+- **R1.8** 经验扫描：每个 DEV 任务开工前必须扫 `.devflow/lessons-learned.md`，检查是否有可复用经验；INTEGRATION 阶段必须提名新条目
 - **R1.9** Token 预算控制：进入任何阶段的首轮消息，加载的 reference/* 总行数 ≤ 150 行。超过 → 拆到后面按需拉
 - **R1.10** 产物完整性检查：恢复后必须核对「阶段进度」清单，确认所有已打钩（`[x]`）阶段的产物文件都存在。缺失 → 报告异常，不继续
 - **R1.11** 入场扫描强制门控：
@@ -176,7 +176,7 @@
 输出格式：
 ```
 ✅ <阶段> 完成
-📝 产物：.ultimate-workflow/<req-id>/<产物文件名>
+📝 产物：.devflow/<req-id>/<产物文件名>
 
 请确认产物内容是否正确：
 - <列出关键内容点，让用户快速确认>
@@ -196,7 +196,7 @@
 输出格式：
 ```
 ✅ <阶段> 完成
-📝 产物：.ultimate-workflow/<req-id>/<产物文件名>
+📝 产物：.devflow/<req-id>/<产物文件名>
 📊 STATE.md 阶段进度已更新：[x] <阶段> → <产物文件名>
 ➡️ 下一步：<下一阶段或具体动作>
 ```
@@ -207,7 +207,7 @@
 
 **每个阶段完成后，AI 必须执行以下步骤**：
 
-1. **产出产物文件** → 保存到 `.ultimate-workflow/<req-id>/`
+1. **产出产物文件** → 保存到 `.devflow/<req-id>/`
 2. **更新STATE.md**：
    - `当前阶段` 保持为当前阶段或设为下一阶段（取决于是否已经实际进入）
    - `阶段状态` 设为 `completed` / `waiting_user_confirmation` / `blocked`
@@ -261,14 +261,14 @@
 
 ## R13 · 产物完整性
 
-- **R13.1** 产物必须存放在 `.ultimate-workflow/<req-id>/` 下，确保跨会话可查找
+- **R13.1** 产物必须存放在 `.devflow/<req-id>/` 下，确保跨会话可查找
 - **R13.2** 产物文件名使用项目当前中文模板命名（如 `00-requirements.md`、`01-analysis.md`、`02-design.md`）。内部状态枚举可用英文，但产物文件名必须与模板和 README 保持一致。
 - **R13.3** 跨阶段推进时，新的产物 `/n/` → `../../` 引用旧产物，不要复制粘贴
 - **R13.4** 产物文件长度 ≤ 500 行（多数 < 200 行），超过 → 拆 `-a.md` / `-b.md`
-- **R13.5** `.ultimate-workflow/CONTEXT.md` 是通用域语言文件，存放术语表、已锁设计决策、全局约束
-- **R13.6** `.ultimate-workflow/lessons-learned.md` 是通用经验沉淀文件，存放跨 req 的可复用经验
-- **R13.7** 所有产物必须有明确的 **Req-ID 命名空间**，多需求并行时使用 `.ultimate-workflow/<id>/` 隔离
-- **R13.8** `.ultimate-workflow/STATE.md` 中记录决策日志（最近 10 条倒序），每条格式 `[YYYY-MM-DD] 内容 — 来源`
+- **R13.5** `.devflow/CONTEXT.md` 是通用域语言文件，存放术语表、已锁设计决策、全局约束
+- **R13.6** `.devflow/lessons-learned.md` 是通用经验沉淀文件，存放跨 req 的可复用经验
+- **R13.7** 所有产物必须有明确的 **Req-ID 命名空间**，多需求并行时使用 `.devflow/<id>/` 隔离
+- **R13.8** `.devflow/STATE.md` 中记录决策日志（最近 10 条倒序），每条格式 `[YYYY-MM-DD] 内容 — 来源`
 - **R13.9** **⚠️ 模板强制**：输出任何产物前必须先读取对应模板文件（`templates/*.md`），产物必须包含模板所有段落，不得省略或改写结构。占位符（如 `<req-id>`）必须替换为实际值。
 - **R13.10** **模板校验失败处理**：若发现产物遗漏模板段落，必须立即补齐后再标记完成。禁止声称"已完成"但产物不完整。
 

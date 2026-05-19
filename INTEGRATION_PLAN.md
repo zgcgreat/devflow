@@ -1,6 +1,6 @@
-# Ultimate-Workflow 增强集成方案
+# devflow 增强集成方案
 
-**目标**: 以ultimate-workflow为主，集成其他两个项目的优势特性  
+**目标**: 以devflow为主，集成其他两个项目的优势特性  
 **时间**: 2026-05-17
 
 ---
@@ -37,7 +37,7 @@
 
 #### 为什么需要？
 
-ultimate-workflow当前只有基础memory/目录，缺少：
+devflow当前只有基础memory/目录，缺少：
 - ❌ 记忆索引和健康监控
 - ❌ 决策记录(ADR)标准化
 - ❌ 已知失败模式库
@@ -48,18 +48,18 @@ ultimate-workflow当前只有基础memory/目录，缺少：
 **步骤1: 复制11个记忆文件**
 
 ```bash
-# 从supercorp-ultimate复制到ultimate-workflow
-cp supercorp-ultimate/memory-index.yaml ultimate-workflow/.ultimate-workflow/
-cp supercorp-ultimate/PROJECT_CONTEXT.md ultimate-workflow/.ultimate-workflow/memory/
-cp supercorp-ultimate/CURRENT_STATE.md ultimate-workflow/.ultimate-workflow/memory/
-cp supercorp-ultimate/DECISIONS.md ultimate-workflow/.ultimate-workflow/memory/
-cp supercorp-ultimate/KNOWN_FAILURES.md ultimate-workflow/.ultimate-workflow/memory/
-cp supercorp-ultimate/LEARNING_BACKLOG.md ultimate-workflow/.ultimate-workflow/memory/
-cp supercorp-ultimate/TEAM_PREFERENCES.md ultimate-workflow/.ultimate-workflow/memory/
-cp supercorp-ultimate/USER_PROFILE.md ultimate-workflow/.ultimate-workflow/memory/
-cp supercorp-ultimate/AGENT_NOTES.md ultimate-workflow/.ultimate-workflow/memory/
-cp supercorp-ultimate/SESSION_CLOSE_CHECKLIST.md ultimate-workflow/.ultimate-workflow/memory/
-cp supercorp-ultimate/VERIFICATION_BASELINE.md ultimate-workflow/.ultimate-workflow/memory/
+# 从supercorp-ultimate复制到devflow
+cp supercorp-ultimate/memory-index.yaml devflow/.devflow/
+cp supercorp-ultimate/PROJECT_CONTEXT.md devflow/.devflow/memory/
+cp supercorp-ultimate/CURRENT_STATE.md devflow/.devflow/memory/
+cp supercorp-ultimate/DECISIONS.md devflow/.devflow/memory/
+cp supercorp-ultimate/KNOWN_FAILURES.md devflow/.devflow/memory/
+cp supercorp-ultimate/LEARNING_BACKLOG.md devflow/.devflow/memory/
+cp supercorp-ultimate/TEAM_PREFERENCES.md devflow/.devflow/memory/
+cp supercorp-ultimate/USER_PROFILE.md devflow/.devflow/memory/
+cp supercorp-ultimate/AGENT_NOTES.md devflow/.devflow/memory/
+cp supercorp-ultimate/SESSION_CLOSE_CHECKLIST.md devflow/.devflow/memory/
+cp supercorp-ultimate/VERIFICATION_BASELINE.md devflow/.devflow/memory/
 ```
 
 **步骤2: 更新SKILL.md引用**
@@ -113,7 +113,7 @@ LearningWorkflow + Team-Skills 协同:
 
 #### 为什么需要？
 
-ultimate-workflow缺少实际模板文件，AI需要从零生成产物。
+devflow缺少实际模板文件，AI需要从零生成产物。
 
 #### 集成方案
 
@@ -121,13 +121,13 @@ ultimate-workflow缺少实际模板文件，AI需要从零生成产物。
 
 ```bash
 # 完整复制templates目录
-cp -r supercorp-ultimate/templates/ ultimate-workflow/templates/
+cp -r supercorp-ultimate/templates/ devflow/templates/
 ```
 
 **步骤2: 分类整理**
 
 ```
-ultimate-workflow/templates/
+devflow/templates/
 ├── phase-templates/          # Phase相关模板
 │   ├── strategy.md           ← Phase 0
 │   ├── requirements.md       ← Phase 1
@@ -193,8 +193,8 @@ AI基于模板生成STRATEGY.md，确保：
 **步骤1: 创建工作区结构**
 
 ```bash
-mkdir -p ultimate-workflow/.ultimate-workspace/projects
-touch ultimate-workflow/.ultimate-workspace/active-project.txt
+mkdir -p devflow/.ultimate-workspace/projects
+touch devflow/.ultimate-workspace/active-project.txt
 ```
 
 **步骤2: 创建config.yaml模板**
@@ -327,8 +327,8 @@ team: []
 **步骤1: 创建插件目录结构**
 
 ```bash
-mkdir -p ultimate-workflow/.ultimate-workflow/plugins
-cat > ultimate-workflow/.ultimate-workflow/plugins/installed.json << EOF
+mkdir -p devflow/.devflow/plugins
+cat > devflow/.devflow/plugins/installed.json << EOF
 {
   "version": "3.0",
   "plugins": []
@@ -453,7 +453,7 @@ EOF
 ### 插件市场
 
 未来规划：
-- https://plugins.ultimate-workflow.dev/
+- https://plugins.devflow.dev/
 - 分类浏览
 - 评分和评论
 - 一键安装
@@ -462,7 +462,7 @@ EOF
 **步骤4: 创建示例插件**
 
 ```bash
-mkdir -p ultimate-workflow/examples/plugins/custom-phase-9
+mkdir -p devflow/examples/plugins/custom-phase-9
 ```
 
 创建完整的Phase 9插件示例（参考unified-platform/PLUGIN_SYSTEM.md）。
@@ -509,7 +509,7 @@ mkdir -p ultimate-workflow/examples/plugins/custom-phase-9
 ```
 
 **执行流程**:
-1. 检测项目根目录是否有 `.ultimate-workflow/`
+1. 检测项目根目录是否有 `.devflow/`
 2. 判断是greenfield还是brownfield
 3. 根据情况选择入场策略
 4. 必要时请求用户确认
@@ -669,7 +669,7 @@ Security Auditor必须检查：
 
 ### 执行流程
 
-1. 读取 `.ultimate-workflow/state.md` 确定当前Phase
+1. 读取 `.devflow/state.md` 确定当前Phase
 2. 仅加载当前Phase相关的Skill和Agent
 3. Phase切换时：
    - 卸载旧Phase的Skill
@@ -699,7 +699,7 @@ Security Auditor必须检查：
 创建hooks/目录：
 
 ```bash
-mkdir -p ultimate-workflow/hooks
+mkdir -p devflow/hooks
 ```
 
 **预定义钩子**:
@@ -750,7 +750,7 @@ echo "📊 生成审查报告..."
 创建rules/目录：
 
 ```bash
-mkdir -p ultimate-workflow/rules
+mkdir -p devflow/rules
 ```
 
 **预定义规则**:
@@ -877,4 +877,4 @@ mkdir -p ultimate-workflow/rules
 
 ---
 
-**集成完成后，ultimate-workflow将成为真正的终极工程平台！**
+**集成完成后，devflow将成为真正的终极工程平台！**

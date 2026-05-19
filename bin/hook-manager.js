@@ -38,7 +38,7 @@ const HOOKS = {
     file: 'session-start.js',
     desc: '会话开始时执行',
     checkItems: [
-      '检查 .ultimate-workflow 目录',
+      '检查 .devflow 目录',
       '检查 STATE.md 状态文件',
       '检测外部工具 (gitnexus, git, npm)',
       '加载 Phase 相关规则',
@@ -79,7 +79,7 @@ function getHookDir() {
   const possiblePaths = [
     path.join(__dirname, '..', 'hooks'),
     path.join(__dirname, '..', '..', 'hooks'),
-    '.ultimate-workflow/hooks'
+    '.devflow/hooks'
   ];
   
   for (const p of possiblePaths) {
@@ -189,7 +189,7 @@ function createHookLinks(projectDir, force = false) {
   logSection('创建 Hook 链接');
   
   const skillHookDir = path.join(__dirname, '..', 'hooks');
-  const projectHookDir = path.join(projectDir, '.ultimate-workflow', 'hooks');
+  const projectHookDir = path.join(projectDir, '.devflow', 'hooks');
   
   // 确保目标目录存在
   if (!fs.existsSync(projectHookDir)) {

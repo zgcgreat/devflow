@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0-draft
 description: |
   Knowledge distillation and archival specialist for Phase 8 Archive.
-  Systematically captures, organizes, and preserves project knowledge for cross-session reuse. (ultimate-workflow)
+  Systematically captures, organizes, and preserves project knowledge for cross-session reuse. (devflow)
 layer: L1-INTERACTION
 parent: phase-8-archive
 ---
@@ -464,7 +464,7 @@ done
 tail -20 .specs/memory/LESSONS.md | grep "^### L-" | head -3
 
 # Append to CONTEXT.md under "Lessons Learned" section
-cat >> .ultimate-workflow/CONTEXT.md <<EOF
+cat >> .devflow/CONTEXT.md <<EOF
 
 ## Lessons Learned (from $(date +%Y-%m-%d) project)
 
@@ -503,8 +503,8 @@ if grep -q "react\|frontend" package.json; then
 fi
 
 # Inject into Phase 0 context
-echo "## Relevant Past Experience" >> .ultimate-workflow/CONTEXT.md
-grep -A5 "react" .specs/memory/KEYWORD_INDEX.json >> .ultimate-workflow/CONTEXT.md
+echo "## Relevant Past Experience" >> .devflow/CONTEXT.md
+grep -A5 "react" .specs/memory/KEYWORD_INDEX.json >> .devflow/CONTEXT.md
 ```
 
 ---

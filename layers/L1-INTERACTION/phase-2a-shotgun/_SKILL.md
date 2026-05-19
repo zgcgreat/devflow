@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0-draft
 description: |
   Multi-variant design generation specialist for Phase 2a.
-  Generates 4-6 design variants with clear trade-offs and AI recommendation based on maintainability/cost/UX scoring. (ultimate-workflow)
+  Generates 4-6 design variants with clear trade-offs and AI recommendation based on maintainability/cost/UX scoring. (devflow)
 layer: L1-INTERACTION
 parent: phase-2a-shotgun
 triggers:
@@ -65,13 +65,13 @@ Generate 4-6 design variants with clear trade-offs, AI recommendation based on m
 
 ```bash
 # Load Phase 2 design document
-cat .ultimate-workflow/<req-id>/02-design.md
+cat .devflow/<req-id>/02-design.md
 
 # Extract key requirements
-grep -A 5 "User Stories\|Acceptance Criteria" .ultimate-workflow/<req-id>/02-design.md
+grep -A 5 "User Stories\|Acceptance Criteria" .devflow/<req-id>/02-design.md
 
 # Check for existing UI/UX guidelines
-if [ -f ".ultimate-workflow/ui-guidelines.md" ]; then
+if [ -f ".devflow/ui-guidelines.md" ]; then
   echo "✅ UI guidelines found, will incorporate"
 else
   echo "⚠️ No UI guidelines, using default patterns"
@@ -426,7 +426,7 @@ Proceeding to generate detailed variants.
 # generate-variants.sh
 
 VARIANT_COUNT=${1:-5}
-OUTPUT_FILE=".ultimate-workflow/<req-id>/02a-design-variants.md"
+OUTPUT_FILE=".devflow/<req-id>/02a-design-variants.md"
 
 echo "# Phase 2a: Design Shotgun — $(date)" > $OUTPUT_FILE
 echo "" >> $OUTPUT_FILE
@@ -438,7 +438,7 @@ for i in $(seq 1 $VARIANT_COUNT); do
   python3 scripts/generate-variant.py \
     --variant-number $i \
     --dimensions "layout,interaction,visual" \
-    --context .ultimate-workflow/<req-id>/02-design.md \
+    --context .devflow/<req-id>/02-design.md \
     >> $OUTPUT_FILE
   
   echo "" >> $OUTPUT_FILE
@@ -608,7 +608,7 @@ USER_CHOICE=$1
 case $USER_CHOICE in
   1)
     echo "✅ Accepted recommendation (Variant #1)"
-    cp .ultimate-workflow/<req-id>/02a-design-variants.md .ultimate-workflow/<req-id>/02a-design-final.md
+    cp .devflow/<req-id>/02a-design-variants.md .devflow/<req-id>/02a-design-final.md
     echo "Moving to Phase 3..."
     ;;
   2)
@@ -700,7 +700,7 @@ This design spec feeds into Phase 3 (Task Breakdown):
 
 ```bash
 # Generate final design spec
-cat > .ultimate-workflow/<req-id>/02a-design-final.md << 'EOF'
+cat > .devflow/<req-id>/02a-design-final.md << 'EOF'
 {final design content}
 EOF
 
@@ -914,7 +914,7 @@ echo "✅ Final design specification generated"
 python3 scripts/generate-variants.py \
   --count 5 \
   --dimensions layout,interaction,visual \
-  --output .ultimate-workflow/<req-id>/02a-design-variants.md
+  --output .devflow/<req-id>/02a-design-variants.md
 ```
 
 **Scoring Calculator**:

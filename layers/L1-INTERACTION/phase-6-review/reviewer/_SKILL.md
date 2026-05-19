@@ -5,7 +5,7 @@ version: 3.0-draft
 description: |
   Three-layer adversarial code review specialist for Phase 6 Review.
   Blind Hunter / Edge Case Hunter / Acceptance Auditor pipeline.
-  Defaults to "NEEDS WORK" unless overwhelming evidence proves readiness. (ultimate-workflow)
+  Defaults to "NEEDS WORK" unless overwhelming evidence proves readiness. (devflow)
 layer: L1-INTERACTION
 parent: phase-6-review
 ---

@@ -1,12 +1,12 @@
-# GO — Ultimate Workflow v3 统一路由器
+# GO — Devflow v3 统一路由器
 
 > **AI指令**：
 > 1. 本文件是 v3 路由入口，读完后按第四步路由表匹配用户意图
 > 2. **第一条回复必须输出路由声明**（含选定的模式 Fast/Standard/Strict + 理由）
-> 3. **所有产物必须保存到 `.ultimate-workflow/<req-id>/` 下**
+> 3. **所有产物必须保存到 `.devflow/<req-id>/` 下**
 > 4. **⚠️ 所有产物必须严格按模板输出**（见 references/RULES-v3.md R19）
 >
-> 用户使用方式：`Use ultimate-workflow` 或 `@ultimate-workflow/SKILL.md` + 一句话需求
+> 用户使用方式：`Use devflow` 或 `@devflow/SKILL.md` + 一句话需求
 
 ---
 
@@ -14,7 +14,7 @@
 
 ```
 Layer 1: 交互层 (SuperCorp)
-Step 1 · 读取项目状态 (.ultimate-workflow/STATE.md)
+Step 1 · 读取项目状态 (.devflow/STATE.md)
 Step 2 · 入场检测 (entry-check.md, brownfield/greenfield)
 Step 3 · GitNexus可选检测 (detect → prompt → grep fallback)
 
@@ -65,14 +65,14 @@ Step 12 · Phase 7-8: Canary发布 + 知识归档
 
 ## Step 1 · 读取项目状态
 
-1. 尝试读 `.ultimate-workflow/STATE.md`。不存在 → 用模板创建
+1. 尝试读 `.devflow/STATE.md`。不存在 → 用模板创建
 2. 关注字段：`活跃req` / `当前阶段` / `中断任务`
 3. 如存在 `中断任务` 非空 → **优先级最高**，直接走恢复分支
 4. **初始化记忆系统**（首次使用必跑）:
-   - 检查 `.ultimate-workflow/memory/` 是否存在
+   - 检查 `.devflow/memory/` 是否存在
    - **如不存在** → 创建目录并初始化基础文件：
      ```
-     .ultimate-workflow/memory/
+     .devflow/memory/
      ├── PROJECT_CONTEXT.md    # 项目背景（待填充）
      ├── DECISIONS.md          # 历史决策（空）
      ├── KNOWN_FAILURES.md     # 已知失败（空）
@@ -80,7 +80,7 @@ Step 12 · Phase 7-8: Canary发布 + 知识归档
      └── domain-skills/        # 领域技能沉淀 ⭐v3新增
          ```
    - **如存在** → 加载 PROJECT_CONTEXT.md、DECISIONS.md、KNOWN_FAILURES.md、LESSONS.md
-5. **多项目支持**: 每个项目独立 `.ultimate-workflow/` 目录，记忆系统按项目隔离
+5. **多项目支持**: 每个项目独立 `.devflow/` 目录，记忆系统按项目隔离
 
 ---
 
@@ -200,7 +200,7 @@ Phase 0结束后，可设定Token预算上限：
 **执行流程**:
 1. **识别灰色地带**: 扫描`01-analysis.md`，标记未明确的技术决策点
 2. **交互式问答**: 对每个歧义点向用户提问（提供选项+优缺点）
-3. **生成CONTEXT.md**: 将用户决策写入 `.ultimate-workflow/<req-id>/CONTEXT.md`
+3. **生成CONTEXT.md**: 将用户决策写入 `.devflow/<req-id>/CONTEXT.md`
 4. **输出决策报告**: 显示已确认决策数、未决项、下一步建议
 
 **常见歧义领域**:
@@ -232,7 +232,7 @@ Phase 0结束后，可设定Token预算上限：
 | 1 | CDN选择 | 静态资源分发 | 根据用户地域决定 |
 
 ### 输出文件
-- ✅ `.ultimate-workflow/<req-id>/CONTEXT.md` ← 已生成
+- ✅ `.devflow/<req-id>/CONTEXT.md` ← 已生成
 ```
 
 **门控G2.5**: Decision Clarity Gate
@@ -534,7 +534,7 @@ Mode: <Fast/Standard/Strict>
 | `references/gate-rules.md` | 保留 + R4升级 |
 | `references/mode-rules.md` | 保留 |
 | `references/entry-check.md` | 保留 |
-| `.ultimate-workflow/` 产物 | **零改动**，v3直接读取 |
+| `.devflow/` 产物 | **零改动**，v3直接读取 |
 
 ---
 

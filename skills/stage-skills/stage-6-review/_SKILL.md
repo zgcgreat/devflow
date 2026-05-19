@@ -18,18 +18,18 @@ dependencies:
 
 ## 输入
 
-- `.ultimate-workflow/<req-id>/01-analysis.md`（或Delta版）
-- `.ultimate-workflow/<req-id>/02-design.md`（或Delta版）
-- `.ultimate-workflow/<req-id>/03-tasks.md`
-- `.ultimate-workflow/<req-id>/05-test-report.md`
+- `.devflow/<req-id>/01-analysis.md`（或Delta版）
+- `.devflow/<req-id>/02-design.md`（或Delta版）
+- `.devflow/<req-id>/03-tasks.md`
+- `.devflow/<req-id>/05-test-report.md`
 - `git diff`（本次改动的完整diff）
-- `.ultimate-workflow/CONTEXT.md`
+- `.devflow/CONTEXT.md`
 
 ## 输出
 
 - 审查问题清单（按轮次分类）
 - 修复记录
-- 更新 `.ultimate-workflow/STATE.md`
+- 更新 `.devflow/STATE.md`
 
 ## 入口门禁
 
@@ -51,7 +51,7 @@ IF 测试报告结论为"不通过":
 
 #### 1.1 读取需求分析（AC基线）
 
-从 `.ultimate-workflow/<req-id>/01-analysis.md` 提取：
+从 `.devflow/<req-id>/01-analysis.md` 提取：
 - **AC列表**：所有验收标准（用于验证实现是否覆盖）
 - **非功能需求**：性能/安全要求（用于审查是否达标）
 
@@ -62,7 +62,7 @@ IF 测试报告结论为"不通过":
 
 #### 1.2 读取方案设计
 
-从 `.ultimate-workflow/<req-id>/02-design.md` 提取：
+从 `.devflow/<req-id>/02-design.md` 提取：
 - **技术决策**：设计时的架构选择（用于验证实现是否遵循）
 - **数据流/架构图**：预期的调用链（用于验证实现是否符合）
 - **ADR列表**：架构决策记录（用于验证实现是否遵守）
@@ -74,7 +74,7 @@ IF 测试报告结论为"不通过":
 
 #### 1.3 读取任务拆分与dev-log
 
-从 `.ultimate-workflow/<req-id>/03-tasks.md` 和所有 `*-dev-log.md` 提取：
+从 `.devflow/<req-id>/03-tasks.md` 和所有 `*-dev-log.md` 提取：
 - **任务列表**：所有task及其write_files范围
 - **dev-log**：每个任务的实施过程、verify输出、6维自查结果
 
@@ -85,7 +85,7 @@ IF 测试报告结论为"不通过":
 
 #### 1.4 读取测试报告
 
-从 `.ultimate-workflow/<req-id>/05-test-report.md` 提取：
+从 `.devflow/<req-id>/05-test-report.md` 提取：
 - **测试结果**：各轮测试通过率
 - **AC覆盖矩阵**：每个AC的测试状态
 - **性能指标**：P50/P95/P99响应时间
@@ -327,7 +327,7 @@ read_file("templates/06-审查报告.md")
 
 ### Step 7: 生成审查报告并逐项核对
 
-按模板生成 `.ultimate-workflow/<req-id>/06-审查报告.md`：
+按模板生成 `.devflow/<req-id>/06-审查报告.md`：
 - **必须包含模板所有3个段落**（见 Step 6 提取的清单）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **🔴问题必须全部修复**

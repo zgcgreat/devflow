@@ -2,7 +2,7 @@
 
 > **阶段定位**：前端项目的视觉和交互设计
 > **前置条件**：02-design.md 已完成，项目类型为前端
-> **后置产物**：`.ultimate-workflow/<req-id>/02a-ui-design.md`
+> **后置产物**：`.devflow/<req-id>/02a-ui-design.md`
 
 ## Skill元信息
 
@@ -17,17 +17,17 @@ dependencies:
 
 ## 输入
 
-- `.ultimate-workflow/<req-id>/00-requirements.md`
-- `.ultimate-workflow/<req-id>/01-analysis.md`
-- `.ultimate-workflow/<req-id>/02-design.md`（必读 `## 0` 段）
-- `.ultimate-workflow/CONTEXT.md`
+- `.devflow/<req-id>/00-requirements.md`
+- `.devflow/<req-id>/01-analysis.md`
+- `.devflow/<req-id>/02-design.md`（必读 `## 0` 段）
+- `.devflow/CONTEXT.md`
 - `references/reference/ui-aesthetics.md`（按节读取）
 - `references/reference/ui-anti-patterns.md`（75行可全读）
 
 ## 输出
 
-- `.ultimate-workflow/<req-id>/02a-ui-design.md`
-- 更新 `.ultimate-workflow/STATE.md`
+- `.devflow/<req-id>/02a-ui-design.md`
+- 更新 `.devflow/STATE.md`
 
 ## 入口门禁
 
@@ -260,7 +260,7 @@ read_file("templates/02a-ui-design.md")
 
 ### Step 10: 生成产物并逐项核对
 
-按模板生成 `.ultimate-workflow/<req-id>/02a-ui-design.md`：
+按模板生成 `.devflow/<req-id>/02a-ui-design.md`：
 - **必须包含模板所有7个段落**（见 Step 9 提取的清单）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **反模式检查必须全部通过**

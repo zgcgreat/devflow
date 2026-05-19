@@ -1,18 +1,18 @@
-# Ultimate-Workflow v3.1 完整溯源报告
+# devflow v3.1 完整溯源报告
 
 > **生成时间**: 2026-05-17  
 > **分析范围**: E:\LLM\skills 下所有项目  
-> **目标项目**: ultimate-workflow  
+> **目标项目**: devflow  
 > **目的**: 详细梳理每个功能、特性、文件的来源和修改情况
 
 ---
 
 ## 📊 总体架构概览
 
-### Ultimate-Workflow 的融合策略
+### devflow 的融合策略
 
 ```
-Ultimate-Workflow v3.1 = 
+devflow v3.1 = 
   Layer 1 (交互层): SuperCorp Ultimate (40%) + Mega-Workflow (30%) + 原创 (30%)
   Layer 2 (引擎层): MEGA-WORKFLOW (50%) + DevFlow Kit (30%) + 原创 (20%)
   Layer 3 (架构层): Mega-Workflow (60%) + Get-Shit-Done (20%) + 原创 (20%)
@@ -312,8 +312,8 @@ Ultimate-Workflow v3.1 =
 
 | 内容 | 来源项目 | 原始文件 | 修改程度 | 说明 |
 |------|---------|---------|---------|------|
-| 项目初始化逻辑 | supercorp-ultimate | bin/init.js | ⚠️ 中度修改 | 适配ultimate-workflow路径 |
-| .ultimate-workflow目录创建 | supercorp-ultimate | bin/init.js | ✅ 几乎未改 | state.md/memory目录 |
+| 项目初始化逻辑 | supercorp-ultimate | bin/init.js | ⚠️ 中度修改 | 适配devflow路径 |
+| .devflow目录创建 | supercorp-ultimate | bin/init.js | ✅ 几乎未改 | state.md/memory目录 |
 | 记忆系统初始化 | devflow-kit | SKILL.md Step 1 | ⚠️ 轻度修改 | 4个基础文件 |
 
 ---
@@ -453,7 +453,7 @@ Ultimate-Workflow v3.1 =
 
 | 文件 | 来源项目 | 原始文件 | 修改程度 | 说明 |
 |------|---------|---------|---------|------|
-| PROJECT_CONTEXT.md | devflow-kit | .ultimate-workflow/memory/PROJECT_CONTEXT.md | ✅ 直接引用 | 项目背景模板 |
+| PROJECT_CONTEXT.md | devflow-kit | .devflow/memory/PROJECT_CONTEXT.md | ✅ 直接引用 | 项目背景模板 |
 | DECISIONS.md | mega-workflow | layer-6-memory/DECISIONS.md | ✅ 直接引用 | ADR风格决策记录 |
 | KNOWN_FAILURES.md | mega-workflow | layer-6-memory/KNOWN_FAILURES.md | ✅ 直接引用 | 失败模式库 |
 
@@ -497,7 +497,7 @@ Ultimate-Workflow v3.1 =
 
 | 内容 | 来源项目 | 原始文件 | 修改程度 | 说明 |
 |------|---------|---------|---------|------|
-| 工作区结构 | unified-platform | MULTI_PROJECT_MANAGEMENT.md | ⚠️ 中度修改 | 适配ultimate-workflow路径 |
+| 工作区结构 | unified-platform | MULTI_PROJECT_MANAGEMENT.md | ⚠️ 中度修改 | 适配devflow路径 |
 | 7个管理命令 | unified-platform | MULTI_PROJECT_MANAGEMENT.md | ⚠️ 轻度修改 | 保持命令体系 |
 | 状态同步机制 | unified-platform | MULTI_PROJECT_MANAGEMENT.md | ✅ 几乎未改 | Checkpoint保存/恢复 |
 | 跨项目知识共享 | unified-platform | MULTI_PROJECT_MANAGEMENT.md | ⚠️ 轻度修改 | 全局知识库概念 |
@@ -582,7 +582,7 @@ Ultimate-Workflow v3.1 =
 
 ### 2. LearningWorkflow是最大创新
 
-**LearningWorkflow自进化系统是ultimate-workflow的核心竞争力**：
+**LearningWorkflow自进化系统是devflow的核心竞争力**：
 - 从caveman的"压缩学习"理念获得灵感
 - 从team-skills的记忆系统获得启发
 - 但**完全重新设计和实现**，无任何代码复用
@@ -590,19 +590,19 @@ Ultimate-Workflow v3.1 =
 ### 3. 渐进式披露来自devflow-kit但有重大增强
 
 - devflow-kit提供了基础的渐进式披露概念
-- ultimate-workflow增加了**Token监控触发条件**和**Phase→Skill加载映射表**
+- devflow增加了**Token监控触发条件**和**Phase→Skill加载映射表**
 - 这是**实质性增强**，而非简单复制
 
 ### 4. Hook系统来自caveman但大幅简化
 
 - caveman有复杂的Hook系统（SessionStart/UserPromptSubmit/Statusline）
-- ultimate-workflow保留了核心功能，但**移除了caveman-specific逻辑**
+- devflow保留了核心功能，但**移除了caveman-specific逻辑**
 - 这是**合理的简化和适配**
 
 ### 5. 多项目管理和插件系统直接来自unified-platform
 
 - 这两个功能是**唯一大量直接引用外部代码的部分**
-- 但做了**路径适配和格式调整**以符合ultimate-workflow架构
+- 但做了**路径适配和格式调整**以符合devflow架构
 - 属于**合理的功能集成**
 
 ---
@@ -621,7 +621,7 @@ Ultimate-Workflow v3.1 =
 
 ### 致谢清单
 
-ultimate-workflow v3.1感谢以下开源项目的贡献：
+devflow v3.1感谢以下开源项目的贡献：
 
 1. **mega-workflow** - 三层Agent架构、Wave并行执行、PartyMode共识
 2. **supercorp-ultimate** - 零配置初始化、YC六问、三层对抗审查
@@ -638,7 +638,7 @@ ultimate-workflow v3.1感谢以下开源项目的贡献：
 
 ## 📝 结论
 
-### Ultimate-Workflow v3.1的本质
+### devflow v3.1的本质
 
 **不是简单的代码拼接，而是深度融合和创新**：
 
@@ -650,7 +650,7 @@ ultimate-workflow v3.1感谢以下开源项目的贡献：
 ### 与其他项目的关系
 
 ```
-Ultimate-Workflow v3.1 = 
+devflow v3.1 = 
   架构设计(原创) + 
   核心引擎(mega-workflow改造) + 
   交互层(supercorp-ultimate简化) + 
@@ -663,7 +663,7 @@ Ultimate-Workflow v3.1 =
 
 ### 最终评价
 
-**Ultimate-Workflow v3.1是一个合法的、有价值的、创新的融合项目**：
+**devflow v3.1是一个合法的、有价值的、创新的融合项目**：
 - ✅ 35%完全原创代码
 - ✅ 6大核心创新功能
 - ✅ 所有引用都注明来源
