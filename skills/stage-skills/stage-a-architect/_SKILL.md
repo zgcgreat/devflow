@@ -2,7 +2,7 @@
 
 > **阶段定位**：建立或更新项目级架构文档
 > **前置条件**：无（可随时执行）
-> **后置产物**：`.devflow-kit/system-architecture.md`
+> **后置产物**：`.ultimate-workflow/system-architecture.md`
 
 ## Skill元信息
 
@@ -17,15 +17,15 @@ dependencies:
 
 ## 输入
 
-- `.devflow-kit/CONTEXT.md`
-- `.devflow-kit/需求LOG.md`（如存在）
-- `.devflow-kit/archive/*/02-design.md`（抽样读取§9段）
+- `.ultimate-workflow/CONTEXT.md`
+- `.ultimate-workflow/需求LOG.md`（如存在）
+- `.ultimate-workflow/archive/*/02-design.md`（抽样读取§9段）
 - `src/` 顶层结构
 - `package.json` / 依赖文件
 
 ## 输出
 
-- `.devflow-kit/system-architecture.md`（新建或更新）
+- `.ultimate-workflow/system-architecture.md`（新建或更新）
 
 ## 入口门禁
 
@@ -54,10 +54,10 @@ cat go.mod
 
 ### Step 2: 读取历史ADR
 
-从 `.devflow-kit/archive/*/02-design.md` 的 `## 9. 架构沉淀建议` 段提取：
+从 `.ultimate-workflow/archive/*/02-design.md` 的 `## 9. 架构沉淀建议` 段提取：
 
 ```markdown
-grep -r "## 9" .devflow-kit/archive/*/02-design.md
+grep -r "## 9" .ultimate-workflow/archive/*/02-design.md
 ```
 
 **汇总**：
@@ -69,7 +69,7 @@ grep -r "## 9" .devflow-kit/archive/*/02-design.md
 
 **⚠️ 强制规则**：输出前必须先读取模板文件 `templates/system-architecture.md`。
 
-按模板生成 `.devflow-kit/system-architecture.md`：
+按模板生成 `.ultimate-workflow/system-architecture.md`：
 - **必须包含模板所有6个章节**（§1-§6）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **不得省略任何章节**
@@ -99,7 +99,7 @@ grep -r "## 9" .devflow-kit/archive/*/02-design.md
 | ADR-001 | 使用PostgreSQL | Accepted | REQ-001 |
 | ADR-002 | Redis缓存策略 | Accepted | REQ-003 |
 
-**每个ADR链接到详细文档**：`.devflow-kit/adr/NNN-title.md`
+**每个ADR链接到详细文档**：`.ultimate-workflow/adr/NNN-title.md`
 
 #### §4 跨模块契约
 
@@ -184,7 +184,7 @@ grep -r "## 9" .devflow-kit/archive/*/02-design.md
 - 需求描述："修复架构Critical问题：循环依赖"
 
 **选项2**：仅记录
-- 将问题清单追加到 `.devflow-kit/system-architecture.md` 末尾
+- 将问题清单追加到 `.ultimate-workflow/system-architecture.md` 末尾
 - 标记为「待优化」
 
 **选项3**：重新扫描

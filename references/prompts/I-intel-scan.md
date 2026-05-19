@@ -18,7 +18,7 @@
 
 ## 输出
 
-- **⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/CONTEXT.md` 模板的完整结构输出，填入第 1 步的发现，**保存到 `.devflow-kit/CONTEXT.md`**。**不得省略或改写任何段落**。每个字段都要有具体证据（文件路径 + 行号）。
+- **⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/CONTEXT.md` 模板的完整结构输出，填入第 1 步的发现，**保存到 `.ultimate-workflow/CONTEXT.md`**。**不得省略或改写任何段落**。每个字段都要有具体证据（文件路径 + 行号）。
 - `STATE.md` 的 `last_intel_scan: <YYYY-MM-DD>` 字段更新
 
 ## 步骤
@@ -33,7 +33,7 @@
 
 | 文档 | 路径 | 来自哪个生态 |
 |---|---|---|
-| `CONTEXT.md` | `.devflow-kit/` | flow-kit 自己 |
+| `CONTEXT.md` | `.ultimate-workflow/` | flow-kit 自己 |
 | `AGENTS.md` | 仓库根 | OpenAI Codex / 标准 agents 协议 |
 | `CLAUDE.md` | 仓库根 / `.claude/` | Anthropic Claude Code |
 | `.cursor/rules/*.md` | `.cursor/` | Cursor IDE |
@@ -244,9 +244,9 @@ ls Dockerfile docker-compose.* k8s/ helm/  → 容器化
 grep -l "DATABASE_URL\|REDIS_URL" .env*    → 服务依赖
 ```
 
-### 2. 生成 `.devflow-kit/CONTEXT.md`
+### 2. 生成 `.ultimate-workflow/CONTEXT.md`
 
-用 `@devflow-kit/templates/CONTEXT.md` 模板，填入第 1 步的发现，**保存到 `.devflow-kit/CONTEXT.md`**。每个字段都要有具体证据（文件路径 + 行号）。
+用 `@devflow-kit/templates/CONTEXT.md` 模板，填入第 1 步的发现，**保存到 `.ultimate-workflow/CONTEXT.md`**。每个字段都要有具体证据（文件路径 + 行号）。
 
 `CONTEXT.md` 必须同时包含：
 
@@ -258,9 +258,9 @@ grep -l "DATABASE_URL\|REDIS_URL" .env*    → 服务依赖
 **禁止**填空话："使用了一些工具" / "标准结构"——这些都要换成具体的「`src/utils/date.ts:12`」级证据。
 **禁止过度压缩**：不能因为CONTEXT.md 长度预算而删除项目结构树；如文件过长，优先压缩历史决策和旧技术债，不压缩项目结构。
 
-### 3. 写 `.devflow-kit/STATE.md`
+### 3. 写 `.ultimate-workflow/STATE.md`
 
-用以下内容写入 `.devflow-kit/STATE.md`（如果文件已存在，只更新或添加相关字段）：
+用以下内容写入 `.ultimate-workflow/STATE.md`（如果文件已存在，只更新或添加相关字段）：
 ### 4. 给用户一份扫描总结
 
 ```markdown

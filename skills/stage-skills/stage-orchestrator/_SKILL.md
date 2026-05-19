@@ -43,7 +43,7 @@
 GO.md 路由到: stage-0-confirm
   ↓ 加载: agent-skills/skills/stage-0-confirm/_SKILL.md
   ↓ 执行: 需求澄清 + 模式判定
-  ↓ 产物: .devflow-kit/REQ-001/00-requirements.md
+  ↓ 产物: .ultimate-workflow/REQ-001/00-requirements.md
 ```
 
 ### 方式2：直接调用stage skill
@@ -108,7 +108,7 @@ dependencies:
 
 ## 状态管理
 
-所有stage共享 `.devflow-kit/STATE.md`：
+所有stage共享 `.ultimate-workflow/STATE.md`：
 
 ```markdown
 当前阶段: task

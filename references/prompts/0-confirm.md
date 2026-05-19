@@ -11,7 +11,7 @@
 ```
 □ 入场检测已输出检测结果框？
 □ 入场检测结果不是"待用户确认"？
-□ 已读取 .devflow-kit/STATE.md（如存在）？
+□ 已读取 .ultimate-workflow/STATE.md（如存在）？
 □ 已加载 idea-refine/_SKILL.md？
 □ 已加载 development-core/_SKILL.md？
 ```
@@ -27,7 +27,7 @@
 ## 输入
 
 - 用户一句话（可能很模糊，例如"加个深色模式"）
-- 已有项目（如有）：`@README.md`、`@.devflow-kit/`
+- 已有项目（如有）：`@README.md`、`@.ultimate-workflow/`
 
 ## 你的职责
 
@@ -35,16 +35,16 @@
 
    > **来源**: 融合 spec-kit SDD 体系 — 项目宪法是所有设计和实现的最高约束
 
-   检查 `.devflow-kit/constitution.md` 是否存在：
+   检查 `.ultimate-workflow/constitution.md` 是否存在：
 
    - **不存在** → 使用 `@devflow-kit/templates/spec-constitution-template.md` 创建：
      1. 读取模板
      2. 根据项目类型填充「项目特定约束」段（技术栈要求、安全要求、性能标准）
      3. 其他段落保留模板原样（9 条核心原则不可修改）
-     4. 保存到 `.devflow-kit/constitution.md`
+     4. 保存到 `.ultimate-workflow/constitution.md`
      5. 告知用户：
         ```
-        📜 已创建项目宪法 .devflow-kit/constitution.md
+        📜 已创建项目宪法 .ultimate-workflow/constitution.md
            - 包含 9 条核心原则（库优先 / CLI 接口 / 测试先行 / 集成测试 / 可观测性 / 版本管理 / 简单性 / 反抽象 / 宪法优先级）
            - 所有后续设计和实现受此宪法约束
            - 如需修改原则，走修订流程（文档化理由 → 审核 → 兼容性评估）
@@ -62,7 +62,7 @@
 1. **自动生成 req-id**（用户**不需要**提供）：
    - 从用户描述提取核心关键词，转成 kebab-case（小写、短横线分隔、英文）
    - 长度 2~4 个词。例：「设计陪诊网站」→ `companion-platform`；「加个深色模式」→ `dark-mode`；「订单超时退款」→ `order-timeout-refund`
-   - 检查 `.devflow-kit/<id>/` 不存在，若冲突自动加序号 `<id>-2`、`<id>-3`
+   - 检查 `.ultimate-workflow/<id>/` 不存在，若冲突自动加序号 `<id>-2`、`<id>-3`
    - 在反问的第一条消息里向用户**显式声明**：
      ```
      ✅ 自动生成 req-id：`<id>`（不满意请告诉我新的，否则继续。）
@@ -113,7 +113,7 @@
 
    #### 2.3 system-architecture.md 不存在的特殊处理
 
-   如果检测到架构级变更但 `.devflow-kit/system-architecture.md` 不存在（项目从未跑过 A-architect）：
+   如果检测到架构级变更但 `.ultimate-workflow/system-architecture.md` 不存在（项目从未跑过 A-architect）：
 
    - 选项 1 改为："✅ 先跑 `@A-architect` 建立项目级架构文档（**这是首次建立 · 一次性投资**）"
    - 选项 2 不变
@@ -177,7 +177,7 @@
 
 7. **范围排除**：明确写出**这次不做什么**。
 
-8. **生成 00-requirements.md**：**⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/00-requirements.md` 模板的完整结构输出，填好后保存到 `.devflow-kit/<req-id>/00-requirements.md`（id 来自步骤 1）。**不得省略或改写任何段落**。
+8. **生成 00-requirements.md**：**⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/00-requirements.md` 模板的完整结构输出，填好后保存到 `.ultimate-workflow/<req-id>/00-requirements.md`（id 来自步骤 1）。**不得省略或改写任何段落**。
 
 9. **路径建议**：模式已在路由声明中由用户确认。此处基于影响面判定，在已确认的模式下建议具体走哪些阶段：
 
@@ -199,9 +199,9 @@
 
 ## 输出
 
-- `.devflow-kit/<req-id>/00-requirements.md`（**必须严格按模板格式输出**）
+- `.ultimate-workflow/<req-id>/00-requirements.md`（**必须严格按模板格式输出**）
 - 一段路径建议（在已确认模式下建议具体阶段），并询问用户确认
-- **更新 `.devflow-kit/STATE.md`**：
+- **更新 `.ultimate-workflow/STATE.md`**：
   - `活跃 Req` 改为 `<req-id>`
   - `当前阶段` 设为 `confirm`
   - `阶段状态` 设为 `waiting_user_confirmation`
@@ -252,7 +252,7 @@
 
 ```
 ✅ 需求确认 完成
-📝 产物：.devflow-kit/<req-id>/00-requirements.md
+📝 产物：.ultimate-workflow/<req-id>/00-requirements.md
 📊 STATE.md 阶段进度已更新：[x] 需求确认 → 00-requirements.md
 
 请确认需求确认书内容：

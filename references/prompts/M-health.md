@@ -25,8 +25,8 @@ Maintenance Engineer。**只产健康报告 + 改造建议清单，不直接改�
 ## 输入
 
 - 仓库根（不限单一 req）
-- `@.devflow-kit/CONTEXT.md`（含技术栈 + 团队偏好）
-- `@.devflow-kit/lessons-learned.md`（已记录的失败教训）
+- `@.ultimate-workflow/CONTEXT.md`（含技术栈 + 团队偏好）
+- `@.ultimate-workflow/lessons-learned.md`（已记录的失败教训）
 - 最近 N 次的 `archive/<date>-<name>/` 归档（看历史趋势）
 - 当前 git log 最近 30 天
 
@@ -64,7 +64,7 @@ Maintenance Engineer。**只产健康报告 + 改造建议清单，不直接改�
 - **架构 Mermaid 图** — 红/黄/绿色码 + 循环依赖
 - **技术债优先级矩阵** — Pain × Spread
 
-把工具输出**原样**贴入 `.devflow-kit/health/<YYYY-MM-DD>-HEALTH.md`。
+把工具输出**原样**贴入 `.ultimate-workflow/health/<YYYY-MM-DD>-HEALTH.md`。
 
 ### 步骤 2.5 · 冗余巡检（brooks-lint 没覆盖的维度 · 装/未装都要跑）
 
@@ -72,7 +72,7 @@ Maintenance Engineer。**只产健康报告 + 改造建议清单，不直接改�
 
 #### 2.5.1 语言检测
 
-读 `.devflow-kit/CONTEXT.md`「技术栈」段 + 扫清单文件定主语言：
+读 `.ultimate-workflow/CONTEXT.md`「技术栈」段 + 扫清单文件定主语言：
 
 | 清单文件 | 语言 |
 |---|---|
@@ -97,7 +97,7 @@ Maintenance Engineer。**只产健康报告 + 改造建议清单，不直接改�
 
 **执行策略**：
 
-1. **优先 `jscpd`**（全语言 · 5 分钟出结果）：`npx jscpd src/ --min-lines 5 --min-tokens 50 --reporters json --output .devflow-kit/health/tmp/`
+1. **优先 `jscpd`**（全语言 · 5 分钟出结果）：`npx jscpd src/ --min-lines 5 --min-tokens 50 --reporters json --output .ultimate-workflow/health/tmp/`
 2. **再跑语言原生工具**（按上表任选 1-2 个）
 3. 工具未装 → 提示用户：`ℹ️ 需要跑《<cmd>》，是否授权自动 npx / pip install？`（2 次拒绝 → 进 2.5.3）
 
@@ -149,25 +149,25 @@ AI 用 grep + import 分析画一个简化 Mermaid 依赖图，标出循环依�
 
 ### 步骤 4 · 输出健康报告
 
-使用 `@devflow-kit/templates/health-check.md` 模板，**⚠️ 强制要求**：必须严格按模板完整结构输出，写入 `.devflow-kit/health/<YYYY-MM-DD>-HEALTH.md`。**不得省略或改写任何段落**。
+使用 `@devflow-kit/templates/health-check.md` 模板，**⚠️ 强制要求**：必须严格按模板完整结构输出，写入 `.ultimate-workflow/health/<YYYY-MM-DD>-HEALTH.md`。**不得省略或改写任何段落**。
 
 必须填齐：综合分、6 维生产代码风险、6 维测试代码风险、架构图、冗余巡检、技术债优先级、行动建议、与上次对比、反哺记录。工具输出可原样贴入对应段；未装工具时必须标明“内置回退”。
 
 ### 步骤 5 · 反哺到 flow-kit 工件
 
 - 🔴 Critical → 自动开新需求（编号如 `health-fix-2026-q1`），AI 进入 `0-confirm` 流程产 00-requirements.md
-- 🟡 Scheduled → 追加到 `.devflow-kit/CONTEXT.md` 的「技术债」段
-- 🟢 Monitored → 追加到 `.devflow-kit/lessons-learned.md`（用 `观察` 类型 entry）
-- 综合分趋势 → 长期保留在 `.devflow-kit/health/` 目录，可画图
+- 🟡 Scheduled → 追加到 `.ultimate-workflow/CONTEXT.md` 的「技术债」段
+- 🟢 Monitored → 追加到 `.ultimate-workflow/lessons-learned.md`（用 `观察` 类型 entry）
+- 综合分趋势 → 长期保留在 `.ultimate-workflow/health/` 目录，可画图
 - **冗余巡检特殊处理**：
   - 🔴 未用导出 / 死分支 → 合并到 health-fix req（不单开）
-  - 🟡 重复块 → 记 `.devflow-kit/CONTEXT.md`「技术债」段，标"待抽公共函数"
+  - 🟡 重复块 → 记 `.ultimate-workflow/CONTEXT.md`「技术债」段，标"待抽公共函数"
   - 🟡 未用依赖 → **写到 CONTEXT.md「禁动清单」段**（标"下次清理窗口移除"），避免 AI 再次为已被移除的库写代码
   - 🟢 关联 `A-evolve` 下次同步时**主动提醒**：有 M 条没用的导出在 CONTEXT.md「既有抽象索引」里还列着，建议清理
 
 ## 输出
 
-- `.devflow-kit/health/<YYYY-MM-DD>-HEALTH.md`（必产，**必须严格按 `@devflow-kit/templates/health-check.md` 模板完整结构输出**）
+- `.ultimate-workflow/health/<YYYY-MM-DD>-HEALTH.md`（必产，**必须严格按 `@devflow-kit/templates/health-check.md` 模板完整结构输出**）
 - 0~N 个新需求 提案（仅 Critical 项）
 - CONTEXT.md / lessons-learned.md 的追加（自动）
 
@@ -185,7 +185,7 @@ AI 用 grep + import 分析画一个简化 Mermaid 依赖图，标出循环依�
 - ⏳ 综合分有「与上次对比」段
 - ⏳ Critical 项已生成 health-fix req 提案
 - ⏳ 未用依赖已写进 CONTEXT.md「禁动清单」（避免 AI 再次使用）
-- ⏳ 报告归入 `.devflow-kit/health/` 目录
+- ⏳ 报告归入 `.ultimate-workflow/health/` 目录
 
 ## 触发下一步
 

@@ -8,9 +8,9 @@
 
 ## 输入
 
-- `@.devflow-kit/<req-id>/01-analysis.md`
-- `@.devflow-kit/<req-id>/02-design.md`（**必读 `## 0. 技术栈选定`**——任务的 verify 命令、依赖管理、目录结构必须按选定的栈写）
-- `@.devflow-kit/CONTEXT.md`
+- `@.ultimate-workflow/<req-id>/01-analysis.md`
+- `@.ultimate-workflow/<req-id>/02-design.md`（**必读 `## 0. 技术栈选定`**——任务的 verify 命令、依赖管理、目录结构必须按选定的栈写）
+- `@.ultimate-workflow/CONTEXT.md`
 
 ## 入口门禁（Artifact Preflight）
 
@@ -115,8 +115,8 @@
 
 ## 输出
 
-- `.devflow-kit/<req-id>/03-tasks.md`（**必须严格按模板格式输出**，包含所有任务的 XML 块 + 执行顺序）
-- **更新 `.devflow-kit/STATE.md`**：
+- `.ultimate-workflow/<req-id>/03-tasks.md`（**必须严格按模板格式输出**，包含所有任务的 XML 块 + 执行顺序）
+- **更新 `.ultimate-workflow/STATE.md`**：
   - `当前阶段` 设为 `task`
   - `阶段状态` 设为 `completed` 或 `blocked`
   - `上次完成阶段` 设为 `task`
@@ -144,7 +144,7 @@
 
 ```
 ✅ 任务拆分 完成
-📝 产物：.devflow-kit/<req-id>/03-tasks.md
+📝 产物：.ultimate-workflow/<req-id>/03-tasks.md
 📊 STATE.md 阶段进度已更新：[x] 任务拆分 → 03-tasks.md
 
 任务统计：
@@ -179,7 +179,7 @@
 2. 如用户确认：
    - 读取 `@devflow-kit/templates/03a-implementation-plan.md` 模板
    - 为每个任务生成详细的实施计划
-   - 保存到 `.devflow-kit/<req-id>/03a-implementation-plan.md`
+   - 保存到 `.ultimate-workflow/<req-id>/03a-implementation-plan.md`
    - 用户 review 确认后进入开发
 3. 如用户跳过：直接进入 `@devflow-kit/references/prompts/4-dev.md`
 

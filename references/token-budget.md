@@ -115,7 +115,7 @@
 
 | 类型 | 路径 | 加载方式 |
 |---|------|---|
-| SPEC（项目产物）| `.devflow-kit/<id>/*.md` | 整读OK，但优先读取关键段落 |
+| SPEC（项目产物）| `.ultimate-workflow/<id>/*.md` | 整读OK，但优先读取关键段落 |
 | REFERENCE（查阅型）| `references/reference/*.md` | **禁止整读**，只读需要的节 |
 | TEMPLATE / PROMPT | `templates|references/prompts/*.md` | 整读OK（必须确保格式正确） |
 | STAGE SKILL | `skills/stage-skills/stage-*/*_SKILL.md` | 整读OK（执行逻辑所在） |

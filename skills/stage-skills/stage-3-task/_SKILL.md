@@ -2,7 +2,7 @@
 
 > **阶段定位**：将设计拆分为可并行的原子任务，并生成详细实施计划
 > **前置条件**：02-design.md 已完成
-> **后置产物**：`.devflow-kit/<req-id>/03-tasks.md` + `.devflow-kit/<req-id>/03a-implementation-plan.md`
+> **后置产物**：`.ultimate-workflow/<req-id>/03-tasks.md` + `.ultimate-workflow/<req-id>/03a-implementation-plan.md`
 
 ## Skill元信息
 
@@ -17,15 +17,15 @@ dependencies:
 
 ## 输入
 
-- `.devflow-kit/<req-id>/01-analysis.md`
-- `.devflow-kit/<req-id>/02-design.md`（必读 `## 0. 技术栈选定` + `## 0.5.1 触碰模块`）
-- `.devflow-kit/CONTEXT.md`
+- `.ultimate-workflow/<req-id>/01-analysis.md`
+- `.ultimate-workflow/<req-id>/02-design.md`（必读 `## 0. 技术栈选定` + `## 0.5.1 触碰模块`）
+- `.ultimate-workflow/CONTEXT.md`
 
 ## 输出
 
-- `.devflow-kit/<req-id>/03-tasks.md`
-- `.devflow-kit/<req-id>/03a-implementation-plan.md` ⚠️ **必填**
-- 更新 `.devflow-kit/STATE.md`
+- `.ultimate-workflow/<req-id>/03-tasks.md`
+- `.ultimate-workflow/<req-id>/03a-implementation-plan.md` ⚠️ **必填**
+- 更新 `.ultimate-workflow/STATE.md`
 
 ## 入口门禁
 
@@ -203,7 +203,7 @@ read_file("flow/templates/03-tasks.md")
 
 ### Step 6: 生成产物并逐项核对
 
-按模板生成 `.devflow-kit/<req-id>/03-tasks.md`：
+按模板生成 `.ultimate-workflow/<req-id>/03-tasks.md`：
 - **必须包含模板所有6个段落**（见 Step 5 提取的清单）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **每个任务必须有完整的7字段**（id/name/read_files/write_files/action/verify/done）
@@ -228,7 +228,7 @@ read_file("flow/templates/03-tasks.md")
 **执行步骤**：
 1. 读取模板：`read_file("templates/03a-implementation-plan.md")`
 2. 基于 03-tasks.md 生成详细实施计划
-3. 保存为 `.devflow-kit/<req-id>/03a-implementation-plan.md`
+3. 保存为 `.ultimate-workflow/<req-id>/03a-implementation-plan.md`
 
 **实施计划必须包含**：
 - 整体架构设计
@@ -247,8 +247,8 @@ read_file("flow/templates/03-tasks.md")
 ### 产物清单
 | 产物 | 状态 | 路径 |
 |---|------|---|
-| 任务拆分 | ✅ | `.devflow-kit/<req-id>/03-tasks.md` |
-| 实施计划 | ✅ | `.devflow-kit/<req-id>/03a-implementation-plan.md` |
+| 任务拆分 | ✅ | `.ultimate-workflow/<req-id>/03-tasks.md` |
+| 实施计划 | ✅ | `.ultimate-workflow/<req-id>/03a-implementation-plan.md` |
 
 ### 任务摘要
 - 任务总数：X 个

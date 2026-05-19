@@ -2,7 +2,7 @@
 
 > **阶段定位**：定期检查项目代码健康和架构一致性
 > **前置条件**：无（可随时执行）
-> **后置产物**：`.devflow-kit/health/YYYY-MM-DD.md`
+> **后置产物**：`.ultimate-workflow/health/YYYY-MM-DD.md`
 
 ## Skill元信息
 
@@ -18,16 +18,16 @@ dependencies:
 
 ## 输入
 
-- `.devflow-kit/CONTEXT.md`
-- `.devflow-kit/lessons-learned.md`
-- 最近1份 `.devflow-kit/health/*.md`（如有，做对比基线）
+- `.ultimate-workflow/CONTEXT.md`
+- `.ultimate-workflow/lessons-learned.md`
+- 最近1份 `.ultimate-workflow/health/*.md`（如有，做对比基线）
 - `src/` 抽样5个最近改动频繁的模块
 - 抽样5个测试文件
 - 最近30天 git log
 
 ## 输出
 
-- `.devflow-kit/health/YYYY-MM-DD.md`
+- `.ultimate-workflow/health/YYYY-MM-DD.md`
 
 ## 入口门禁
 
@@ -40,7 +40,7 @@ dependencies:
 如存在历史报告，读取最近一份作为基线：
 
 ```bash
-ls -lt .devflow-kit/health/ | head -1
+ls -lt .ultimate-workflow/health/ | head -1
 ```
 
 **对比维度**：
@@ -172,7 +172,7 @@ depcruise src/ --config .dependency-cruiser.js
 
 #### 5.2 ADR合规检查
 
-对照 `.devflow-kit/system-architecture.md` 的ADR列表，检查当前代码是否遵循：
+对照 `.ultimate-workflow/system-architecture.md` 的ADR列表，检查当前代码是否遵循：
 
 **示例**：
 ```markdown
@@ -214,7 +214,7 @@ ADR-003: Redis缓存策略
 
 **⚠️ 强制规则**：输出前必须先读取模板文件 `templates/健康报告.md`（如存在）。
 
-按模板生成 `.devflow-kit/health/YYYY-MM-DD.md`：
+按模板生成 `.ultimate-workflow/health/YYYY-MM-DD.md`：
 - **必须包含模板所有段落**（不得省略或改写）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **必须包含以下核心章节**：
@@ -352,7 +352,7 @@ ADR-003: Redis缓存策略
 - 需求描述："修复健康检查Critical问题：<具体问题>"
 
 **选项2**：仅记录
-- 保存报告到 `.devflow-kit/health/YYYY-MM-DD.md`
+- 保存报告到 `.ultimate-workflow/health/YYYY-MM-DD.md`
 - 结束
 
 **选项3**：查看详情

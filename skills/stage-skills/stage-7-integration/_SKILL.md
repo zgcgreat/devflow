@@ -2,7 +2,7 @@
 
 > **阶段定位**：生成发布清单，准备上线
 > **前置条件**：06-review审查通过
-> **后置产物**：`.devflow-kit/<req-id>/07-release-checklist.md`
+> **后置产物**：`.ultimate-workflow/<req-id>/07-release-checklist.md`
 
 ## Skill元信息
 
@@ -17,16 +17,16 @@ dependencies:
 
 ## 输入
 
-- `.devflow-kit/<req-id>/` 全部产物
-- `.devflow-kit/lessons-learned.md`
-- `.devflow-kit/requirements-baseline.md` + `.devflow-kit/design-baseline.md`（Delta合并用）
+- `.ultimate-workflow/<req-id>/` 全部产物
+- `.ultimate-workflow/lessons-learned.md`
+- `.ultimate-workflow/requirements-baseline.md` + `.ultimate-workflow/design-baseline.md`（Delta合并用）
 - `git log`（本次改动的commit历史）
 
 ## 输出
 
-- `.devflow-kit/<req-id>/07-release-checklist.md`
-- 更新 `.devflow-kit/STATE.md`
-- 归档当前需求到 `.devflow-kit/archive/<req-id>/`
+- `.ultimate-workflow/<req-id>/07-release-checklist.md`
+- 更新 `.ultimate-workflow/STATE.md`
+- 归档当前需求到 `.ultimate-workflow/archive/<req-id>/`
 
 ## 入口门禁
 
@@ -44,7 +44,7 @@ IF 缺 06-review审查结论 OR 审查结论为"不通过":
 
 #### 1.1 读取需求分析（AC基线）
 
-从 `.devflow-kit/<req-id>/01-analysis.md` 提取：
+从 `.ultimate-workflow/<req-id>/01-analysis.md` 提取：
 - **AC列表**：所有验收标准（用于验证发布前是否全部通过）
 - **非功能需求**：性能/安全要求（用于验证是否达标）
 
@@ -54,7 +54,7 @@ IF 缺 06-review审查结论 OR 审查结论为"不通过":
 
 #### 1.2 读取测试报告与审查报告
 
-从 `.devflow-kit/<req-id>/05-test-report.md` 和 `06-审查报告.md` 提取：
+从 `.ultimate-workflow/<req-id>/05-test-report.md` 和 `06-审查报告.md` 提取：
 - **测试结果**：各轮测试通过率、AC覆盖矩阵
 - **审查结论**：代码审查是否通过、遗留问题清单
 
@@ -259,11 +259,11 @@ DELETE FROM notifications WHERE created_at > '2026-01-15 14:30:00';
 
 **requirements-baseline合并**:
 - 将 01-analysis-delta.md 的变更合并到基线
-- 生成新的requirements-baseline: `.devflow-kit/requirements-baseline.md`
+- 生成新的requirements-baseline: `.ultimate-workflow/requirements-baseline.md`
 
 **design-baseline合并**:
 - 将 02-design-delta.md 的变更合并到基线
-- 生成新的design-baseline: `.devflow-kit/design-baseline.md`
+- 生成新的design-baseline: `.ultimate-workflow/design-baseline.md`
 
 **命令**:
 ```bash
@@ -280,7 +280,7 @@ DELETE FROM notifications WHERE created_at > '2026-01-15 14:30:00';
 
 #### 6.1 写入项目级 lessons-learned.md
 
-追加到 `.devflow-kit/lessons-learned.md`：
+追加到 `.ultimate-workflow/lessons-learned.md`：
 
 ```markdown
 ## L-NNN: <经验标题>
@@ -341,7 +341,7 @@ DELETE FROM notifications WHERE created_at > '2026-01-15 14:30:00';
 
 **⚠️ 强制规则**：输出前必须先读取模板文件 `flow/templates/07-release-checklist.md`。
 
-按模板生成 `.devflow-kit/<req-id>/07-release-checklist.md`，包含：
+按模板生成 `.ultimate-workflow/<req-id>/07-release-checklist.md`，包含：
 - **必须包含模板所有段落**（不得省略或改写）
 - **所有 `<...>` 占位符必须替换为实际值**
 - 变更汇总
@@ -357,7 +357,7 @@ DELETE FROM notifications WHERE created_at > '2026-01-15 14:30:00';
 
 ```bash
 # 移动产物到archive
-mv .devflow-kit/<req-id>/ .devflow-kit/archive/<req-id>/
+mv .ultimate-workflow/<req-id>/ .ultimate-workflow/archive/<req-id>/
 
 # 更新项目状态
 ```
@@ -415,7 +415,7 @@ mv .devflow-kit/<req-id>/ .devflow-kit/archive/<req-id>/
 
 ```python
 # 伪代码
-if exists(".devflow-kit/memory/"):
+if exists(".ultimate-workflow/memory/"):
     print("✅ 检测到记忆系统，开始更新...")
 else:
     print("ℹ️ 未检测到记忆系统，跳过更新")
@@ -467,7 +467,7 @@ else:
 
 **影响**: <对未来的影响>
 
-**来源**: `.devflow-kit/<req-id>/02-design.md`
+**来源**: `.ultimate-workflow/<req-id>/02-design.md`
 ```
 
 #### 8.4 追加 KNOWN_FAILURES.md（如有新失败模式）
@@ -485,12 +485,12 @@ else:
 
 **预防措施**: <如何避免再次发生>
 
-**来源**: `.devflow-kit/<req-id>/05-test-report.md`
+**来源**: `.ultimate-workflow/<req-id>/05-test-report.md`
 ```
 
 #### 8.5 创建会话日志
 
-**在 `.devflow-kit/memory/journals/` 下创建日志文件**：
+**在 `.ultimate-workflow/memory/journals/` 下创建日志文件**：
 
 文件名格式：`YYYY-MM-DD-<req-id>.md`
 

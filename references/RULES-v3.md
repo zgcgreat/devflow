@@ -163,7 +163,7 @@
 ## R21 · 向后兼容
 
 - **R21.1** v3.0 产物零改动可迁移到 v1.0 流程使用
-- **R21.2** `.devflow-kit/` 目录结构保持与 devflow-kit 兼容
+- **R21.2** `.ultimate-workflow/` 目录结构保持与 devflow-kit 兼容
 - **R21.3** STATE.md 状态机枚举（not_started / in_progress / waiting_user_confirmation / completed / blocked / skipped）保持不变
 
 ---

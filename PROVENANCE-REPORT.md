@@ -453,7 +453,7 @@ Ultimate-Workflow v3.1 =
 
 | 文件 | 来源项目 | 原始文件 | 修改程度 | 说明 |
 |------|---------|---------|---------|------|
-| PROJECT_CONTEXT.md | devflow-kit | .devflow-kit/memory/PROJECT_CONTEXT.md | ✅ 直接引用 | 项目背景模板 |
+| PROJECT_CONTEXT.md | devflow-kit | .ultimate-workflow/memory/PROJECT_CONTEXT.md | ✅ 直接引用 | 项目背景模板 |
 | DECISIONS.md | mega-workflow | layer-6-memory/DECISIONS.md | ✅ 直接引用 | ADR风格决策记录 |
 | KNOWN_FAILURES.md | mega-workflow | layer-6-memory/KNOWN_FAILURES.md | ✅ 直接引用 | 失败模式库 |
 

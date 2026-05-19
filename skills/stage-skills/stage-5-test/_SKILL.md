@@ -2,7 +2,7 @@
 
 > **阶段定位**：验证所有AC是否通过
 > **前置条件**：4-dev阶段所有任务完成
-> **后置产物**：`.devflow-kit/<req-id>/05-test-report.md`
+> **后置产物**：`.ultimate-workflow/<req-id>/05-test-report.md`
 
 ## Skill元信息
 
@@ -17,16 +17,16 @@ dependencies:
 
 ## 输入
 
-- `.devflow-kit/<req-id>/01-analysis.md`（或Delta版）
-- `.devflow-kit/<req-id>/02-design.md`（必读 `## 0. 技术栈选定`）
-- `.devflow-kit/<req-id>/03-tasks.md`
-- `.devflow-kit/<req-id>/04-dev-log.md` + 各 `<task-id>-dev-log.md`
-- `.devflow-kit/CONTEXT.md`
+- `.ultimate-workflow/<req-id>/01-analysis.md`（或Delta版）
+- `.ultimate-workflow/<req-id>/02-design.md`（必读 `## 0. 技术栈选定`）
+- `.ultimate-workflow/<req-id>/03-tasks.md`
+- `.ultimate-workflow/<req-id>/04-dev-log.md` + 各 `<task-id>-dev-log.md`
+- `.ultimate-workflow/CONTEXT.md`
 
 ## 输出
 
-- `.devflow-kit/<req-id>/05-test-report.md`
-- 更新 `.devflow-kit/STATE.md`
+- `.ultimate-workflow/<req-id>/05-test-report.md`
+- 更新 `.ultimate-workflow/STATE.md`
 
 ## 入口门禁
 
@@ -364,7 +364,7 @@ read_file("templates/05-test-report.md")
 
 ### Step 9: 生成测试报告并逐项核对
 
-按模板生成 `.devflow-kit/<req-id>/05-test-report.md`：
+按模板生成 `.ultimate-workflow/<req-id>/05-test-report.md`：
 - **必须包含模板所有6个段落**（见 Step 8 提取的清单）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **AC覆盖率必须100%**

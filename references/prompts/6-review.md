@@ -53,10 +53,10 @@
 
 ```
 ✅ 已读取：
-[ ] .devflow-kit/<req-id>/01-analysis.md — 必须
-[ ] .devflow-kit/<req-id>/05-test-report.md — 必须
-[ ] .devflow-kit/<req-id>/02-design.md — 如有
-[ ] .devflow-kit/<req-id>/02a-ui-design.md — 前端项目必须
+[ ] .ultimate-workflow/<req-id>/01-analysis.md — 必须
+[ ] .ultimate-workflow/<req-id>/05-test-report.md — 必须
+[ ] .ultimate-workflow/<req-id>/02-design.md — 如有
+[ ] .ultimate-workflow/<req-id>/02a-ui-design.md — 前端项目必须
 ```
 
 **01 或 05 不存在 → 报错退出**："缺少必要输入文件 X，请先完成对应阶段"。
@@ -95,17 +95,17 @@
 
 ## 输入
 
-- `@.devflow-kit/<req-id>/01-analysis.md`
-- `@.devflow-kit/<req-id>/02-design.md`（如有）
-- `@.devflow-kit/<req-id>/02a-ui-design.md`（如是前端项目）
-- `@.devflow-kit/<req-id>/03-tasks.md`
-- `@.devflow-kit/<req-id>/05-test-report.md`
+- `@.ultimate-workflow/<req-id>/01-analysis.md`
+- `@.ultimate-workflow/<req-id>/02-design.md`（如有）
+- `@.ultimate-workflow/<req-id>/02a-ui-design.md`（如是前端项目）
+- `@.ultimate-workflow/<req-id>/03-tasks.md`
+- `@.ultimate-workflow/<req-id>/05-test-report.md`
 - 本次变更的 git diff（用户提供或 AI 通过工具获取）
 - `@devflow-kit/references/reference/ui-anti-patterns.md`（如是前端项目）
 
 ## 你的职责
 
-**⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/06-code-review.md` 模板的完整结构分四轮审查（后端 / lib 项目跳过第三轮），**保存到 `.devflow-kit/<req-id>/06-code-review.md`**。**不得省略或改写任何段落**。
+**⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/06-code-review.md` 模板的完整结构分四轮审查（后端 / lib 项目跳过第三轮），**保存到 `.ultimate-workflow/<req-id>/06-code-review.md`**。**不得省略或改写任何段落**。
 
 ### 第一轮 · Spec 合规审查
 
@@ -178,7 +178,7 @@
 **⚠️ 强制要求**：必须先读取 `05-test-report.md` 文件内容，不允许凭空填写。
 
 **验证步骤**：
-1. 执行 Read `.devflow-kit/<id>/05-test-report.md`
+1. 执行 Read `.ultimate-workflow/<id>/05-test-report.md`
 2. 在输出中声明："已读取 05-test-report.md，内容摘要：..."
 3. 逐项检查以下内容：
 
@@ -459,7 +459,7 @@ UI 审查触发判定：
 
 #### 4.1 技术债评估（适用于里程碑 / 季度大版本 / 重构项目）
 
-**触发条件**：本次需求 是里程碑 / 季度大版本 / 重构项目，或 `.devflow-kit/CONTEXT.md` 「技术债」段多于 30 天未更新。
+**触发条件**：本次需求 是里程碑 / 季度大版本 / 重构项目，或 `.ultimate-workflow/CONTEXT.md` 「技术债」段多于 30 天未更新。
 
 ```
 /brooks-debt              # 装了 brooks-lint 才能调
@@ -471,7 +471,7 @@ UI 审查触发判定：
 
 拿到输出后：
 - 🔴 Critical · 本次必修 → 追加为 fix 任务
-- 🟡 Scheduled · 近 1~3 个迭代 → 追加为 backlog，记入 `.devflow-kit/CONTEXT.md` 的「技术债」段
+- 🟡 Scheduled · 近 1~3 个迭代 → 追加为 backlog，记入 `.ultimate-workflow/CONTEXT.md` 的「技术债」段
 - 🟢 Monitored · 仅记录不处理 → lessons-learned.md
 
 未装 brooks-lint → 跳过本段（内置不提供回退，债评估需要书本包装才不会”凭感觉”）。
@@ -690,7 +690,7 @@ AI: ✅ 已记录：问题 3 跳过（原因：历史遗留）
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  📝 审查报告: .devflow-kit/<req-id>/06-code-review.md                 │
+│  📝 审查报告: .ultimate-workflow/<req-id>/06-code-review.md                 │
 │  📋 修复任务: 2 条已追加到 03-tasks.md                    │
 │  ➡️  下一步: 进入 4-dev 执行修复                             │
 └─────────────────────────────────────────────────────────────┘
@@ -698,9 +698,9 @@ AI: ✅ 已记录：问题 3 跳过（原因：历史遗留）
 
 ## 输出
 
-- `.devflow-kit/<req-id>/06-code-review.md`（**必须严格按模板格式输出**）
+- `.ultimate-workflow/<req-id>/06-code-review.md`（**必须严格按模板格式输出**）
 - 0~N 条新增 fix 任务追加到 `03-tasks.md`
-- **更新 `.devflow-kit/STATE.md`**：
+- **更新 `.ultimate-workflow/STATE.md`**：
   - `当前阶段` 设为 `review`
   - `阶段状态` 设为 `completed` 或 `blocked`
   - `上次完成阶段` 设为 `review`
@@ -735,7 +735,7 @@ AI: ✅ 已记录：问题 3 跳过（原因：历史遗留）
 
 ```
 ✅ 审查 完成
-📝 产物：.devflow-kit/<req-id>/06-code-review.md
+📝 产物：.ultimate-workflow/<req-id>/06-code-review.md
 📊 STATE.md 阶段进度已更新：[x] 审查 → 06-code-review.md
 
 审查统计：

@@ -2,7 +2,7 @@
 
 > **阶段定位**：新项目或大改动前的代码库扫描，生成上下文
 > **前置条件**：无（首次执行或项目结构大变化时执行）
-> **后置产物**：`.devflow-kit/CONTEXT.md`
+> **后置产物**：`.ultimate-workflow/CONTEXT.md`
 
 ## Skill元信息
 
@@ -24,7 +24,7 @@ dependencies:
 
 ## 输出
 
-- `.devflow-kit/CONTEXT.md`（新建或更新）
+- `.ultimate-workflow/CONTEXT.md`（新建或更新）
 
 ## 入口门禁
 
@@ -275,7 +275,7 @@ read_file("templates/CONTEXT.md")
 
 ### Step 9: 生成产物并逐项核对
 
-按模板生成 `.devflow-kit/CONTEXT.md`：
+按模板生成 `.ultimate-workflow/CONTEXT.md`：
 - **必须包含所有15个必填段落**（见 Step 8 提取的清单）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **必须基于实际扫描结果**（禁止编造）
@@ -327,7 +327,7 @@ read_file("templates/CONTEXT.md")
 1. 创建 AGENTS.md 固化AI规则
 2. 补充部署流程文档
 
-是否保存为 .devflow-kit/CONTEXT.md？
+是否保存为 .ultimate-workflow/CONTEXT.md？
 1. ✅ 是，保存
 2. ✏️ 否，先修改
 3. ↩️ 重新扫描
@@ -336,8 +336,8 @@ read_file("templates/CONTEXT.md")
 ### Step 11: 根据用户选择执行
 
 **选项1**：保存
-- 写入 `.devflow-kit/CONTEXT.md`
-- 更新 `.devflow-kit/STATE.md` 的 `ai_context_doc: CONTEXT.md`
+- 写入 `.ultimate-workflow/CONTEXT.md`
+- 更新 `.ultimate-workflow/STATE.md` 的 `ai_context_doc: CONTEXT.md`
 
 **选项2**：修改
 - 展示完整内容
@@ -387,7 +387,7 @@ read_file("templates/CONTEXT.md")
 
 1. 检测到错误后，记录错误信息
 
-2. 追加到 `.devflow-kit/memory/KNOWN_FAILURES.md`：
+2. 追加到 `.ultimate-workflow/memory/KNOWN_FAILURES.md`：
 
 ```markdown
 ## [YYYY-MM-DD] intel-scan 错误

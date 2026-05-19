@@ -59,8 +59,8 @@ skills/stage-skills/
 ↓ 路由到: stage-0-confirm
 ↓ 加载: skills/stage-skills/stage-0-confirm/_SKILL.md
 ↓ 执行: 需求澄清 + 模式判定
-↓ 产物: .devflow-kit/REQ-001/00-requirements.md
-↓ 更新: .devflow-kit/STATE.md → 下一阶段: analysis
+↓ 产物: .ultimate-workflow/REQ-001/00-requirements.md
+↓ 更新: .ultimate-workflow/STATE.md → 下一阶段: analysis
 ```
 
 ### 方式2：直接调用stage skill
@@ -71,7 +71,7 @@ skills/stage-skills/
 ↓ 直接加载: skills/stage-skills/stage-3-task/_SKILL.md
 ↓ 执行入口门禁检查
 ↓ 如缺前置产物，提示补齐
-↓ 生成: .devflow-kit/REQ-001/03-tasks.md
+↓ 生成: .ultimate-workflow/REQ-001/03-tasks.md
 ```
 
 ## Stage Skill结构规范

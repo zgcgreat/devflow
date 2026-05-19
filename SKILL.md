@@ -595,7 +595,7 @@ Phase 4: + dev-*.md + Developer persona (按需加载)
 
 ---
 
-## 📋 v3.0 规则集摘要 (R1-R20)
+## 📋 v3.0 规则集摘要 (R1-R24)
 
 | 编号 | 规则 | 说明 |
 |------|------|------|
@@ -620,6 +620,11 @@ Phase 4: + dev-*.md + Developer persona (按需加载)
 | R19 | 产物模板强制 | 所有输出严格按模板；Phase 结束前必须输出合规检查报告（逐项确认 12/7/3 个必填段落） |
 | R19.1 | 合规验证 | Phase 4/5/6 结束时必须运行产物合规检查：读取对应模板，逐项确认必填段落存在、元数据块完整、占位符已替换 |
 | R20 | 向后兼容 | v1.0产物零改动迁移 |
+| R21 | Path Standardization | 产物路径统一为 `.ultimate-workflow/`，旧 `.devflow-kit/` 兼容迁移 |
+| R21.2 | 目录结构保持与 .ultimate-workflow 兼容 |
+| R22 | Quality Scoring | Phase 6 输出质量评分报告（详见 references/RULES-v3.md） |
+| R23 | Stage-Skills Sync | Stage Skills 与 Core Skills 同步维护，≥7 天差异报 P2 |
+| R24 | Call Chain Ownership | L1→L2/L3 调用链必须在 call-chain-inventory.md 注册 |
 
 ---
 

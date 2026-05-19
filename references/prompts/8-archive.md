@@ -12,17 +12,17 @@
 
 ## 输入
 
-- `@.devflow-kit/<req-id>/00-requirements.md`
-- `@.devflow-kit/<req-id>/01-analysis.md`
-- `@.devflow-kit/<req-id>/02-design.md`
-- `@.devflow-kit/<req-id>/03-tasks.md`
-- `@.devflow-kit/<req-id>/04-dev-log.md`
-- `@.devflow-kit/<req-id>/05-test-report.md`
-- `@.devflow-kit/<req-id>/06-code-review.md`
-- `@.devflow-kit/<req-id>/UAT.md`
-- `@.devflow-kit/lessons-learned.md`
-- `@.devflow-kit/DECISIONS.md`
-- `@.devflow-kit/KNOWN_FAILURES.md`
+- `@.ultimate-workflow/<req-id>/00-requirements.md`
+- `@.ultimate-workflow/<req-id>/01-analysis.md`
+- `@.ultimate-workflow/<req-id>/02-design.md`
+- `@.ultimate-workflow/<req-id>/03-tasks.md`
+- `@.ultimate-workflow/<req-id>/04-dev-log.md`
+- `@.ultimate-workflow/<req-id>/05-test-report.md`
+- `@.ultimate-workflow/<req-id>/06-code-review.md`
+- `@.ultimate-workflow/<req-id>/UAT.md`
+- `@.ultimate-workflow/lessons-learned.md`
+- `@.ultimate-workflow/DECISIONS.md`
+- `@.ultimate-workflow/KNOWN_FAILURES.md`
 
 ---
 
@@ -155,15 +155,15 @@
 
 | 产物 | 位置 | 状态 |
 |------|------|------|
-| 需求文档 | `.devflow-kit/<req-id>/00-requirements.md` | ✅/❌ |
-| 分析文档 | `.devflow-kit/<req-id>/01-analysis.md` | ✅/❌ |
-| 设计文档 | `.devflow-kit/<req-id>/02-design.md` | ✅/❌ |
-| 任务列表 | `.devflow-kit/<req-id>/03-tasks.md` | ✅/❌ |
-| 开发日志 | `.devflow-kit/<req-id>/04-dev-log.md` | ✅/❌ |
-| 测试报告 | `.devflow-kit/<req-id>/05-test-report.md` | ✅/❌ |
-| 审查报告 | `.devflow-kit/<req-id>/06-code-review.md` | ✅/❌ |
-| UAT 结果 | `.devflow-kit/<req-id>/UAT.md` | ✅/❌ |
-| 发布清单 | `.devflow-kit/<req-id>/07-release-checklist.md` | ✅/❌ |
+| 需求文档 | `.ultimate-workflow/<req-id>/00-requirements.md` | ✅/❌ |
+| 分析文档 | `.ultimate-workflow/<req-id>/01-analysis.md` | ✅/❌ |
+| 设计文档 | `.ultimate-workflow/<req-id>/02-design.md` | ✅/❌ |
+| 任务列表 | `.ultimate-workflow/<req-id>/03-tasks.md` | ✅/❌ |
+| 开发日志 | `.ultimate-workflow/<req-id>/04-dev-log.md` | ✅/❌ |
+| 测试报告 | `.ultimate-workflow/<req-id>/05-test-report.md` | ✅/❌ |
+| 审查报告 | `.ultimate-workflow/<req-id>/06-code-review.md` | ✅/❌ |
+| UAT 结果 | `.ultimate-workflow/<req-id>/UAT.md` | ✅/❌ |
+| 发布清单 | `.ultimate-workflow/<req-id>/07-release-checklist.md` | ✅/❌ |
 
 ---
 
@@ -208,10 +208,10 @@
 - Domain Skills: N 条
 
 ### 归档位置
-- `.devflow-kit/lessons-learned.md`
-- `.devflow-kit/DECISIONS.md`
-- `.devflow-kit/KNOWN_FAILURES.md`
-- `.devflow-kit/memory/domain-skills/`
+- `.ultimate-workflow/lessons-learned.md`
+- `.ultimate-workflow/DECISIONS.md`
+- `.ultimate-workflow/KNOWN_FAILURES.md`
+- `.ultimate-workflow/memory/domain-skills/`
 
 ### 项目状态
 - Phase 8: ✅ 完成
