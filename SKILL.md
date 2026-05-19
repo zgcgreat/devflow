@@ -516,6 +516,8 @@ Use ultimate-workflow. 健康检查
 | 安全规范 | `references/SECURITY.md` |
 | Stage Skills | `skills/stage-skills/` (向后兼容) |
 | 快速上手 | `SKILL.md`「三步启动」 |
+| 模板版本规则 | `references/templates/` 下带 `-delta` 后缀的变体仅增量变更使用，主模板（无后缀）为默认消费源 |
+| 宪法模板 | `references/templates/constitution-template.md` → Phase 0/1 后写入 `.ultimate-workflow/memory/constitution.md` |
 
 ---
 

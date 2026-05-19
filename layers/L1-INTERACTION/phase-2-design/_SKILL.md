@@ -53,6 +53,27 @@ v3_upgrade:
 
 ## 执行流程
 
+### Step 0.5: 宪法检查 (Constitution Gate · Sprint 11 修复)
+
+> 来源: 问题 5 修复 — 确保 Phase 2 设计决策符合项目宪法约束。
+
+**读取** `.ultimate-workflow/memory/constitution.md`
+
+**不存在时** → 使用默认模板创建新项目宪法：
+1. 读取 `references/templates/constitution-template.md`
+2. 基于 Phase 0/1 的输出填充宪法内容
+3. 展示给用户确认
+4. 用户确认后写入 `.ultimate-workflow/memory/constitution.md`
+
+**已存在时** → 读取现有宪法，Phase 2 所有设计决策必须符合宪法约束。
+
+**宪法合规检查清单**（Phase 2 设计前逐项确认）：
+- [ ] 技术栈符合宪法原则
+- [ ] 代码风格与宪法约定一致
+- [ ] 目录结构遵循宪法约定
+- [ ] 架构边界不违反宪法约束
+- [ ] 无禁止事项
+
 ### Step 1: 加载上下文
 
 读取 `01-analysis.md`，提取：
