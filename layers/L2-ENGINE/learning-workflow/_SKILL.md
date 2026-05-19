@@ -67,6 +67,12 @@ Before starting learning workflow, verify ALL of the following:
 /learn extract --from <dev-log|wave-summary|review> --scope <wave|phase|project>
 ```
 
+**Phase 4 Post-Wave Trigger** (MANDATORY):
+- After **every** Wave completes in Phase 4, LearningWorkflow MUST be triggered automatically
+- Trigger point: Phase 4 Step N+1 (Learning Extraction), immediately after Wave execution log is finalized
+- If Phase 4 has no Waves (e.g., planning-only Phase 4), skip to Phase 8 for final extraction
+- Phase 8 Archive Orchestrator also triggers LearningWorkflow for final LESSONS aggregation
+
 **When NOT to use**:
 - Trivial changes (<5 LOC, no architectural impact)
 - Pure documentation updates (no code logic)
