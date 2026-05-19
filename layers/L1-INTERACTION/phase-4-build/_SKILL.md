@@ -87,7 +87,15 @@ wave_plan:
 
 **转换逻辑**:
 
-1. **解析 `03-tasks.md` 中的 Task 段落**:按 `### Task ID:` 标记分割文件,提取每个任务的字段。Phase 3 输出格式示例:
+> **⚠️ 格式兼容性（Sprint 11 修复 - 问题 2）**: Phase 4 同时支持两种 Task 格式。Phase 3 实际输出为 Markdown `### Task ID:` 格式，03-tasks.md 模板定义的是 XML `<task>` 格式。解析器必须优先检测 XML 格式，未检测到 XML 时降级到 Markdown 格式。
+
+1. **检测 Task 格式**: 读取 `03-tasks.md` 开头 200 字符，检测是否包含 `<task ` 标签。
+   - **检测到 `<task `** → 使用 XML 解析器（见步骤 1b）
+   - **未检测到 `<task `** → 使用 Markdown 解析器（见步骤 1a）
+
+1a. **Markdown 格式解析（`### Task ID:` 格式）** — Phase 3 实际输出格式:
+
+   按 `### Task ID:` 标记分割文件，提取每个任务的字段。Phase 3 输出格式示例:
    ```markdown
    ### Task ID: T01
    **描述**: 创建用户认证数据库模型
@@ -98,17 +106,43 @@ wave_plan:
    **Done 判定**: 所有认证相关模型可通过编译且单元测试全部通过
    ```
 
+1b. **XML 格式解析（`<task>` 标签格式）** — 03-tasks.md 模板定义格式:
+
+   ```xml
+   <task id="T01" parallel="true" status="pending">
+     <name>创建用户认证数据库模型</name>
+     <read_files>src/models/base.py</read_files>
+     <write_files>src/models/auth.py, migrations/001_initial.sql</write_files>
+     <action>创建用户认证模型</action>
+     <verify>pytest tests/test_auth_model.py -v</verify>
+     <done>所有认证相关模型可通过编译且单元测试全部通过</done>
+     <depends_on>T00</depends_on>
+   </task>
+   ```
+
+   | XML 字段 | wave-plan.yaml 字段 | 转换规则 |
+   |----------|---------------------|----------|
+   | `task @id` | `tasks[].id` | 直接使用 Task ID 字符串 |
+   | `<name>` | `tasks[].name` | 取 XML 文本内容 |
+   | `<read_files>` | `tasks[].read_files` | 逗号分割为数组 |
+   | `<write_files>` | `tasks[].write_files` | 逗号分割为数组 |
+   | `<action>` | `tasks[].action` | 直接取文本内容 |
+   | `<verify>` | `tasks[].verify` | 直接取文本内容 |
+   | `<done>` | `tasks[].done_criterion` | 直接取文本内容 |
+   | `<depends_on>` | `tasks[].deps` | 逗号分割为数组，空→`[]` |
+   | `task @parallel` | `parallelism` | 布尔值，默认 `false` |
+
 2. **解析 Wave 分组**:识别文件中的 Wave 标题(`Wave N1`, `Wave N2`等)和组内任务列表。Phase 3 输出示例:
    ```markdown
    ### Wave N1: 基础模块
    - T01, T02
-   
+
    ### Wave N2: API 层
    - T03
    ```
 
-3. **字段映射**:
-   
+3. **字段映射（Markdown 格式专用）**:
+
    | Phase 3 (Markdown) 字段 | wave-plan.yaml 字段 | 转换规则 |
    |--------------------------|---------------------|----------|
    | `Task ID: TNN` | `tasks[].id` | 直接使用 Task ID 字符串 |
@@ -119,7 +153,7 @@ wave_plan:
    | `Done 判定`: XXX | `tasks[].done_criterion` | 直接使用 Done 判定内容 |
 
 4. **优先级自动推断规则**:
-   
+
    | 关键词匹配(大小写不敏感) | 分配优先级 |
    |--------------------------|-----------|
    | "核心", "关键", "Critical", "Foundation", "基石" | P0 |
