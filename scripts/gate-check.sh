@@ -739,8 +739,7 @@ check_g7() {
 
     # Check 3: Traffic ramp-up plan present (look for percentage or ramp keywords)
     _total_checks=$((_total_checks + 1))
-    if grep -qiE "ramp.?up|traffic.*percent|canary.*weight|rollout.*percent" "$test_report" 2>/dev/null || \
-       grep -qiE "ramp.?up|traffic.*percent|canary.*weight|rollout.*percent" "$_canary_script" 2>/dev/null; then
+    if grep -qiE "ramp.?up|traffic.*percent|canary.*weight|rollout.*percent" "${_canary_script:-/dev/null}" 2>/dev/null; then
         checks_passed=$((checks_passed + 1))
         info "Traffic ramp-up plan present"
     else
@@ -872,7 +871,7 @@ case "$GATE_ID" in
     G4)           check_g4 "$@" ;;
     G3-PHASE6|G3) check_g3_phase6 "$@" ;;
     G5-PHASE5|G5) check_g5 "$@" ;;
-    G6-PHASE6)    check_g6_phase6 "$@" ;;
+    G6-PHASE6|G6) check_g6_phase6 "$@" ;;
     G7-PHASE7|G7) check_g7 "$@" ;;
     G8-PHASE8|G8) check_g8 "$@" ;;
     CUSTOM)       check_custom "$@" ;;
