@@ -2,7 +2,7 @@
 
 > **版本**: v3.0-draft  
 > **创建日期**: 2026-05-17  
-> **融合来源**: devflow-kit RULES.md + Mega-Workflow R1-R15 + SuperCorp Phase Rules + Karpathy Coding Principles  
+> **融合来源**: devflow-kit RULES.md + 架构层 R1-R15 + 交互层 Phase Rules + Karpathy Coding Principles  
 > **适用范围**: devflow 全流程 Phase 0-8
 
 ---
@@ -249,7 +249,7 @@ done
 
 ## 规则演进历史
 
-- **v3.0-draft (2026-05-17)**: 初始版本，融合 devflow-kit + mega-workflow + supercorp
+- **v3.0-draft (2026-05-17)**: 初始版本，融合 devflow-kit + 架构层 + supercorp
 - **R1-R9**: 流程基础（PRD → 模式判定 → 入场检测 → 门禁 → Token 优化 → Agent 隔离 → DAG → LearningWorkflow → Provider）
 - **R10-R21**: 执行保障（Delta Specs → GitNexus → 审查 → Canary → 设计枪战 → 跨波注入 → 原子提交 → Heartbeat → Domain Skills → 模板强制 → 向后兼容）
 - **R22**: 质量评分标准（Quality Scoring）

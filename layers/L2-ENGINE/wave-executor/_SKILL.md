@@ -8,7 +8,7 @@ description: |
   heartbeat checkpoints, and LearningWorkflow integration. Use when: "execute waves",
   "run parallel tasks", "execute phase plan". (devflow)
 layer: L2-ENGINE
-source: SEP Wave Engine + Mega-Workflow DAG Router + Kahn Algorithm
+source: 引擎层 Wave Engine + 架构层 DAG Router + Kahn Algorithm
 dependencies:
   - dag-router (Phase 3 output required before execution)
   - learning-workflow (post-wave hook, optional)
@@ -1229,7 +1229,7 @@ Quality gates:
   - Added comprehensive error handling (5 common issues)
   - Integrated LearningWorkflow post-wave hook
 
-- **v1.0** (2024-01-10): Initial implementation based on SEP Wave Engine + Mega-Workflow DAG Router
+- **v1.0** (2024-01-10): Initial implementation based on 引擎层 Wave Engine + 架构层 DAG Router
   - Basic wave execution
   - Simple dependency tracking
   - No heartbeat protocol

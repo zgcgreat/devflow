@@ -1,8 +1,8 @@
-# Layer 1: 交互层 (SuperCorp) — Zero-Threshold Entry
+# Layer 1: 交互层 (交互层) — Zero-Threshold Entry
 
 ## Phase 0-8 全流程实现
 
-此目录封装 SuperCorp 的全部 Phase Skill，作为 v3.0 的零门槛用户入口。
+此目录封装 交互层 的全部 Phase Skill，作为 v3.0 的零门槛用户入口。
 
 ### 文件结构
 

@@ -7,7 +7,7 @@ description: |
   patterns (≥3 occurrences) to domain skills, and injects relevant knowledge into future waves.
   Use when: "extract lessons", "learn from wave", "domain skill promotion", "knowledge consolidation". (devflow)
 layer: L2-ENGINE
-source: SEP LearningWorkflow + Mega-Workflow Memory Manager
+source: 引擎层 LearningWorkflow + 架构层 Memory Manager
 dependencies:
   - phase-8-archive (post-archive: LESSONS update + domain skill graduation)
 triggers:
@@ -1150,7 +1150,7 @@ Quality gates:
   - Added comprehensive error handling (5 common issues)
   - Integrated Jaccard similarity clustering for graduation
 
-- **v1.0** (2024-01-10): Initial implementation based on SEP LearningWorkflow + SuperCorp ARCHIVE-PROMPT
+- **v1.0** (2024-01-10): Initial implementation based on 引擎层 LearningWorkflow + 交互层 ARCHIVE-PROMPT
   - Basic lesson extraction
   - Simple domain skill creation
   - No graduation clustering

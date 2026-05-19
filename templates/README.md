@@ -1,4 +1,4 @@
-# SuperCorp Ultimate 模板库
+# 交互层 Ultimate 模板库
 
 整合自 get-shit-done 项目，共 **36个模板**。
 

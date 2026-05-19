@@ -22,7 +22,7 @@ devflow/
 ├── LICENSE                           # MIT (1KB)
 │
 ├── layers/                           # ★ v3 三层架构核心
-│   ├── L1-INTERACTION/               #   交互层 — SuperCorp Phase 0-8
+│   ├── L1-INTERACTION/               #   交互层 — Phase 0-8
 │   │   ├── README.md
 │   │   ├── phase-0-yc-strategy/_SKILL.md    (2.9KB)
 │   │   ├── phase-1-5whys/_SKILL.md          (2.7KB)
@@ -36,13 +36,13 @@ devflow/
 │   │   ├── phase-7-canary/_SKILL.md         (4.9KB)
 │   │   └── phase-8-archive/_SKILL.md        (6.6KB)
 │   │
-│   ├── L2-ENGINE/                  #   引擎层 — SEP Engine
+│   ├── L2-ENGINE/                  #   引擎层 — 引擎层
 │   │   ├── README.md
 │   │   ├── learning-workflow/_SKILL.md      (8.9KB)
 │   │   ├── party-mode/_SKILL.md             (4.6KB)
 │   │   └── wave-executor/_SKILL.md          (6.8KB)
 │   │
-│   └── L3-ARCHITECTURE/             #   架构层 — Mega-Workflow
+│   └── L3-ARCHITECTURE/             #   架构层 — 架构层
 │       ├── README.md
 │       ├── _SKILL.md                        (4.7KB)
 │       ├── dag-router/_SKILL.md             (7.0KB)

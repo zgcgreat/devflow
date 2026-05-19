@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0-draft
 description: Security Specialist for Phase 6+ code review — input validation, auth bypass, injection vectors, crypto misuse, secrets exposure. Use when "security review", "penetration test", "trust boundary". (devflow)
 layer: L1-INTERACTION
-source: mega-workflow / supercorp-ultimate fusion
+source: 架构层 / supercorp-ultimate fusion
 dependencies:
   - phase-6-review (orchestrator)
 triggers:

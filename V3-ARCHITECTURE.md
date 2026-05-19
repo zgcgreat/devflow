@@ -12,7 +12,7 @@
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                   Layer 1: 交互层                       │
-│              SuperCorp Interaction Layer                │
+│              交互层 Interaction Layer                │
 │                                                           │
 │  Phase 0: YC六问 → Phase 1: 需求追问 → Phase 2: 方案设计   │
 │  Phase 2a: 设计枪战 → Phase 3: 任务拆分                    │
@@ -23,7 +23,7 @@
                            │
               ┌────────────▼────────────┐
               │   Layer 2: 引擎层       │
-              │   SEP Engine Layer      │
+              │   引擎层 Engine Layer      │
               │                         │
               │  GSD六命令闭环          │
               │  LearningWorkflow自进化  │
@@ -34,7 +34,7 @@
                            │
               ┌────────────▼────────────┐
               │   Layer 3: 架构层       │
-              │   Mega-Workflow Arch     │
+              │   架构层 Arch     │
               │                         │
               │  DAG依赖路由            │
               │  多Provider编排         │
@@ -56,9 +56,9 @@
 
 这三层不是竞争关系，而是互补的垂直分层：
 
-- **SuperCorp** = 交互/前��层（用户界面）→ 极致易用
-- **SEP** = 引擎/核心层（核心执行）→ 持续进化
-- **Mega-Workflow** = 架构/协调层（生态整合）→ 企业级保障
+- **交互层** = 交互/前��层（用户界面）→ 极致易用
+- **引擎层** = 引擎/核心层（核心执行）→ 持续进化
+- **架构层** = 架构/协调层（生态整合）→ 企业级保障
 
 三者结合 = 完美解决方案。
 
@@ -71,7 +71,7 @@
 | 原则 | 含义 | 实现方式 |
 |------|------|---------|
 | **零配置** | `npx` / 加载 Skill 即可运行，无需 `.env`/`tsconfig`/`package.json` | 内置所有默认值，运行时自动检测环境 |
-| **零门槛** | 一句话需求 → AI自动路由 → 执行，用户无需理解内部架构 | SuperCorp Phase 0六问作为统一入口 |
+| **零门槛** | 一句话需求 → AI自动路由 → 执行，用户无需理解内部架构 | Phase 0六问作为统一入口 |
 | **零依赖** | 不强制安装任何外部工具；GitNexus可选，不装走grep降级 | `gitnexus --version` 检测 → 安装引导 → grep fallback |
 
 ### 启动流程（三步完成）
@@ -140,19 +140,19 @@ V3-ARCHITECTURE.md 侧重架构设计文档，以下核心内容在 SKILL.md 中
 
 | 维度 | v3.0 状态 | 来源 |
 |------|-----------|------|
-| 自学习能力 (LearningWorkflow) | ✅ 融合 SEP | Phase 8+ LESSONS → Domain Skills |
-| Agent上下文隔离 (~200K) | ✅ 融合 Mega-Workflow | R7 规则定义 |
-| Provider智能路由 | ✅ 融合 Mega-Workflow | R10 规则定义 |
-| Token压缩~90% | ✅ 融合 SEP + Mega-Workflow | R6 规则定义 |
-| 设计枪战 (4-6变体) | ✅ 融合 SuperCorp | Phase 2a, R14 |
-| Canary灰度发布 | ✅ 融合 SuperCorp | Phase 7, R13 |
-| 三层对抗审查 | ✅ 融合 SuperCorp | Phase 6, R12 |
+| 自学习能力 (LearningWorkflow) | ✅ 融合引擎层 | Phase 8+ LESSONS → Domain Skills |
+| Agent上下文隔离 (~200K) | ✅ 融合架构层 | R7 规则定义 |
+| Provider智能路由 | ✅ 融合架构层 | R10 规则定义 |
+| Token压缩~90% | ✅ 融合引擎层 + 架构层 | R6 规则定义 |
+| 设计枪战 (4-6变体) | ✅ 融合交互层 | Phase 2a, R14 |
+| Canary灰度发布 | ✅ 融合交互层 | Phase 7, R13 |
+| 三层对抗审查 | ✅ 融合交互层 | Phase 6, R12 |
 
 ---
 
 ## 📊 v3.0 vs v1.0 vs 三方对比
 
-| 维度 | v1.0 (当前) | SEP | SuperCorp | Mega-Workflow | **v3.0 终极** |
+| 维度 | v1.0 (当前) | 引擎版 | 交互版 | 架构版 | **v3.0 终极** |
 |------|-----------|-----|-----------|---------------|--------------|
 | **配置要求** | 低 | 中(npm) | 极低 | 高 | **零** |
 | **门槛** | 低 | 高 | 极低 | 中 | **极低** |
@@ -178,7 +178,7 @@ devflow/
 ├── GO.md                       # 统一路由器（升级v3版）
 │
 ├── layers/                     # 三层架构核心
-│   ├── L1-INTERACTION/         # SuperCorp 交互层封装 (Phase 0-8 ✅全部完成)
+│   ├── L1-INTERACTION/         # 交互层封装 (Phase 0-8 ✅全部完成)
 │   │   ├── phase-0-yc-strategy/     # YC六问 ⭐已完成
 │   │   ├── phase-1-5whys/           # 5 Whys需求追问 ⭐已补全
 │   │   ├── phase-2-design/          # 方案设计 ⭐已补全
@@ -190,13 +190,13 @@ devflow/
 │   │   ├── phase-7-canary/          # Canary灰度发布 ⭐已完成
 │   │   └── phase-8-archive/         # 知识归档 ⭐已完成
 │   │
-│   ├── L2-ENGINE/              # SEP 引擎层封装 (协议文档中, JS实现待Phase C)
+│   ├── L2-ENGINE/              # 引擎层封装 (协议文档中, JS实现待Phase C)
 │   │   ├── learning-workflow/     # LearningWorkflow自进化 ⭐协议完成
 │   │   ├── party-mode/            # PartyMode多Agent共识 ⭐协议完成
 │   │   ├── wave-executor/         # Wave并行执行器 ⭐协议+Kahn算法伪代码完成
 │   │   └── (GSDFlow stub)         # 通过 Phase 3-4 prompts 间接实现
 │   │
-│   └── L3-ARCHITECTURE/        # Mega-Workflow 架构层封装 (protocol-stub, JS待Phase C)
+│   └── L3-ARCHITECTURE/        # 架构层封装 (protocol-stub, JS待Phase C)
 │       ├── dag-router/              # DAG依赖路由 ✅ (Kahn topological sort + parallelism matrix)
 │       ├── provider-gateway/        # Provider智能网关 ✅ (multi-provider routing + fallback chain)
 │       ├── agent-isolation/         # Agent上下文隔离 ✅ (~200K budget per agent + 6-module loading)
@@ -264,7 +264,7 @@ devflow/
 - [x] Agent上下文隔离 — `agent-isolation/_SKILL.md` (~200K budget + 6-module loading order + cross-agent channels)
 - [x] 并行引擎优化(~5x目标) — `parallel-engine/_SKILL.md` (wave N parallel orchestration + error recovery + acceleration calculator)
 
-### Phase D: SuperCorp特性融合 ✅ Complete (2026-05-17)
+### Phase D: 特性融合 ✅ Complete (2026-05-17)
 - [x] 设计枪战Phase 2a — `phase-2a-shotgun/_SKILL.md`
 - [x] 三层对抗审查升级 → v3.1 **双阶段**审查 — `phase-6-review/_SKILL.md` (Stage A spec compliance + Stage B code quality)
 - [x] Canary灰度发布 — `phase-7-canary/_SKILL.md`

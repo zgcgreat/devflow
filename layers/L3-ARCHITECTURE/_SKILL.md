@@ -2,12 +2,12 @@
 name: l3-architecture-index
 version: 3.0-draft
 description: |
-  L3 Architecture layer index and protocol document for Mega-Workflow.
+  L3 Architecture layer index and protocol document for 架构层.
   Layer 3 负责全局协调、路由、和 Agent 上下文管理。 (devflow)
 layer: L3-ARCHITECTURE
 ---
 
-# L3-ARCHITECTURE — Mega-Workflow 架构层
+# L3-ARCHITECTURE — 架构层 架构层
 
 > Layer 3 负责全局协调、路由、和 Agent 上下文管理。
 > **状态**: v3.0 Protocol Implementation Complete (三个核心模块已落地)

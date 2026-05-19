@@ -7,7 +7,7 @@ description: |
   Detects PRD gaps, edge cases, acceptance failures, and blind spots in Phase 4 implementation.
   Use when: "review phase", "two-stage review", "spec compliance check", "adversarial review". (devflow)
 layer: L1-INTERACTION
-source: SuperCorp Three-Layer Adversarial Review + gstack Cross-Model Review (R14) + Two-Stage Spec Compliance
+source: 交互层 Three-Layer Adversarial Review + gstack Cross-Model Review (R14) + Two-Stage Spec Compliance
 dependencies:
   - code-quality, spec-compliance
   - agent-isolation (review agents run in ~200K context each)
@@ -25,7 +25,7 @@ allowed-tools:
 
 # Phase 6: 双阶段审查 (Two-Stage Adversarial Review)
 
-> **Layer**: L1-INTERACTION (SuperCorp 交互层)  
+> **Layer**: L1-INTERACTION (交互层 交互层)  
 > **前置**: Phase 5 测试通过, Phase 4 Wave执行完成  
 > **后置产物**: `.devflow/<req-id>/06-review.md`  
 > **门控**: G3-PHASE6 — Review Quality Gate
@@ -89,7 +89,7 @@ Verify that the Phase 5 test output artifact is present and valid before startin
 name: phase-6-review
 version: 3.1-enhanced (two-stage)
 layer: L1-INTERACTION
-source: SuperCorp Three-Layer Adversarial Review + gstack Cross-Model Review (R14) + Two-Stage Spec Compliance
+source: 交互层 Three-Layer Adversarial Review + gstack Cross-Model Review (R14) + Two-Stage Spec Compliance
 dependencies:
   - code-quality, spec-compliance
 v3_upgrade:

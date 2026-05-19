@@ -1,8 +1,8 @@
-# Layer 3: 架构层 (Mega-Workflow) — Enterprise Orchestration
+# Layer 3: 架构层 (架构层) — Enterprise Orchestration
 
 ## DAG依赖路由 + Provider智能网关 + Agent上下文隔离 + 并行执行引擎
 
-此目录封装 Mega-Workflow v2.0 的架构能力，为全生命周期提供企业级编排。
+此目录封装 架构层 v2.0 的架构能力，为全生命周期提供企业级编排。
 
 ### 文件结构
 

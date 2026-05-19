@@ -8,7 +8,7 @@ description: |
   and archives session state. Use when: "archive phase", "knowledge consolidation",
   "LESSONS nomination", "domain skill promotion". (devflow)
 layer: L1-INTERACTION
-source: SuperCorp Phase 8 + SEP LearningWorkflow + Mega-Workflow Memory Manager
+source: 交互层 Phase 8 + 引擎层 LearningWorkflow + 架构层 Memory Manager
 dependencies:
   - wave-executor (input: per-wave SUMMARY.md files)
   - learning-workflow (post-archive: LESSONS update + domain skill graduation)
@@ -28,7 +28,7 @@ allowed-tools:
 
 # Phase 8: 知识归档 (Knowledge Archival)
 
-> **Layer**: L1-INTERACTION (SuperCorp交互层) + L2-ENGINE (LearningWorkflow) + L3-ARCHITECTURE (Memory Manager)  
+> **Layer**: L1-INTERACTION (交互层交互层) + L2-ENGINE (LearningWorkflow) + L3-ARCHITECTURE (Memory Manager)  
 > **前置**: G5 集成通过, Phase 7 Canary发布完成  
 > **后置产物**: `memory/LESSONS.md` + `memory/domain-skills/*.md` + `STATE.md`归档  
 > **门控**: G8 — Archive Quality Gate
@@ -68,7 +68,7 @@ Before starting archive phase, verify ALL of the following:
 name: phase-8-archive
 version: 3.0-draft
 layer: L1-INTERACTION (L2/L3 collaboration for knowledge archival)
-source: SuperCorp Phase 8 + SEP LearningWorkflow + Mega-Workflow Memory Manager
+source: 交互层 Phase 8 + 引擎层 LearningWorkflow + 架构层 Memory Manager
 dependencies:
   - wave-executor (input: per-wave SUMMARY.md files)
   - learning-workflow (post-archive: LESSONS update + domain skill graduation)

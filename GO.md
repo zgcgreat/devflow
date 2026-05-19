@@ -13,7 +13,7 @@
 ## ⚡ v3 执行流程（12步）
 
 ```
-Layer 1: 交互层 (SuperCorp)
+Layer 1: 交互层 ()
 Step 1 · 读取项目状态 (.devflow/STATE.md)
 Step 2 · 入场检测 (entry-check.md, brownfield/greenfield)
 Step 3 · GitNexus可选检测 (detect → prompt → grep fallback)
@@ -22,7 +22,7 @@ Layer 1 → Layer 3: 战略评估 + 需求澄清
 Step 4 · Phase 0: YC六问战略评估 (stop-on-G1)
 Step 5 · Phase 1: 5 Whys需求追问
 
-Layer 3: 架构层 (Mega-Workflow)
+Layer 3: 架构层 ()
 Step 6 · Phase 2: 方案设计 (DAG路由 + Provider选择)
 Step 7 · Phase 2a: 设计枪战 (前端/UI项目必跑, 4-6变体)
 
@@ -179,7 +179,7 @@ Phase 0结束后，可设定Token预算上限：
 
 ## Step 5 · Phase 1: 5 Whys需求追问
 
-**Layer 1**: SuperCorp 交互层
+**Layer 1**: 交互层
 
 使用 grill skill 或 5 Whys 方法穷追模糊表述：
 - "用户说'要快'——多快？具体指标是什么？"
@@ -259,7 +259,7 @@ SDD完成后自动生成CONTEXT.md，然后进入Phase 2。
 
 ## Step 6 · Phase 2: 方案设计 (Layer 3)
 
-**Mega-Workflow 架构层**: DAG路由 + Provider智能选择
+**架构层**: DAG路由 + Provider智能选择
 
 ### DAG路由决策
 
@@ -308,7 +308,7 @@ SDD完成后自动生成CONTEXT.md，然后进入Phase 2。
 
 ## Step 8 · Phase 3: 任务拆分 (Layer 3 → Layer 2)
 
-**Mega-Workflow DAG + SEP Wave Engine**: Kahn算法拓扑排序
+**架构层 DAG + 引擎层 Wave Engine**: Kahn算法拓扑排序
 
 ### 执行流程
 
@@ -332,7 +332,7 @@ Wave N: <wave-name>
 
 ## Step 9 · Phase 4: 实施 (Layer 2)
 
-**SEP Engine Layer**: Wave并行执行 + LearningWorkflow自进化
+**引擎层 Engine Layer**: Wave并行执行 + LearningWorkflow自进化
 
 ### Wave执行流程
 
@@ -361,7 +361,7 @@ Wave N: <wave-name>
 
 ## Step 10 · Phase 5: 测试 (Layer 3)
 
-**Mega-Workflow QA + Cross-Wave Strategy Matrix**
+**架构层 QA + Cross-Wave Strategy Matrix**
 
 ### 交叉波测试矩阵
 
@@ -383,7 +383,7 @@ Wave N: <wave-name>
 
 ## Step 11 · Phase 6: 三层对抗审查 (Layer 1)
 
-**SuperCorp 三层对抗**: Blind Hunter / Edge Case Hunter / Acceptance Auditor 并行独立审查
+**三层对抗**: Blind Hunter / Edge Case Hunter / Acceptance Auditor 并行独立审查
 
 ### 三个审查员分工
 

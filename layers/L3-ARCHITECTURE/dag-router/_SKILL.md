@@ -7,7 +7,7 @@ description: |
   Classifies waves by resource overlap (HIGH/MEDIUM/LOW/NONE) for worktree isolation.
   Use when: "route tasks", "create wave plan", "DAG analysis", "topological sort". (devflow)
 layer: L3-ARCHITECTURE
-source: SEP DAG Router + Kahn's Algorithm + Mega-Workflow Task Splitter
+source: 引擎层 DAG Router + Kahn's Algorithm + 架构层 Task Splitter
 dependencies:
   - phase-3-task-plan (input: task list with dependency annotations)
   - wave-executor (output: wave-plan.yaml for Wave scheduling)

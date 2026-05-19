@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0-draft
 description: Multi-agent roundtable consensus protocol for complex decisions requiring diverse perspectives and structured debate. Use when "technical debate", "multi-agent consensus", "architectural decision". (devflow)
 layer: L2-ENGINE
-source: SuperCorp PartyMode + Cavecrew sub-agent delegation
+source: 交互层 PartyMode + Cavecrew sub-agent delegation
 dependencies: []
 triggers:
   - multi-agent consensus

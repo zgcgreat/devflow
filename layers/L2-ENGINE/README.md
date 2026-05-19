@@ -1,8 +1,8 @@
-# Layer 2: 引擎层 (SEP) — Learning-Enabled Execution Core
+# Layer 2: 引擎层 (引擎层) — Learning-Enabled Execution Core
 
 ## GSD六命令闭环 + LearningWorkflow自进化 + Wave并行执行
 
-此目录封装 SEP 的核心引擎能力，为 Phase 4-8 提供运行时执行力和自动进化。
+此目录封装 引擎层 的核心引擎能力，为 Phase 4-8 提供运行时执行力和自动进化。
 
 ### 文件结构
 

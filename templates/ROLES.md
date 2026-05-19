@@ -1,6 +1,6 @@
 # 职责划分：Templates / Skills / Rules
 
-> 本文档澄清 SuperCorp Ultimate 项目中 `templates/`、`skills/`、`rules/` 三个目录的职责边界和相互关系。
+> 本文档澄清 交互层 Ultimate 项目中 `templates/`、`skills/`、`rules/` 三个目录的职责边界和相互关系。
 
 ---
 
@@ -247,4 +247,4 @@ rules/ ──► 强制约束
 
 ## 来源
 
-本职责划分文档由 SuperCorp Ultimate 整合团队创建。
+本职责划分文档由 交互层 Ultimate 整合团队创建。

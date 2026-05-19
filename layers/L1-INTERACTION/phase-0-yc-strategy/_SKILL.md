@@ -1028,7 +1028,7 @@ Quality gates:
   - Integrated evidence requirements for all claims
   - Added boundary conditions for edge cases (solo founder, enterprise, non-profit)
 
-- **v1.0** (2024-01-10): Initial implementation based on SuperCorp Phase 0 + YC Due Diligence
+- **v1.0** (2024-01-10): Initial implementation based on 交互层 Phase 0 + YC Due Diligence
   - Basic 6-question framework
   - Simple pass/fail gate
   - No scoring system

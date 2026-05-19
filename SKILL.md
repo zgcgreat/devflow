@@ -3,7 +3,7 @@ name: devflow
 version: 3.0-draft
 description: |
   AI programming workflow v3.0 — zero-config, zero-threshold, zero-dependency.
-  Three-layer pyramid: SuperCorp (interaction) + SEP (engine) + Mega-Workflow (architecture).
+  Three-layer pyramid: 交互层 + 引擎层 + 架构层.
 
   Use when: (1) Starting any dev task, (2) User says "use devflow" or "v3",
   (3) Need structured workflow with auto-routing, learning evolution, and parallel execution.
@@ -17,7 +17,7 @@ Architecture: Skill in E:\LLM\skills\devflow, projects only get .devflow/ artifa
 # Devflow v3.0 — AI 编程工作流系统
 
 > **零配置 · 零门槛 · 零依赖**  
-> 三层架构：SuperCorp(交互层) → SEP(引擎层) → Mega-Workflow(架构层)  
+> 三层架构：交互层 → 引擎层 → 架构层  
 > GitNexus 可选检测，不装不影响流程。
 
 ## 🚀 三步启动
@@ -32,7 +32,7 @@ Architecture: Skill in E:\LLM\skills\devflow, projects only get .devflow/ artifa
 
 ## 🏗️ 三层架构总览
 
-### Layer 1: 交互层 (SuperCorp) — 零门槛入口
+### Layer 1: 交互层 — 零门槛入口
 
 Phase 0-8 全流程，Markdown Skill 驱动：
 
@@ -49,7 +49,7 @@ Phase 0-8 全流程，Markdown Skill 驱动：
 | 7 | **Canary灰度集成** ⭐ | 分批次上线 + 自动回滚 |
 | 8 | 知识归档 | LESSONS nomination + Domain Skills Promotion |
 
-### Layer 2: 引擎层 (SEP) — 持续进化核心
+### Layer 2: 引擎层 — 持续进化核心
 
 | 组件 | 能力 |
 |------|------|
@@ -58,7 +58,7 @@ Phase 0-8 全流程，Markdown Skill 驱动：
 | **PartyMode共识** | 多Agent讨论，投票达成共识 |
 | **Token压缩引擎** | 4级(lite/full/ultra/extreme)，最高~90%节省 |
 
-### Layer 3: 架构层 (Mega-Workflow) — 企业级编排
+### Layer 3: 架构层 — 企业级编排
 
 | 组件 | 能力 |
 |------|------|
@@ -72,14 +72,14 @@ Phase 0-8 全流程，Markdown Skill 驱动：
 
 ## ⭐ v3.0 五大独有能力
 
-### 1. LearningWorkflow 自动进化 (来自 SEP)
+### 1. LearningWorkflow 自动进化
 
 系统越用越强。每次 Phase 执行后：
 - 提取失败教训 → 写入 `memory/LESSONS.md`
 - 沉淀领域技能 → `memory/domain-skills/`
 - Wave N+1 启动时自动加载相关经验（跨波上下文读取协议）
 
-### 2. Provider 智能路由 (来自 Mega-Workflow)
+### 2. Provider 智能路由
 
 根据任务类型自动选择最佳模型：
 - **创意类** (设计/文案) → 高创造力模型
@@ -88,14 +88,14 @@ Phase 0-8 全流程，Markdown Skill 驱动：
 - **搜索类** (Phase 1) → 高检索能力模型
 - **简单任务** → lite 模型节省成本
 
-### 3. 分层 Agent 上下文隔离 (来自 Mega-Workflow)
+### 3. 分层 Agent 上下文隔离
 
 每层Agent有独立新鲜上下文窗口，避免 context rot：
 - **Orchestrator**: ~50K tokens 全局上下文
 - **Research Agent**: ~200K tokens Phase 1/2 纯新鲜上下文
 - **Execution Agent**: ~200K tokens Phase 4 Wave级新鲜上下文
 
-### 4. 设计枪战变体生成 (来自 SuperCorp)
+### 4. 设计枪战变体生成
 
 Phase 2a 自动生成 4-6 个设计方案变体：
 - 每个标注优缺点和风险评估
@@ -103,7 +103,7 @@ Phase 2a 自动生成 4-6 个设计方案变体：
 - 用户选择或组合 → 最终方案
 - 防决策疲劳
 
-### 5. Canary 灰度发布 (来自 SuperCorp)
+### 5. Canary 灰度发布
 
 Phase 7 分批次上线：10% → 50% → 100%
 - 每批间隔自动健康检查
@@ -118,7 +118,7 @@ Phase 7 分批次上线：10% → 50% → 100%
 用户输入（一句话需求）
         │
         ▼
-┌──────────────────────┐     Layer 1: SuperCorp 交互层
+┌──────────────────────┐     Layer 1: 交互层
 │ Phase 0: YC六问      │ ← 战略评估，6个尖锐问题
 │ Phase 1: 5 Whys追问  │ ← 消除模糊表述
 └──────────┬───────────┘
@@ -129,7 +129,7 @@ Phase 7 分批次上线：10% → 50% → 100%
 └──────────┬───────────┘
            │ 通过 G2.5 (Decision Clarity)
            ▼
-┌──────────────────────┐     Layer 3: Mega-Workflow 架构层
+┌──────────────────────┐     Layer 3: 架构层
 │ Phase 2: 方案设计    │ ← DAG路由 + Provider选择
 │ Phase 2a: 设计枪战   │ ← 4-6变体生成，用户选最优 ⭐
 └──────────┬───────────┘
@@ -140,23 +140,23 @@ Phase 7 分批次上线：10% → 50% → 100%
 └──────────┬───────────┘
            │
            ▼
-┌──────────────────────┐     Layer 2: SEP 引擎层
+┌──────────────────────┐     Layer 2: 引擎层
 │ Phase 4: 实施        │ ← Wave并行 + Learning自进化 ⭐
 │                  ↑    │ ← PartyMode共识（复杂任务）
 └──────────┬───────────┘
            │
            ▼
-┌──────────────────────┐     Layer 3: Mega-Workflow QA
+┌──────────────────────┐     Layer 3: 架构层 QA
 │ Phase 5: 测试        │ ← 浏览器QA + 交叉波测试矩阵
 └──────────┬───────────┘
            │
            ▼
-┌──────────────────────┐     Layer 1: SuperCorp 对抗审查 ⭐
+┌──────────────────────┐     Layer 1: 对抗审查 ⭐
 │ Phase 6: 三层审查    │ ← Blind Hunter / Edge Case / Auditor
 └──────────┬───────────┘
            │ 通过 G5 (Integration)
            ▼
-┌──────────────────────┐     Layer 1: SuperCorp Canary ⭐
+┌──────────────────────┐     Layer 1: Canary发布 ⭐
 │ Phase 7: Canary发布  │ ← 10%→50%→100% + 自动回滚
 └──────────┬───────────┘
            │
@@ -413,9 +413,9 @@ SKILL.md          ← 本文件，v3零配置入口（你正在读的）
 GO.md             ← v3路由器，包含完整路由决策树和12步流程
 V3-ARCHITECTURE.md ← 架构设计文档（三层金字塔详解）
 layers/           ← 三层架构核心模块
-  L1-INTERACTION/ ← SuperCorp交互层封装 (Phase 0-8)
-  L2-ENGINE/      ← SEP引擎层封装 (GSD/Learning/Wave/Token)
-  L3-ARCHITECTURE/← Mega-Workflow架构层 (DAG/Provider/Agent)
+  L1-INTERACTION/ ← 交互层封装 (Phase 0-8)
+  L2-ENGINE/      ← 引擎层封装 (GSD/Learning/Wave/Token)
+  L3-ARCHITECTURE/← 架构层 (DAG/Provider/Agent)
 optional/         ← 可选工具链 (GitNexus检测 + Grep降级)
 skills/stage-skills/ ← v1.0向后兼容的Stage Skills
 references/       ← 规则集(R1-R20)、模板、门控规则
@@ -578,8 +578,8 @@ Phase 4: + dev-*.md + Developer persona (按需加载)
 
 ## 🌟 v3.0 vs 对比
 
-| 维度 | v1.0 | SEP | SuperCorp | Mega-Workflow | **v3.0** |
-|------|------|-----|-----------|---------------|----------|
+| 维度 | 旧版 | 引擎版 | 交互版 | 架构版 | **v3.0** |
+|------|------|--------|--------|--------|----------|
 | 配置要求 | 低 | 中(npm) | 极低 | 高 | **零** |
 | 门槛 | 低 | 高 | 极低 | 中 | **极低** |
 | 功能覆盖 | ~60% | ~70% | ~60% | ~95% | **~98%** |
@@ -631,7 +631,7 @@ Phase 4: + dev-*.md + Developer persona (按需加载)
 ## 版本历史
 
 ### v3.0-draft (2026-05-17)
-- **三层金字塔架构**: SuperCorp(交互) + SEP(引擎) + Mega-Workflow(架构)
+- **三层金字塔架构**: 交互层 + 引擎层 + 架构层
 - **五大独有能力**: LearningWorkflow自进化 / Provider路由 / Agent隔离 / 设计枪战 / Canary发布
 - **零配置入口**: 加载SKILL.md → 一句话需求 → 自动执行
 - **GitNexus可选检测**: detect → prompt → grep fallback

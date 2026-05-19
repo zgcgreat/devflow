@@ -7,7 +7,7 @@ description: |
   complexity, and cost constraints with fallback chains (exponential backoff).
   Use when: "route to provider", "select model", "provider fallback", "cost-aware routing". (devflow)
 layer: L3-ARCHITECTURE
-source: SEP Provider Gateway + Cost-Aware Model Router
+source: 引擎层 Provider Gateway + Cost-Aware Model Router
 dependencies:
   - dag-router (input: task types from WAVE-PLAN.md)
   - agent-isolation (output: provider-assigned tasks run in isolated context)

@@ -1,6 +1,6 @@
 # API Contract Specialist — Phase 6+ 技术专家审查层
 
-> **来源**: mega-workflow / supercorp-ultimate 融合  
+> **来源**: 架构层 / supercorp-ultimate 融合  
 > **层级**: L1-INTERACTION (Phase 6之上第二层)
 
 ## 触发条件

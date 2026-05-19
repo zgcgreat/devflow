@@ -8,7 +8,7 @@ description: |
   and atomic commits. Use when: "implement feature", "TDD development", "execute wave tasks",
   "run tests first". (devflow)
 layer: L2-ENGINE
-source: SEP Executor + Wave Engine + TDD Workflow
+source: 引擎层 Executor + Wave Engine + TDD Workflow
 dependencies:
   - dag-router (input: wave-plan.yaml with task dependencies)
   - parallel-engine (dispatches executor per wave in dependency order)
@@ -1048,7 +1048,7 @@ Quality gates:
   - Defined strict heartbeat checkpoint format
   - Added comprehensive error handling (5 common issues)
 
-- **v1.0** (2024-01-10): Initial implementation based on SuperCorp developer.md + SEP wave-executor
+- **v1.0** (2024-01-10): Initial implementation based on 交互层 developer.md + 引擎层 wave-executor
   - Basic TDD cycle (Red-Green-Refactor)
   - Simple Wave execution without dependency verification
   - No R6 checks

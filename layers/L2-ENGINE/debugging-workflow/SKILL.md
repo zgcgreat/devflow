@@ -8,7 +8,7 @@ description: Four-phase methodology for systematic debugging — inserted betwee
 
 # Systematic Debugging — 系统化调试方法论
 
-> **Layer**: L2-ENGINE (SEP Engine Layer 唯一缺失的方法论层)  
+> **Layer**: L2-ENGINE (引擎层 Engine Layer 唯一缺失的方法论层)  
 > **触发时机**: Phase 4 代码完成后、Phase 5 测试前（Phase 4 → Phase 5 过渡时）  
 > **前置产物**: 失败的测试、Bug 报告、异常行为日志  
 > **后置产物**: Root cause 分析结果 + 修复方案 + Defense-in-depth 验证层  

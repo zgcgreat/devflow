@@ -3,7 +3,7 @@ name: phase-3-task-plan
 preamble-tier: 2
 version: 3.0-draft
 layer: L1-INTERACTION (DAG), L3-ARCHITECTURE (执行)
-source: SuperCorp Phase 3 + Mega-Workflow DAG Router
+source: 交互层 Phase 3 + 架构层 DAG Router
 dependencies:
   - writing-plans
 allowed-tools:
