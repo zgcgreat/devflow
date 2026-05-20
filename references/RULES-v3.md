@@ -265,35 +265,13 @@ done
 - 每次修改 `layers/L1-INTERACTION/phase-*` 下的 core skill，必须同步更新 `skills/stage-skills/stage-*` 对应文件
 - 每次修改 `layers/L2-ENGINE/` 或 `layers/L3-ARCHITECTURE/` 必须检查 stage-skills 是否有引用
 
-### R23.2 SYNC-STATUS.md 维护
+### R23.2 同步状态跟踪
 
-- `skills/stage-skills/SYNC-STATUS.md` 是同步状态的单一事实来源
-- 每次同步后更新 `last-synced` 字段和变更摘要
-- SYNC-STATUS.md 格式：
+> ⚠️ **Note**: `SYNC-STATUS.md` 已移除。Stage skills 已标 DEPRECATED，新开发全部走 `layers/L1-INTERACTION/phase-*`。
+> 同步状态通过 git diff 和 phase skill 的 `version` frontmatter 字段追踪。
 
-```markdown
-# Stage Skills Sync Status
-
-- **Last Synced**: YYYY-MM-DD
-- **Core Version**: v3.x-draft
-- **Stage Skills Version**: v3.x-draft (must match)
-- **Owner**: L2-ENGINE team
-
-## Sync Mapping
-
-| Stage Skill | Core Skill | Status | Last Verified |
-|-------------|------------|--------|---------------|
-| stage-2-design | phase-2-design | synced | YYYY-MM-DD |
-| stage-3-task | phase-3-task-plan | synced | YYYY-MM-DD |
-| stage-4-dev | phase-4-build | synced | YYYY-MM-DD |
-| stage-6-review | phase-6-review | synced | YYYY-MM-DD |
-| stage-7-integration | phase-7-canary | synced | YYYY-MM-DD |
-
-## Divergence Log
-
-| Date | Core Change | Stage Action | Result |
-|------|-------------|--------------|--------|
-```
+- 每次同步后验证 `layers/L1-INTERACTION/phase-*` 的 `version` 字段一致性
+- 不再维护独立的 SYNC-STATUS.md 文件
 
 ### R23.3 版本一致性检查
 
@@ -313,7 +291,7 @@ fi
 
 - **P2**: Stage skill 版本与 core skill 不一致超过 7 天
 - **P1**: Stage skill 包含 core skill 已删除的字段或步骤
-- **Escalation**: 同步失败时先更新 SYNC-STATUS.md → 通知 L2-ENGINE owner → 手动合并冲突
+- **Escalation**: 同步失败时检查 phase skill `version` frontmatter → 通知 L2-ENGINE owner → 手动合并冲突
 
 ---
 
