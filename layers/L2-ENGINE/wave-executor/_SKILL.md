@@ -150,6 +150,32 @@ Ready to execute Wave 1.
 
 ---
 
+### Step 0.5: GitNexus Index Freshness Check
+
+> GitNexus 是 devflow 的代码智能后端（替代 regex-based code-intelligence）。索引过期会导致分析结果不准确。
+
+**在 Wave 执行前检查索引新鲜度**：
+
+```bash
+# 检查 GitNexus 索引状态
+node scripts/gitnexus-check.js --check
+
+# 如果索引不存在或过期，刷新索引
+gitnexus analyze --reindex
+```
+
+**新鲜度标准**：
+| 条件 | 操作 |
+|------|------|
+| 索引不存在 | 执行 `gitnexus analyze` 建立索引 |
+| 索引 > 1小时 且 本轮有代码变更 | 执行 `gitnexus analyze --reindex` |
+| 索引 ≤ 1小时 | 跳过，使用现有索引 |
+| GitNexus 未安装 | 降级到 regex fallback（自动处理，不影响执行） |
+
+**集成点**：在 Step 0 加载 wave plan 之后、Step 1 执行 wave 之前执行此检查。
+
+---
+
 ### Step 1: Execute Wave with Dependency Validation
 
 **⚠️ MANDATORY**: Before starting Wave N, verify Wave N-1 SUMMARY is PASS.

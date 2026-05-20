@@ -1,0 +1,78 @@
+---
+name: gitnexus-bridge
+layer: L3-ARCHITECTURE
+category: code-intelligence
+version: 1.0.0
+description: GitNexus 深度代码分析引擎桥接层，为 devflow 提供知识图谱驱动的代码智能能力
+dependencies:
+  - gitnexus (>=1.6.0)
+  - code-intelligence (fallback)
+triggers:
+  - code analysis needed
+  - impact analysis requested
+  - git-diff change detection
+---
+
+# GitNexus Bridge — 深度代码分析引擎
+
+## 概述
+
+将 devflow 的代码智能需求桥接到 GitNexus，替代旧的 regex 分析器，获得以下升级：
+
+| 能力 | 旧 (regex) | 新 (GitNexus) |
+|------|-----------|---------------|
+| 依赖图 | import/require 正则 | 44 node types, 21 edge types 知识图谱 |
+| Blast Radius | 固定深度遍历 | 置信度评分(0-1) + 深度分组 |
+| 变更影响 | 无 git 感知 | `detect_changes` 自动关联 git diff |
+| 语义搜索 | 关键词匹配 | BM25 + vector + RRF 混合检索 |
+| 社区检测 | 无 | Leiden algorithm 自动聚类 |
+| 跨仓库 | 无 | Groups + contracts |
+
+## MCP 工具映射
+
+| devflow 工具 | GitNexus 命令 | 说明 |
+|---|---|---|
+| `devflow_analyze` | `gitnexus context` | 解析文件结构 |
+| `devflow_trace_chain` | `gitnexus context --direction` | 调用链追踪 |
+| `devflow_blast_radius` | `gitnexus impact` | 影响分析 + 置信度 |
+| `devflow_dep_graph` | `gitnexus query dependencies` | 依赖图 |
+| `devflow_find_references` | `gitnexus context --refs` | 引用查找 |
+| `devflow_detect_changes` | `gitnexus detect-changes` | **新增** git-diff → 受影响符号 |
+| `devflow_route_map` | `gitnexus query routes` | **新增** API 路由映射 |
+
+## 降级策略
+
+当 GitNexus 不可用时，自动 fallback 到 `code-intelligence/` 的 regex 分析器：
+- 返回结果中 `_source` 字段标识数据来源：`"gitnexus"` 或 `"regex-fallback"`
+- `devflow_detect_changes` 和 `devflow_route_map` 无 fallback，返回 unavailable 提示
+
+## Phase 集成
+
+| Phase | 使用方式 |
+|-------|---------|
+| Phase 3 Task Plan | `devflow_dep_graph` 拆分任务依赖 |
+| Phase 4 Build | `devflow_blast_radius` 评估修改安全性 |
+| Phase 5 Test | `devflow_detect_changes` 确定测试范围 |
+| Phase 6 Review | `devflow_trace_chain` + `devflow_route_map` 跨文件审查 |
+
+## 索引管理
+
+- 首次使用：`cd <project> && gitnexus analyze`
+- 索引位置：`<project>/.gitnexus/`
+- 自动刷新：wave-executor 完成后触发 `gitnexus analyze .`
+- 手动刷新：`gitnexus analyze . --force`
+
+## Error Taxonomy (GitNexus Bridge 专属)
+
+| 级别 | 错误 | 处理 |
+|------|------|------|
+| P0 | GitNexus 索引损坏 | `gitnexus analyze . --force` 重建 |
+| P1 | GitNexus 版本过低 | 升级：`npm update -g gitnexus` |
+| P2 | 项目未索引 | 自动触发 `gitnexus analyze` |
+| P3 | GitNexus 不可用，fallback 到 regex | 静默降级，日志标记 |
+
+## Boundary Conditions (GitNexus Bridge)
+
+- 项目文件数 > 50,000 时，首次索引可能需要 > 5 分钟
+- LadybugDB WAL 文件可能增长过大，需定期 `gitnexus analyze --compact`
+- Node.js < 22 时无法运行 GitNexus，强制 fallback

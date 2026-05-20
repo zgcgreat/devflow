@@ -7,7 +7,7 @@
  */
 
 const readline = require('readline');
-const { TOOL_DEFS: ciTools, handlers: ciHandlers } = require('../layers/L3-ARCHITECTURE/code-intelligence/mcp-server');
+const { GITNEXUS_TOOLS: ciTools, handlers: ciHandlers } = require('../layers/L3-ARCHITECTURE/gitnexus-bridge/mcp-server');
 const { readState, checkGate, loadMemory, detectRuntime } = require('../adapters/shared/core-bridge');
 const { loadCompressed } = require('../adapters/shared/memory-loader');
 const { createChange, applyChange, verifyChange, archiveChange, listChanges } = require('../layers/L2-ENGINE/change-manager/change-lifecycle');
@@ -17,14 +17,6 @@ const { createChange, applyChange, verifyChange, archiveChange, listChanges } = 
 // ============================================================
 
 const { compress: compressMemory } = require('../layers/L2-ENGINE/token-compression-v2/compressor');
-
-const ciToolsRemapped = [
-  { name: 'devflow_analyze', description: 'Parse a file and extract code structure', inputSchema: { type: 'object', properties: { file_path: { type: 'string' }, language: { type: 'string' } }, required: ['file_path'] } },
-  { name: 'devflow_trace_chain', description: 'Trace call chain from a function', inputSchema: { type: 'object', properties: { file_path: { type: 'string' }, symbol_name: { type: 'string' }, direction: { type: 'string', enum: ['callers','callees','both'], default: 'both' } }, required: ['file_path', 'symbol_name'] } },
-  { name: 'devflow_blast_radius', description: 'Analyze impact radius of changes', inputSchema: { type: 'object', properties: { changed_files: { type: 'array', items: { type: 'string' } }, changed_symbols: { type: 'array', items: { type: 'string' } } }, required: ['changed_files'] } },
-  { name: 'devflow_dep_graph', description: 'Build dependency graph', inputSchema: { type: 'object', properties: { scope: { type: 'string', enum: ['project','directory','file'], default: 'project' }, path: { type: 'string' }, format: { type: 'string', enum: ['dot','mermaid','json'], default: 'json' } }, required: [] } },
-  { name: 'devflow_find_references', description: 'Find all references to a symbol', inputSchema: { type: 'object', properties: { file_path: { type: 'string' }, symbol_name: { type: 'string' } }, required: ['file_path', 'symbol_name'] } }
-];
 
 const devflowTools = [
   { name: 'devflow_status', description: 'Get current project state', inputSchema: { type: 'object', properties: { projectDir: { type: 'string' } }, required: ['projectDir'] } },
@@ -40,7 +32,7 @@ const devflowTools = [
   { name: 'devflow_change_verify', description: 'Verify a change', inputSchema: { type: 'object', properties: { projectDir: { type: 'string' }, changeName: { type: 'string' } }, required: ['projectDir', 'changeName'] } },
   { name: 'devflow_change_apply', description: 'Apply a change', inputSchema: { type: 'object', properties: { projectDir: { type: 'string' }, changeName: { type: 'string' }, mainSpecPath: { type: 'string' } }, required: ['projectDir', 'changeName', 'mainSpecPath'] } },
   { name: 'devflow_change_archive', description: 'Archive a change', inputSchema: { type: 'object', properties: { projectDir: { type: 'string' }, changeName: { type: 'string' } }, required: ['projectDir', 'changeName'] } },
-  ...ciToolsRemapped
+  ...ciTools
 ];
 
 // ============================================================
@@ -80,11 +72,13 @@ const devflowHandlers = {
   devflow_change_verify: (p) => verifyChange(require('path').join(p.projectDir, '.devflow/changes', p.changeName)),
   devflow_change_apply: (p) => applyChange(require('path').join(p.projectDir, '.devflow/changes', p.changeName), p.mainSpecPath),
   devflow_change_archive: (p) => { const dir = archiveChange(p.projectDir, p.changeName); return { archived: true, path: dir }; },
-  devflow_analyze: ciHandlers.analyze_file,
-  devflow_trace_chain: ciHandlers.trace_call_chain,
-  devflow_blast_radius: ciHandlers.blast_radius,
-  devflow_dep_graph: ciHandlers.dependency_graph,
-  devflow_find_references: ciHandlers.find_references
+  devflow_analyze: ciHandlers.devflow_analyze,
+  devflow_trace_chain: ciHandlers.devflow_trace_chain,
+  devflow_blast_radius: ciHandlers.devflow_blast_radius,
+  devflow_dep_graph: ciHandlers.devflow_dep_graph,
+  devflow_find_references: ciHandlers.devflow_find_references,
+  devflow_detect_changes: ciHandlers.devflow_detect_changes,
+  devflow_route_map: ciHandlers.devflow_route_map
 };
 
 // ============================================================

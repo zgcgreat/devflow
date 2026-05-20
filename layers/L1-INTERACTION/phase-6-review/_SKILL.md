@@ -247,6 +247,26 @@ Stage A判定: NOT_PASS (#4 missing)
 
 **前置条件**: Stage A PASS → 继续执行 Stage B。
 
+### Step B-1: GitNexus Index Freshness Check
+
+> 审查阶段依赖代码智能分析结果（blast radius、call chain、references），索引过期会导致审查结论不准确。
+
+**在启动 Stage B 审查员前检查索引**：
+
+```bash
+# Quick check — 如果输出 "stale" 或 "missing"，刷新索引
+gitnexus analyze --check || gitnexus analyze --reindex
+```
+
+| 索引状态 | 操作 |
+|---------|------|
+| 不存在 | `gitnexus analyze` 建立索引 |
+| 过期 (>1h 且有变更) | `gitnexus analyze --reindex` |
+| 新鲜 (≤1h) | 跳过 |
+| GitNexus 未安装 | 降级到 regex fallback，审查照常进行 |
+
+**在审查报告中标注数据来源**：所有基于代码智能的审查结论需标注 `_source: gitnexus` 或 `_source: regex-fallback`。
+
 ### Step B0: 审查员初始化
 
 Stage B 有 **两个独立审查员并行工作**（不再含 Acceptance Auditor，它已在 Stage A 完成 spec 检查）：
