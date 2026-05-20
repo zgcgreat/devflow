@@ -1,11 +1,17 @@
 ---
 name: phase-3-task-plan
+description: Phase 3 任务规划 — ADR 映射、Task 拆分、DAG 依赖分析与 Wave 分组
 preamble-tier: 2
 version: 3.0-draft
-layer: L1-INTERACTION (DAG), L3-ARCHITECTURE (执行)
-source: 交互层 Phase 3 + 架构层 DAG Router
+layer: L1-INTERACTION
+source: 交互层 Phase 3 (Task Plan & DAG)
 dependencies:
   - writing-plans
+triggers:
+  - "拆分任务"
+  - "任务规划"
+  - "DAG"
+  - "task planning"
 allowed-tools:
   - Read
   - Bash
@@ -37,7 +43,7 @@ allowed-tools:
 **1.1 读取 Phase 2 产物**:
 - `02-design.md` — 技术方案设计文档(必需)
 - `02a-ui-design.md` — UI设计方案(如有)
-- **ADR (架构决策记录)** — 如果存在 `.devflow/adr/*.md` 或 `layers/L3-ARCHITECTURE/schema-definitions/DECISIONS.md`,必须解析
+- **ADR (架构决策记录)** — 如果存在 `.devflow/adr/*.md` 或 `.devflow/DECISIONS.md`,必须解析
 
 **1.2 ADR 解析步骤**:
 ```markdown
@@ -100,7 +106,7 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 
 **格式消费契约**: Phase 3 输出 `03-tasks.md` 为 Markdown 格式，Wave Executor 直接消费（不需要 YAML 中间格式）。Wave Executor Step 0 内置 markdown → internal task array 解析器。
 
-**Task ID convention**: Use descriptive kebab-case IDs that reflect the task's domain/module (e.g., `user-auth-model`, `payment-webhook-handler`). This aligns with dag-router and executor expectations which use kebab-case identifiers. The legacy `T<NN>` format (e.g., `T01`) is still accepted for backward compatibility but kebab-case is canonical.
+**Task ID convention**: Use descriptive kebab-case IDs that reflect the task's domain/module (e.g., `user-auth-model`, `payment-webhook-handler`). This aligns with executor expectations which use kebab-case identifiers. The legacy `T<NN>` format (e.g., `T01`) is still accepted for backward compatibility but kebab-case is canonical.
 
 **Sprint 9 Audit (A-P2-1)**: All existing task ID examples in this file use `T01`, `T02` format. New task specifications SHOULD use kebab-case. Validation bash script provided in "可执行命令示例" section scans for non-conforming IDs. Phase 3 output `03-tasks.md` MUST have all Task IDs in kebab-case format (legacy `T<NN>` accepted only for backward compatibility with existing Wave Executor parsers).
 
@@ -114,17 +120,13 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 | Wave 分组 | 并行任务无交叉依赖 | 重新分组 |
 | 原子性 | 单 Task < 10 文件, < 500 行改动 | 拆分大 Task |
 
-### Step 5: 用户确认（多问题确认模式）
+### Step 5: 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-输出完成声明后，使用多问题确认格式与用户交互：
-
-```markdown
 📍 当前阶段: Phase 3 · Task Plan — Task Breakdown & DAG
 🎯 本步目标: 确认任务拆分和依赖关系是否合理
 
----
 **问题 1**: 任务拆分粒度是否合适？
 [1] ✅ 粒度合适，继续 ← 推荐
 [2] 需要拆分/合并
@@ -139,26 +141,6 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 [1] ✅ 同意，开始 Phase 4 ← 推荐
 [2] 需要修改后重试
 [3] 回退到 Phase 2
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```
 
 ---
 

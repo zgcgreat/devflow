@@ -1,19 +1,17 @@
-﻿# devflow-kit Stage: A-Evolve（架构演进）
-
-> **阶段定位**：从历史需求中提取架构级经验，同步到上下文
-> **前置条件**：`.devflow/system-architecture.md` 存在
-> **后置产物**：更新的 `.devflow/CONTEXT.md` + `.devflow/system-architecture.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-a-evolve
 version: 1.0.0
 description: devflow-kit可选命令 - 架构演进与经验沉淀
 author: devflow-kit
 dependencies:
   - planning-and-context
-```
+---
+
+# devflow-kit Stage: A-Evolve（架构演进）
+
+> **阶段定位**：从历史需求中提取架构级经验，同步到上下文
+> **前置条件**：`.devflow/system-architecture.md` 存在
+> **后置产物**：更新的 `.devflow/CONTEXT.md` + `.devflow/system-architecture.md`
 
 ## 输入
 

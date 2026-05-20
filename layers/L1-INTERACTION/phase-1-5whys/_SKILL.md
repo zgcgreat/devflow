@@ -6,6 +6,8 @@ phase: 1
 description: Apply the "5 Whys" root cause analysis technique to uncover true user needs beneath surface-level requests
 requires: [g1-gate-decision, strategy-document]
 provides: [user-stories, acceptance-criteria, glossary, scope-boundaries, g2-gate-decision]
+dependencies:
+  - phase-0-strategy
 gate: G2
 triggers:
   - requirements clarification
@@ -696,17 +698,13 @@ echo "✅ STATE.md updated with Phase 1 results"
 
 ---
 
-### Step 7: 用户确认（多问题确认模式）
+### Step 7: 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-输出 G2 Gate 评估后，使用多问题确认格式与用户交互：
-
-```markdown
 📍 当前阶段: Phase 1 · 5 Whys — G2 Analysis Quality Gate
 🎯 本步目标: 确认五问分析结果和 G2 Gate 决策
 
----
 **问题 1**: G2 Gate 决策是否合理（5 项检查全部 PASS）？
 [1] ✅ 分析质量达标，继续 ← 推荐
 [2] 需要补充用户故事或验收标准
@@ -721,26 +719,6 @@ echo "✅ STATE.md updated with Phase 1 results"
 [1] ✅ 同意，继续 Phase 2 ← 推荐
 [2] 需要修改 01-analysis.md
 [3] 回退到 Phase 0 重审战略
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```
 
 ---
 

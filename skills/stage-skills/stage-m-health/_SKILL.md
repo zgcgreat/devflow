@@ -1,12 +1,4 @@
-﻿# devflow-kit Stage: M-Health（健康检查）
-
-> **阶段定位**：定期检查项目代码健康和架构一致性
-> **前置条件**：无（可随时执行）
-> **后置产物**：`.devflow/health/YYYY-MM-DD.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-m-health
 version: 1.0.0
 description: devflow-kit可选命令 - 项目健康检查
@@ -14,7 +6,13 @@ author: devflow-kit
 dependencies:
   - verification-before-completion
   - security-and-performance
-```
+---
+
+# devflow-kit Stage: M-Health（健康检查）
+
+> **阶段定位**：定期检查项目代码健康和架构一致性
+> **前置条件**：无（可随时执行）
+> **后置产物**：`.devflow/health/YYYY-MM-DD.md`
 
 ## 输入
 

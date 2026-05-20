@@ -1,19 +1,17 @@
-﻿# devflow-kit Stage: 1-Analysis（需求分析）
-
-> **阶段定位**：将模糊需求转化为明确的验收标准
-> **前置条件**：00-requirements.md 已完成
-> **后置产物**：`.devflow/<req-id>/01-analysis.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-1-analysis
 version: 1.0.0
 description: devflow-kit工作流第1阶段 - 需求分析与AC拆解
 author: devflow-kit
 dependencies:
   - executing-plans
-```
+---
+
+# devflow-kit Stage: 1-Analysis（需求分析）
+
+> **阶段定位**：将模糊需求转化为明确的验收标准
+> **前置条件**：00-requirements.md 已完成
+> **后置产物**：`.devflow/<req-id>/01-analysis.md`
 
 ## 输入
 

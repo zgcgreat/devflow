@@ -441,15 +441,13 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 | CONTEXT.md完整性 | 文件存在且格式正确 | 重新生成 |
 | 用户确认 | 用户回复Y或继续 | 停等用户输入 |
 
-### 用户确认（多问题确认模式）
+### 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-```markdown
 📍 当前阶段: Phase 1b · Discuss — Decision Capture
 🎯 本步目标: 确认 CONTEXT.md 中的技术决策是否合理
 
----
 **问题 1**: 已确认决策是否覆盖关键实现细节（≥70%）？
 [1] ✅ 覆盖率达标 ← 推荐
 [2] 需要补充决策点
@@ -464,26 +462,6 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 [1] ✅ 同意，继续 Phase 2 ← 推荐
 [2] 需要修改 CONTEXT.md
 [3] 回退到 Phase 1
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```
 | **PartyMode Gate 集成** | 所有 PartyMode 审议的决策均已消费 gate output 并标记 | 未消费 gate result 的决策计为 [NEEDS CLARIFICATION] |
 | **PartyMode Gate Report** | `.devflow/<req-id>/partymode-gate-report.md` 存在（如有 PartyMode 调用） | 缺失则回溯 PartyMode Step D |
 

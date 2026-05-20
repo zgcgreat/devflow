@@ -1,19 +1,17 @@
-﻿# devflow-kit Stage: A-Architect（架构梳理）
-
-> **阶段定位**：建立或更新项目级架构文档
-> **前置条件**：无（可随时执行）
-> **后置产物**：`.devflow/system-architecture.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-a-architect
 version: 1.0.0
 description: devflow-kit可选命令 - 架构梳理与文档化
 author: devflow-kit
 dependencies:
   - stage-a-architect
-```
+---
+
+# devflow-kit Stage: A-Architect（架构梳理）
+
+> **阶段定位**：建立或更新项目级架构文档
+> **前置条件**：无（可随时执行）
+> **后置产物**：`.devflow/system-architecture.md`
 
 ## 输入
 

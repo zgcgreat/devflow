@@ -1,27 +1,25 @@
-# L3-Agent Isolation — Agent 上下文隔离 (~200K/Agent)
-
-> **Layer**: L3-ARCHITECTURE (全局协调层)  
-> **前置**: Wave Plan 已生成, Provider Assignment 已完成  
-> **后置产物**: Per-agent isolated context packages + communication channels  
-> **门控**: R7 — Context Isolation Rule
-
-## Skill元信息
-
-```yaml
+---
 name: agent-isolation
+description: L3 Agent 上下文隔离 — 每个Agent ~200K token独立上下文窗口
 version: 3.0
 layer: L3-ARCHITECTURE
 source: Agent isolation from v3 architecture, R7 rule enforcement
 dependencies:
-  - WAVE-PLAN.md (input: per-agent task assignments)
-  - provider-gateway (input: provider chains)
+  - wave-executor
 token_budget: "inherited from parent execution (~200K per child agent)"
 v3_upgrade:
   token_budget_per_agent: ~200K tokens enforced
   context_rotation_at_wave_boundary: true
   six_module_loading_order: true
   cross_agent_communication_channels: true
-```
+---
+
+# L3-Agent Isolation — Agent 上下文隔离 (~200K/Agent)
+
+> **Layer**: L3-ARCHITECTURE (全局协调层)
+> **前置**: Wave Plan 已生成, Provider Assignment 已完成
+> **后置产物**: Per-agent isolated context packages + communication channels
+> **门控**: R7 — Context Isolation Rule
 
 > **Note**: This is a documentation-only index file describing the agent-isolation policy. Actual enforcement happens in `executor/_SKILL.md` and `wave-executor/_SKILL.md` (~200K/Agent context window budget). This file's budget is inherited from parent workflow execution.
 

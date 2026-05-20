@@ -1,19 +1,17 @@
-﻿# devflow-kit Stage: 3-Task（任务拆分）
-
-> **阶段定位**：将设计拆分为可并行的原子任务，并生成详细实施计划
-> **前置条件**：02-design.md 已完成
-> **后置产物**：`.devflow/<req-id>/03-tasks.md` + `.devflow/<req-id>/03a-implementation-plan.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-3-task
 version: 1.0.0
 description: devflow-kit工作流第3阶段 - 任务拆分与并行规划
 author: devflow-kit
 dependencies:
   - writing-plans
-```
+---
+
+# devflow-kit Stage: 3-Task（任务拆分）
+
+> **阶段定位**：将设计拆分为可并行的原子任务，并生成详细实施计划
+> **前置条件**：02-design.md 已完成
+> **后置产物**：`.devflow/<req-id>/03-tasks.md` + `.devflow/<req-id>/03a-implementation-plan.md`
 
 ## 输入
 

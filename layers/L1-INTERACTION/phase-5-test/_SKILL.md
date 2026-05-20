@@ -1,11 +1,17 @@
 ---
 name: phase-5-test
+description: Phase 5 测试阶段 — 测试策略制定、测试用例执行、覆盖度验证与 Bug 修复循环
 preamble-tier: 2
 version: 3.0-draft
-layer: L1-INTERACTION (协调), L3-ARCHITECTURE (QA)
-source: 交互层 Phase 5 + 架构层 QA
+layer: L1-INTERACTION (协调), L2-ENGINE (QA via core-bridge)
+source: 交互层 Phase 5 + 引擎层 QA
 dependencies:
   - writing-plans
+triggers:
+  - "运行测试"
+  - "验证功能"
+  - "test phase"
+  - "单元测试"
 allowed-tools:
   - Read
   - Bash
@@ -132,17 +138,13 @@ grep -qE "PASS|FAIL|✓|✗" ".specs/test/05-test-results.md" || {
 }
 ```
 
-### Step 7: 用户确认（多问题确认模式）
+### Step 7: 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-输出完成声明后，使用多问题确认格式与用户交互：
-
-```markdown
 📍 当前阶段: Phase 5 · Test — Test Results Review
 🎯 本步目标: 确认测试通过率和遗留问题
 
----
 **问题 1**: 测试结果是否符合预期？
 [1] ✅ 全部通过/可接受 ← 推荐
 [2] 有失败需要修复
@@ -157,26 +159,6 @@ grep -qE "PASS|FAIL|✓|✗" ".specs/test/05-test-results.md" || {
 [1] ✅ 遗留问题可接受 ← 推荐
 [2] 需要修复 Critical 项
 [3] 查看遗留问题
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```
 
 **结果处理**:
 - **全部通过** → 标记 Phase 5 completed，进入 Phase 6

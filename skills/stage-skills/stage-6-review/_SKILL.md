@@ -1,12 +1,4 @@
-﻿# devflow-kit Stage: 6-Review（代码审查）
-
-> **阶段定位**：三轮审查确保代码质量、安全、业务正确性
-> **前置条件**：05-test-report.md 已完成且通过
-> **后置产物**：审查问题清单 + 修复记录
-
-## Skill元信息
-
-```yaml
+---
 name: stage-6-review
 version: 1.0.0
 description: devflow-kit工作流第6阶段 - 三轮代码审查
@@ -14,7 +6,13 @@ author: devflow-kit
 dependencies:
   - verification-before-completion
   - security-and-performance
-```
+---
+
+# devflow-kit Stage: 6-Review（代码审查）
+
+> **阶段定位**：三轮审查确保代码质量、安全、业务正确性
+> **前置条件**：05-test-report.md 已完成且通过
+> **后置产物**：审查问题清单 + 修复记录
 
 ## 输入
 

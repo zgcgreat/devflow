@@ -6,6 +6,8 @@ phase: 0
 description: Apply Y Combinator's due diligence framework to validate project viability before implementation
 requires: [project-context]
 provides: [g1-gate-decision, strategy-document, follow-up-queue]
+dependencies:
+  - phase-0-strategy
 gate: G1
 triggers:
   - YC strategy validation
@@ -1019,17 +1021,13 @@ Quality gates:
 
 ---
 
-## 用户确认（多问题确认模式）
+## 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-输出 G1 Gate 评估后，使用多问题确认格式与用户交互：
-
-```markdown
 📍 当前阶段: Phase 0 · YC Strategy — Strategic Assessment
 🎯 本步目标: 确认六问评估结果和 G1 Gate 决策
 
----
 **问题 1**: G1 Gate 决策是否合理？
 [1] ✅ 决策合理，继续下一阶段 ← 推荐
 [2] 需要重新评估
@@ -1044,26 +1042,6 @@ Quality gates:
 [1] ✅ 风险级别准确 ← 推荐
 [2] 需要调整风险等级
 [3] 查看风险因素
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```
 
 ## Version History
 

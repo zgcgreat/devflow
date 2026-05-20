@@ -28,7 +28,8 @@ allowed-tools:
 
 # Phase 8: 知识归档 (Knowledge Archival)
 
-> **Layer**: L1-INTERACTION (交互层交互层) + L2-ENGINE (LearningWorkflow) + L3-ARCHITECTURE (Memory Manager)  
+> **Layer**: L1-INTERACTION (交互层) + L2-ENGINE (LearningWorkflow)
+> **引擎依赖**: memory-compression, learning-workflow (via core-bridge)
 > **前置**: G5 集成通过, Phase 7 Canary发布完成  
 > **后置产物**: `memory/LESSONS.md` + `memory/domain-skills/*.md` + `STATE.md`归档  
 > **门控**: G8 — Archive Quality Gate
@@ -67,7 +68,7 @@ Before starting archive phase, verify ALL of the following:
 ```yaml
 name: phase-8-archive
 version: 3.0-draft
-layer: L1-INTERACTION (L2/L3 collaboration for knowledge archival)
+layer: L1-INTERACTION (collaborates with L2-ENGINE for knowledge archival; L3 access via L2 only)
 source: 交互层 Phase 8 + 引擎层 LearningWorkflow + 架构层 Memory Manager
 dependencies:
   - wave-executor (input: per-wave SUMMARY.md files)
@@ -413,17 +414,13 @@ next_session:
 - `layers/L2-ENGINE/learning-workflow/_SKILL.md` (post-archive: domain skill graduation)
 - `layers/L2-ENGINE/wave-executor/_SKILL.md` (input: per-wave SUMMARY.md files)
 
-## 用户确认（多问题确认模式）
+## 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-输出完成声明后，使用多问题确认格式与用户交互：
-
-```markdown
 📍 当前阶段: Phase 8 · Archive — Lessons Learned & Domain Skills
 🎯 本步目标: 确认归档完整性和经验沉淀
 
----
 **问题 1**: LESSONS.md 是否完整记录了所有经验？
 [1] ✅ 经验记录完整 ← 推荐
 [2] 需要补充经验
@@ -438,26 +435,6 @@ next_session:
 [1] ✅ 归档完成，项目结束 ← 推荐
 [2] 需要补充归档内容
 [3] 回退到 Phase 7
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```
 
 ---
 

@@ -1,19 +1,17 @@
-﻿# devflow-kit Stage: 2-Design（方案设计）
-
-> **阶段定位**：将需求转化为可执行的技术设计
-> **前置条件**：01-analysis.md 已完成
-> **后置产物**：`.devflow/<req-id>/02-design.md` + ADRs
-
-## Skill元信息
-
-```yaml
+---
 name: stage-2-design
 version: 1.0.0
 description: devflow-kit工作流第2阶段 - 技术设计与架构决策
 author: devflow-kit
 dependencies:
   - stage-a-architect
-```
+---
+
+# devflow-kit Stage: 2-Design（方案设计）
+
+> **阶段定位**：将需求转化为可执行的技术设计
+> **前置条件**：01-analysis.md 已完成
+> **后置产物**：`.devflow/<req-id>/02-design.md` + ADRs
 
 ## 输入
 

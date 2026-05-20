@@ -1,19 +1,17 @@
-﻿# devflow-kit Stage: 5-Test（测试验证）
-
-> **阶段定位**：验证所有AC是否通过
-> **前置条件**：4-dev阶段所有任务完成
-> **后置产物**：`.devflow/<req-id>/05-test-report.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-5-test
 version: 1.0.0
 description: devflow-kit工作流第5阶段 - 测试验证与报告生成
 author: devflow-kit
 dependencies:
   - testing-suite
-```
+---
+
+# devflow-kit Stage: 5-Test（测试验证）
+
+> **阶段定位**：验证所有AC是否通过
+> **前置条件**：4-dev阶段所有任务完成
+> **后置产物**：`.devflow/<req-id>/05-test-report.md`
 
 ## 输入
 

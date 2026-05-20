@@ -1,19 +1,17 @@
-﻿# devflow-kit Stage: 2a-UI Design（UI设计）
-
-> **阶段定位**：前端项目的视觉和交互设计
-> **前置条件**：02-design.md 已完成，项目类型为前端
-> **后置产物**：`.devflow/<req-id>/02a-ui-design.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-2a-ui-design
 version: 1.0.0
 description: devflow-kit工作流第2a阶段 - UI设计与交互规范
 author: devflow-kit
 dependencies:
   - frontend-ui-engineering
-```
+---
+
+# devflow-kit Stage: 2a-UI Design（UI设计）
+
+> **阶段定位**：前端项目的视觉和交互设计
+> **前置条件**：02-design.md 已完成，项目类型为前端
+> **后置产物**：`.devflow/<req-id>/02a-ui-design.md`
 
 ## 输入
 

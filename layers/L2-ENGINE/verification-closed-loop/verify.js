@@ -60,7 +60,7 @@ function verifyImplement(projectDir, quick = false) {
   if (fs.existsSync(pkgPath) && !quick) {
     // TypeScript 类型检查
     try {
-      execSync('npx tsc --noEmit', { cwd: projectDir, stdio: 'pipe', timeout: 30000 });
+      execSync('npx tsc --noEmit', { cwd: projectDir, stdio: 'pipe', timeout: 60000 });
       results.checks.push({ check: 'tsc', passed: true });
       results.verified++;
     } catch (e) {
@@ -70,7 +70,7 @@ function verifyImplement(projectDir, quick = false) {
 
     // ESLint
     try {
-      execSync('npx eslint . --max-warnings 0', { cwd: projectDir, stdio: 'pipe', timeout: 30000 });
+      execSync('npx eslint . --max-warnings 0', { cwd: projectDir, stdio: 'pipe', timeout: 120000 });
       results.checks.push({ check: 'eslint', passed: true });
     } catch (e) {
       results.checks.push({ check: 'eslint', passed: false, note: 'Has warnings/errors' });

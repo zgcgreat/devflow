@@ -60,6 +60,10 @@ const strategies = {
 
 // ============================================================
 // Phase 压缩建议
+// NOTE: phaseSuggestions 是纯建议性的。当前无自动触发机制——
+// 需要在 Phase 转换时由外部调用方（如 gate-checker.js 或 Phase skill）
+// 调用 suggestCompression() 并根据结果执行 compress()。
+// TODO: 在 Phase advance 流程中集成自动压缩触发。
 // ============================================================
 
 const phaseSuggestions = {

@@ -29,7 +29,7 @@ function buildDependencyGraph(projectDir, options = {}) {
   const files = findSourceFiles(targetPath, extensions, options.exclude || ['node_modules', '.git', 'dist', 'build']);
   
   for (const file of files) {
-    const relPath = path.relative(projectDir, file);
+    const relPath = path.relative(projectDir, file).replace(/\\/g, '/');
     const imports = extractImports(file);
     
     graph.nodes[relPath] = {
@@ -195,13 +195,14 @@ function resolveImport(imp, fromFile, projectDir) {
   return null; // 跳过 node_modules
 }
 
-function findSourceFiles(dir, extensions, exclude) {
+function findSourceFiles(dir, extensions, exclude, maxDepth = 20, currentDepth = 0) {
   const results = [];
+  if (currentDepth > maxDepth) return results;
   try {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      if (exclude.some(e => entry.name.includes(e))) continue;
+      if (exclude.some(e => entry.name === e)) continue;
       const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) results.push(...findSourceFiles(full, extensions, exclude));
+      if (entry.isDirectory()) results.push(...findSourceFiles(full, extensions, exclude, maxDepth, currentDepth + 1));
       else if (extensions.some(ext => entry.name.endsWith(ext))) results.push(full);
     }
   } catch (e) { /* permission denied, skip */ }

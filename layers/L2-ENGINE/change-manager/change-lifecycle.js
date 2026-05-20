@@ -27,18 +27,40 @@ function createChange(projectDir, name, goal) {
   return changeDir;
 }
 
+const DEFAULT_DEPS = { proposal: [], specs: ['proposal'], design: ['proposal'], tasks: ['specs', 'design'] };
+
 function detectCompleted(changeDir) {
-  const a = { proposal: false, design: false, tasks: false, specs: false };
-  if (fs.existsSync(path.join(changeDir, 'proposal.md'))) a.proposal = true;
-  if (fs.existsSync(path.join(changeDir, 'design.md'))) a.design = true;
-  if (fs.existsSync(path.join(changeDir, 'tasks.md'))) a.tasks = true;
+  const yamlPath = path.join(changeDir, '.devflow-change.yaml');
+  let customArtifacts = null;
+  if (fs.existsSync(yamlPath)) {
+    const yamlContent = fs.readFileSync(yamlPath, 'utf8');
+    const match = yamlContent.match(/^artifacts:\s*\n((?:\s{2}\S+.*\n?)*)/m);
+    if (match) {
+      customArtifacts = {};
+      for (const line of match[1].trim().split('\n')) {
+        const m = line.match(/^\s+(\S+):/);
+        if (m) customArtifacts[m[1]] = false;
+      }
+    }
+  }
+  const a = customArtifacts || { proposal: false, design: false, tasks: false, specs: false };
+  if (a.proposal !== undefined && fs.existsSync(path.join(changeDir, 'proposal.md'))) a.proposal = true;
+  if (a.design !== undefined && fs.existsSync(path.join(changeDir, 'design.md'))) a.design = true;
+  if (a.tasks !== undefined && fs.existsSync(path.join(changeDir, 'tasks.md'))) a.tasks = true;
   const specsDir = path.join(changeDir, 'specs');
-  if (fs.existsSync(specsDir)) a.specs = findFiles(specsDir, '.md').length > 0;
+  if (a.specs !== undefined && fs.existsSync(specsDir)) a.specs = findFiles(specsDir, '.md').length > 0;
+  // Check custom artifacts by file existence
+  for (const key of Object.keys(a)) {
+    if (a[key] === false) {
+      if (fs.existsSync(path.join(changeDir, key + '.md'))) a[key] = true;
+      else if (fs.existsSync(path.join(changeDir, key))) a[key] = true;
+    }
+  }
   return a;
 }
 
-function getNextArtifacts(completed) {
-  const deps = { proposal: [], specs: ['proposal'], design: ['proposal'], tasks: ['specs', 'design'] };
+function getNextArtifacts(completed, customDeps) {
+  const deps = customDeps || DEFAULT_DEPS;
   const ready = [];
   for (const [k, req] of Object.entries(deps)) {
     if (completed[k]) continue;

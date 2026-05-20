@@ -1,19 +1,17 @@
-﻿# devflow-kit Stage: 3a-Plan（实施计划）
-
-> **阶段定位**：为每个任务提供详细技术方案
-> **前置条件**：03-tasks.md 已完成
-> **后置产物**：`.devflow/<req-id>/03a-implementation-plan.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-3a-plan
 version: 1.0.0
 description: devflow-kit工作流第3a阶段 - 详细实施计划生成
 author: devflow-kit
 dependencies:
   - planning-and-context
-```
+---
+
+# devflow-kit Stage: 3a-Plan（实施计划）
+
+> **阶段定位**：为每个任务提供详细技术方案
+> **前置条件**：03-tasks.md 已完成
+> **后置产物**：`.devflow/<req-id>/03a-implementation-plan.md`
 
 ## 输入
 

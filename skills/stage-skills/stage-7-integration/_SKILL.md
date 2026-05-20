@@ -1,19 +1,17 @@
-﻿# devflow-kit Stage: 7-Integration（集成发布）
-
-> **阶段定位**：生成发布清单，准备上线
-> **前置条件**：06-review审查通过
-> **后置产物**：`.devflow/<req-id>/07-release-checklist.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-7-integration
 version: 1.0.0
 description: devflow-kit工作流第7阶段 - 集成发布与回滚方案
 author: devflow-kit
 dependencies:
   - devops
-```
+---
+
+# devflow-kit Stage: 7-Integration（集成发布）
+
+> **阶段定位**：生成发布清单，准备上线
+> **前置条件**：06-review审查通过
+> **后置产物**：`.devflow/<req-id>/07-release-checklist.md`
 
 ## 输入
 

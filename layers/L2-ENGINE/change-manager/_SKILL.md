@@ -186,6 +186,18 @@ Change Manager 不是替代 Phase 流程，而是增强 Phase 6 Review 和 Phase
 - **Phase 7 Canary** 期间，变更处于 `verifying` 状态
 - **Phase 8 Archive** 时，调用 `/df:archive` 完成最终合并和归档
 
+## 模板文件
+
+变更制品使用以下模板（位于 `templates/changes/`）：
+
+| 模板 | 说明 | 对应制品 |
+|------|------|---------|
+| `proposal.md` | 变更提案模板 | Why & What |
+| `design.md` | 技术方案模板 | How |
+| `tasks.md` | 实现清单模板（复选框） | Task breakdown |
+| `delta-spec.md` | Delta Spec 模板 | ADDED/MODIFIED/REMOVED |
+| `change-schema.yaml` | 变更元数据 Schema | `.devflow-change.yaml` |
+
 ## 自定义 Schema
 
 支持 OpenSpec 风格的自定义工作流 Schema：

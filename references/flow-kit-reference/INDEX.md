@@ -3,6 +3,15 @@
 > 来源: `flow-kit/reference/` 目录，已复制到 devflow 作为自引用参考。
 > 每个文件有明确的触发条件和使用阶段，AI 按任务类型自动判定加载。
 
+> **DEDUP NOTICE**: 以下 5 个文件同时存在于 `references/reference/` 目录（规范位置）。
+> 两份内容目前一致，但 `references/reference/` 为规范源。后续更新请只修改 `references/reference/` 中的版本，
+> 并同步到本目录。长期计划：本目录副本替换为符号链接或删除。
+> - frontend-engineer-rules.md
+> - tech-stacks.md
+> - test-pyramid.md
+> - ui-aesthetics.md
+> - ui-anti-patterns.md
+
 ---
 
 ## 文件清单

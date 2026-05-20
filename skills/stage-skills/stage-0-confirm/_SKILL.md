@@ -1,12 +1,4 @@
-﻿# devflow-kit Stage: 0-Confirm（需求确认）
-
-> **阶段定位**：工作流入口，澄清需求并判定执行模式
-> **前置条件**：无
-> **后置产物**：`.devflow/<req-id>/00-requirements.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-0-confirm
 version: 1.0.0
 description: devflow-kit工作流第0阶段 - 需求确认与模式判定
@@ -14,7 +6,13 @@ author: devflow-kit
 dependencies:
   - brainstorming
   - writing-plans
-```
+---
+
+# devflow-kit Stage: 0-Confirm（需求确认）
+
+> **阶段定位**：工作流入口，澄清需求并判定执行模式
+> **前置条件**：无
+> **后置产物**：`.devflow/<req-id>/00-requirements.md`
 
 ## 输入
 

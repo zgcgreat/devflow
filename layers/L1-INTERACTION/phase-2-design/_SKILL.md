@@ -1,11 +1,17 @@
 ---
 name: phase-2-design
+description: Phase 2 设计阶段 — 架构设计、技术选型、API 定义与设计文档输出
 preamble-tier: 2
 version: 3.0-draft
 layer: L1-INTERACTION (交互层)
 source: 交互层 Phase 2 + 架构层 DAG Routing
 dependencies:
   - writing-plans
+triggers:
+  - "设计方案"
+  - "技术选型"
+  - "架构设计"
+  - "design phase"
 token_budget: ~100K tokens (Phase 2 design context)
 allowed-tools:
   - Read
@@ -144,17 +150,13 @@ v3_upgrade:
 - **常规任务** → 进入 Phase 2a（设计枪战），Phase 2 产出作为基准变体
 - **复杂任务** → Phase 2 与 Phase 2a 并行执行
 
-### Step 6: 用户确认（多问题确认模式）
+### Step 6: 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-输出完成声明后，使用多问题确认格式与用户交互：
-
-```markdown
 📍 当前阶段: Phase 2 · Design — Technical Design Gate
 🎯 本步目标: 确认设计方案是否满足需求并可通过 G2
 
----
 **问题 1**: 设计方案是否满足需求？
 [1] ✅ 确认，继续下一阶段 ← 推荐
 [2] 需要修改
@@ -169,26 +171,6 @@ v3_upgrade:
 [1] ✅ 同意，继续 Phase 2a ← 推荐
 [2] 需要修改后重试
 [3] 跳入 Phase 3（简单任务）
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```
 
 ---
 

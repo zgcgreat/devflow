@@ -205,11 +205,102 @@ function getAdapterConfigPath(runtime) {
   return runtimeDir;
 }
 
+/**
+ * 组装完整 prompt — 自动注入宪法层
+ *
+ * 参考 html-anything 的 assemblePrompt() 模式：
+ * 所有 Phase skill 的 prompt 必须以 CONSTITUTION.md 内容为前缀，
+ * 确保共享规则被系统级强制执行，而非依赖 AI 主动遵守。
+ *
+ * @param {object} opts
+ * @param {string} opts.skillBody  - Phase _SKILL.md 的正文内容
+ * @param {string} [opts.projectDir] - 项目目录（用于加载项目级记忆）
+ * @param {object} [opts.variables] - 模板变量替换
+ * @returns {string} 完整的 prompt 文本
+ */
+function assemblePrompt({ skillBody, projectDir, variables = {} }) {
+  // CONSTITUTION.md 位于 devflow 根目录的 layers/L1-INTERACTION/ 下
+  // __dirname = adapters/shared/，需要向上两级回到 devflow 根目录
+  const DEVFLOW_ROOT = path.resolve(__dirname, '..', '..');
+  const CONSTITUTION_PATH = path.join(
+    DEVFLOW_ROOT, 'layers', 'L1-INTERACTION', 'CONSTITUTION.md'
+  );
+
+  let constitution = '';
+  if (fs.existsSync(CONSTITUTION_PATH)) {
+    constitution = fs.readFileSync(CONSTITUTION_PATH, 'utf8');
+  }
+
+  // 模板变量替换：{{varName}} → value
+  let body = skillBody;
+  for (const [key, value] of Object.entries(variables)) {
+    body = body.replace(new RegExp('\\{\\{' + key + '\\}\\}', 'g'), value);
+  }
+
+  // 组装：宪法前缀 + Phase skill 正文
+  const sections = [];
+
+  if (constitution) {
+    sections.push('═══ devflow 工作流宪法（强制规则）═══\n');
+    sections.push(constitution);
+    sections.push('\n═══ 宪法结束 ═══\n');
+  }
+
+  sections.push(body);
+
+  // 如果有项目目录，追加关键记忆摘要
+  if (projectDir) {
+    const memPath = path.join(projectDir, MEMORY_DIR, 'LESSONS.md');
+    if (fs.existsSync(memPath)) {
+      const lessons = fs.readFileSync(memPath, 'utf8');
+      // 只取最近 3 条 lessons，避免 token 爆炸
+      const recentLessons = lessons.split(/^## /m).slice(0, 4).join('## ').trim();
+      if (recentLessons) {
+        sections.push('\n═══ 近期 Lessons（参考）═══\n');
+        sections.push(recentLessons);
+      }
+    }
+  }
+
+  return sections.join('\n');
+}
+
+/**
+ * 构造 Diff-Edit 约束指令
+ *
+ * 用于 wave-executor 在修改已有文件时注入增量编辑约束，
+ * 防止 AI 重写整个文件导致回归。
+ *
+ * @param {string} filePath - 目标文件路径
+ * @param {string} taskType - 任务类型: refactor | fix | modify | feature
+ * @returns {string} Diff-Edit 约束文本
+ */
+function buildDiffEditConstraint(filePath, taskType = 'modify') {
+  const THRESHOLDS = {
+    refactor: { expected: '15-50 行', drift: 100 },
+    fix:      { expected: '5-15 行',  drift: 30 },
+    modify:   { expected: '1-5 行',   drift: 10 },
+    feature:  { expected: '20-80 行', drift: 150 }
+  };
+  const t = THRESHOLDS[taskType] || THRESHOLDS.modify;
+  return [
+    '═══ DIFF-EDIT 约束（强制）═══',
+    `目标文件: ${filePath}`,
+    'Base 快照已保存。你只能修改与任务描述直接相关的代码区域。',
+    '禁止：重写整个文件、修改无关函数、调整代码风格',
+    '输出格式：使用 Edit 工具的 old_string/new_string 精确替换',
+    `预期修改: ${t.expected}，DRIFT 阈值: ${t.drift} 行`,
+    '═══ DIFF-EDIT 约束结束 ═══'
+  ].join('\n');
+}
+
 module.exports = {
   readState,
   checkGate,
   loadMemory,
   getCompressionLevel,
   detectRuntime,
-  getAdapterConfigPath
+  getAdapterConfigPath,
+  assemblePrompt,
+  buildDiffEditConstraint
 };

@@ -1,11 +1,17 @@
 ---
 name: phase-4-build
+description: Phase 4 构建阶段 — Wave 执行、原子 Task 编码、Verify 验证与 Commit
 preamble-tier: 2
 version: 3.0-draft
 layer: L1-INTERACTION (协调), L2-ENGINE (执行)
 source: 交互层 Phase 4 + 引擎层 Wave Executor
 dependencies:
   - subagent-driven-development
+triggers:
+  - "开始开发"
+  - "执行任务"
+  - "build phase"
+  - "写代码"
 allowed-tools:
   - Read
   - Bash
@@ -315,17 +321,13 @@ wave_plan:
 
 > **修复 (2024-05-17)**: Phase 4 不再每 Wave 都触发 LearningWorkflow(避免与 Phase 8 archive 冲突),由 Orchestrator 统一聚合。
 
-### Step 5: 用户确认（多问题确认模式）
+### Step 5: 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-输出完成声明后，使用多问题确认格式与用户交互：
-
-```markdown
 📍 当前阶段: Phase 4 · Build — Code Implementation
 🎯 本步目标: 确认代码实现质量和 Wave 执行结果
 
----
 **问题 1**: Wave 执行结果是否符合预期？
 [1] ✅ 全部通过/可接受 ← 推荐
 [2] 有失败需要修复
@@ -340,26 +342,6 @@ wave_plan:
 [1] ✅ 同意，继续 Phase 5 ← 推荐
 [2] 需要修改后重试
 [3] 回退到 Phase 3
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```
 
 ### Step 6: PartyMode 共识（复杂决策时触发）
 

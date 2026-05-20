@@ -1,12 +1,4 @@
-﻿# devflow-kit Stage: 4-Dev（开发执行）
-
-> **阶段定位**：在fresh context中执行单个任务
-> **前置条件**：03-tasks.md 已完成，用户指定task id
-> **后置产物**：代码实现 + `04-dev-log.md`
-
-## Skill元信息
-
-```yaml
+---
 name: stage-4-dev
 version: 1.0.0
 description: devflow-kit工作流第4阶段 - 按任务执行开发
@@ -15,7 +7,13 @@ dependencies:
   - executing-plans
   - testing-suite
   - karpathy-rules  # 12条编码行为准则
-```
+---
+
+# devflow-kit Stage: 4-Dev（开发执行）
+
+> **阶段定位**：在fresh context中执行单个任务
+> **前置条件**：03-tasks.md 已完成，用户指定task id
+> **后置产物**：代码实现 + `04-dev-log.md`
 
 ## 输入
 

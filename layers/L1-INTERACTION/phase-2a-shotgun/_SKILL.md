@@ -7,6 +7,8 @@ description: |
   Generates 4-6 design variants with clear trade-offs and AI recommendation based on maintainability/cost/UX scoring. (devflow)
 layer: L1-INTERACTION
 parent: phase-2a-shotgun
+dependencies:
+  - phase-2-design
 triggers:
   - design variant generation
   - shot gun design
@@ -1038,17 +1040,13 @@ Quality gates:
 
 ---
 
-## 用户确认（多问题确认模式）
+## 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-输出设计方案变体后，使用多问题确认格式与用户交互：
-
-```markdown
 📍 当前阶段: Phase 2a · Design Shotgun — UI Design Variants
 🎯 本步目标: 确认设计变体评估和用户选择
 
----
 **问题 1**: 设计变体多样性是否足够？
 [1] ✅ 变体差异明显，足够选择 ← 推荐
 [2] 需要更多差异化变体
@@ -1063,26 +1061,6 @@ Quality gates:
 [1] ✅ 同意，继续 Phase 3 ← 推荐
 [2] 需要修改设计方案
 [3] 回退到 Phase 2
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```
 
 ## Version History
 

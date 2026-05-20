@@ -29,7 +29,7 @@ allowed-tools:
 
 Execute tasks in dependency-aware waves using Kahn's topological sort algorithm. Achieve 4-5x speedup through wave-level and task-level parallelism while maintaining correctness through strict dependency validation.
 
-**Core philosophy**: Parallel where safe, sequential where required. Never sacrifice correctness for speed. Isolate context per wave to prevent corruption. Learn from every wave.
+**Core philosophy**: Parallel where safe, sequential where required. Never sacrifice correctness for speed. Isolate context per wave to prevent corruption. Learn from every wave. **Edit minimally**: apply diff-patches, not full rewrites.
 
 ---
 
@@ -266,6 +266,39 @@ for task in $(yq '.waves[] | select(.wave_number == N) | .tasks[].id' wave-plan.
   fi
 done
 ```
+
+### Diff-Edit Mode (增量编辑模式)
+
+> 参考 html-anything 的 diff-edit 设计。解决 Phase 4 核心痛点：AI 倾向重写整个文件而非局部修改，引入意外回归。
+
+**何时启用**：
+- 任务修改已有文件（非新建）时强制启用
+- 任务的 scope 标注为 `refactor`/`fix`/`modify` 时强制启用
+- 新建文件时不启用
+
+**三步流程**：
+
+1. **Base 快照**：执行前，读取目标文件的当前内容作为 `baseSource`
+2. **Diff 约束**：在 task prompt 中注入约束指令：
+   ```
+   ═══ DIFF-EDIT 约束（强制）═══
+   目标文件: {filePath}
+   Base 快照已保存。你只能修改与任务描述直接相关的代码区域。
+   禁止：重写整个文件、修改无关函数、调整代码风格
+   输出格式：使用 Edit 工具的 old_string/new_string 精确替换
+   ═══ DIFF-EDIT 约束结束 ═══
+   ```
+3. **Drift 检测**：执行后，对比 `baseSource` 与当前内容。如果修改行数超过任务描述暗示的范围（例如 "修改函数签名" 却改了 50+ 行），标记为 `DRIFT_WARNING` 并在 heartbeat 中报告
+
+**Drift 阈值参考**：
+| 任务类型 | 预期修改行数 | DRIFT 阈值 |
+|----------|-------------|-----------|
+| 修改函数签名 | 1-5 行 | 10 行 |
+| 修复 bug | 5-15 行 | 30 行 |
+| 重构模块 | 15-50 行 | 100 行 |
+| 新增功能 | 20-80 行 | 150 行 |
+
+**Anti-Pattern**：diff-edit 模式下严禁使用 Write 工具重写整个文件，只能使用 Edit 工具。
 
 **Output format** (per task):
 ```markdown

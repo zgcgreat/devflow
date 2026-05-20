@@ -6,6 +6,8 @@ phase: 7
 description: Deploy changes in staged batches (10% → 50% → 100%) with automatic health checks and rollback on threshold breach
 requires: [g3-gate, all-tests-passed]
 provides: [canary-report, rollback-report, g5-gate-decision]
+dependencies:
+  - phase-6-review
 gate: G5
 triggers:
   - canary deployment
@@ -795,17 +797,13 @@ Quality gates:
 
 ---
 
-## 用户确认（多问题确认模式）
+## 用户确认
 
-> **参考**: `devflow-kit/references/user-interaction-guidelines.md`
+> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
 
-输出完成声明后，使用多问题确认格式与用户交互：
-
-```markdown
 📍 当前阶段: Phase 7 · Canary — Gradual Rollout
 🎯 本步目标: 确认部署健康和回滚决策
 
----
 **问题 1**: Canary 部署是否健康？
 [1] ✅ 所有阶段通过 ← 推荐
 [2] 有指标异常
@@ -820,23 +818,3 @@ Quality gates:
 [1] ✅ 同意全量发布 ← 推荐
 [2] 推迟发布
 [3] 回滚到上一版本
-
-请逐个回复，如 "1, 1, 1" 或 "问题1选1，问题2选2..."
-```
-
-**用户回复后确认**:
-
-```markdown
-✅ 收到你的选择：
-- 问题 1：<选项A>
-- 问题 2：<选项B>
-- 问题 3：<选项A>
-
----
-**确认以上选择：**
-
-[1] ✅ 确认无误，继续 ← 推荐
-[2] 需要修改
-
-请回复 1/2。
-```

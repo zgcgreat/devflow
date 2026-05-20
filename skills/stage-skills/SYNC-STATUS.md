@@ -1,9 +1,14 @@
 # Stage Skills Sync Status
 
+> **DEPRECATED**: Stage skills are superseded by `layers/L1-INTERACTION/phase-*` modules in devflow v3.0.
+> Do not create new content in stage-skills. All new development should go to the corresponding phase module.
+> See mapping table below for the canonical replacement.
+
 - **Last Synced**: 2026-05-18
 - **Core Version**: v3.0-draft
 - **Stage Skills Version**: v3.0-draft (must match)
 - **Owner**: L2-ENGINE team
+- **Deprecation Date**: 2026-05-19
 
 ## Sync Mapping
 
