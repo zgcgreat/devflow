@@ -1,7 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(devflow:*)",
+      "Bash(devflow-evo:*)",
       "Read",
       "Write",
       "Edit"
@@ -12,14 +12,14 @@
     "SessionStart": [
       {
         "type": "command",
-        "command": "node ${DEVFLOW_HOME}/adapters/shared/core-bridge.js startup",
-        "description": "Load devflow project state and memory on session start"
+        "command": "node ${DEVFLOW_EVO_HOME}/adapters/shared/core-bridge.js startup",
+        "description": "Load devflow-evo project state and memory on session start"
       }
     ],
     "UserPromptSubmit": [
       {
         "type": "command",
-        "command": "node ${DEVFLOW_HOME}/adapters/shared/core-bridge.js pre-prompt",
+        "command": "node ${DEVFLOW_EVO_HOME}/adapters/shared/core-bridge.js pre-prompt",
         "description": "Inject current phase context before prompt processing"
       }
     ]

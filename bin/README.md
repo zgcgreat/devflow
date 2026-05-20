@@ -10,7 +10,7 @@
 
 | 功能 | 对应的纯 Markdown 指令 | 说明 |
 |------|----------------------|------|
-| 项目初始化 | [init](#init) | 创建 .devflow/ 目录结构 |
+| 项目初始化 | [init](#init) | 创建 .devflow-evo/ 目录结构 |
 | 阶段执行 | [stage-executor](#stage-executor) | 执行指定 Phase |
 | Hook 管理 | [hook-manager](#hook-manager) | 会话前后检查 |
 | Token 管理 | [token-manager](#token-manager) | 7级压缩监控 |
@@ -24,7 +24,7 @@
 
 ### 用途
 
-在项目中创建 `.devflow/` 目录结构，包括 STATE.md、config.yaml、memory/ 等标准文件。
+在项目中创建 `.devflow-evo/` 目录结构，包括 STATE.md、config.yaml、memory/ 等标准文件。
 
 ### 等效命令
 
@@ -37,22 +37,22 @@ python bin/init.py --project-dir <path> --mode <fast|standard|strict>
 复制以下内容到你的 AI 对话中：
 
 ```markdown
-请帮我初始化 devflow 项目。
+请帮我初始化 devflow-evo 项目。
 
 - 项目目录: <当前目录>
 - 执行模式: <fast|standard|strict>
 
 请按以下步骤操作：
 
-1. 在项目中创建 `.devflow/` 目录结构
-2. 创建 `.devflow/STATE.md`，包含阶段进度清单
-3. 创建 `.devflow/config.yaml`，写入模式和技术栈配置
-4. 在 `.devflow/memory/` 下创建：
+1. 在项目中创建 `.devflow-evo/` 目录结构
+2. 创建 `.devflow-evo/STATE.md`，包含阶段进度清单
+3. 创建 `.devflow-evo/config.yaml`，写入模式和技术栈配置
+4. 在 `.devflow-evo/memory/` 下创建：
    - PROJECT_CONTEXT.md（项目背景模板）
    - DECISIONS.md（ADR 决策记录模板）
    - KNOWN_FAILURES.md（已知失败模式模板）
    - LESSONS.md（经验教训模板）
-5. 在项目根目录创建或更新 `.gitignore`，加入 `.devflow/`
+5. 在项目根目录创建或更新 `.gitignore`，加入 `.devflow-evo/`
 6. 验证所有文件已创建
 ```
 
@@ -60,7 +60,7 @@ python bin/init.py --project-dir <path> --mode <fast|standard|strict>
 
 ```
 <project>/
-├── .devflow/
+├── .devflow-evo/
 │   ├── STATE.md
 │   ├── config.yaml
 │   ├── memory/
@@ -70,7 +70,7 @@ python bin/init.py --project-dir <path> --mode <fast|standard|strict>
 │   │   └── LESSONS.md
 │   └── hooks/
 │   └── templates/
-└── .gitignore  # 包含 .devflow/
+└── .gitignore  # 包含 .devflow-evo/
 ```
 
 ---
@@ -218,7 +218,7 @@ python bin/hook-manager.py session-end
 ```markdown
 请执行会话开始 Hook 检查：
 
-1. 检查 `.devflow/STATE.md` 是否存在且内容有效
+1. 检查 `.devflow-evo/STATE.md` 是否存在且内容有效
 2. 验证当前 Phase 状态
 3. 检查记忆文件完整性（PROJECT_CONTEXT.md, DECISIONS.md, LESSONS.md）
 4. 检测 GitNexus 是否可用，不可用则提示降级方案
@@ -230,7 +230,7 @@ python bin/hook-manager.py session-end
 ```markdown
 请执行会话结束 Hook 检查：
 
-1. 更新 `.devflow/STATE.md`，记录当前进度
+1. 更新 `.devflow-evo/STATE.md`，记录当前进度
 2. 检查所有产物是否已保存
 3. 更新 LESSONS.md（如有经验教训）
 4. 生成会话结束摘要
@@ -248,7 +248,7 @@ python bin/hook-manager.py session-end
 
 ```bash
 python bin/token-manager.py status
-python bin/token-manager.py analyze .devflow
+python bin/token-manager.py analyze .devflow-evo
 ```
 
 ### 纯 Markdown 指令
@@ -354,7 +354,7 @@ python bin/external-adapter.py call-chain <function>
 
 ### 用途
 
-管理 `.devflow/memory/` 下的记忆文件。
+管理 `.devflow-evo/memory/` 下的记忆文件。
 
 ### 等效命令
 
@@ -368,7 +368,7 @@ python bin/memory-system.py write LESSONS
 #### 读取记忆文件
 
 ```markdown
-请读取 `.devflow/memory/` 下的记忆文件：
+请读取 `.devflow-evo/memory/` 下的记忆文件：
 
 1. 读取 PROJECT_CONTEXT.md，提取项目背景
 2. 读取 DECISIONS.md，提取历史决策
@@ -379,7 +379,7 @@ python bin/memory-system.py write LESSONS
 #### 写入记忆文件
 
 ```markdown
-请将以下内容写入 `.devflow/memory/LESSONS.md`：
+请将以下内容写入 `.devflow-evo/memory/LESSONS.md`：
 
 经验教训: <教训内容>
 
@@ -392,7 +392,7 @@ python bin/memory-system.py write LESSONS
 #### 更新决策记录
 
 ```markdown
-请在 `.devflow/memory/DECISIONS.md` 中新增 ADR 条目：
+请在 `.devflow-evo/memory/DECISIONS.md` 中新增 ADR 条目：
 
 - 标题: <决策标题>
 - 日期: <日期>
@@ -426,7 +426,7 @@ python bin/memory-system.py write LESSONS
 ```markdown
 请验证 G1 门控（Phase 入口条件）：
 
-1. 检查 `.devflow/STATE.md` 是否存在
+1. 检查 `.devflow-evo/STATE.md` 是否存在
 2. 检查上一阶段产物是否完整
 3. 检查记忆文件是否可用
 4. 输出门控验证报告
@@ -507,7 +507,7 @@ python bin/memory-system.py write LESSONS
 ```markdown
 请帮我从零开始一个新项目：
 
-1. 运行 init 指令，初始化 .devflow/ 目录结构
+1. 运行 init 指令，初始化 .devflow-evo/ 目录结构
 2. 执行 Phase 0 战略评估
 3. 根据评估结果决定是否继续
 4. 如果继续，依次执行 Phase 1-8
@@ -518,7 +518,7 @@ python bin/memory-system.py write LESSONS
 ```markdown
 请继续当前项目：
 
-1. 检查 .devflow/STATE.md，确定当前进度
+1. 检查 .devflow-evo/STATE.md，确定当前进度
 2. 执行当前 Phase 的工作流
 3. 执行 Hook 结束检查
 ```
@@ -577,7 +577,7 @@ rm bin/*.js
 
 ### 零依赖验证
 
-复制本 README 的全部内容，或仅复制需要的指令片段，即可在任何支持 Markdown 的 AI 对话中完成所有 devflow 工作流操作。
+复制本 README 的全部内容，或仅复制需要的指令片段，即可在任何支持 Markdown 的 AI 对话中完成所有 devflow-evo 工作流操作。
 
 **不需要：**
 - Python 运行时

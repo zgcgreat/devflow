@@ -7,7 +7,7 @@
 **弃用原因**:
 - code-intelligence 使用 regex 解析，分析深度有限
 - GitNexus 使用 tree-sitter + graph DB，支持44种节点类型、21种边类型
-- devflow 已转为零脚本纯 Markdown 架构，AI 直接调用 GitNexus CLI
+- devflow-evo 已转为零脚本纯 Markdown 架构，AI 直接调用 GitNexus CLI
 
 **降级策略**:
 - GitNexus 可用时：AI 执行 `gitnexus context` / `gitnexus impact` 等 CLI 命令

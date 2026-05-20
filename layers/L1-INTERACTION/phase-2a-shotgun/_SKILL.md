@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0-draft
 description: |
   Multi-variant design generation specialist for Phase 2a.
-  Generates 4-6 design variants with clear trade-offs and AI recommendation based on maintainability/cost/UX scoring. (devflow)
+  Generates 4-6 design variants with clear trade-offs and AI recommendation based on maintainability/cost/UX scoring. (devflow-evo)
 layer: L1-INTERACTION
 phase: 2a
 requires: [g3-gate-decision, design-document]
@@ -117,13 +117,13 @@ Generate 4-6 design variants with clear trade-offs, AI recommendation based on m
 
 ```bash
 # Load Phase 2 design document
-cat .devflow/<req-id>/02-design.md
+cat .devflow-evo/<req-id>/02-design.md
 
 # Extract key requirements
-grep -A 5 "User Stories\|Acceptance Criteria" .devflow/<req-id>/02-design.md
+grep -A 5 "User Stories\|Acceptance Criteria" .devflow-evo/<req-id>/02-design.md
 
 # Check for existing UI/UX guidelines
-if [ -f ".devflow/ui-guidelines.md" ]; then
+if [ -f ".devflow-evo/ui-guidelines.md" ]; then
   echo "✅ UI guidelines found, will incorporate"
 else
   echo "⚠️ No UI guidelines, using default patterns"
@@ -478,7 +478,7 @@ Proceeding to generate detailed variants.
 # 1. 读取 02-design.md 作为上下文
 # 2. 按维度（layout, interaction, visual）生成 N 个变体
 # 3. 每个变体包含：描述、评分维度、优劣势
-# 4. 输出到 .devflow/<req-id>/02a-design-variants.md
+# 4. 输出到 .devflow-evo/<req-id>/02a-design-variants.md
 ```
 
 ---
@@ -707,7 +707,7 @@ This design spec feeds into Phase 3 (Task Breakdown):
 
 ```bash
 # Generate final design spec
-cat > .devflow/<req-id>/02a-design-final.md << 'EOF'
+cat > .devflow-evo/<req-id>/02a-design-final.md << 'EOF'
 {final design content}
 EOF
 
@@ -920,7 +920,7 @@ echo "✅ Final design specification generated"
 ```markdown
 # AI 生成设计变体（按维度：layout, interaction, visual）
 # --count 变体数量，--dimensions 评分维度
-# 输出到 .devflow/<req-id>/02a-design-variants.md
+# 输出到 .devflow-evo/<req-id>/02a-design-variants.md
 ```
 
 **Scoring Calculator**:

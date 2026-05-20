@@ -12,13 +12,13 @@ cp adapters/codex/codex.yaml codex.yaml
 ### 2. 设置环境变量
 
 ```bash
-export DEVFLOW_HOME="$(pwd)/path/to/devflow"
+export DEVFLOW_EVO_HOME="$(pwd)/path/to/devflow-evo"
 ```
 
 ### 3. 验证安装
 
 ```bash
-codex --config codex.yaml "check devflow status"
+codex --config codex.yaml "check devflow-evo status"
 ```
 
 ## 限制

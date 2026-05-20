@@ -11,17 +11,17 @@ dependencies:
 
 > **阶段定位**：为每个任务提供详细技术方案
 > **前置条件**：03-tasks.md 已完成
-> **后置产物**：`.devflow/<req-id>/03a-implementation-plan.md`
+> **后置产物**：`.devflow-evo/<req-id>/03a-implementation-plan.md`
 
 ## 输入
 
-- `.devflow/<req-id>/03-tasks.md`（必读全部任务）
-- `.devflow/<req-id>/02-design.md`（必读 `## 0` + `## 9`）
-- `.devflow/CONTEXT.md`
+- `.devflow-evo/<req-id>/03-tasks.md`（必读全部任务）
+- `.devflow-evo/<req-id>/02-design.md`（必读 `## 0` + `## 9`）
+- `.devflow-evo/CONTEXT.md`
 
 ## 输出
 
-- `.devflow/<req-id>/03a-implementation-plan.md`
+- `.devflow-evo/<req-id>/03a-implementation-plan.md`
 
 ## 入口门禁
 

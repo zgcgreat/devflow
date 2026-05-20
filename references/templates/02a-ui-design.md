@@ -1,4 +1,4 @@
-﻿---
+---
 name: <项目名>
 description: <一句话美学定位，例：温暖纸面编辑式 sanctuary，单一品牌色 / brutalist 黑白网格 / 玩具糖果色>
 
@@ -225,7 +225,7 @@ shadow:
 
 ## 9. 反 AI-slop 自检结果
 
-逐条对照 `@.devflow/references/reference/ui-anti-patterns.md` 的"强制禁忌"段：
+逐条对照 `@.devflow-evo/references/reference/ui-anti-patterns.md` 的"强制禁忌"段：
 
 - ⏳ 字体类禁忌：未命中
 - ⏳ 颜色类禁忌：未命中

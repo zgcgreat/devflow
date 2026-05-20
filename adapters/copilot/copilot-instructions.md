@@ -1,19 +1,19 @@
 # Devflow Workflow Integration
 
-This project uses devflow v3.0 phased workflow. As a GitHub Copilot assistant, follow these rules:
+This project uses devflow-evo v3.0 phased workflow. As a GitHub Copilot assistant, follow these rules:
 
 ## Phase Awareness
 
-- Read `.devflow/STATE.md` to determine the current development phase
+- Read `.devflow-evo/STATE.md` to determine the current development phase
 - Respect gate checks — do not skip phases
-- Load context from `.devflow/memory/` when available
+- Load context from `.devflow-evo/memory/` when available
 
 ## Core Rules
 
-1. **Check Phase**: Before making changes, verify the current phase in `.devflow/STATE.md`
+1. **Check Phase**: Before making changes, verify the current phase in `.devflow-evo/STATE.md`
 2. **Gate Enforcement**: Ensure required artifacts exist before advancing phases
-3. **Memory**: Important decisions go to `.devflow/memory/DECISIONS.md`
-4. **Lessons**: Record learnings in `.devflow/memory/LESSONS.md`
+3. **Memory**: Important decisions go to `.devflow-evo/memory/DECISIONS.md`
+4. **Lessons**: Record learnings in `.devflow-evo/memory/LESSONS.md`
 
 ## Phase Gate Requirements
 
@@ -30,7 +30,7 @@ This project uses devflow v3.0 phased workflow. As a GitHub Copilot assistant, f
 
 ## Token Compression
 
-Apply compression to memory files based on `.devflow/config.yaml` caveman settings:
+Apply compression to memory files based on `.devflow-evo/config.yaml` caveman settings:
 - `lite`: Keep first 500 chars
 - `ultra`: Keep first 200 chars
 - `extreme`: Keep first 100 chars

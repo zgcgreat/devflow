@@ -1,24 +1,25 @@
 ---
-name: devflow
+name: devflow-evo
 version: 3.0-draft
 description: |
   AI programming workflow v3.0 — zero-config, zero-threshold, zero-dependency.
   Three-layer pyramid: 交互层 + 引擎层 + 架构层.
 
-  Use when: (1) Starting any dev task, (2) User says "use devflow" or "v3",
+  Use when: (1) Starting any dev task, (2) User says "use devflow-evo" or "v3",
   (3) Need structured workflow with auto-routing, learning evolution, and parallel execution.
 
   Core: Load this file once → read GO.md for routing → execute layered pipeline.
   GitNexus optional: detect → install prompt → grep fallback if missing.
 
-Architecture: Skill in E:\LLM\skills\devflow, projects only get .devflow/ artifacts.
+Architecture: Skill in E:\LLM\skills\devflow-evo, projects only get .devflow-evo/ artifacts.
 ---
 
-# Devflow v3.0 — AI 编程工作流系统
+# Devflow-Evo v3.0 — AI 编程工作流系统
 
 > **零配置 · 零门槛 · 零依赖**  
 > 三层架构：交互层 → 引擎层 → 架构层  
 > GitNexus 可选检测，不装不影响流程。
+> *(evo = evolution)*
 
 ## 🚀 三步启动
 
@@ -303,8 +304,8 @@ AI会自动：
 #### 项目初始化
 
 ```bash
-/devflow new "项目名称" --tech React,Node.js,PostgreSQL
-/devflow new "电商平台" --mode Strict --template ecommerce
+/devflow-evo new "项目名称" --tech React,Node.js,PostgreSQL
+/devflow-evo new "电商平台" --mode Strict --template ecommerce
 ```
 
 **参数说明**:
@@ -315,11 +316,11 @@ AI会自动：
 #### 阶段控制
 
 ```bash
-/devflow discuss 1        # Phase 1: 需求分析
-/devflow plan 1           # Phase 2: 方案设计
-/devflow execute 1        # Phase 4: 实施开发
-/devflow verify 1         # Phase 5: 测试验证
-/devflow ship 1           # Phase 7: 交付部署
+/devflow-evo discuss 1        # Phase 1: 需求分析
+/devflow-evo plan 1           # Phase 2: 方案设计
+/devflow-evo execute 1        # Phase 4: 实施开发
+/devflow-evo verify 1         # Phase 5: 测试验证
+/devflow-evo ship 1           # Phase 7: 交付部署
 ```
 
 **阶段编号**:
@@ -352,7 +353,7 @@ AI会自动：
 
 **示例1: 创建新项目**
 ```
-/devflow new "任务管理APP" --tech Next.js,TypeScript,TailwindCSS --mode Standard
+/devflow-evo new "任务管理APP" --tech Next.js,TypeScript,TailwindCSS --mode Standard
 ```
 
 **示例2: 查看进度**
@@ -406,7 +407,7 @@ AI启动5 Whys追问流程，挖掘真实需求。
 
 ## 📦 架构说明
 
-### Skill 位置（`E:\LLM\skills\devflow`）
+### Skill 位置（`E:\LLM\skills\devflow-evo`）
 
 ```
 SKILL.md          ← 本文件，v3零配置入口（你正在读的）
@@ -423,7 +424,7 @@ memory/           ← 记忆系统 (PROJECT_CONTEXT/DECISIONS/LESSONS等)
 docs/             ← 扩展功能文档 (SDD/Surface Budget/多项目/插件)
 ```
 
-### 项目产物（`<project>/.devflow/`）
+### 项目产物（`<project>/.devflow-evo/`）
 
 ```
 STATE.md                  ← 跨会话状态追踪
@@ -436,7 +437,7 @@ memory/
 <req-id>/                 ← 需求产物 (00-requirements→07-integration)
 ```
 
-> **关键原则**: AI从 `E:\LLM\skills\devflow` 读取逻辑，在项目中只生成 `.devflow/` 产物。
+> **关键原则**: AI从 `E:\LLM\skills\devflow-evo` 读取逻辑，在项目中只生成 `.devflow-evo/` 产物。
 
 ---
 
@@ -447,11 +448,11 @@ memory/
 **支持同时管理多个项目，快速切换，状态同步，知识共享**
 
 ```bash
-/devflow projects list              # 列出所有项目
-/devflow projects new "名称"        # 创建新项目
-/devflow projects switch <id>       # 切换项目
-/devflow projects info <id>         # 查看项目详情
-/devflow workspace stats            # 工作区统计
+/devflow-evo projects list              # 列出所有项目
+/devflow-evo projects new "名称"        # 创建新项目
+/devflow-evo projects switch <id>       # 切换项目
+/devflow-evo projects info <id>         # 查看项目详情
+/devflow-evo workspace stats            # 工作区统计
 ```
 
 详见: `docs/MULTI-PROJECT-MANAGEMENT.md`
@@ -461,10 +462,10 @@ memory/
 **可扩展Phase、Gate、Agent、Template、Command，沙箱隔离，签名验证**
 
 ```bash
-/devflow plugins install <plugin>   # 安装插件
-/devflow plugins enable <name>      # 启用插件
-/devflow plugins list --enabled     # 查看已启用插件
-/devflow plugins create <name>      # 创建新插件
+/devflow-evo plugins install <plugin>   # 安装插件
+/devflow-evo plugins enable <name>      # 启用插件
+/devflow-evo plugins list --enabled     # 查看已启用插件
+/devflow-evo plugins create <name>      # 创建新插件
 ```
 
 **插件类型**:
@@ -480,24 +481,24 @@ memory/
 
 ### 场景1: 开发新功能
 ```
-Use devflow.
+Use devflow-evo.
 帮我做一个用户登录功能，支持邮箱密码和JWT认证
 ```
 
 ### 场景2: Fast模式修复
 ```
-Use devflow. Fast模式: 修复settings页面按钮文案typo
+Use devflow-evo. Fast模式: 修复settings页面按钮文案typo
 ```
 
 ### 场景3: 架构重构（Strict模式）
 ```
-Use devflow. Strict模式。
+Use devflow-evo. Strict模式。
 把单体应用拆分成微服务，先做用户模块
 ```
 
 ### 场景4: 健康检查
 ```
-Use devflow. 健康检查
+Use devflow-evo. 健康检查
 ```
 
 ---
@@ -517,7 +518,7 @@ Use devflow. 健康检查
 | Stage Skills | `skills/stage-skills/` (向后兼容) |
 | 快速上手 | `SKILL.md`「三步启动」 |
 | 模板版本规则 | `references/templates/` 下带 `-delta` 后缀的变体仅增量变更使用，主模板（无后缀）为默认消费源 |
-| 宪法模板 | `references/templates/constitution-template.md` → Phase 0/1 后写入 `.devflow/memory/constitution.md` |
+| 宪法模板 | `references/templates/constitution-template.md` → Phase 0/1 后写入 `.devflow-evo/memory/constitution.md` |
 
 ---
 
@@ -620,8 +621,8 @@ Phase 4: + L2/wave-executor/_SKILL.md + L1/phase-4-build/_SKILL.md (按需加载
 | R18 | Domain Skills Promotion | LESSONS→domain-skills/持久化 |
 | R19 | 产物模板强制 | 所有输出严格按模板；Phase 4/5/6 结束前必须运行合规检查：读取对应模板，逐项确认必填段落存在、元数据块完整、占位符已替换 |
 | R20 | 向后兼容 | v1.0产物零改动迁移 |
-| R21 | Path Standardization | 产物路径统一为 `.devflow/`，旧 `.devflow-kit/` 兼容迁移 |
-| R21.2 | 目录结构保持与 .devflow 兼容 |
+| R21 | Path Standardization | 产物路径统一为 `.devflow-evo/`，旧 `.devflow-kit/` 兼容迁移 |
+| R21.2 | 目录结构保持与 .devflow-evo 兼容 |
 | R22 | Quality Scoring | Phase 6 输出质量评分报告（详见 references/RULES-v3.md） |
 | R23 | Stage-Skills Sync | Stage Skills 与 Core Skills 同步维护，≥7 天差异报 P2 |
 | R24 | Call Chain Ownership | L1→L2/L3 调用链必须在 call-chain-inventory.md 注册 |

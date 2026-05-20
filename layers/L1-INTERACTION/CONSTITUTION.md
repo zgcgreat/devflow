@@ -1,4 +1,4 @@
-# devflow 工作流宪法
+# devflow-evo 工作流宪法
 
 > 本文件定义所有 Phase 必须遵守的强制性规则。各 Phase `_SKILL.md` 只需定义**差异化规则**，不再重复以下内容。
 > 加载方式：每个 Phase skill 的上下文应自动包含本文件内容。
@@ -127,4 +127,4 @@ Phase 转换前必须向用户确认，使用多问题确认模式：
 
 ## 宪法生效范围
 
-本宪法适用于 devflow v3.0 的 L1-INTERACTION 层所有 Phase skills（Phase 0-8 + YC/Shotgun/Discuss 变体）。L2-ENGINE 和 L3-ARCHITECTURE 层的模块遵循各自的层内规则。
+本宪法适用于 devflow-evo v3.0 的 L1-INTERACTION 层所有 Phase skills（Phase 0-8 + YC/Shotgun/Discuss 变体）。L2-ENGINE 和 L3-ARCHITECTURE 层的模块遵循各自的层内规则。

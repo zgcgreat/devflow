@@ -77,7 +77,7 @@ Manages the full lifecycle of `canary-health-check.sh` and `auto-rollback.sh` sc
 1. **Initialization**: Load current deployment config to identify rollback target
 2. **Execution**: Run with parameters `$STAGE $REASON`
 3. **Verification**: Confirm rollback success by re-checking error_rate post-rollback
-4. **Reporting**: Generate structured rollback report at `.devflow/<req-id>/rollback-report.md`
+4. **Reporting**: Generate structured rollback report at `.devflow-evo/<req-id>/rollback-report.md`
 
 **Parameters**:
 - `$1` — Stage from which rollback was triggered (1, 2, or 3)

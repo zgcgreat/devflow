@@ -1,6 +1,8 @@
 # Devflow 项目结构完整性审查报告
 
-**项目路径**: `E:\LLM\skills\devflow`
+> ⚠️ Historical document — references to "devflow" predate the "devflow-evo" rename.
+
+**项目路径**: `E:\LLM\skills\devflow` (now `E:\LLM\skills\devflow-evo`)
 **审查日期**: 2026-05-19
 
 ---

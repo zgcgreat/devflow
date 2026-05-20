@@ -133,7 +133,7 @@ Step 2: ...
 
 ### 内容
 
-#### 1. devflow-rules.md — 14维规则体系
+#### 1. devflow-evo-rules.md — 14维规则体系
 定义开发流程的14个维度规则：
 - R1: 需求获取（入场检测R1.11）
 - R2: 需求分析（AC标准）
@@ -214,8 +214,8 @@ rules/ ──► 强制约束
 |------|-----------|
 | 新项目初始化 | templates/project.md + rules/schema.md |
 | 需求分析 | skills/stage-1-analysis/ + templates/requirements.md |
-| 开发阶段 | skills/tdd/ + rules/devflow-rules.md |
-| 代码审查 | skills/gstack-review/ + rules/devflow-rules.md |
+| 开发阶段 | skills/tdd/ + rules/devflow-evo-rules.md |
+| 代码审查 | skills/gstack-review/ + rules/devflow-evo-rules.md |
 | Token告警 | rules/caveman-rules.md |
 | 阶段转换 | rules/gate-conditions.md |
 

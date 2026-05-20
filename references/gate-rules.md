@@ -1,7 +1,7 @@
 # 阶段门验证规则 (v3.0)
 
 > 本文件是 GO.md 第四步的详细展开，由 GO.md 按需加载。
-> **版本**: v3.0 — 与 devflow Phase 0-8 和 G0-G8 Gate 编号体系对齐
+> **版本**: v3.0 — 与 devflow-evo Phase 0-8 和 G0-G8 Gate 编号体系对齐
 
 ## 阶段依赖关系图
 
@@ -37,7 +37,7 @@ G0:Strategy  G1:5Whys   G2.5:Discuss  G3:Design   G3.5:Shotgun  G4:TaskPlan
 
 | 路由目标 | Gate | 必须存在的前置产物 | 缺失时处理 |
 |---------|------|-------------------|---|
-| Phase 1 (5 Whys) | G1 | `.devflow/<id>/00-strategy.md` | 先走 Phase 0 |
+| Phase 1 (5 Whys) | G1 | `.devflow-evo/<id>/00-strategy.md` | 先走 Phase 0 |
 | Phase 1b (Discuss) | G2.5 | `00-strategy.md` + `01-analysis.md` | 先补 Phase 1 |
 | Phase 2 (Design) | G3 | `01-analysis.md` + `01b-context.md` | 先补 Phase 1b |
 | Phase 2a (Shotgun) | G3.5 | `02-design.md` | 先走 Phase 2 |

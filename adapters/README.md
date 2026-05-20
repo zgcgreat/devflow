@@ -2,7 +2,7 @@
 name: adapter-bridge
 version: 3.0-draft
 layer: L2-ENGINE
-description: Unified runtime bridge that adapts devflow hooks, skills, and configurations to multiple AI coding runtimes (Claude Code, Cursor, Copilot, Codex, Gemini CLI, Windsurf, Kilo, etc.)
+description: Unified runtime bridge that adapts devflow-evo hooks, skills, and configurations to multiple AI coding runtimes (Claude Code, Cursor, Copilot, Codex, Gemini CLI, Windsurf, Kilo, etc.)
 source: get-shit-done Sync Runtime Bridge
 triggers:
   - runtime detection
@@ -14,7 +14,7 @@ triggers:
 
 ## 核心原理
 
-借鉴 GSD Sync Runtime Bridge 的零子进程设计，devflow 的核心能力（阶段路由、门禁检查、记忆管理、Token 压缩）应能被任何 AI 编码运行时调用。
+借鉴 GSD Sync Runtime Bridge 的零子进程设计，devflow-evo 的核心能力（阶段路由、门禁检查、记忆管理、Token 压缩）应能被任何 AI 编码运行时调用。
 
 **设计目标**: 一次编写，处处运行 — 核心逻辑在 `adapters/shared/` 中，各运行时适配器仅处理配置格式差异。
 
@@ -44,7 +44,7 @@ adapters/
 │   ├── hooks.json         # hooks 注册模板
 │   └── install.md         # 安装指南
 ├── cursor/                # Cursor 适配
-│   ├── devflow.mdc        # .mdc 规则文件模板
+│   ├── devflow-evo.mdc        # .mdc 规则文件模板
 │   └── install.md
 ├── copilot/               # GitHub Copilot 适配
 │   ├── copilot-instructions.md  # instructions 模板
@@ -66,7 +66,7 @@ adapters/
 const bridge = {
   // 读取项目状态
   readState(projectDir) {
-    // 解析 .devflow/STATE.md
+    // 解析 .devflow-evo/STATE.md
     // 返回: { phase, mode, progress, gateStatus }
   },
 
@@ -84,7 +84,7 @@ const bridge = {
 
   // 获取当前压缩级别
   getCompressionLevel(projectDir) {
-    // 读取 .devflow/config.yaml 中的 caveman.level
+    // 读取 .devflow-evo/config.yaml 中的 caveman.level
     // 返回: 'lite' | 'full' | 'ultra' | 'extreme'
   },
 
@@ -98,7 +98,7 @@ const bridge = {
 
 ## 安装流程
 
-1. `install-devflow` 技能新增运行时选择步骤
+1. `install-devflow-evo` 技能新增运行时选择步骤
 2. 根据选择生成对应适配器配置
 3. 将 shared/ 核心逻辑链接到运行时配置
 4. 验证配置生效

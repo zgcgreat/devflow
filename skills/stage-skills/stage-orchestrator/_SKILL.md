@@ -1,4 +1,4 @@
-﻿# devflow-kit Stage Orchestrator（阶段编排器）- DEPRECATED
+# devflow-kit Stage Orchestrator（阶段编排器）- DEPRECATED
 
 > ⚠️ **已废弃**：GO.md 直接管理路由，不再需要 orchestrator
 > 
@@ -43,7 +43,7 @@
 GO.md 路由到: stage-0-confirm
   ↓ 加载: agent-skills/skills/stage-0-confirm/_SKILL.md
   ↓ 执行: 需求澄清 + 模式判定
-  ↓ 产物: .devflow/REQ-001/00-requirements.md
+  ↓ 产物: .devflow-evo/REQ-001/00-requirements.md
 ```
 
 ### 方式2：直接调用stage skill
@@ -108,7 +108,7 @@ dependencies:
 
 ## 状态管理
 
-所有stage共享 `.devflow/STATE.md`：
+所有stage共享 `.devflow-evo/STATE.md`：
 
 ```markdown
 当前阶段: task

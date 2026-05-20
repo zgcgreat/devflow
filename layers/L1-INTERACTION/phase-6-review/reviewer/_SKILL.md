@@ -11,7 +11,7 @@ provides: [review-findings, fix-recommendations]
 description: |
   Three-layer adversarial code review specialist for Phase 6 Review.
   Blind Hunter / Edge Case Hunter / Acceptance Auditor pipeline.
-  Defaults to "NEEDS WORK" unless overwhelming evidence proves readiness. (devflow)
+  Defaults to "NEEDS WORK" unless overwhelming evidence proves readiness. (devflow-evo)
 ---
 
 # Reviewer — Three-Layer Adversarial Code Review

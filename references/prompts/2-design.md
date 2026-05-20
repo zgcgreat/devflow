@@ -1,4 +1,4 @@
-﻿# 阶段 2 · 设计 — 把需求变成可执行的技术设计
+# 阶段 2 · 设计 — 把需求变成可执行的技术设计
 
 > ⚠️ **进入本阶段前，必须先加载**：
 > - **skill**：`devflow-kit/agent-skills/skills/design-and-architecture/_SKILL.md`
@@ -10,20 +10,20 @@
 
 ## 输入
 
-- `@.devflow/<req-id>/01-analysis.md`（或 `01-analysis-delta.md`）
-- `@.devflow/<req-id>/00-requirements.md`（含项目类型与调性信息）
+- `@.devflow-evo/<req-id>/01-analysis.md`（或 `01-analysis-delta.md`）
+- `@.devflow-evo/<req-id>/00-requirements.md`（含项目类型与调性信息）
 - **项目上下文文档**（从 `STATE.md` 读 `ai_context_doc` 字段决定）：
   - 有 `ai_context_doc: <path>` → 读那个文档（如 `AGENTS.md` / `CLAUDE.md`）
-  - 没 `ai_context_doc` 或 `ai_context_doc: CONTEXT.md` → 读 `@.devflow/CONTEXT.md`
+  - 没 `ai_context_doc` 或 `ai_context_doc: CONTEXT.md` → 读 `@.devflow-evo/CONTEXT.md`
   - `ai_context_doc: none` → 跳过此输入（AI "盲飞"，必须在 02-design.md 顶部贴警告）
-- **项目级架构文档**（如存在 · brownfield 强烈推荐）：`@.devflow/system-architecture.md`
+- **项目级架构文档**（如存在 · brownfield 强烈推荐）：`@.devflow-evo/system-architecture.md`
   - 重点读 `§ 2 模块清单 + 依赖规则`（决定本需求 能不能引入新模块 / 跨模块依赖）
   - 重点读 `§ 3 ADR 列表`（看本需求 是否撞已有不可逆决策——撞了必须显式说"延续 ADR-NNN"或"申请 supersede ADR-NNN"）
   - 重点读 `§ 4 跨模块契约`（本需求 改 API / 事件 / Schema 时必查）
   - 不存在则跳过；如果用户从未跑过 `A-architect` 但项目复杂度已较高，提醒一句"建议先跑 `@A-architect.md` 建立项目级架构文档"
-- **design-baseline**（Delta 模式触发）：`@.devflow/design-baseline.md`（如存在）
+- **design-baseline**（Delta 模式触发）：`@.devflow-evo/design-baseline.md`（如存在）
 - `@devflow-kit/references/reference/tech-stacks.md`（技术栈卡片）
-- 已有项目（如有）：`@02-design.md`、`@.devflow/adr/`、相关源码（按需）
+- 已有项目（如有）：`@02-design.md`、`@.devflow-evo/adr/`、相关源码（按需）
 
 ## 你的职责
 
@@ -35,13 +35,13 @@
 | Delta 模式 | `@devflow-kit/templates/02-design-delta.md` | Delta 格式，只写变更部分 |
 
 **Delta 模式触发条件**（必须同时满足）：
-- `.devflow/design-baseline.md` 已存在（表示项目已有design-baseline）
+- `.devflow-evo/design-baseline.md` 已存在（表示项目已有design-baseline）
 - 本次需求 是修改/扩展已有设计，而非全新设计
 - `01-analysis.md`（或 `01-analysis-delta.md`）中明确标注了「本次为增量需求」
 
-> **注意**：Delta 模式在需求分析和方案设计阶段应保持一致。如果 1-analysis 走了 Delta 模式，2-design 也应走 Delta 模式。如果 `.devflow/design-baseline.md` 不存在但本次是存量项目修改，应先走完整模式，在归档时会自动创建基线。
+> **注意**：Delta 模式在需求分析和方案设计阶段应保持一致。如果 1-analysis 走了 Delta 模式，2-design 也应走 Delta 模式。如果 `.devflow-evo/design-baseline.md` 不存在但本次是存量项目修改，应先走完整模式，在归档时会自动创建基线。
 
-**必须严格按模板完整结构输出，保存到 `.devflow/<req-id>/02-design.md`**。**不得省略或改写任何段落**。
+**必须严格按模板完整结构输出，保存到 `.devflow-evo/<req-id>/02-design.md`**。**不得省略或改写任何段落**。
 
 模板必须覆盖：
 
@@ -55,8 +55,8 @@
 
 **首次到这步的判定**：
 
-- 命中 + `.devflow/system-architecture.md` 存在 → 检查 ADR 是否冲突。冲突则提示一次："⚠️ 本次设计可能 supersede ADR-NNN，请在 § 1 决策清单显式声明 supersede 关系"。**不阻塞继续**（因为用户已到 design 阶段）
-- 命中 + `.devflow/system-architecture.md` 不存在 → 反问用户：
+- 命中 + `.devflow-evo/system-architecture.md` 存在 → 检查 ADR 是否冲突。冲突则提示一次："⚠️ 本次设计可能 supersede ADR-NNN，请在 § 1 决策清单显式声明 supersede 关系"。**不阻塞继续**（因为用户已到 design 阶段）
+- 命中 + `.devflow-evo/system-architecture.md` 不存在 → 反问用户：
 
   ```
   🏛️ 本次设计涉及项目级架构变更（拆模块 / 换数据库 / 改鉴权方案 / ...），但项目无 system-architecture.md。
@@ -164,11 +164,11 @@
 ### 1.5 宪法检查（Constitution Gate）— 来自 spec-kit 融合
 
 > **来源**: 融合 spec-kit 的 Constitutional Foundation
-> **目的**: 确保所有技术决策符合项目宪法 `.devflow/constitution.md`
+> **目的**: 确保所有技术决策符合项目宪法 `.devflow-evo/constitution.md`
 
 **强制门禁**：在列出决策清单后、绘制架构图前，必须执行此检查。
 
-读取 `.devflow/constitution.md`，逐条验证：
+读取 `.devflow-evo/constitution.md`，逐条验证：
 
 | 宪法条款 | 检查项 | 通过? | 违规说明 |
 |---|---|---|---|
@@ -226,7 +226,7 @@
 ### 3. ADR（Architecture Decision Records）
 
 凡是「以后可能被推翻」的决策，单独写一份 ADR：
-保存到 `.devflow/adr/<NNN>-<title>.md`，结构：Context / Decision / Consequences。
+保存到 `.devflow-evo/adr/<NNN>-<title>.md`，结构：Context / Decision / Consequences。
 
 ### 4. 风险
 
@@ -264,11 +264,11 @@
 
 ## 输出
 
-- `.devflow/<req-id>/02-design.md`（**必须严格按模板格式输出**）
+- `.devflow-evo/<req-id>/02-design.md`（**必须严格按模板格式输出**）
   - 新需求：使用 `02-design.md` 模板
   - Delta 模式：使用 `02-design-delta.md` 模板
-- 0~N 个 `.devflow/adr/<NNN>-*.md`
-- **更新 `.devflow/STATE.md`**：
+- 0~N 个 `.devflow-evo/adr/<NNN>-*.md`
+- **更新 `.devflow-evo/STATE.md`**：
   - `当前阶段` 设为 `design`
   - `阶段状态` 设为 `waiting_user_confirmation`
   - `上次完成阶段` 设为 `design`
@@ -297,7 +297,7 @@
 
 ```
 ✅ 方案设计 完成
-📝 产物：.devflow/<req-id>/02-design.md
+📝 产物：.devflow-evo/<req-id>/02-design.md
 📊 STATE.md 阶段进度已更新：[x] 方案设计 → 02-design.md
 
 请确认方案设计内容：

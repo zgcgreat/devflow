@@ -1,6 +1,10 @@
 # Devflow Project Deep Research Report
 # Generated: 2026-05-19
 # Source: E:\LLM\skills\devflow\
+#
+# ⚠️ HISTORICAL DOCUMENT — This report was written before the "devflow → devflow-evo" rename.
+# All references to "devflow" in this file refer to the project now known as "devflow-evo".
+# References to "E:\LLM\skills\devflow\" should be read as "E:\LLM\skills\devflow-evo\".
 
 ---
 
@@ -5532,216 +5536,216 @@ elif cluster_suggested_target == STATE.md backlog:
 
 ### 5.6 L2-ENGINE/learning-workflow/memory/AGENT_NOTES.md
 
-﻿# AI助手笔记
-
-本文件用于记录AI助手端关于执行质量、仓库特定处理或重复操作陷阱的持久提醒。
-
-## 条目模板
-
-```md
-### AI助手笔记：<简短标题>
-- id: agent-YYYY-MM-DD-<标识>
-- type: agent_note
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-提醒内容：
-
-重要性：
-
-如何应用：
-```
-
-## 说明
-
-- 与项目事实和用户偏好分开保存。
-- 本文件用于可重复的执行提醒，而非临时草稿笔记。
-- 如果笔记不再相关，标记为 `superseded` 而不是静默删除历史。
+﻿# AI助手笔记
+
+本文件用于记录AI助手端关于执行质量、仓库特定处理或重复操作陷阱的持久提醒。
+
+## 条目模板
+
+```md
+### AI助手笔记：<简短标题>
+- id: agent-YYYY-MM-DD-<标识>
+- type: agent_note
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+提醒内容：
+
+重要性：
+
+如何应用：
+```
+
+## 说明
+
+- 与项目事实和用户偏好分开保存。
+- 本文件用于可重复的执行提醒，而非临时草稿笔记。
+- 如果笔记不再相关，标记为 `superseded` 而不是静默删除历史。
 
 
 ### 5.6 L2-ENGINE/learning-workflow/memory/LEARNING_BACKLOG.md
 
-﻿# 学习待办
-
-本文件用于跟踪可复用的经验教训，这些经验可能值得在未来创建工作流、技能、检查清单或项目规则。
-
-## 候选格式
-
-```md
-### 候选：<简短名称>
-- candidate_id: learn-YYYY-MM-DD-<标识>
-- type: learning_candidate
-- status: proposed
-- confidence: inferred
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-- trigger:
-- repeated_pattern:
-- impact:
-- evidence_count:
-- repeated_times:
-- suggested_artifact:
-- promote_decision:
-- linked_entries:
-```
-
-## 提升指导
-
-- 将候选保持在 `proposed` 状态，直到它显示出重复模式或明确的跨会话价值。
-- 当它有足够证据和明确的目标产物时，将其移动到 `ready_for_promotion`。
-- 当经验不再相关或已转化为持久化产物时，使用 `superseded`。
-- 准备提升的候选通常应有 `evidence_count >= 2`、`repeated_times >= 2`、`source`、`review_after` 和链接的证据。
-
-## 说明
-
-- 将持久的项目事实放在 `PROJECT_CONTEXT.md` 中，而不是这里。
-- 将当前任务状态放在 `CURRENT_STATE.md` 中，而不是这里。
-- 将一次性会话摘要放在 `session-journal/` 中，而不是这里。
-- 仅将看起来可在未来会话中复用的经验放在本文件中。
+﻿# 学习待办
+
+本文件用于跟踪可复用的经验教训，这些经验可能值得在未来创建工作流、技能、检查清单或项目规则。
+
+## 候选格式
+
+```md
+### 候选：<简短名称>
+- candidate_id: learn-YYYY-MM-DD-<标识>
+- type: learning_candidate
+- status: proposed
+- confidence: inferred
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+- trigger:
+- repeated_pattern:
+- impact:
+- evidence_count:
+- repeated_times:
+- suggested_artifact:
+- promote_decision:
+- linked_entries:
+```
+
+## 提升指导
+
+- 将候选保持在 `proposed` 状态，直到它显示出重复模式或明确的跨会话价值。
+- 当它有足够证据和明确的目标产物时，将其移动到 `ready_for_promotion`。
+- 当经验不再相关或已转化为持久化产物时，使用 `superseded`。
+- 准备提升的候选通常应有 `evidence_count >= 2`、`repeated_times >= 2`、`source`、`review_after` 和链接的证据。
+
+## 说明
+
+- 将持久的项目事实放在 `PROJECT_CONTEXT.md` 中，而不是这里。
+- 将当前任务状态放在 `CURRENT_STATE.md` 中，而不是这里。
+- 将一次性会话摘要放在 `session-journal/` 中，而不是这里。
+- 仅将看起来可在未来会话中复用的经验放在本文件中。
 
 
 ### 5.6 L2-ENGINE/learning-workflow/memory/SESSION_CLOSE_CHECKLIST.md
 
-﻿# 会话收尾检查清单
-
-在声明一个记忆感知会话完成之前，使用此检查清单。
-
-## 必需检查
-
-- `CURRENT_STATE.md` 是否已更新以反映真实的停止点？
-- 是否需要为此会话创建新的 `session-journal/` 条目？
-- 是否有任何持久化事实、决策、失败模式、验证规则或团队偏好发生变化？
-- 本次会话写入的所有持久化条目是否包含：
-  - `id`
-  - `status`
-  - `confidence`
-  - `source`
-  - `last_updated`
-  - `review_after`
-- 如果有条目标记为 `confidence: verified`，它是否在 `source` 中包含真实证据？
-- 如果替换了任何旧条目，是否将其标记为 `status: superseded`？
-
-## 提升检查
-
-- 如果待办候选是 `ready_for_promotion`，它是否有：
-  - `evidence_count >= 2`
-  - `repeated_times >= 2`
-  - `source`
-  - `review_after`
-  - 链接的支持条目
-
-## 最终验证
-
-- 当记忆发生变化时，运行 `scripts/validate-superpowers-memory.ps1` 或 `scripts/validate-superpowers-memory.sh`
-- 如果验证器刷新了 `memory-index.yaml`，请审查它
+﻿# 会话收尾检查清单
+
+在声明一个记忆感知会话完成之前，使用此检查清单。
+
+## 必需检查
+
+- `CURRENT_STATE.md` 是否已更新以反映真实的停止点？
+- 是否需要为此会话创建新的 `session-journal/` 条目？
+- 是否有任何持久化事实、决策、失败模式、验证规则或团队偏好发生变化？
+- 本次会话写入的所有持久化条目是否包含：
+  - `id`
+  - `status`
+  - `confidence`
+  - `source`
+  - `last_updated`
+  - `review_after`
+- 如果有条目标记为 `confidence: verified`，它是否在 `source` 中包含真实证据？
+- 如果替换了任何旧条目，是否将其标记为 `status: superseded`？
+
+## 提升检查
+
+- 如果待办候选是 `ready_for_promotion`，它是否有：
+  - `evidence_count >= 2`
+  - `repeated_times >= 2`
+  - `source`
+  - `review_after`
+  - 链接的支持条目
+
+## 最终验证
+
+- 当记忆发生变化时，运行 `scripts/validate-superpowers-memory.ps1` 或 `scripts/validate-superpowers-memory.sh`
+- 如果验证器刷新了 `memory-index.yaml`，请审查它
 
 
 ### 5.6 L2-ENGINE/learning-workflow/memory/TEAM_PREFERENCES.md
 
-﻿# 团队偏好
-
-本文件用于记录持久的协作偏好、沟通边界和团队特定的工作约定。
-
-## 条目模板
-
-```md
-### 偏好：<简短标题>
-- id: preference-YYYY-MM-DD-<标识>
-- type: team_preference
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-偏好内容：
-
-存在原因：
-
-如何应用：
-```
-
-## 说明
-
-- 本文件用于持久偏好，而非会话特定的请求。
-- 如果偏好发生变化，更新现有条目或标记为 `superseded`。
-- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
+﻿# 团队偏好
+
+本文件用于记录持久的协作偏好、沟通边界和团队特定的工作约定。
+
+## 条目模板
+
+```md
+### 偏好：<简短标题>
+- id: preference-YYYY-MM-DD-<标识>
+- type: team_preference
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+偏好内容：
+
+存在原因：
+
+如何应用：
+```
+
+## 说明
+
+- 本文件用于持久偏好，而非会话特定的请求。
+- 如果偏好发生变化，更新现有条目或标记为 `superseded`。
+- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
 
 
 ### 5.6 L2-ENGINE/learning-workflow/memory/USER_PROFILE.md
 
-﻿# 用户画像
-
-本文件用于记录持久的面向用户的偏好，这些偏好在跨会话中有帮助，但不是项目事实。
-
-## 条目模板
-
-```md
-### 用户偏好：<简短标题>
-- id: user-YYYY-MM-DD-<标识>
-- type: user_preference
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-偏好内容：
-
-重要性：
-
-如何应用：
-```
-
-## 说明
-
-- 与 `PROJECT_CONTEXT.md` 分开保存，避免用户偏好污染项目事实。
-- 优先记录持久的交互偏好，而非一次性请求。
-- 如果偏好发生变化，更新条目或标记为 `superseded`。
+﻿# 用户画像
+
+本文件用于记录持久的面向用户的偏好，这些偏好在跨会话中有帮助，但不是项目事实。
+
+## 条目模板
+
+```md
+### 用户偏好：<简短标题>
+- id: user-YYYY-MM-DD-<标识>
+- type: user_preference
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+偏好内容：
+
+重要性：
+
+如何应用：
+```
+
+## 说明
+
+- 与 `PROJECT_CONTEXT.md` 分开保存，避免用户偏好污染项目事实。
+- 优先记录持久的交互偏好，而非一次性请求。
+- 如果偏好发生变化，更新条目或标记为 `superseded`。
 
 
 ### 5.6 L2-ENGINE/learning-workflow/memory/VERIFICATION_BASELINE.md
 
-﻿# 验证基线
-
-本文件用于记录团队认为可信的验证命令和证据标准。
-
-## 条目模板
-
-```md
-### 验证规则：<简短标题>
-- id: verification-YYYY-MM-DD-<标识>
-- type: verification_rule
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-命令或方法：
-
-验证内容：
-
-不验证的内容：
-
-期望的证据：
-```
-
-## 说明
-
-- 优先使用可重现且团队已成功使用的命令。
-- 记录已知的盲点，避免未来会话过度自信。
-- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
-- 如果规则标记为 `verified`，`source` 应指向成功的命令、日志、测试或文档化证据。
+﻿# 验证基线
+
+本文件用于记录团队认为可信的验证命令和证据标准。
+
+## 条目模板
+
+```md
+### 验证规则：<简短标题>
+- id: verification-YYYY-MM-DD-<标识>
+- type: verification_rule
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+命令或方法：
+
+验证内容：
+
+不验证的内容：
+
+期望的证据：
+```
+
+## 说明
+
+- 优先使用可重现且团队已成功使用的命令。
+- 记录已知的盲点，避免未来会话过度自信。
+- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
+- 如果规则标记为 `verified`，`source` 应指向成功的命令、日志、测试或文档化证据。
 
 
 ### 5.6 L2-ENGINE/learning-workflow/memory/memory-index.yaml
@@ -12058,64 +12062,64 @@ Use this taxonomy when designing or auditing workflow validation points:
 
 ### 6.9 L3-ARCHITECTURE/schema-definitions/CURRENT_STATE.md
 
-﻿# 当前状态
-
-本文件用于记录最新的工作上下文，下次会话应首先阅读。
-
-## 当前焦点
-
-- 当前任务：
-- 为什么现在重要：
-
-## 最新决策
-
-- 决策：
-- 理由：
-
-## 待解决问题
-
-- 问题：
-- 阻碍或后续行动：
-
-## 下一步建议
-
-- 下一步：
-- 建议负责人：
+﻿# 当前状态
+
+本文件用于记录最新的工作上下文，下次会话应首先阅读。
+
+## 当前焦点
+
+- 当前任务：
+- 为什么现在重要：
+
+## 最新决策
+
+- 决策：
+- 理由：
+
+## 待解决问题
+
+- 问题：
+- 阻碍或后续行动：
+
+## 下一步建议
+
+- 下一步：
+- 建议负责人：
 
 
 ### 6.9 L3-ARCHITECTURE/schema-definitions/DECISIONS.md
 
-﻿# 技术决策
-
-本文件用于记录重要的项目或工作流决策，跨会话保持可见。
-
-## 条目模板
-
-```md
-### 决策：<简短标题>
-- id: decision-YYYY-MM-DD-<标识>
-- type: decision
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-理由：
-
-考虑的替代方案：
-
-影响：
-```
-
-## 说明
-
-- 只记录对未来会话仍然重要的决策。
-- 过时的决策标记为 `status: superseded`，而不是盲目删除历史。
-- 尽可能引用代码、文档、测试或会话笔记。
-- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
-- 除非 `source` 指向真实证据，否则不要将条目标记为 `confidence: verified`。
+﻿# 技术决策
+
+本文件用于记录重要的项目或工作流决策，跨会话保持可见。
+
+## 条目模板
+
+```md
+### 决策：<简短标题>
+- id: decision-YYYY-MM-DD-<标识>
+- type: decision
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+理由：
+
+考虑的替代方案：
+
+影响：
+```
+
+## 说明
+
+- 只记录对未来会话仍然重要的决策。
+- 过时的决策标记为 `status: superseded`，而不是盲目删除历史。
+- 尽可能引用代码、文档、测试或会话笔记。
+- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
+- 除非 `source` 指向真实证据，否则不要将条目标记为 `confidence: verified`。
 
 
 ### 6.9 L3-ARCHITECTURE/schema-definitions/PROGRESS.md
@@ -12954,179 +12958,179 @@ memory/memory-index.yaml
 
 ### 9.2 memory/AGENT_NOTES.md
 
-﻿# AI助手笔记
-
-本文件用于记录AI助手端关于执行质量、仓库特定处理或重复操作陷阱的持久提醒。
-
-## 条目模板
-
-```md
-### AI助手笔记：<简短标题>
-- id: agent-YYYY-MM-DD-<标识>
-- type: agent_note
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-提醒内容：
-
-重要性：
-
-如何应用：
-```
-
-## 说明
-
-- 与项目事实和用户偏好分开保存。
-- 本文件用于可重复的执行提醒，而非临时草稿笔记。
-- 如果笔记不再相关，标记为 `superseded` 而不是静默删除历史。
+﻿# AI助手笔记
+
+本文件用于记录AI助手端关于执行质量、仓库特定处理或重复操作陷阱的持久提醒。
+
+## 条目模板
+
+```md
+### AI助手笔记：<简短标题>
+- id: agent-YYYY-MM-DD-<标识>
+- type: agent_note
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+提醒内容：
+
+重要性：
+
+如何应用：
+```
+
+## 说明
+
+- 与项目事实和用户偏好分开保存。
+- 本文件用于可重复的执行提醒，而非临时草稿笔记。
+- 如果笔记不再相关，标记为 `superseded` 而不是静默删除历史。
 
 
 ### 9.2 memory/CURRENT_STATE.md
 
-﻿# 当前状态
-
-本文件用于记录最新的工作上下文，下次会话应首先阅读。
-
-## 当前焦点
-
-- 当前任务：
-- 为什么现在重要：
-
-## 最新决策
-
-- 决策：
-- 理由：
-
-## 待解决问题
-
-- 问题：
-- 阻碍或后续行动：
-
-## 下一步建议
-
-- 下一步：
-- 建议负责人：
+﻿# 当前状态
+
+本文件用于记录最新的工作上下文，下次会话应首先阅读。
+
+## 当前焦点
+
+- 当前任务：
+- 为什么现在重要：
+
+## 最新决策
+
+- 决策：
+- 理由：
+
+## 待解决问题
+
+- 问题：
+- 阻碍或后续行动：
+
+## 下一步建议
+
+- 下一步：
+- 建议负责人：
 
 
 ### 9.2 memory/DECISIONS.md
 
-﻿# 技术决策
-
-本文件用于记录重要的项目或工作流决策，跨会话保持可见。
-
-## 条目模板
-
-```md
-### 决策：<简短标题>
-- id: decision-YYYY-MM-DD-<标识>
-- type: decision
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-理由：
-
-考虑的替代方案：
-
-影响：
-```
-
-## 说明
-
-- 只记录对未来会话仍然重要的决策。
-- 过时的决策标记为 `status: superseded`，而不是盲目删除历史。
-- 尽可能引用代码、文档、测试或会话笔记。
-- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
-- 除非 `source` 指向真实证据，否则不要将条目标记为 `confidence: verified`。
+﻿# 技术决策
+
+本文件用于记录重要的项目或工作流决策，跨会话保持可见。
+
+## 条目模板
+
+```md
+### 决策：<简短标题>
+- id: decision-YYYY-MM-DD-<标识>
+- type: decision
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+理由：
+
+考虑的替代方案：
+
+影响：
+```
+
+## 说明
+
+- 只记录对未来会话仍然重要的决策。
+- 过时的决策标记为 `status: superseded`，而不是盲目删除历史。
+- 尽可能引用代码、文档、测试或会话笔记。
+- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
+- 除非 `source` 指向真实证据，否则不要将条目标记为 `confidence: verified`。
 
 
 ### 9.2 memory/KNOWN_FAILURES.md
 
-﻿# 已知失败模式
-
-本文件用于记录重复的失败模式、环境陷阱、流程陷阱和反复出现的误判。
-
-## 条目模板
-
-```md
-### 失败模式：<简短标题>
-- id: failure-YYYY-MM-DD-<标识>
-- type: failure_pattern
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-触发条件：
-
-症状：
-
-可能原因：
-
-如何检测：
-
-缓解措施：
-```
-
-## 说明
-
-- 优先记录重复或高影响的失败，而非一次性错误。
-- 如果失败已完全过时，标记为 `superseded` 并解释原因。
-- 尽可能链接到验证证据。
-- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
-- 使用 `review_after` 强制定期检查对环境敏感的失败模式。
+﻿# 已知失败模式
+
+本文件用于记录重复的失败模式、环境陷阱、流程陷阱和反复出现的误判。
+
+## 条目模板
+
+```md
+### 失败模式：<简短标题>
+- id: failure-YYYY-MM-DD-<标识>
+- type: failure_pattern
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+触发条件：
+
+症状：
+
+可能原因：
+
+如何检测：
+
+缓解措施：
+```
+
+## 说明
+
+- 优先记录重复或高影响的失败，而非一次性错误。
+- 如果失败已完全过时，标记为 `superseded` 并解释原因。
+- 尽可能链接到验证证据。
+- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
+- 使用 `review_after` 强制定期检查对环境敏感的失败模式。
 
 
 ### 9.2 memory/LEARNING_BACKLOG.md
 
-﻿# 学习待办
-
-本文件用于跟踪可复用的经验教训，这些经验可能值得在未来创建工作流、技能、检查清单或项目规则。
-
-## 候选格式
-
-```md
-### 候选：<简短名称>
-- candidate_id: learn-YYYY-MM-DD-<标识>
-- type: learning_candidate
-- status: proposed
-- confidence: inferred
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-- trigger:
-- repeated_pattern:
-- impact:
-- evidence_count:
-- repeated_times:
-- suggested_artifact:
-- promote_decision:
-- linked_entries:
-```
-
-## 提升指导
-
-- 将候选保持在 `proposed` 状态，直到它显示出重复模式或明确的跨会话价值。
-- 当它有足够证据和明确的目标产物时，将其移动到 `ready_for_promotion`。
-- 当经验不再相关或已转化为持久化产物时，使用 `superseded`。
-- 准备提升的候选通常应有 `evidence_count >= 2`、`repeated_times >= 2`、`source`、`review_after` 和链接的证据。
-
-## 说明
-
-- 将持久的项目事实放在 `PROJECT_CONTEXT.md` 中，而不是这里。
-- 将当前任务状态放在 `CURRENT_STATE.md` 中，而不是这里。
-- 将一次性会话摘要放在 `session-journal/` 中，而不是这里。
-- 仅将看起来可在未来会话中复用的经验放在本文件中。
+﻿# 学习待办
+
+本文件用于跟踪可复用的经验教训，这些经验可能值得在未来创建工作流、技能、检查清单或项目规则。
+
+## 候选格式
+
+```md
+### 候选：<简短名称>
+- candidate_id: learn-YYYY-MM-DD-<标识>
+- type: learning_candidate
+- status: proposed
+- confidence: inferred
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+- trigger:
+- repeated_pattern:
+- impact:
+- evidence_count:
+- repeated_times:
+- suggested_artifact:
+- promote_decision:
+- linked_entries:
+```
+
+## 提升指导
+
+- 将候选保持在 `proposed` 状态，直到它显示出重复模式或明确的跨会话价值。
+- 当它有足够证据和明确的目标产物时，将其移动到 `ready_for_promotion`。
+- 当经验不再相关或已转化为持久化产物时，使用 `superseded`。
+- 准备提升的候选通常应有 `evidence_count >= 2`、`repeated_times >= 2`、`source`、`review_after` 和链接的证据。
+
+## 说明
+
+- 将持久的项目事实放在 `PROJECT_CONTEXT.md` 中，而不是这里。
+- 将当前任务状态放在 `CURRENT_STATE.md` 中，而不是这里。
+- 将一次性会话摘要放在 `session-journal/` 中，而不是这里。
+- 仅将看起来可在未来会话中复用的经验放在本文件中。
 
 
 ### 9.2 memory/LESSONS.md
@@ -13197,191 +13201,191 @@ created: YYYY-MM-DD
 
 ### 9.2 memory/PROJECT_CONTEXT.md
 
-﻿# 项目背景
-
-本文件用于存储稳定的项目知识，跨会话持久保存。
-
-## 项目概述
-
-- 项目功能：
-- 目标用户：
-- 主要目标：
-
-## 架构说明
-
-- 核心模块：
-- 重要边界：
-- 关键数据流：
-
-## 工作约定
-
-- 编码规范：
-- 测试要求：
-- 部署说明：
-
-## 已知约束
-
-- 技术约束：
-- 产品约束：
-- 运维约束：
-
-## 持久化事实
-
-本部分用于需要明确元数据和后续审查的稳定事实。
-
-```md
-### 事实：<简短标题>
-- id: context-YYYY-MM-DD-<标识>
-- type: durable_fact
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-陈述：
-
-重要性：
-```
+﻿# 项目背景
+
+本文件用于存储稳定的项目知识，跨会话持久保存。
+
+## 项目概述
+
+- 项目功能：
+- 目标用户：
+- 主要目标：
+
+## 架构说明
+
+- 核心模块：
+- 重要边界：
+- 关键数据流：
+
+## 工作约定
+
+- 编码规范：
+- 测试要求：
+- 部署说明：
+
+## 已知约束
+
+- 技术约束：
+- 产品约束：
+- 运维约束：
+
+## 持久化事实
+
+本部分用于需要明确元数据和后续审查的稳定事实。
+
+```md
+### 事实：<简短标题>
+- id: context-YYYY-MM-DD-<标识>
+- type: durable_fact
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+陈述：
+
+重要性：
+```
 
 
 ### 9.2 memory/SESSION_CLOSE_CHECKLIST.md
 
-﻿# 会话收尾检查清单
-
-在声明一个记忆感知会话完成之前，使用此检查清单。
-
-## 必需检查
-
-- `CURRENT_STATE.md` 是否已更新以反映真实的停止点？
-- 是否需要为此会话创建新的 `session-journal/` 条目？
-- 是否有任何持久化事实、决策、失败模式、验证规则或团队偏好发生变化？
-- 本次会话写入的所有持久化条目是否包含：
-  - `id`
-  - `status`
-  - `confidence`
-  - `source`
-  - `last_updated`
-  - `review_after`
-- 如果有条目标记为 `confidence: verified`，它是否在 `source` 中包含真实证据？
-- 如果替换了任何旧条目，是否将其标记为 `status: superseded`？
-
-## 提升检查
-
-- 如果待办候选是 `ready_for_promotion`，它是否有：
-  - `evidence_count >= 2`
-  - `repeated_times >= 2`
-  - `source`
-  - `review_after`
-  - 链接的支持条目
-
-## 最终验证
-
-- 当记忆发生变化时，运行 `scripts/validate-superpowers-memory.ps1` 或 `scripts/validate-superpowers-memory.sh`
-- 如果验证器刷新了 `memory-index.yaml`，请审查它
+﻿# 会话收尾检查清单
+
+在声明一个记忆感知会话完成之前，使用此检查清单。
+
+## 必需检查
+
+- `CURRENT_STATE.md` 是否已更新以反映真实的停止点？
+- 是否需要为此会话创建新的 `session-journal/` 条目？
+- 是否有任何持久化事实、决策、失败模式、验证规则或团队偏好发生变化？
+- 本次会话写入的所有持久化条目是否包含：
+  - `id`
+  - `status`
+  - `confidence`
+  - `source`
+  - `last_updated`
+  - `review_after`
+- 如果有条目标记为 `confidence: verified`，它是否在 `source` 中包含真实证据？
+- 如果替换了任何旧条目，是否将其标记为 `status: superseded`？
+
+## 提升检查
+
+- 如果待办候选是 `ready_for_promotion`，它是否有：
+  - `evidence_count >= 2`
+  - `repeated_times >= 2`
+  - `source`
+  - `review_after`
+  - 链接的支持条目
+
+## 最终验证
+
+- 当记忆发生变化时，运行 `scripts/validate-superpowers-memory.ps1` 或 `scripts/validate-superpowers-memory.sh`
+- 如果验证器刷新了 `memory-index.yaml`，请审查它
 
 
 ### 9.2 memory/TEAM_PREFERENCES.md
 
-﻿# 团队偏好
-
-本文件用于记录持久的协作偏好、沟通边界和团队特定的工作约定。
-
-## 条目模板
-
-```md
-### 偏好：<简短标题>
-- id: preference-YYYY-MM-DD-<标识>
-- type: team_preference
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-偏好内容：
-
-存在原因：
-
-如何应用：
-```
-
-## 说明
-
-- 本文件用于持久偏好，而非会话特定的请求。
-- 如果偏好发生变化，更新现有条目或标记为 `superseded`。
-- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
+﻿# 团队偏好
+
+本文件用于记录持久的协作偏好、沟通边界和团队特定的工作约定。
+
+## 条目模板
+
+```md
+### 偏好：<简短标题>
+- id: preference-YYYY-MM-DD-<标识>
+- type: team_preference
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+偏好内容：
+
+存在原因：
+
+如何应用：
+```
+
+## 说明
+
+- 本文件用于持久偏好，而非会话特定的请求。
+- 如果偏好发生变化，更新现有条目或标记为 `superseded`。
+- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
 
 
 ### 9.2 memory/USER_PROFILE.md
 
-﻿# 用户画像
-
-本文件用于记录持久的面向用户的偏好，这些偏好在跨会话中有帮助，但不是项目事实。
-
-## 条目模板
-
-```md
-### 用户偏好：<简短标题>
-- id: user-YYYY-MM-DD-<标识>
-- type: user_preference
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-偏好内容：
-
-重要性：
-
-如何应用：
-```
-
-## 说明
-
-- 与 `PROJECT_CONTEXT.md` 分开保存，避免用户偏好污染项目事实。
-- 优先记录持久的交互偏好，而非一次性请求。
-- 如果偏好发生变化，更新条目或标记为 `superseded`。
+﻿# 用户画像
+
+本文件用于记录持久的面向用户的偏好，这些偏好在跨会话中有帮助，但不是项目事实。
+
+## 条目模板
+
+```md
+### 用户偏好：<简短标题>
+- id: user-YYYY-MM-DD-<标识>
+- type: user_preference
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+偏好内容：
+
+重要性：
+
+如何应用：
+```
+
+## 说明
+
+- 与 `PROJECT_CONTEXT.md` 分开保存，避免用户偏好污染项目事实。
+- 优先记录持久的交互偏好，而非一次性请求。
+- 如果偏好发生变化，更新条目或标记为 `superseded`。
 
 
 ### 9.2 memory/VERIFICATION_BASELINE.md
 
-﻿# 验证基线
-
-本文件用于记录团队认为可信的验证命令和证据标准。
-
-## 条目模板
-
-```md
-### 验证规则：<简短标题>
-- id: verification-YYYY-MM-DD-<标识>
-- type: verification_rule
-- status: active
-- confidence: verified
-- last_updated: YYYY-MM-DD
-- source:
-- owner:
-- review_after:
-
-命令或方法：
-
-验证内容：
-
-不验证的内容：
-
-期望的证据：
-```
-
-## 说明
-
-- 优先使用可重现且团队已成功使用的命令。
-- 记录已知的盲点，避免未来会话过度自信。
-- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
-- 如果规则标记为 `verified`，`source` 应指向成功的命令、日志、测试或文档化证据。
+﻿# 验证基线
+
+本文件用于记录团队认为可信的验证命令和证据标准。
+
+## 条目模板
+
+```md
+### 验证规则：<简短标题>
+- id: verification-YYYY-MM-DD-<标识>
+- type: verification_rule
+- status: active
+- confidence: verified
+- last_updated: YYYY-MM-DD
+- source:
+- owner:
+- review_after:
+
+命令或方法：
+
+验证内容：
+
+不验证的内容：
+
+期望的证据：
+```
+
+## 说明
+
+- 优先使用可重现且团队已成功使用的命令。
+- 记录已知的盲点，避免未来会话过度自信。
+- 持久化条目应始终包含 `id`、`status`、`confidence`、`source`、`last_updated` 和 `review_after`。
+- 如果规则标记为 `verified`，`source` 应指向成功的命令、日志、测试或文档化证据。
 
 
 ### 9.2 memory/memory-index.yaml

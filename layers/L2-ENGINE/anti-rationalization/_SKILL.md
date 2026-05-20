@@ -60,10 +60,10 @@ triggers:
 - 复查日期: YYYY-MM-DD
 ```
 
-## 与 devflow Phase 集成
+## 与 devflow-evo Phase 集成
 
 ### Phase 2 (Design)
-每个架构决策必须填写反理性化表，存入 `.devflow/memory/DECISIONS.md`
+每个架构决策必须填写反理性化表，存入 `.devflow-evo/memory/DECISIONS.md`
 
 ### Phase 6 (Review)
 审查时检查反理性化表的完整性和诚实度：

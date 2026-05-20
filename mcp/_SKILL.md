@@ -2,7 +2,7 @@
 name: mcp-protocol
 version: 3.0-draft
 layer: L3-ARCHITECTURE
-description: MCP (Model Context Protocol) integration layer exposing devflow capabilities as MCP tools for any MCP-compatible runtime
+description: MCP (Model Context Protocol) integration layer exposing devflow-evo capabilities as MCP tools for any MCP-compatible runtime
 source: GitNexus MCP Server + GSD Sync Bridge
 dependencies:
   - code-intelligence
@@ -17,7 +17,7 @@ triggers:
 
 ## 核心定位
 
-将 devflow 的核心能力通过 MCP 协议暴露，使任何 MCP 兼容运行时（Claude Code、Cursor、Copilot 等）无需本地配置即可调用 devflow 功能。
+将 devflow-evo 的核心能力通过 MCP 协议暴露，使任何 MCP 兼容运行时（Claude Code、Cursor、Copilot 等）无需本地配置即可调用 devflow-evo 功能。
 
 ## 架构
 
@@ -26,9 +26,9 @@ MCP Client (Runtime)
     │
     ▼ MCP Protocol (stdio/SSE)
 ┌───────────────────────────┐
-│     devflow MCP Server    │
+│     devflow-evo MCP Server    │
 ├───────────────────────────┤
-│  Tool Registry            │  ← 统一注册所有 devflow 工具
+│  Tool Registry            │  ← 统一注册所有 devflow-evo 工具
 │  ├─ Phase Tools           │  ← 阶段路由/门禁/推进
 │  ├─ Memory Tools          │  ← 记忆读写/压缩
 │  ├─ Change Tools          │  ← 变更生命周期
@@ -92,10 +92,10 @@ MCP Resources 允许客户端订阅文件变更：
 
 | URI | 说明 | 更新触发 |
 |-----|------|---------|
-| `devflow://state` | 项目状态 | Phase 变更时 |
-| `devflow://memory/{key}` | 记忆文件 | 写入时 |
-| `devflow://changes` | 活跃变更列表 | 变更创建/归档时 |
-| `devflow://changes/{name}/status` | 变更状态 | 状态变更时 |
+| `devflow-evo://state` | 项目状态 | Phase 变更时 |
+| `devflow-evo://memory/{key}` | 记忆文件 | 写入时 |
+| `devflow-evo://changes` | 活跃变更列表 | 变更创建/归档时 |
+| `devflow-evo://changes/{name}/status` | 变更状态 | 状态变更时 |
 
 ## Prompt Templates
 
@@ -131,11 +131,11 @@ Verify change "{changeName}" across three dimensions:
 // .claude/mcp.json
 {
   "mcpServers": {
-    "devflow": {
+    "devflow-evo": {
       "command": "node",
-      "args": ["path/to/devflow/mcp/server.js"],
+      "args": ["path/to/devflow-evo/mcp/server.js"],
       "env": {
-        "DEVFLOW_HOME": "path/to/devflow"
+        "DEVFLOW_EVO_HOME": "path/to/devflow-evo"
       }
     }
   }
@@ -148,9 +148,9 @@ Verify change "{changeName}" across three dimensions:
 // .cursor/mcp.json
 {
   "mcpServers": {
-    "devflow": {
+    "devflow-evo": {
       "command": "node",
-      "args": ["path/to/devflow/mcp/server.js"]
+      "args": ["path/to/devflow-evo/mcp/server.js"]
     }
   }
 }
@@ -159,7 +159,7 @@ Verify change "{changeName}" across three dimensions:
 ### 通用 stdio 模式
 
 ```bash
-node path/to/devflow/mcp/server.js --stdio
+node path/to/devflow-evo/mcp/server.js --stdio
 ```
 
 ## 降级策略

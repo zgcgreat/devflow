@@ -1,5 +1,7 @@
 # Shared Rules Analysis: devflow v3.0 Phase Skills to CONSTITUTION.md Candidates
 
+> ⚠️ Historical document — references to "devflow" predate the "devflow-evo" rename.
+
 Generated: 2026-05-20
 Source: Phase 0-7 _SKILL.md under e:/LLM/skills/devflow/layers/L1-INTERACTION/phase-{0-7}-*/_SKILL.md
 

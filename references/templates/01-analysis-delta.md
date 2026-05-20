@@ -1,12 +1,12 @@
-﻿# ANALYSIS (Delta): <req-id>
+# ANALYSIS (Delta): <req-id>
 
 - **Req ID**: <id>
-- **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/CONTEXT.md`
+- **关联**: `@.devflow-evo/<req-id>/00-requirements.md`、`@.devflow-evo/CONTEXT.md`
 - **基线版本**: <如有requirements-baseline.md，填写版本号；首次创建写"初始"">
 
 ---
 
-> **Delta 格式说明**：本文档只记录**本次变更**的内容。归档时会自动合并到 `.devflow/requirements-baseline.md`。
+> **Delta 格式说明**：本文档只记录**本次变更**的内容。归档时会自动合并到 `.devflow-evo/requirements-baseline.md`。
 
 ---
 
@@ -126,4 +126,4 @@ _（如无修改，写"无"）_
 
 ---
 
-> **归档提示**：本 Delta 产物归档时，会自动合并到 `.devflow/requirements-baseline.md`，形成完整的需求视图。
+> **归档提示**：本 Delta 产物归档时，会自动合并到 `.devflow-evo/requirements-baseline.md`，形成完整的需求视图。

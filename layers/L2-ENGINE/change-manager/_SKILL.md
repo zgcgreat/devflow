@@ -47,13 +47,13 @@ proposal → [specs] → [design] → [tasks] → apply → verify → archive
 ## 变更文件夹结构
 
 ```
-.devflow/
+.devflow-evo/
 └── changes/
     ├── add-dark-mode/          # 活跃变更
     │   ├── proposal.md         # Why & What
     │   ├── design.md           # How (技术方案)
     │   ├── tasks.md            # 实现清单 (复选框)
-    │   ├── .devflow-change.yaml # 变更元数据
+    │   ├── .devflow-evo-change.yaml # 变更元数据
     │   └── specs/              # Delta specs
     │       └── ui/
     │           └── spec.md     # ADDED/MODIFIED/REMOVED
@@ -61,7 +61,7 @@ proposal → [specs] → [design] → [tasks] → apply → verify → archive
         └── 2026-05-19-add-dark-mode/
 ```
 
-## 变更元数据 (.devflow-change.yaml)
+## 变更元数据 (.devflow-evo-change.yaml)
 
 ```yaml
 name: add-dark-mode
@@ -181,7 +181,7 @@ verification:
   overall: passed_with_warnings
 ```
 
-## 与 devflow Phase 流程的关系
+## 与 devflow-evo Phase 流程的关系
 
 Change Manager 不是替代 Phase 流程，而是增强 Phase 6 Review 和 Phase 7 Canary：
 
@@ -199,14 +199,14 @@ Change Manager 不是替代 Phase 流程，而是增强 Phase 6 Review 和 Phase
 | `design.md` | 技术方案模板 | How |
 | `tasks.md` | 实现清单模板（复选框） | Task breakdown |
 | `delta-spec.md` | Delta Spec 模板 | ADDED/MODIFIED/REMOVED |
-| `change-schema.yaml` | 变更元数据 Schema | `.devflow-change.yaml` |
+| `change-schema.yaml` | 变更元数据 Schema | `.devflow-evo-change.yaml` |
 
 ## 自定义 Schema
 
 支持 OpenSpec 风格的自定义工作流 Schema：
 
 ```yaml
-# .devflow/schemas/my-workflow/schema.yaml
+# .devflow-evo/schemas/my-workflow/schema.yaml
 name: my-workflow
 version: 1
 artifacts:

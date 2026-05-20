@@ -1,4 +1,4 @@
-﻿---
+---
 name: manage-memory
 description: 管理 DevFlow Kit 的记忆系统。用于初始化、更新、验证和清理 .superpowers-memory/ 目录中的记忆文件。
 ---
@@ -464,7 +464,7 @@ PROJECT_CONTEXT.md 已自动填充:
 
 ## 与其他Skill的关系
 
-- **install-devflow**: 安装DevFlow Kit时可选择启用记忆系统
+- **install-devflow-evo**: 安装DevFlow Kit时可选择启用记忆系统
 - **stage-7-integration**: 集成阶段会触发记忆更新
 - **brainstorming**: 设计澄清时会参考 PROJECT_CONTEXT.md
 - **systematic-debugging**: 调试时会查询 KNOWN_FAILURES.md

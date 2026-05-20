@@ -6,7 +6,7 @@
 
 ## 概述
 
-devflow v3.0 提供可扩展的插件系统，支持扩展 Phase、Gate、Agent、Template 和 Command，具备沙箱隔离和签名验证。
+devflow-evo v3.0 提供可扩展的插件系统，支持扩展 Phase、Gate、Agent、Template 和 Command，具备沙箱隔离和签名验证。
 
 ## 插件类型
 
@@ -21,10 +21,10 @@ devflow v3.0 提供可扩展的插件系统，支持扩展 Phase、Gate、Agent�
 ## 命令
 
 ```bash
-/devflow plugins install <plugin>   # 安装插件
-/devflow plugins enable <name>      # 启用插件
-/devflow plugins list --enabled     # 查看已启用插件
-/devflow plugins create <name>      # 创建新插件
+/devflow-evo plugins install <plugin>   # 安装插件
+/devflow-evo plugins enable <name>      # 启用插件
+/devflow-evo plugins list --enabled     # 查看已启用插件
+/devflow-evo plugins create <name>      # 创建新插件
 ```
 
 ## 插件结构
@@ -42,7 +42,7 @@ plugins/<plugin-name>/
 - **沙箱隔离**: 插件只能访问其声明的资源和工具
 - **签名验证**: 插件 manifest.json 包含数字签名，安装时验证
 - **权限声明**: 插件必须在 manifest.json 中声明所需工具和文件访问权限
-- **审核日志**: 插件操作记录到 `.devflow/memory/PLUGIN-AUDIT.md`
+- **审核日志**: 插件操作记录到 `.devflow-evo/memory/PLUGIN-AUDIT.md`
 
 ## 插件生命周期
 

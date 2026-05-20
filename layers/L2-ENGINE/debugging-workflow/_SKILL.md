@@ -17,7 +17,7 @@ description: Four-phase methodology for systematic debugging — inserted betwee
 > **后置产物**: Root cause 分析结果 + 修复方案 + Defense-in-depth 验证层  
 > **版本**: v3.1-draft
 
-## Systematic Debugging 在 devflow 中的位置
+## Systematic Debugging 在 devflow-evo 中的位置
 
 ```
 Phase 4: Wave代码完成
@@ -34,7 +34,7 @@ Systematic Debugging.run() [Phase 4→5过渡钩子]
 Phase 5: Testing (测试验证)
 ```
 
-**为什么是最大的单一价值遗漏**: devflow 有开发(Wave执行)、测试、审查三个阶段，但没有专门针对"发现问题→定位原因→验证修复"全链路的调试方法论。Systematic Debugging 填补了这个空白，包含真实世界影响数据(15-30分钟vs 2-3小时)。
+**为什么是最大的单一价值遗漏**: devflow-evo 有开发(Wave执行)、测试、审查三个阶段，但没有专门针对"发现问题→定位原因→验证修复"全链路的调试方法论。Systematic Debugging 填补了这个空白，包含真实世界影响数据(15-30分钟vs 2-3小时)。
 
 ## 铁律 (The Iron Law)
 
@@ -308,4 +308,4 @@ phase_4_completion:
 > **Adapted from**: devflow-kit `skills/systematic-debugging/` directory  
 > **Source files**: SKILL.md (~297 lines) + root-cause-tracing.md (~170 lines) + condition-based-waiting.md (~116 lines) + defense-in-depth.md (~123 lines) + condition-based-waiting-example.ts (~159 lines)  
 > **Total source**: ~865 lines condensed to integrated format  
-> **Key adaptation**: Inserted as Phase 4→5 transition hook in devflow's DAG; aligned with Wave Executor post-phase hooks
+> **Key adaptation**: Inserted as Phase 4→5 transition hook in devflow-evo-evo's DAG; aligned with Wave Executor post-phase hooks

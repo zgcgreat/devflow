@@ -9,7 +9,7 @@ provides: [lessons-updated, domain-skills-promoted, cross-wave-injections]
 description: |
   Automatic evolution engine that extracts lessons from execution data, promotes high-frequency
   patterns (≥3 occurrences) to domain skills, and injects relevant knowledge into future waves.
-  Use when: "extract lessons", "learn from wave", "domain skill promotion", "knowledge consolidation". (devflow)
+  Use when: "extract lessons", "learn from wave", "domain skill promotion", "knowledge consolidation". (devflow-evo)
 source: 引擎层 LearningWorkflow + 架构层 Memory Manager
 dependencies:
   - phase-8-archive (post-archive: LESSONS update + domain skill graduation)
@@ -95,7 +95,7 @@ Before starting learning workflow, verify ALL of the following:
 |----------|---------|-----------|------------------|
 | **Durable Facts** | Domain knowledge reusable across sessions | Permanent (until superseded by newer evidence) | `memory/domain-skills/{domain}/SKILL.md` |
 | **Temporary Notes** | Session-specific observations, not reusable | Current session / cleared at Phase 8 Archive | `memory/TEMPORARY.md` |
-| **Session State** | Request-level workflow tracking | Per req-id, never cross-request reuse | `.devflow/<req-id>/STATE.md` |
+| **Session State** | Request-level workflow tracking | Per req-id, never cross-request reuse | `.devflow-evo/<req-id>/STATE.md` |
 
 #### Classification Decision Tree
 

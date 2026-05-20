@@ -2,12 +2,12 @@
 
 ## Core Rules
 
-This project uses devflow v3.0 phased workflow. Follow these instructions:
+This project uses devflow-evo v3.0 phased workflow. Follow these instructions:
 
 ### Phase Awareness
-- Read `.devflow/STATE.md` to determine current phase
+- Read `.devflow-evo/STATE.md` to determine current phase
 - Respect gate checks — do not skip phases
-- Load memory from `.devflow/memory/` for project context
+- Load memory from `.devflow-evo/memory/` for project context
 
 ### Phase Gate Requirements
 
@@ -23,13 +23,13 @@ This project uses devflow v3.0 phased workflow. Follow these instructions:
 | Phase 8 | 07-release-checklist.md |
 
 ### Memory Management
-- Decisions: `.devflow/memory/DECISIONS.md`
-- Lessons: `.devflow/memory/LESSONS.md`
-- Known Failures: `.devflow/memory/KNOWN_FAILURES.md`
-- Patterns: `.devflow/memory/PATTERNS.md`
+- Decisions: `.devflow-evo/memory/DECISIONS.md`
+- Lessons: `.devflow-evo/memory/LESSONS.md`
+- Known Failures: `.devflow-evo/memory/KNOWN_FAILURES.md`
+- Patterns: `.devflow-evo/memory/PATTERNS.md`
 
 ### Token Compression
-Apply compression based on `.devflow/config.yaml` caveman.level setting:
+Apply compression based on `.devflow-evo/config.yaml` caveman.level setting:
 - lite: 500 chars/file
 - ultra: 200 chars/file
 - extreme: 100 chars/file

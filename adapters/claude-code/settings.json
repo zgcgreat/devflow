@@ -1,10 +1,10 @@
 {
-  "devflow": {
+  "devflow-evo": {
     "enabled": true,
     "autoInject": true,
     "bridgePath": "../shared/core-bridge.js",
-    "memoryPath": ".devflow/memory",
-    "statePath": ".devflow/STATE.md",
+    "memoryPath": ".devflow-evo/memory",
+    "statePath": ".devflow-evo/STATE.md",
     "compressionLevel": "full",
     "gateChecking": true,
     "statusline": {

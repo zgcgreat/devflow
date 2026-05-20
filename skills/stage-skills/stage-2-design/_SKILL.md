@@ -11,22 +11,22 @@ dependencies:
 
 > **阶段定位**：将需求转化为可执行的技术设计
 > **前置条件**：01-analysis.md 已完成
-> **后置产物**：`.devflow/<req-id>/02-design.md` + ADRs
+> **后置产物**：`.devflow-evo/<req-id>/02-design.md` + ADRs
 
 ## 输入
 
-- `.devflow/<req-id>/01-analysis.md`（或Delta版）
-- `.devflow/<req-id>/00-requirements.md`
-- `.devflow/CONTEXT.md`（或ai_context_doc指定文档）
-- `.devflow/system-architecture.md`（如存在·brownfield项目）
-- `.devflow/design-baseline.md`（如存在·Delta模式）
+- `.devflow-evo/<req-id>/01-analysis.md`（或Delta版）
+- `.devflow-evo/<req-id>/00-requirements.md`
+- `.devflow-evo/CONTEXT.md`（或ai_context_doc指定文档）
+- `.devflow-evo/system-architecture.md`（如存在·brownfield项目）
+- `.devflow-evo/design-baseline.md`（如存在·Delta模式）
 - `references/reference/tech-stacks.md`（按节读取）
 
 ## 输出
 
-- `.devflow/<req-id>/02-design.md`
-- `.devflow/adr/<NNN>-<title>.md`（如有架构决策）
-- 更新 `.devflow/STATE.md`
+- `.devflow-evo/<req-id>/02-design.md`
+- `.devflow-evo/adr/<NNN>-<title>.md`（如有架构决策）
+- 更新 `.devflow-evo/STATE.md`
 
 ## 入口门禁
 
@@ -162,10 +162,10 @@ IF 前端项目 AND 缺 00-requirements.md 中的项目类型:
 
 **首次到这步**：
 ```markdown
-IF 命中 AND .devflow/system-architecture.md 存在:
+IF 命中 AND .devflow-evo/system-architecture.md 存在:
   检查ADR是否冲突 → 提示在§1显式声明supersede关系
   
-IF 命中 AND .devflow/system-architecture.md 不存在:
+IF 命中 AND .devflow-evo/system-architecture.md 不存在:
   反问用户:
   "🏛️ 本次设计涉及项目级架构变更，但项目无system-architecture.md。
   
@@ -306,7 +306,7 @@ IF 未命中:
 
 凡是「以后可能被推翻」的决策，单独写ADR：
 
-保存到 `.devflow/adr/<NNN>-<title>.md`，结构：
+保存到 `.devflow-evo/adr/<NNN>-<title>.md`，结构：
 - Context（背景）
 - Decision（决策）
 - Consequences（后果）
@@ -360,7 +360,7 @@ read_file("templates/02-design.md")
 
 ### Step 11: 生成产物并逐项核对
 
-按模板生成 `.devflow/<req-id>/02-design.md`：
+按模板生成 `.devflow-evo/<req-id>/02-design.md`：
 - **必须包含模板所有8个段落**（见 Step 10 提取的清单）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **ADR编号必须连续**
@@ -388,7 +388,7 @@ read_file("templates/02-design.md")
 
 1. 从 02-design.md 提取关键决策（技术栈、架构决策、ADR）
 
-2. 追加到 `.devflow/memory/DECISIONS.md`：
+2. 追加到 `.devflow-evo/memory/DECISIONS.md`：
 
 ```markdown
 ## [YYYY-MM-DD] <req-id> 技术决策

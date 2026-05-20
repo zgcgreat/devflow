@@ -11,20 +11,20 @@ dependencies:
 
 > **阶段定位**：验证所有AC是否通过
 > **前置条件**：4-dev阶段所有任务完成
-> **后置产物**：`.devflow/<req-id>/05-test-report.md`
+> **后置产物**：`.devflow-evo/<req-id>/05-test-report.md`
 
 ## 输入
 
-- `.devflow/<req-id>/01-analysis.md`（或Delta版）
-- `.devflow/<req-id>/02-design.md`（必读 `## 0. 技术栈选定`）
-- `.devflow/<req-id>/03-tasks.md`
-- `.devflow/<req-id>/04-dev-log.md` + 各 `<task-id>-dev-log.md`
-- `.devflow/CONTEXT.md`
+- `.devflow-evo/<req-id>/01-analysis.md`（或Delta版）
+- `.devflow-evo/<req-id>/02-design.md`（必读 `## 0. 技术栈选定`）
+- `.devflow-evo/<req-id>/03-tasks.md`
+- `.devflow-evo/<req-id>/04-dev-log.md` + 各 `<task-id>-dev-log.md`
+- `.devflow-evo/CONTEXT.md`
 
 ## 输出
 
-- `.devflow/<req-id>/05-test-report.md`
-- 更新 `.devflow/STATE.md`
+- `.devflow-evo/<req-id>/05-test-report.md`
+- 更新 `.devflow-evo/STATE.md`
 
 ## 入口门禁
 
@@ -362,7 +362,7 @@ read_file("templates/05-test-report.md")
 
 ### Step 9: 生成测试报告并逐项核对
 
-按模板生成 `.devflow/<req-id>/05-test-report.md`：
+按模板生成 `.devflow-evo/<req-id>/05-test-report.md`：
 - **必须包含模板所有6个段落**（见 Step 8 提取的清单）
 - **所有 `<...>` 占位符必须替换为实际值**
 - **AC覆盖率必须100%**

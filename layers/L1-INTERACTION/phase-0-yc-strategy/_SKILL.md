@@ -51,7 +51,7 @@ Apply Y Combinator's due diligence framework to validate project viability befor
 
 **Manual trigger**:
 ```
-/strategy assess --context .devflow/memory/PROJECT_CONTEXT.md
+/strategy assess --context .devflow-evo/memory/PROJECT_CONTEXT.md
 ```
 
 **When NOT to use**:
@@ -70,13 +70,13 @@ Apply Y Combinator's due diligence framework to validate project viability befor
 
 ```bash
 # Load project context
-if [ -f ".devflow/memory/PROJECT_CONTEXT.md" ]; then
-  cat .devflow/memory/PROJECT_CONTEXT.md
+if [ -f ".devflow-evo/memory/PROJECT_CONTEXT.md" ]; then
+  cat .devflow-evo/memory/PROJECT_CONTEXT.md
   
   # Extract key info
-  TECH_STACK=$(grep "Tech Stack:" .devflow/memory/PROJECT_CONTEXT.md | cut -d':' -f2-)
-  BUSINESS_DOMAIN=$(grep "Business Domain:" .devflow/memory/PROJECT_CONTEXT.md | cut -d':' -f2-)
-  USER_PERSONA=$(grep "Target Users:" .devflow/memory/PROJECT_CONTEXT.md | cut -d':' -f2-)
+  TECH_STACK=$(grep "Tech Stack:" .devflow-evo/memory/PROJECT_CONTEXT.md | cut -d':' -f2-)
+  BUSINESS_DOMAIN=$(grep "Business Domain:" .devflow-evo/memory/PROJECT_CONTEXT.md | cut -d':' -f2-)
+  USER_PERSONA=$(grep "Target Users:" .devflow-evo/memory/PROJECT_CONTEXT.md | cut -d':' -f2-)
   
   echo "✅ Context loaded: $TECH_STACK, $BUSINESS_DOMAIN"
 else
@@ -85,7 +85,7 @@ else
 fi
 
 # Load current state
-cat .devflow/STATE.md
+cat .devflow-evo/STATE.md
 ```
 
 **Extract user requirement**:
@@ -717,7 +717,7 @@ Ready for YC Six Questions assessment.
 
 ```bash
 # Update state file
-cat >> .devflow/STATE.md << EOF
+cat >> .devflow-evo/STATE.md << EOF
 
 ## Phase 0 Results ($(date))
 current_phase: phase-0-complete
@@ -933,10 +933,10 @@ echo "✅ STATE.md updated with Phase 0 results"
 **Context Loading**:
 ```bash
 # Load project context
-cat .devflow/memory/PROJECT_CONTEXT.md
+cat .devflow-evo/memory/PROJECT_CONTEXT.md
 
 # Extract key fields
-grep "Tech Stack:\|Business Domain:\|Target Users:" .devflow/memory/PROJECT_CONTEXT.md
+grep "Tech Stack:\|Business Domain:\|Target Users:" .devflow-evo/memory/PROJECT_CONTEXT.md
 ```
 
 **Market Research** (optional):
@@ -979,7 +979,7 @@ During assessment:
 - [ ] G1 gate evaluated (≥4 passing)
 
 After assessment:
-- [ ] 00-strategy.md written to .devflow/<req-id>/
+- [ ] 00-strategy.md written to .devflow-evo/<req-id>/
 - [ ] STATE.md updated with scores and next steps
 - [ ] Follow-up questions documented for Phase 1
 - [ ] Risk level assessed (LOW/MEDIUM/HIGH)

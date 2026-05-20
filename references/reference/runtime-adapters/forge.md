@@ -1,4 +1,4 @@
-﻿# Forge runtime adapter（可选）
+# Forge runtime adapter（可选）
 
 flow-kit 默认仍然是纯 markdown：不需要 CLI、不需要安装运行时，也不绑定任何外部工具。Forge 是一个可选 runtime adapter，适合那些希望在 Claude Code 里防止 AI 跳阶段、漏产物、漏测试或漏 review 的项目。
 
@@ -62,7 +62,7 @@ Forge adapter 不要求 flow-kit 改变产物格式。推荐只写一条轻量 r
 }
 ```
 
-这些字段只给 Forge runtime gate 使用，不替代 `.devflow/<req-id>/*.md` 工件。
+这些字段只给 Forge runtime gate 使用，不替代 `.devflow-evo/<req-id>/*.md` 工件。
 
 ## 使用建议
 

@@ -1,6 +1,6 @@
-﻿# LESSONS — 跨任务失败知识库
+# LESSONS — 跨任务失败知识库
 
-> 项目级常驻文件，位置：`.devflow/lessons-learned.md`
+> 项目级常驻文件，位置：`.devflow-evo/lessons-learned.md`
 > **每个新任务开工前必扫**（R1.8）；任务完成后按本文件末尾的「提名条件」决定是否新增。
 
 ---
@@ -83,7 +83,7 @@ AI 扫本次需求 的所有 `*-dev-log.md` 与遗留 `*-dev-snapshot.md`，按�
 
 - **栈变更检查**：当 `package.json` / `Dockerfile` / DB schema 有大版本变化时，扫描所有 active 条目，把"适用栈"已不匹配的标 `deprecated:<栈版本>`
 - **superseded 标记**：发现新条目对老条目形成更优替代时，给老条目加 `superseded-by:L-MMM`，不删除（保留历史）
-- **季度剪枝**：deprecated > 6 个月的条目移到 `.devflow/archive/LESSONS-archive.md`
+- **季度剪枝**：deprecated > 6 个月的条目移到 `.devflow-evo/archive/LESSONS-archive.md`
 
 ---
 
@@ -115,7 +115,7 @@ useEffect(() => {
 
 **当前推荐做法**
 - 把读 localStorage 和写 `<html data-theme>` 这一步**前置到首次渲染前**：用一段同步内联 script 注入 `<head>`，或用 `useLayoutEffect` 在 SPA 入口组件里执行
-- 详见 `.devflow/archive/2026-04-30-add-dark-mode/dev-log.md` 的"决策与偏离"段
+- 详见 `.devflow-evo/archive/2026-04-30-add-dark-mode/dev-log.md` 的"决策与偏离"段
 
 **何时可重新评估**
 - 引入 SSR 后（届时方案改为基于 cookie，而非 localStorage）

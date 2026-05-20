@@ -1,12 +1,13 @@
-# DevFlow Kit
+# DevFlow-Evo
 
 [English](./README.en.md) | [中文](./README.md)
 
-DevFlow Kit is an AI-powered software development workflow system that provides **structured processes**, **engineering discipline**, and **cross-session memory** for AI-driven development projects.
+DevFlow-Evo is an AI-powered software development workflow system that provides **structured processes**, **engineering discipline**, **cross-session memory**, and **self-evolving capabilities** for AI-driven development projects.
+*(evo = evolution)*
 
-## What is DevFlow Kit?
+## What is DevFlow-Evo?
 
-DevFlow Kit (formerly DevFlow / SuperFlow) is a comprehensive workflow framework designed to structure AI-assisted software development. It guides AI agents and developers through a complete software development lifecycle with:
+DevFlow-Evo (formerly DevFlow / DevFlow-Kit) is a comprehensive workflow framework designed to structure AI-assisted software development. It guides AI agents and developers through a complete software development lifecycle with:
 
 - **Structured Stages**: From requirements to deployment (0→1→2→3→4→5→6→7)
 - **Gate Validation**: Each stage has checkpoints to ensure quality
@@ -51,10 +52,11 @@ DevFlow Kit (formerly DevFlow / SuperFlow) is a comprehensive workflow framework
 
 ## Features
 
-### 🧠 Cross-Session Memory
+### 🧠 Cross-Session Memory & Self-Evolution
 - Remembers project context, decisions, and failures across sessions
-- Automatic state tracking with `.devflow/STATE.md`
+- Automatic state tracking with `.devflow-evo/STATE.md`
 - Session journals for auditing
+- **LearningWorkflow**: Extracts lessons from failures and injects them into future waves
 
 ### 🚪 Stage Gates
 - Validation at each stage transition
@@ -87,10 +89,10 @@ DevFlow Kit (formerly DevFlow / SuperFlow) is a comprehensive workflow framework
 
 ```bash
 # Clone the repository
-git clone https://github.com/zgcgreat/devflow-kit.git
+git clone https://github.com/zgcgreat/devflow-evo.git
 
 # Navigate to the kit
-cd devflow-kit
+cd devflow-evo
 
 # Copy to your project
 # (or use as a reference for your AI coding tool)
@@ -103,7 +105,7 @@ cd devflow-kit
    User: I want to build a new web app
    ```
 
-2. **DevFlow** automatically:
+2. **DevFlow-Evo** automatically:
    - Reads project state
    - Detects entry point (new vs existing)
    - Routes to appropriate stage
@@ -113,13 +115,13 @@ cd devflow-kit
    ```
    User: Continue where we left off
    ```
-   DevFlow detects interrupted state and continues from the right place.
+   DevFlow-Evo detects interrupted state and continues from the right place.
 
 ## Project Structure
 
 ```
-devflow-kit/
-├── SKILL.md                    # Main DevFlow skill
+devflow-evo/
+├── SKILL.md                    # Main DevFlow-Evo skill
 ├── references/                 # Reference documents
 │   ├── GO.md                  # Complete workflow details
 │   ├── RULES.md              # Global rules
@@ -169,4 +171,4 @@ MIT License - feel free to use for your own projects.
 
 ---
 
-**Note**: This project was formerly known as DevFlow / SuperFlow. The name changed to DevFlow Kit to better reflect its purpose as a "kit" of tools for AI-driven development.
+**Note**: This project was formerly known as DevFlow / DevFlow-Kit. The name changed to DevFlow-Evo to emphasize its self-evolving LearningWorkflow capability.

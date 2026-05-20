@@ -1,6 +1,6 @@
 # flow-kit/reference 参考文件索引
 
-> 来源: `flow-kit/reference/` 目录，已复制到 devflow 作为自引用参考。
+> 来源: `flow-kit/reference/` 目录，已复制到 devflow-evo 作为自引用参考。
 > 每个文件有明确的触发条件和使用阶段，AI 按任务类型自动判定加载。
 
 > **DEDUP NOTICE**: 以下 5 个文件同时存在于 `references/reference/` 目录（规范位置）。
@@ -16,7 +16,7 @@
 
 ## 文件清单
 
-| 文件 | 触发条件 | 对应 devflow 阶段 | 定位 |
+| 文件 | 触发条件 | 对应 devflow-evo 阶段 | 定位 |
 |------|----------|-------------------|------|
 | [tech-stacks.md](tech-stacks.md) | Phase 2 做技术选型前 | Phase 2 方案设计 | 10 张完整工程模板卡片 |
 | [ui-aesthetics.md](ui-aesthetics.md) | 前端项目 + UI 设计 | Phase 2a / Phase 2 | 9 种调性卡片 + 美学决策框架 |
@@ -117,4 +117,4 @@
 
 ## 整合日期
 
-2026-05-19 — 从 flow-kit/reference/ 复制到 devflow/references/flow-kit-reference/，建立索引并更新对应 Phase 引用。
+2026-05-19 — 从 flow-kit/reference/ 复制到 devflow-evo/references/flow-kit-reference/，建立索引并更新对应 Phase 引用。

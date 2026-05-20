@@ -10,7 +10,7 @@
 ## 目录架构
 
 ```
-devflow/
+devflow-evo/
 ├── SKILL.md                          # v3 零配置入口 (20KB)
 ├── GO.md                             # v3 12步路由器 (20KB)
 ├── V3-ARCHITECTURE.md                # 三层架构设计 (15KB)
@@ -72,7 +72,7 @@ devflow/
 │   ├── dispatching-parallel-agents/  #   并行Agent调度
 │   ├── executing-plans/              #   计划执行
 │   ├── finishing-a-development-branch/ # 分支收尾
-│   ├── install-devflow/              #   DevFlow安装
+│   ├── install-devflow-evo/              #   DevFlow安装
 │   ├── karpathy-rules/               #   Karpathy编程准则
 │   ├── manage-memory/                #   记忆管理
 │   ├── receiving-code-review/        #   接收Code Review

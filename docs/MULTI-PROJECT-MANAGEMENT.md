@@ -6,14 +6,14 @@
 
 ## 概述
 
-devflow v3.0 支持同时管理多个项目，实现快速切换、状态同步和知识共享。
+devflow-evo v3.0 支持同时管理多个项目，实现快速切换、状态同步和知识共享。
 
 ## 核心能力
 
 | 能力 | 说明 |
 |------|------|
 | 项目列表 | 列出工作区内所有已注册项目 |
-| 项目创建 | 新建项目并初始化 `.devflow/` 目录结构 |
+| 项目创建 | 新建项目并初始化 `.devflow-evo/` 目录结构 |
 | 项目切换 | 在多个项目间快速切换，自动恢复 STATE.md |
 | 项目详情 | 查看项目当前 Phase、Wave 状态、LESSONS 摘要 |
 | 工作区统计 | 汇总所有项目的进度和资源使用情况 |
@@ -21,11 +21,11 @@ devflow v3.0 支持同时管理多个项目，实现快速切换、状态同步�
 ## 命令
 
 ```bash
-/devflow projects list              # 列出所有项目
-/devflow projects new "名称"        # 创建新项目
-/devflow projects switch <id>       # 切换项目
-/devflow projects info <id>         # 查看项目详情
-/devflow workspace stats            # 工作区统计
+/devflow-evo projects list              # 列出所有项目
+/devflow-evo projects new "名称"        # 创建新项目
+/devflow-evo projects switch <id>       # 切换项目
+/devflow-evo projects info <id>         # 查看项目详情
+/devflow-evo workspace stats            # 工作区统计
 ```
 
 ## 项目间知识共享
@@ -36,7 +36,7 @@ devflow v3.0 支持同时管理多个项目，实现快速切换、状态同步�
 
 ## 多项目状态管理
 
-每个项目的独立状态存储在 `<project>/.devflow/STATE.md` 中，包含：
+每个项目的独立状态存储在 `<project>/.devflow-evo/STATE.md` 中，包含：
 
 - 当前 Phase 和 Wave
 - 最近一次 GATE 决策
