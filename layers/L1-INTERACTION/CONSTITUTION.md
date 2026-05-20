@@ -36,7 +36,7 @@
 ## 5. 层间依赖规则 (Layer Dependency Contract)
 
 - L1-INTERACTION 不得直接引用 L3-ARCHITECTURE 的模块
-- L1 必须通过 L2-ENGINE 的 core-bridge.js 间接访问 L3
+- L1 必须通过 L2-ENGINE 间接访问 L3（如 wave-executor → gitnexus-bridge）
 - 违反层间依赖的代码必须在 Code Review 阶段被拦截
 
 ## 6. Error Taxonomy 标准 (Standard Error Classification)

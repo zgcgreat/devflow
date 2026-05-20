@@ -632,7 +632,7 @@ grep "Wave ${WAVE_NUM}" .specs/waves/wave-${WAVE_NUM}/heartbeat.log | grep -E "L
 learning-workflow extract --from /tmp/wave-lessons.txt --output .specs/memory/LESSONS.md
 
 # Check for domain skill promotion candidates
-./scripts/promote-domain-skills.sh
+# AI 按 LearningWorkflow 指令检查：频率 ≥3 的 LESSONS → 提升为 Domain Skill
 ```
 
 #### Verify Wave Integrity

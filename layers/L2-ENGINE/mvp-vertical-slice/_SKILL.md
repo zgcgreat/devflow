@@ -183,10 +183,10 @@ search  export
 
 每个切片对应一个 change-manager 变更：
 
-```bash
-# 创建切片变更
-node change-lifecycle.js create auth "User authentication flow"
-node change-lifecycle.js create core-crud "Basic CRUD operations"
+```markdown
+# 创建切片变更（AI 按指令执行）
+- 切片 auth: "User authentication flow"
+- 切片 core-crud: "Basic CRUD operations"
 ```
 
 ## 降级策略

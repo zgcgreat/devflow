@@ -467,12 +467,11 @@ def calculate_cost(provider, tokens):
 
 #### Weekly Optimization Report
 
-```bash
-# Generate weekly report
-python3 scripts/analyze-provider-performance.py \
-  --input logs/provider-performance.jsonl \
-  --period week \
-  --output reports/provider-optimization-weekly.md
+```markdown
+# AI 分析 provider 性能日志，生成周报
+# 输入：logs/provider-performance.jsonl
+# 输出：reports/provider-optimization-weekly.md
+# 分析维度：成功率、延迟分布、成本效率、降级频率
 ```
 
 **Analysis dimensions**:
@@ -802,7 +801,7 @@ echo '{"timestamp": "...", "provider": "..."}' >> logs/provider-performance.json
 jq 'select(.success == false)' logs/provider-performance.jsonl
 
 # Aggregate metrics
-python3 scripts/analyze-provider-performance.py --input logs/provider-performance.jsonl
+# AI 分析 provider-performance.jsonl 中的成功率、延迟和成本数据
 ```
 
 ### Optional Tools

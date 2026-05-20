@@ -17,9 +17,9 @@
 | phase-2-design | research-agent | L2-ENGINE (via agent-isolation) | L3-ARCHITECTURE/agent-isolation | @l3-arch-team | ~200K/token per agent |
 | phase-3-task-plan | dag-router | — | L3-ARCHITECTURE/dag-router | @l3-arch-team | validates task dependency DAG |
 | phase-4-build | wave-executor, executor | L2-ENGINE/wave-executor, L2-ENGINE/executor | L3-ARCHITECTURE/parallel-engine | @l2-engine-team | validates wave-plan.yaml schema |
-| phase-5-test | gate-check | — | scripts/gate-check.sh | @l2-engine-team | validates test-results.md exists |
+| phase-5-test | gate-check | — | AI 逐项核对清单 | @l2-engine-team | validates test-results.md exists |
 | phase-6-review | party-mode, reviewer | L2-ENGINE/party-mode, L2-ENGINE/reviewer | — | @l2-engine-team | validates review findings |
-| phase-7-canary | canary-health-check | — | scripts/canary-wrapper.sh | @l2-engine-team | validates stability score ≥ threshold |
+| phase-7-canary | canary-health-check | — | AI 逐项核对健康指标 | @l2-engine-team | validates stability score ≥ threshold |
 | phase-8-archive | learning-workflow | L2-ENGINE/learning-workflow | — | @l2-engine-team | validates wave SUMMARY existence |
 
 ## Wave Execution Call Chain (Internal)

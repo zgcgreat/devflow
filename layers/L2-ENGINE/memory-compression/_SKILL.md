@@ -19,19 +19,16 @@ Compress natural language files (CLAUDE.md, todos, preferences) into caveman-spe
 
 ## Process
 
-1. The compression scripts live in `scripts/` (adjacent to this SKILL.md). If the path is not immediately available, search for `scripts/__main__.py` next to this SKILL.md.
+1. AI 直接按本文件的压缩规则执行压缩，无需外部脚本。
 
-2. From the directory containing this SKILL.md, run:
+2. AI 读取目标文件，按压缩规则处理，输出覆盖原文件，备份为 `<filename>.original.md`。
 
-python3 -m scripts <absolute_filepath>
-
-3. The CLI will:
-- detect file type (no tokens)
-- call Claude to compress
-- validate output (no tokens)
-- if errors: cherry-pick fix with Claude (targeted fixes only, no recompression)
-- retry up to 2 times
-- if still failing after 2 retries: report error to user, leave original file untouched
+3. 验证输出：
+- 检测文件类型
+- 压缩后验证内容完整性
+- 如有错误：针对性修复（不复压）
+- 最多重试 2 次
+- 2 次后仍失败：报告错误，保留原文件不动
 
 4. Return result to user
 

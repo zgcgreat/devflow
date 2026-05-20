@@ -113,17 +113,13 @@ cat .devflow/wave-plan.yaml
 #     parallelism: false (depends on Wave 1)
 ```
 
-**Validate wave plan integrity** (shared gate-check):
+**Validate wave plan integrity** — 逐项核对 G4 Execution Readiness gate：
 
-```bash
-# Run shared G4 Execution Readiness gate
-./scripts/gate-check.sh G4 "$PROJECT_ROOT" --detail
-# Exit 0 = all checks passed, proceed to execution
-# Exit 1 = failed, fix identified issues before starting
-
-# Additional DAG cycle check (G4 covers this via wave-plan structure)
-python3 scripts/validate-dag.py --input .devflow/wave-plan.yaml
-```
+- [ ] Wave plan YAML 语法正确，所有 wave 有 tasks
+- [ ] 每个 task 有 id、description、dependencies
+- [ ] 无循环依赖（拓扑排序可完成）
+- [ ] 共享资源标记一致
+- [ ] 所有 dependency 引用的 task id 存在
 
 **Output format**:
 ```markdown
@@ -157,8 +153,8 @@ Ready to execute Wave 1.
 **在 Wave 执行前检查索引新鲜度**：
 
 ```bash
-# 检查 GitNexus 索引状态
-node scripts/gitnexus-check.js --check
+# 检查 GitNexus 索引状态（如已安装）
+gitnexus analyze --check
 
 # 如果索引不存在或过期，刷新索引
 gitnexus analyze --reindex
@@ -451,18 +447,13 @@ echo "[checkpoint][wave:{N}][all-done] ✓" >> .specs/waves/wave-{N}/heartbeat.l
 
 **Post-wave lesson extraction**:
 
-```bash
-# Run LearningWorkflow to extract lessons from this wave
-python3 scripts/learning-workflow.py \
-  --wave-number {N} \
-  --input .specs/waves/wave-{N}/ \
-  --output .specs/memory/LESSONS.md
-
-# Output:
-# 🧠 LearningWorkflow completed:
-# - 2 new lessons extracted
-# - 1 domain skill promoted (frequency ≥3)
-# - Cross-wave injection ready for Wave {N+1}
+```markdown
+# AI 按 LearningWorkflow 指令从 Wave 结果提取 LESSONS
+# 1. 扫描 wave 目录下所有 task 执行日志
+# 2. 提取失败根因和成功模式
+# 3. 输出到 .specs/memory/LESSONS.md
+# 4. 检查 Domain Skill 提升候选（频率 ≥3）
+# 5. 准备跨波注入到 Wave {N+1}
 ```
 
 **Integration with LearningWorkflow**:
@@ -537,10 +528,7 @@ rm -rf .devflow/execution-context/*
 cp .specs/waves/wave-${CURRENT_WAVE}/SUMMARY.md .devflow/execution-context/prev-wave-summary.md
 
 # Load matching domain skills for Wave N+1 tasks
-python3 scripts/load-domain-skills.py \
-  --wave-plan .devflow/wave-plan.yaml \
-  --wave-number ${NEXT_WAVE} \
-  --output .devflow/execution-context/domain-skills/
+# AI 按 LearningWorkflow 指令匹配 Wave N+1 任务与 Domain Skills
 
 echo "✅ Transition from Wave ${CURRENT_WAVE} to Wave ${NEXT_WAVE} complete"
 exit 0
@@ -611,7 +599,7 @@ fi
 **Monitoring dashboard** (optional):
 ```bash
 # Real-time wave progress monitor
-watch -n 5 'grep "checkpoint" .specs/waves/wave-*/scripts/gate-check.sh G4 waves/wave-*/heartbeat.log | tail -20'
+watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
 ```
 
 #### G4 Gate Data Source Priority (F-P2-3 Fix)
@@ -629,7 +617,7 @@ watch -n 5 'grep "checkpoint" .specs/waves/wave-*/scripts/gate-check.sh G4 waves
 3. If `heartbeat.log` has `[all-done]` BUT `SUMMARY.md` shows `status: FAIL` → **WARN** (inconsistency, needs manual review)
 4. If no `SUMMARY.md` exists → G4 validates against heartbeat.log only (partial gate, acceptable for pre-execution)
 
-**Implementation**: See `scripts/gate-check.sh` `check_g4()` function for the cross-validation logic.
+**Implementation**: AI 按上方 Step 0 清单逐项核对 G4 条件，确认 wave plan 完整性。
 
 ---
 
@@ -764,10 +752,10 @@ Transition to Wave N+1:
 - **Symptom**: Kahn's algorithm throws error: "DAG contains cycle: task-a, task-b"
 - **Cause**: Circular dependency between tasks (A→B→A)
 - **Fix**:
-  1. Identify cycle: `python3 scripts/find-cycle.py --input wave-plan.yaml`
+  1. Identify cycle: AI 用 DFS 算法遍历 wave-plan.yaml 中的任务依赖图
   2. Break cycle by removing one dependency edge
   3. Re-run Phase 3 DAG Router to regenerate wave plan
-  4. Verify no cycles: `python3 scripts/validate-dag.py --input wave-plan.yaml`
+  4. Verify no cycles: AI 再次遍历确认无环
 - **Prevention**: Phase 3 should catch cycles before generating wave plan
 
 **Issue 2: Wave Dependency Not Met**
@@ -873,11 +861,13 @@ Every wave plan MUST pass these validation checks before execution:
 | `wave_plan[].tasks[].worktree` | string (optional) | Valid worktree path or empty string | WARNING if present but invalid path — proceed with default worktree |
 | `wave_plan[].tasks[].shared_resources` | string[] (optional) | List of resource paths | WARNING if present but empty for tasks claiming shared resources — flag for parallelism downgrade |
 
-**Validation Command**:
-```bash
-python3 scripts/validate-dag.py --input .devflow/wave-plan.yaml
-# Exit 0: valid, all checks pass
-# Exit 1: FAIL — report error details
+**Validation**:
+```markdown
+# AI 用 DFS 算法验证 wave-plan.yaml 无环
+# 1. 解析 YAML 中所有任务和依赖
+# 2. 构建邻接表
+# 3. DFS 检测环
+# 4. 无环 → PASS；有环 → FAIL + 报告环路径
 ```
 
 ### When to Escalate Immediately
@@ -1092,54 +1082,19 @@ EOF
 echo "[checkpoint][wave:{N}][task:{id}] ✓ (3min)" >> .specs/waves/wave-{N}/heartbeat.log
 ```
 
-**Cycle Detection** (validation):
+**Cycle Detection** (AI 按算法执行):
 
-```python
-# scripts/validate-dag.py
-import yaml
-import sys
-
-def has_cycle(wave_plan):
-    """Detect cycles in DAG using DFS"""
-    tasks = {}
-    for wave in wave_plan['wave_plan']:
-        for task in wave['tasks']:
-            tasks[task['id']] = task['deps']
-    
-    visited = set()
-    rec_stack = set()
-    
-    def dfs(node):
-        visited.add(node)
-        rec_stack.add(node)
-        
-        for neighbor in tasks.get(node, []):
-            if neighbor not in visited:
-                if dfs(neighbor):
-                    return True
-            elif neighbor in rec_stack:
-                return True
-        
-        rec_stack.remove(node)
-        return False
-    
-    for node in tasks:
-        if node not in visited:
-            if dfs(node):
-                return True
-    
-    return False
-
-# Usage
-with open(sys.argv[1]) as f:
-    wave_plan = yaml.safe_load(f)
-
-if has_cycle(wave_plan):
-    print("❌ DAG contains cycle")
-    sys.exit(1)
-else:
-    print("✅ DAG is valid (no cycles)")
-    sys.exit(0)
+```markdown
+# DFS 环检测算法（AI 自执行，无需脚本）
+# 1. 解析 wave-plan.yaml，构建 {task_id: [deps]} 邻接表
+# 2. 初始化 visited={}, rec_stack={}
+# 3. 对每个未访问节点执行 DFS：
+#    - 标记 visited, 加入 rec_stack
+#    - 递归访问所有邻居
+#    - 若邻居在 rec_stack 中 → 发现环
+#    - 回溯时移出 rec_stack
+# 4. 有环 → 报告环路径并阻断
+# 5. 无环 → DAG 有效
 ```
 
 ### Optional Tools
@@ -1159,9 +1114,6 @@ distillator verify original.md compressed.md
 ```bash
 # Watch wave progress
 watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
-
-# Dashboard (advanced)
-python3 scripts/wave-dashboard.py --live
 ```
 
 **Automated Retry**:
@@ -1275,7 +1227,7 @@ Quality gates:
 - **A-P1-3**: Parallelism Semantics Resolution cross-reference present ✅ (lines 245-252 reference parallel-engine as source of truth)
 - **C-P1-1**: token_budget present ✅ (preamble-tier 2, layer L2-ENGINE → ~200K/Agent)
 - **F-P1-1**: Phase 3→Wave Executor converter defined ✅ — Wave Executor consumes `wave-plan.yaml` generated by phase-4-build Step 1 converter (pre-flight gate at lines 46-56 validates input schema)
-- **G-P1-1**: Shared gate-check utility used ✅ — wave-executor calls `./scripts/gate-check.sh G4` at Step 0 (lines 116-126) for shared G4 Execution Readiness gate
+- **G-P1-1**: Gate-check integrated ✅ — wave-executor uses G4 Execution Readiness gate at Step 0，AI 逐项核对清单
 
 ---
 
@@ -1306,8 +1258,4 @@ Quality gates:
 4. `executor/_SKILL.md` 已统一使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log` 路径
 5. `executor/_SKILL.md` 第30行添加了 deprecation note 说明旧 dev-log.md 路径已废弃
 
-**验证命令**:
-```bash
-# G4 gate cross-validation logic documented in scripts/gate-check.sh check_g4()
-grep -A30 "check_g4" scripts/gate-check.sh
-```
+**验证方式**: AI 按 G4 清单逐项核对，确认 wave plan 满足所有执行前置条件。

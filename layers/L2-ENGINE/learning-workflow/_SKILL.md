@@ -683,14 +683,12 @@ Phase N Complete → graduation_scan() [post-phase hook]
 
 **Clustering example**:
 
-```bash
-# Calculate Jaccard similarity between lessons
-python3 scripts/cluster-lessons.py \
-  --input .specs/memory/LESSONS.md \
-  --threshold 0.25 \
-  --output /tmp/clusters.json
-
-# Output:
+```markdown
+# AI 按 Jaccard 相似度聚类 LESSONS
+# 输入：.specs/memory/LESSONS.md
+# 阈值：0.25
+# 输出：聚类结果
+# 示例：
 # Cluster 1: ["L-042", "L-038", "L-029"] — microservices pattern (similarity: 0.67)
 # Cluster 2: ["L-043", "L-021"] — React hooks pattern (similarity: 0.42)
 ```
@@ -1046,12 +1044,9 @@ grep -oP '(?<=Applicability: ).*' .specs/memory/LESSONS.md | tr ',' '\n' | sort 
 ```
 
 **Clustering** (optional):
-```bash
-# Jaccard similarity clustering
-python3 scripts/cluster-lessons.py \
-  --input .specs/memory/LESSONS.md \
-  --threshold 0.25 \
-  --output /tmp/clusters.json
+```markdown
+# AI 按 Jaccard 相似度聚类 LESSONS（阈值 0.25）
+# 读取 .specs/memory/LESSONS.md，输出聚类结果
 ```
 
 ### Optional Tools
@@ -1066,12 +1061,9 @@ distillator verify original.md compressed.md
 ```
 
 **Semantic Embeddings** (advanced):
-```bash
-# Generate embeddings for better clustering
-python3 scripts/generate-embeddings.py \
-  --input .specs/memory/LESSONS.md \
-  --model all-MiniLM-L6-v2 \
-  --output /tmp/embeddings.npy
+```markdown
+# AI 使用语义嵌入提升聚类质量（高级，需 embedding 模型支持）
+# 读取 .specs/memory/LESSONS.md，生成向量表示后聚类
 ```
 
 **Automated Indexing**:

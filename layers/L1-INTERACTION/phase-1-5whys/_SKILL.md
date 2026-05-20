@@ -194,59 +194,26 @@ Ready for 5 Whys deep dive.
 **Success Metric**: "Reduce payment-step abandonment from 60% to <30% within 2 weeks"
 ```
 
-**Execution script** (automated):
+**AI 执行 5 Whys 分析**（按指令自执行）:
 
-```python
-# scripts/5-whys-analysis.py
-import sys
-import json
+```markdown
+# AI 逐步追问执行 5 Whys 分析
+# 输入：用户需求 + 项目上下文
+# 输出：根因分析 + 成功指标
 
-def execute_5_whys(requirement, context):
-    """
-    Execute 5 Whys analysis on a requirement.
-    
-    Args:
-        requirement: str - User's original request
-        context: dict - Project context (users, goals, constraints)
-    
-    Returns:
-        dict - Root cause analysis with success metrics
-    """
-    whys = []
-    
-    # Why 1: Business motivation
-    why1 = ask_user(f"Why do you need: {requirement}?")
-    whys.append(why1)
-    
-    # Why 2: Deeper impact
-    why2 = ask_user(f"Why is '{why1}' important to your business?")
-    whys.append(why2)
-    
-    # Why 3: Pain quantification
-    why3 = ask_user(f"What happens if you DON'T solve '{why2}'? Quantify the cost.")
-    whys.append(why3)
-    
-    # Why 4: Alternative solutions
-    why4 = ask_user(f"Is '{requirement}' the only way? What are simpler alternatives?")
-    whys.append(why4)
-    
-    # Why 5: Success criteria
-    why5 = ask_user(f"How will you measure success? Be specific (numbers, timelines).")
-    whys.append(why5)
-    
-    return {
-        "surface_request": requirement,
-        "root_cause": why3,
-        "success_metric": why5,
-        "alternatives_considered": why4,
-        "whys_chain": whys
-    }
+## 步骤：
+1. Why 1: "为什么需要 {requirement}？"
+2. Why 2: "为什么 {why1} 对业务重要？"
+3. Why 3: "如果不解决 {why2} 会怎样？量化成本"
+4. Why 4: "{requirement} 是唯一方案吗？更简单的替代？"
+5. Why 5: "如何衡量成功？具体指标和时间线"
 
-# Usage
-requirement = sys.argv[1]
-context = json.loads(sys.argv[2])
-result = execute_5_whys(requirement, context)
-print(json.dumps(result, indent=2))
+## 输出格式：
+- surface_request: 用户原始需求
+- root_cause: Why 3 揭示的根因
+- success_metric: Why 5 定义的成功标准
+- alternatives_considered: Why 4 考虑的替代方案
+- whys_chain: [why1, why2, why3, why4, why5]
 ```
 
 ---
@@ -350,22 +317,12 @@ print(json.dumps(result, indent=2))
 - **Out-of-Scope Risk**: Without saved payments, repeat purchases still slow → May lose loyal customers to competitors
 ```
 
-**Generation script** (automated):
+**Generation** (AI 按指令执行):
 
-```bash
-#!/bin/bash
-# generate-user-stories.sh
-
-ROOT_CAUSE=$1
-SUCCESS_METRIC=$2
-
-# Call AI to generate user stories
-python3 scripts/generate-stories.py \
-  --root-cause "$ROOT_CAUSE" \
-  --success-metric "$SUCCESS_METRIC" \
-  --output .devflow/<req-id>/01-analysis.md
-
-echo "✅ User stories generated"
+```markdown
+# AI 根据根因和成功指标生成用户故事
+# 输入：root_cause + success_metric
+# 输出：.devflow/<req-id>/01-analysis.md（含用户故事和验收标准）
 ```
 
 ---
@@ -403,22 +360,14 @@ echo "✅ User stories generated"
 | Lighthouse Score | Google's performance measurement tool (0-100 scale) | Target: Mobile score >80 for checkout page |
 ```
 
-**Extraction script** (automated):
+**Extraction** (AI 按指令执行):
 
-```python
-# scripts/extract-glossary.py
-import re
-
-def extract_terms_from_context(context_file):
-    """Extract existing terms from CONTEXT.md"""
-    with open(context_file) as f:
-        content = f.read()
-    
-    # Find terms in glossary section
-    terms = re.findall(r'^- \*\*(.+?)\*\*: (.+)$', content, re.MULTILINE)
-    return terms
-
-def add_new_terms(root_cause_analysis):
+```markdown
+# AI 从 CONTEXT.md 和 5 Whys 分析中提取术语
+# 1. 读取 CONTEXT.md 中的已有术语
+# 2. 识别 5 Whys 分析中的新术语
+# 3. 合并去重，更新术语表
+```
     """Identify new terms from 5 Whys analysis"""
     # Extract technical/business terms from root cause
     # Use NLP to identify domain-specific vocabulary
@@ -623,22 +572,15 @@ If PASS:
 - User stories become input for task breakdown
 ```
 
-**Automated validation script**:
+**G2 自动化验证**（AI 逐项核对）:
 
-```bash
-#!/bin/bash
-# g2-validation.sh
-
-ANALYSIS_FILE=".devflow/<req-id>/01-analysis.md"
-
-# Check AC testability
-AC_COUNT=$(grep -c "^AC-" $ANALYSIS_FILE)
-TESTABLE_AC=$(grep -c "Verification:" $ANALYSIS_FILE)
-
-if [ $AC_COUNT -eq $TESTABLE_AC ]; then
-  echo "✅ AC Testability: PASS ($TESTABLE_AC/$AC_COUNT testable)"
-else
-  echo "❌ AC Testability: FAIL ($TESTABLE_AC/$AC_COUNT testable)"
+```markdown
+# AI 逐项核对 G2 Gate：
+# 1. AC 可测试性：每个 AC 是否有 Verification 步骤
+# 2. 根因是否识别（非表面需求）
+# 3. 成功指标是否可量化
+# 4. 用户故事是否覆盖所有场景
+```
   exit 1
 fi
 
@@ -922,16 +864,15 @@ echo "✅ STATE.md updated with Phase 1 results"
 ### Required Tools
 
 **User Story Generation**:
-```bash
-python3 scripts/generate-stories.py \
-  --root-cause "Checkout form too long" \
-  --success-metric "Abandonment <30%" \
-  --output .devflow/<req-id>/01-analysis.md
+```markdown
+# AI 根据根因和成功指标生成用户故事
+# --root-cause, --success-metric 作为参数理解分析上下文
+# --output 输出到 .devflow/<req-id>/01-analysis.md
 ```
 
 **G2 Validation**:
-```bash
-bash scripts/g2-validation.sh
+```markdown
+# AI 逐项核对 G2 Gate（见上方验证清单）
 ```
 
 ### Optional Tools

@@ -115,9 +115,9 @@ verification:
     - "Proceed to canary deployment after fix"
 ```
 
-## 自动化集成
+## CI/CD 集成指南
 
-### CI Pipeline
+### GitHub Actions 示例
 
 ```yaml
 # .github/workflows/devflow-verify.yml
@@ -131,16 +131,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: L1 Format Check
-        run: node $DEVFLOW_HOME/layers/L2-ENGINE/verification-closed-loop/verify.js format .
+        run: |
+          # AI 按验证闭环指令逐项核对：
+          # 1. Spec 格式合规（YAML frontmatter 完整）
+          # 2. Schema 合规（字段类型正确）
+          # 3. 命名规范（kebab-case 文件名）
       - name: L2 Implementation Check
-        run: node $DEVFLOW_HOME/layers/L2-ENGINE/verification-closed-loop/verify.js implement .
+        run: |
+          # AI 逐项核对：
+          # 1. 编译检查 (tsc / cargo build / go build)
+          # 2. Lint 检查 (eslint / ruff / clippy)
+          # 3. 类型检查 (tsc --noEmit)
       - name: L3 Test Check
-        run: node $DEVFLOW_HOME/layers/L2-ENGINE/verification-closed-loop/verify.js test .
+        run: |
+          # AI 逐项核对：
+          # 1. 单元/集成/E2E 测试全部通过
+          # 2. AC 覆盖率 ≥ 90%
 ```
 
-### Pre-commit Hook
+### Pre-commit 示例
 
 ```bash
 # .husky/pre-commit
-node $DEVFLOW_HOME/layers/L2-ENGINE/verification-closed-loop/verify.js implement . --quick
+# AI 按 L2 实现验证清单快速核对：
+# 1. 编译是否通过？
+# 2. Lint 是否无错？
+# 3. 关联测试是否通过？
 ```

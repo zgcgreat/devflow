@@ -202,45 +202,15 @@ adr_count=$(grep -c "^ADR-" .devflow/<req-id>/02-design.md || true); test "$adr_
 | ADR Records | `grep -c "^ADR-" 02-design.md` | ≥3 ADRs | PASS/FAIL |
 | Brownfield Markers | `grep -c "\[BROWNFIELD\]\|既有\|migration" 02-design.md` | ≥1 if brownfield | PASS/FAIL |
 
-**Automated Gate Script**:
-```bash
-#!/bin/bash
-# G2-PHASE2 automated structural check (Sprint 9 addition)
-# Usage: ./g2-structural-check.sh .devflow/<req-id>/02-design.md
-
-DESIGN_DOC=$1
-PASS_COUNT=0
-FAIL_COUNT=0
-
-check() {
-  local name=$1
-  local cmd=$2
-  local threshold=$3
-  
-  result=$(eval "$cmd" || true)
-  if [ "$result" -ge "$threshold" ] 2>/dev/null; then
-    echo "✅ $name: $result (≥$threshold) PASS"
-    PASS_COUNT=$((PASS_COUNT + 1))
-  else
-    echo "❌ $name: $result (<$threshold) FAIL"
-    FAIL_COUNT=$((FAIL_COUNT + 1))
-  fi
-}
-
-check "Module Boundaries" "grep -c '^## Module\|^## Architecture' $DESIGN_DOC" 3
-check "API Definitions" "grep -c '^### API\|^#### Endpoint' $DESIGN_DOC" 1
-check "Data Models" "grep -c '^### Data Model\|^#### Entity' $DESIGN_DOC" 2
-check "ADR Records" "grep -c '^ADR-' $DESIGN_DOC" 3
-
-echo "---"
-echo "G2 Gate: $PASS_COUNT PASS, $FAIL_COUNT FAIL"
-if [ "$FAIL_COUNT" -gt 0 ]; then
-  echo "Result: FAIL — Fix failed checks before Phase 2a/Phase 3"
-  exit 1
-else
-  echo "Result: PASS — Proceed to Phase 2a/Phase 3"
-  exit 0
-fi
+**G2-PHASE2 结构化检查**（AI 逐项核对）:
+```markdown
+# AI 读取 02-design.md，逐项核对以下结构化检查：
+# 1. 模块边界：设计文档包含 ≥3 个模块/架构章节？
+# 2. API 定义：至少 1 个 API 端点定义？
+# 3. 数据模型：至少 2 个数据模型/实体定义？
+# 4. ADR 记录：至少 3 条 ADR（架构决策记录）？
+# 全部 PASS → 可进入 Phase 2a/3
+# 任一 FAIL → 修复后再检查
 ```
 
 **Rationale**: These grep-able structural checks ensure design documents meet minimum quality thresholds before proceeding to implementation. Module boundaries prevent tangled architectures, API definitions ensure AC coverage, data models guarantee schema completeness, and ADRs document critical decisions.

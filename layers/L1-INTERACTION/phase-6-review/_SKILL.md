@@ -49,14 +49,9 @@ Before starting review, verify ALL of the following:
 
 **Gate Result**: `[PASS / FAIL]` — If any item FAILS, address before starting. Stage A must pass for every requirement review.
 
-**Shared gate-check execution** (recommended over manual checklist):
+**Gate-check execution** — 逐项核对上方清单，全部 PASS 方可进入 Stage A：
 
-```bash
-# Run shared G3-PHASE6 Review Quality gate
-./scripts/gate-check.sh G3-PHASE6 "$PROJECT_ROOT" --detail
-# Exit 0 = all prerequisite checks passed, proceed to Stage A
-# Exit 1 = failed, address missing artifacts before starting review
-```
+> Gate G3-PHASE6: Review Quality Gate — 确认 Phase 5 测试通过、Phase 4 实施完成、PRD 可访问
 
 ### Phase 5→6 Artifact Validation Gate
 
@@ -66,12 +61,9 @@ Verify that the Phase 5 test output artifact is present and valid before startin
 - [ ] File is non-empty (>10 lines)
 - [ ] Contains test summary indicators (PASS/FAIL or ✓/✗)
 
-```bash
-# Run Phase 5→6 artifact validation gate
-./scripts/gate-check.sh G6-PHASE6 "$PROJECT_ROOT" --detail
-# Exit 0 = phase 5 output validated, proceed to Stage A review
-# Exit 1 = phase 5 artifact missing or invalid, address before starting review
-```
+**Gate-check execution** — 逐项核对上方清单，确认 Phase 5 产物有效：
+
+> Gate G6-PHASE6: Artifact Validation Gate — 确认 05-test-results.md 存在、非空、包含 PASS/FAIL 标记
 
 ### Key Principles
 

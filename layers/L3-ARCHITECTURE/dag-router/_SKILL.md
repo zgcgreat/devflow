@@ -593,7 +593,7 @@ exit 0
 - **Symptom**: Kahn's algorithm throws `DAGCycleError: DAG contains cycle among [task-a, task-b]`
 - **Cause**: Task A depends on B, B depends on A (direct or indirect cycle)
 - **Fix**:
-  1. Identify cycle: `python3 scripts/find-cycle.py --tasks 03-tasks.md`
+  1. Identify cycle: AI 用 DFS 遍历 03-tasks.md 中的任务依赖图
   2. Break cycle by removing one dependency edge
   3. Justify removal: "Task A doesn't actually need B at runtime"
   4. Re-run DAG Router
@@ -801,22 +801,25 @@ git worktree remove wt/task-id
 git worktree prune
 ```
 
-**Python DAG Processing**:
-```python
-# Run Kahn's algorithm
-python3 scripts/kahn-sort.py \
-  --input .devflow/<req-id>/03-tasks.md \
-  --output .devflow/<req-id>/wave-plan.yaml
+**DAG Processing** (AI 自执行):
+```markdown
+# AI 按 Kahn's 算法执行拓扑排序
+# 输入：.devflow/<req-id>/03-tasks.md
+# 输出：.devflow/<req-id>/wave-plan.yaml
+# 算法步骤：
+# 1. 统计所有任务的入度
+# 2. 入度为 0 的任务入队
+# 3. 依次出队，将其后继入度 -1
+# 4. 入度变 0 则入队
+# 5. 若最终排序结果 < 任务总数 → 有环
 ```
 
 ### Optional Tools
 
 **Graph Visualization**:
-```bash
-# Generate DAG visualization
-python3 scripts/visualize-dag.py \
-  --tasks 03-tasks.md \
-  --output dag-graph.png
+```markdown
+# AI 用 Mermaid 语法生成 DAG 可视化
+# 读取 03-tasks.md，输出 mermaid 图表嵌入 Markdown
 ```
 
 **Automated Cleanup**:

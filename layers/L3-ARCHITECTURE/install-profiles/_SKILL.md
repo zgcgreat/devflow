@@ -93,10 +93,10 @@ node install.js /path/to/project --interactive
 node install.js /path/to/project --profile small-team
 
 # 指定运行时
-node install.js /path/to/project --profile solo-dev --runtime claude-code
+# AI 按 install-profiles 指令配置项目，profile=solo-dev, runtime=claude-code
 
 # 自定义
-node install.js /path/to/project --profile small-team --phases-skip phase-2a --compression ultra
+# AI 按 install-profiles 指令配置项目，profile=small-team, phases-skip=phase-2a, compression=ultra
 ```
 
 ## 与 adapters 集成
@@ -104,8 +104,7 @@ node install.js /path/to/project --profile small-team --phases-skip phase-2a --c
 安装时根据 `--runtime` 参数，自动生成对应的适配器配置：
 
 ```bash
-# 生成 Claude Code 配置
-node install.js . --profile solo-dev --runtime claude-code
+# AI 按 install-profiles 指令生成 Claude Code 配置，profile=solo-dev
 # → .claude/hooks.json, .claude/settings.json, CLAUDE.md
 
 # 生成 Cursor 配置

@@ -940,13 +940,10 @@ grep "Tech Stack:\|Business Domain:\|Target Users:" .devflow/memory/PROJECT_CONT
 ```
 
 **Market Research** (optional):
-```bash
-# Query industry benchmarks
-curl -s "https://api.industry-data.com/benchmarks?sector=saas&metric=cac" \
-  -H "Authorization: Bearer $API_KEY"
-
-# Competitor pricing
-python3 scripts/scrape-competitor-pricing.py --competitors quickbooks,xero,freshbooks
+```markdown
+# AI 查询行业基准数据和竞品定价
+# 使用 WebSearch 搜索竞品公开定价信息
+# 整理为对比表格
 ```
 
 ### Optional Tools
@@ -960,13 +957,10 @@ curl -X POST "https://api.typeform.com/forms" \
 ```
 
 **Financial Modeling**:
-```python
-# Calculate LTV/CAC
-python3 scripts/unit-economics.py \
-  --arpu 49 \
-  --churn 0.04 \
-  --cac 68 \
-  --margin 0.80
+```markdown
+# AI 计算 LTV/CAC 单位经济学
+# 输入参数：ARPU=49, 月流失率=4%, CAC=68, 毛利率=80%
+# 输出：LTV, LTV/CAC 比值, 回收期
 ```
 
 ---

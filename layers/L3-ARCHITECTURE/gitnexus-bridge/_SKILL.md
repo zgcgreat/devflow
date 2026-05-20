@@ -42,9 +42,10 @@ triggers:
 
 ## 降级策略
 
-当 GitNexus 不可用时，自动 fallback 到 `code-intelligence/` 的 regex 分析器：
-- 返回结果中 `_source` 字段标识数据来源：`"gitnexus"` 或 `"regex-fallback"`
-- `devflow_detect_changes` 和 `devflow_route_map` 无 fallback，返回 unavailable 提示
+当 GitNexus 不可用时，降级为 AI 手动分析（正则/文本搜索）：
+- 在审查报告中标注数据来源：`_source: gitnexus` 或 `_source: manual-analysis`
+- `detect_changes` 和 `route_map` 无手动替代，需人工阅读 git diff
+- 降级时 AI 应执行：`grep -rn` / `git diff --stat` / `git log --oneline` 替代
 
 ## Phase 集成
 

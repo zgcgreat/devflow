@@ -467,34 +467,14 @@ Proceeding to generate detailed variants.
 - **Total**: 6 days
 ```
 
-**Generation script** (automated):
+**Generation** (AI 按指令执行):
 
-```bash
-#!/bin/bash
-# generate-variants.sh
-
-VARIANT_COUNT=${1:-5}
-OUTPUT_FILE=".devflow/<req-id>/02a-design-variants.md"
-
-echo "# Phase 2a: Design Shotgun — $(date)" > $OUTPUT_FILE
-echo "" >> $OUTPUT_FILE
-
-for i in $(seq 1 $VARIANT_COUNT); do
-  echo "Generating Variant #$i..."
-  
-  # Call AI to generate variant details
-  python3 scripts/generate-variant.py \
-    --variant-number $i \
-    --dimensions "layout,interaction,visual" \
-    --context .devflow/<req-id>/02-design.md \
-    >> $OUTPUT_FILE
-  
-  echo "" >> $OUTPUT_FILE
-  echo "---" >> $OUTPUT_FILE
-  echo "" >> $OUTPUT_FILE
-done
-
-echo "✅ Generated $VARIANT_COUNT variants in $OUTPUT_FILE"
+```markdown
+# AI 生成设计变体
+# 1. 读取 02-design.md 作为上下文
+# 2. 按维度（layout, interaction, visual）生成 N 个变体
+# 3. 每个变体包含：描述、评分维度、优劣势
+# 4. 输出到 .devflow/<req-id>/02a-design-variants.md
 ```
 
 ---
@@ -561,32 +541,15 @@ Weights (project-specific):
 **Result**: Main flow uses cards (simple), advanced users can switch to tabs (flexible)
 ```
 
-**Scoring script** (automated):
+**Scoring** (AI 按加权公式计算):
 
-```python
-# scripts/score-variants.py
-import json
-import sys
-
-def calculate_weighted_score(variant, weights):
-    """
-    Calculate weighted score for a variant.
-    
-    Args:
-        variant: Dict with scores for each dimension
-        weights: Dict with weight for each dimension
-    
-    Returns:
-        Float: Weighted score (0-5)
-    """
-    score = 0
-    for dimension, weight in weights.items():
-        score += variant[dimension] * weight
-    return round(score, 2)
-
-# Load variant scores
-with open(sys.argv[1]) as f:
-    variants = json.load(f)
+```markdown
+# AI 为每个变体按维度评分，计算加权总分
+# 权重配置示例：
+# maintainability: 0.30, cost: 0.25, ux: 0.25, extensibility: 0.20
+# 加权总分 = Σ(维度分数 × 权重)
+# 输出排序：最高分的变体为推荐方案
+```
 
 # Define weights (customize per project)
 weights = {
@@ -645,23 +608,15 @@ Based on analysis above, please choose:
 **Please respond with your choice (1/2/3/4)**:
 ```
 
-**User response handling**:
+**User response handling** (AI 按指令执行):
 
-```bash
-#!/bin/bash
-# handle-user-choice.sh
-
-USER_CHOICE=$1
-
-case $USER_CHOICE in
-  1)
-    echo "✅ Accepted recommendation (Variant #1)"
-    cp .devflow/<req-id>/02a-design-variants.md .devflow/<req-id>/02a-design-final.md
-    echo "Moving to Phase 3..."
-    ;;
-  2)
-    echo "Selected alternative variant"
-    # Extract chosen variant details
+```markdown
+# AI 根据用户选择处理变体决策
+# 用户选择 1 → 采纳推荐变体，进入 Phase 3
+# 用户选择 2-4 → 选择替代变体
+# 用户选择 "混合" → 合并多个变体的优势元素
+# 输出：02a-design-final.md
+```
     # Update design spec
     ;;
   3)
@@ -957,27 +912,24 @@ echo "✅ Final design specification generated"
 
 ### Required Tools
 
-**Variant Generation Script**:
-```bash
-python3 scripts/generate-variants.py \
-  --count 5 \
-  --dimensions layout,interaction,visual \
-  --output .devflow/<req-id>/02a-design-variants.md
+**Variant Generation**:
+```markdown
+# AI 生成设计变体（按维度：layout, interaction, visual）
+# --count 变体数量，--dimensions 评分维度
+# 输出到 .devflow/<req-id>/02a-design-variants.md
 ```
 
 **Scoring Calculator**:
-```bash
-python3 scripts/score-variants.py \
-  --input variants.json \
-  --weights '{"maintainability": 0.30, "cost": 0.25, "ux": 0.25, "extensibility": 0.20}'
+```markdown
+# AI 按加权公式计算变体评分
+# 权重示例：maintainability=0.30, cost=0.25, ux=0.25, extensibility=0.20
 ```
 
 ### Optional Tools
 
 **Wireframe Generator** (ASCII art):
-```bash
-# Auto-generate ASCII wireframes
-python3 scripts/ascii-wireframe.py --variant progressive-cards
+```markdown
+# AI 为指定变体生成 ASCII 线框图
 ```
 
 **Stakeholder Voting App**:

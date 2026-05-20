@@ -828,12 +828,14 @@ find . -name "*.md" -size +10k -exec distillator compress {} --output {}.compres
 ```
 
 **Knowledge Graph Visualization**:
-```bash
-# Generate lesson relationship graph
-python3 scripts/build-knowledge-graph.py --input .specs/memory/LESSONS.md --output graph.html
+```markdown
+# AI 生成 LESSONS 关系图（Mermaid 格式嵌入 Markdown）
+# 输入：.specs/memory/LESSONS.md
+# 输出：Mermaid 图表
 
-# Visualize domain skill evolution
-python3 scripts/skill-evolution-timeline.py --input .specs/memory/domain-skills/ --output timeline.html
+# AI 生成 Domain Skill 演化时间线
+# 输入：.specs/memory/domain-skills/
+# 输出：时间线图表
 ```
 
 **Automated Indexing**:

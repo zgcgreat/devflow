@@ -95,13 +95,8 @@ wave_budget:
 
 ```
 layers/L2-ENGINE/token-compression-v2/
-├── _SKILL.md          # 本文件
-├── compressor.js      # 压缩调度器
-├── strategies/        # 各级别压缩策略
-│   ├── lite.js        # lite: 移除冗余 + 合并短句
-│   ├── ultra.js       # ultra: caveman + 结构精简
-│   └── extreme.js     # extreme: 关键词提取 + 代码保留
-└── budget-tracker.js  # Context 预算追踪
+├── _SKILL.md          # 本文件（零脚本，AI 按指令执行压缩）
+└── (压缩策略详见下方各级别描述)
 ```
 
 ## Karpathy 规则集成
