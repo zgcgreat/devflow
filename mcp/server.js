@@ -8,7 +8,7 @@
 
 const readline = require('readline');
 const { TOOL_DEFS: ciTools, handlers: ciHandlers } = require('../layers/L3-ARCHITECTURE/code-intelligence/mcp-server');
-const { readState, checkGate, loadMemory, detectRuntime, assemblePrompt, buildDiffEditConstraint } = require('../adapters/shared/core-bridge');
+const { readState, checkGate, loadMemory, detectRuntime } = require('../adapters/shared/core-bridge');
 const { loadCompressed } = require('../adapters/shared/memory-loader');
 const { createChange, applyChange, verifyChange, archiveChange, listChanges } = require('../layers/L2-ENGINE/change-manager/change-lifecycle');
 
@@ -40,8 +40,6 @@ const devflowTools = [
   { name: 'devflow_change_verify', description: 'Verify a change', inputSchema: { type: 'object', properties: { projectDir: { type: 'string' }, changeName: { type: 'string' } }, required: ['projectDir', 'changeName'] } },
   { name: 'devflow_change_apply', description: 'Apply a change', inputSchema: { type: 'object', properties: { projectDir: { type: 'string' }, changeName: { type: 'string' }, mainSpecPath: { type: 'string' } }, required: ['projectDir', 'changeName', 'mainSpecPath'] } },
   { name: 'devflow_change_archive', description: 'Archive a change', inputSchema: { type: 'object', properties: { projectDir: { type: 'string' }, changeName: { type: 'string' } }, required: ['projectDir', 'changeName'] } },
-  { name: 'devflow_assemble_prompt', description: 'Assemble a complete Phase prompt with Constitutional injection', inputSchema: { type: 'object', properties: { projectDir: { type: 'string' }, skillBody: { type: 'string', description: 'Phase _SKILL.md body content' }, variables: { type: 'object', description: 'Template variables for {{varName}} replacement' } }, required: ['skillBody'] } },
-  { name: 'devflow_diff_edit', description: 'Generate diff-edit constraint for modifying existing files', inputSchema: { type: 'object', properties: { filePath: { type: 'string' }, taskType: { type: 'string', enum: ['refactor', 'fix', 'modify', 'feature'], default: 'modify' } }, required: ['filePath'] } },
   ...ciToolsRemapped
 ];
 
@@ -82,14 +80,6 @@ const devflowHandlers = {
   devflow_change_verify: (p) => verifyChange(require('path').join(p.projectDir, '.devflow/changes', p.changeName)),
   devflow_change_apply: (p) => applyChange(require('path').join(p.projectDir, '.devflow/changes', p.changeName), p.mainSpecPath),
   devflow_change_archive: (p) => { const dir = archiveChange(p.projectDir, p.changeName); return { archived: true, path: dir }; },
-  devflow_assemble_prompt: (p) => {
-    const result = assemblePrompt({ skillBody: p.skillBody, projectDir: p.projectDir, variables: p.variables || {} });
-    return { prompt: result, length: result.length, constitutionInjected: result.includes('═══ devflow') };
-  },
-  devflow_diff_edit: (p) => {
-    const constraint = buildDiffEditConstraint(p.filePath, p.taskType || 'modify');
-    return { constraint, filePath: p.filePath, taskType: p.taskType || 'modify' };
-  },
   devflow_analyze: ciHandlers.analyze_file,
   devflow_trace_chain: ciHandlers.trace_call_chain,
   devflow_blast_radius: ciHandlers.blast_radius,

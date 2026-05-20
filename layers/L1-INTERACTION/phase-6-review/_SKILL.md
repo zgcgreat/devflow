@@ -348,7 +348,7 @@ G3-PHASE6判定: FAIL → 退回 Wave 修复 R2 后重审
 | 1 | Issue severity distribution | Review report severity count | ≥90% of issues are P1 or lower |
 | 2 | P0 resolution status | grep "P0" in review findings | All P0 resolved before Phase 7 |
 | 3 | TODO/FIXME cleanup | `grep -rE "TODO|FIXME" src/` | Zero matches in implementation files |
-| 4 | Review report completeness | Check output exists | Written to `.specs/reviews/phase-6-review.md` (and optionally `.specs/reviews/phase-6-review.html`) |
+| 4 | Review report completeness | Check output exists | Written to `.specs/reviews/phase-6-review.md` |
 | 5 | Minimum review duration | Timestamps in gate check log | ≥30 min for Phase 4 tasks |
 
 ```bash
@@ -556,17 +556,3 @@ Stage A PASS → Stage B PASS (G3-PHASE6):
 | Testing Reviewer | `specialists/testing/_SKILL.md` | ✅ Exists (~6KB) |
 
 **Note**: Phase 6 review architecture includes reviewer sub-agents under `reviewer/` directory (main reviewer skill) and specialist sub-agents under `specialists/` directory (security, testing, performance, etc.). Each has its own _SKILL.md with independent execution capabilities. The main phase-6-review/_SKILL.md defines the trigger decision logic (Step D0) that orchestrates these sub-agents.
-
-## HTML Review Report (可选输出格式)
-
-除标准 Markdown 报告外，Phase 6 可生成 HTML 格式审查报告，提供更丰富的视觉表达：
-
-- **严重程度着色**：P0 红 / P1 黄 / P2 蓝 / P3 灰，一目了然
-- **可折叠代码上下文**：`<details>` 折叠代码片段，不占阅读空间
-- **内联 diff 视图**：增删行用绿/红着色
-- **自动判定横幅**：根据 P0/P1 数量自动显示 PASS/CONDITIONAL/BLOCKED
-- **单文件自包含**：Tailwind CDN + 内联 CSS/JS，双击即可打开
-
-模板路径：`templates/review-report.html`
-
-使用方式：审查完成后，用模板变量替换 `{{...}}` 占位符，输出到 `.specs/reviews/phase-6-review.html`。
