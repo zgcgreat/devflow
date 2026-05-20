@@ -2,6 +2,9 @@
 name: dedup-cleanup
 version: 3.0-draft
 layer: L3-ARCHITECTURE
+gate: internal
+requires: [duplication-report]
+provides: [cleanup-plan, deduplicated-structure]
 description: Deduplication plan for stage-skills/ and references/ directories
 source: Gap Analysis P2+Architecture
 status: planned

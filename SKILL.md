@@ -303,8 +303,8 @@ AI会自动：
 #### 项目初始化
 
 ```bash
-/unified new "项目名称" --tech React,Node.js,PostgreSQL
-/unified new "电商平台" --mode Strict --template ecommerce
+/devflow new "项目名称" --tech React,Node.js,PostgreSQL
+/devflow new "电商平台" --mode Strict --template ecommerce
 ```
 
 **参数说明**:
@@ -315,11 +315,11 @@ AI会自动：
 #### 阶段控制
 
 ```bash
-/unified discuss 1        # Phase 1: 需求分析
-/unified plan 1           # Phase 2: 方案设计
-/unified execute 1        # Phase 4: 实施开发
-/unified verify 1         # Phase 5: 测试验证
-/unified ship 1           # Phase 7: 交付部署
+/devflow discuss 1        # Phase 1: 需求分析
+/devflow plan 1           # Phase 2: 方案设计
+/devflow execute 1        # Phase 4: 实施开发
+/devflow verify 1         # Phase 5: 测试验证
+/devflow ship 1           # Phase 7: 交付部署
 ```
 
 **阶段编号**:
@@ -352,7 +352,7 @@ AI会自动：
 
 **示例1: 创建新项目**
 ```
-/unified new "任务管理APP" --tech Next.js,TypeScript,TailwindCSS --mode Standard
+/devflow new "任务管理APP" --tech Next.js,TypeScript,TailwindCSS --mode Standard
 ```
 
 **示例2: 查看进度**
@@ -447,11 +447,11 @@ memory/
 **支持同时管理多个项目，快速切换，状态同步，知识共享**
 
 ```bash
-/unified projects list              # 列出所有项目
-/unified projects new "名称"        # 创建新项目
-/unified projects switch <id>       # 切换项目
-/unified projects info <id>         # 查看项目详情
-/unified workspace stats            # 工作区统计
+/devflow projects list              # 列出所有项目
+/devflow projects new "名称"        # 创建新项目
+/devflow projects switch <id>       # 切换项目
+/devflow projects info <id>         # 查看项目详情
+/devflow workspace stats            # 工作区统计
 ```
 
 详见: `docs/MULTI-PROJECT-MANAGEMENT.md`
@@ -461,10 +461,10 @@ memory/
 **可扩展Phase、Gate、Agent、Template、Command，沙箱隔离，签名验证**
 
 ```bash
-/unified plugins install <plugin>   # 安装插件
-/unified plugins enable <name>      # 启用插件
-/unified plugins list --enabled     # 查看已启用插件
-/unified plugins create <name>      # 创建新插件
+/devflow plugins install <plugin>   # 安装插件
+/devflow plugins enable <name>      # 启用插件
+/devflow plugins list --enabled     # 查看已启用插件
+/devflow plugins create <name>      # 创建新插件
 ```
 
 **插件类型**:
@@ -536,16 +536,17 @@ Use devflow. 健康检查
 
 | Phase | 必须加载 | 可选加载 | 必须卸载 |
 |-------|---------|---------|---------|
-| **Phase 0** | SKILL.md, GO.md | entry-check.md | - |
-| **Phase 1** | + rules/RULES.md | 5-whys.md, personas/CEO.md | Phase 0 特定规则 |
-| **Phase 2** | + rules/RULES.md | design/*.md, personas/Architect.md | Phase 1 追问规则 |
-| **Phase 2a** | + rules/RULES.md | ui-*.md | Phase 2 设计规则 |
-| **Phase 3** | + rules/RULES.md | task-template.md | Phase 2a UI规则 |
-| **Phase 4** | + rules/RULES.md, dev-*.md | personas/Developer.md | Phase 3 拆分规则 |
-| **Phase 5** | + rules/RULES.md, test-*.md | personas/QA.md | Phase 4 开发规则 |
-| **Phase 6** | + rules/RULES.md, review-*.md | personas/Reviewer.md | Phase 5 测试规则 |
-| **Phase 7** | + rules/RULES.md, deploy-*.md | personas/DevOps.md | Phase 6 审查规则 |
-| **Phase 8** | + rules/RULES.md, archive-*.md | - | Phase 7 部署规则 |
+| **Phase 0** | SKILL.md, GO.md, `L1/phase-0-yc-strategy/_SKILL.md` | `L1/phase-0-strategy/_SKILL.md` | - |
+| **Phase 1** | + `references/RULES-v3.md` | `L1/phase-1-5whys/_SKILL.md` | Phase 0 特定规则 |
+| **Phase 1b** | + `references/RULES-v3.md` | `L1/phase-1b-discuss/_SKILL.md` | Phase 1 追问规则 |
+| **Phase 2** | + `references/RULES-v3.md` | `L1/phase-2-design/_SKILL.md` | Phase 1b 决策规则 |
+| **Phase 2a** | + `references/RULES-v3.md` | `L1/phase-2a-shotgun/_SKILL.md` | Phase 2 设计规则 |
+| **Phase 3** | + `references/RULES-v3.md`, `L3/dag-router/_SKILL.md` | - | Phase 2a 变体规则 |
+| **Phase 4** | + `references/RULES-v3.md`, `L2/wave-executor/_SKILL.md` | `L2/executor/_SKILL.md` | Phase 3 拆分规则 |
+| **Phase 5** | + `references/RULES-v3.md` | `L1/phase-5-test/_SKILL.md` | Phase 4 开发规则 |
+| **Phase 6** | + `references/RULES-v3.md` | `L1/phase-6-review/_SKILL.md` | Phase 5 测试规则 |
+| **Phase 7** | + `references/RULES-v3.md` | `L1/phase-7-canary/_SKILL.md` | Phase 6 审查规则 |
+| **Phase 8** | + `references/RULES-v3.md`, `L2/learning-workflow/_SKILL.md` | `L1/phase-8-archive/_SKILL.md` | Phase 7 部署规则 |
 
 ### Token 监控触发条件
 
@@ -569,9 +570,9 @@ Use devflow. 健康检查
 #### ✅ 正确：按 Phase 渐进加载
 
 ```
-Phase 0: SKILL.md + GO.md + entry-check.md (约 ~15% Token)
-Phase 1: + RULES.md + 5-whys.md (约 +20% Token)
-Phase 4: + dev-*.md + Developer persona (按需加载)
+Phase 0: SKILL.md + GO.md + references/entry-check.md (约 ~15% Token)
+Phase 1: + references/RULES-v3.md + L1/phase-1-5whys/_SKILL.md (约 +20% Token)
+Phase 4: + L2/wave-executor/_SKILL.md + L1/phase-4-build/_SKILL.md (按需加载)
 ```
 
 ---

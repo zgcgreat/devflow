@@ -4,11 +4,11 @@ version: 3.0-draft
 layer: L1-INTERACTION
 phase: 7
 description: Deploy changes in staged batches (10% → 50% → 100%) with automatic health checks and rollback on threshold breach
-requires: [g3-gate, all-tests-passed]
-provides: [canary-report, rollback-report, g5-gate-decision]
+requires: [g7-gate-decision, all-tests-passed]
+provides: [canary-report, rollback-report, g7.5-gate-decision]
 dependencies:
   - phase-6-review
-gate: G5
+gate: G7.5
 triggers:
   - canary deployment
   - gradual rollout

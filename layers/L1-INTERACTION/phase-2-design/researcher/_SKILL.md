@@ -2,12 +2,16 @@
 name: phase-2-design-researcher
 preamble-tier: 2
 version: 3.0-draft
+layer: L1-INTERACTION
+phase: 2
+parent: phase-2-design
+gate: G3
+requires: [g2.5-gate-decision, context-md]
+provides: [research-findings, dependency-verification, risk-assessment]
 description: |
   Technical investigation specialist for Phase 2 Design.
   Conducts systematic research for architecture decisions, dependency validation, and risk assessment.
   Output feeds directly into Phase 2 Design spec and Phase 1b Discuss context. (devflow)
-layer: L1-INTERACTION
-parent: phase-2-design
 ---
 
 # Researcher — Technical Investigation & Dependency Verification

@@ -2,16 +2,20 @@
 name: phase-8-archive
 preamble-tier: 2
 version: 3.0-draft
+layer: L1-INTERACTION
+phase: 8
+requires: [g7.5-gate-decision, canary-report]
+provides: [lessons-md, domain-skills-updated, archive-complete, g8-gate-decision]
 description: |
   Knowledge archival engine that aggregates Wave SUMMARYs, promotes lessons learned
   to LESSONS.md, creates/updates domain skills from high-frequency patterns (≥3),
   and archives session state. Use when: "archive phase", "knowledge consolidation",
   "LESSONS nomination", "domain skill promotion". (devflow)
-layer: L1-INTERACTION
 source: 交互层 Phase 8 + 引擎层 LearningWorkflow + 架构层 Memory Manager
 dependencies:
   - wave-executor (input: per-wave SUMMARY.md files)
   - learning-workflow (post-archive: LESSONS update + domain skill graduation)
+gate: G8
 token_budget: ~80K tokens (Wave SUMMARY aggregation + LESSONS deduplication, max 10 waves)
 triggers:
   - archive phase

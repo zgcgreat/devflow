@@ -2,12 +2,15 @@
 name: parallel-engine
 preamble-tier: 2
 version: 3.0-draft
+layer: L3-ARCHITECTURE
+gate: internal
+requires: [wave-plan, provider-chains]
+provides: [parallel-execution-plan, dispatch-coordination]
 description: |
   Dependency-aware wave scheduling engine for parallel task orchestration.
   Takes wave-plan.yaml from dag-router and dispatches agents to execute tasks
   concurrently within waves, with coordination points and error recovery.
   Use when: "schedule parallel tasks", "execute wave plan", "dispatch agents". (devflow)
-layer: L3-ARCHITECTURE
 source: DAG-based wave scheduling from L2 wave-executor + L3 dag-router, inherited from 引擎层 Wave Engine
 dependencies:
   - dag-router (input: wave-plan.yaml with parallelism classifications per wave)

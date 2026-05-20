@@ -2,6 +2,11 @@
 name: phase-1b-discuss
 preamble-tier: 2
 version: 3.0-draft
+layer: L1-INTERACTION
+phase: 1b
+gate: G2.5
+requires: [g1-gate-decision, strategy-document, analysis-md]
+provides: [context-md, decision-coverage, g2.5-gate-decision]
 description: |
   Decision capture engine that identifies implementation ambiguities from Phase 1 analysis,
   conducts interactive Q&A with the user, and generates CONTEXT.md as constraints for Phase 2.

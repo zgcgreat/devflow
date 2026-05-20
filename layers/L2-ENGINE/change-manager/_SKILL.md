@@ -2,6 +2,9 @@
 name: change-manager
 version: 3.0-draft
 layer: L2-ENGINE
+gate: internal
+requires: [change-proposal]
+provides: [applied-change, verification-result]
 description: OpenSpec-inspired change lifecycle manager implementing proposal → apply → verify → archive workflow with dynamic Delta Specs merging
 source: OpenSpec proposal→apply→archive lifecycle + ArtifactGraph + Delta Specs
 dependencies:

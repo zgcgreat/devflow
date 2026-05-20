@@ -2,11 +2,14 @@
 name: dag-router
 preamble-tier: 2
 version: 3.0-draft
+layer: L3-ARCHITECTURE
+gate: internal
+requires: [task-list, dependency-annotations]
+provides: [wave-plan, parallelism-classification]
 description: |
   Dependency-aware task router using Kahn's topological sort to group tasks into parallel waves.
   Classifies waves by resource overlap (HIGH/MEDIUM/LOW/NONE) for worktree isolation.
   Use when: "route tasks", "create wave plan", "DAG analysis", "topological sort". (devflow)
-layer: L3-ARCHITECTURE
 source: 引擎层 DAG Router + Kahn's Algorithm + 架构层 Task Splitter
 dependencies:
   - phase-3-task-plan (input: task list with dependency annotations)

@@ -2,8 +2,13 @@
 name: security-reviewer
 preamble-tier: 2
 version: 3.0-draft
-description: Security Specialist for Phase 6+ code review — input validation, auth bypass, injection vectors, crypto misuse, secrets exposure. Use when "security review", "penetration test", "trust boundary". (devflow)
 layer: L1-INTERACTION
+phase: 6
+parent: phase-6-review
+gate: G7
+requires: [g6-gate, diff-output]
+provides: [security-findings, vulnerability-report]
+description: Security Specialist for Phase 6+ code review — input validation, auth bypass, injection vectors, crypto misuse, secrets exposure. Use when "security review", "penetration test", "trust boundary". (devflow)
 source: 架构层 / supercorp-ultimate fusion
 dependencies:
   - phase-6-review (orchestrator)

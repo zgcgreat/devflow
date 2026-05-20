@@ -68,7 +68,7 @@
 
 - **R7.1** Orchestrator 上下文 ~50K tokens（承载路由声明 + 阶段状态）
 - **R7.2** Research/Execution Agent 各自 ~200K fresh context，会话隔离不共享记忆
-- **R7.3** Agent 间手调用标准化消息格式（见 CLOSED-LOOP-LOGGING.md heartbeat/handoff protocol）
+- **R7.3** Agent 间手调用标准化消息格式（见 `layers/L2-ENGINE/verification-closed-loop/_SKILL.md` heartbeat/handoff protocol）
 - **R7.4** 换角色必须清窗或重置上下文
 
 ## R8 · Wave 并行执行（DAG 拓扑排序）
@@ -131,7 +131,7 @@
 
 - **R16.1** Wave N SUMMARY → Phase N+1 Agent context 自动注入
 - **R16.2** LESSONS deduplication：同名 LESSON 条目合并，仅保留最新版本
-- **R16.3** Cross-wave Context Reading Protocol（见 MEMORY-MANAGER.md）
+- **R16.3** Cross-wave Context Reading Protocol（见 `layers/L2-ENGINE/learning-workflow/_SKILL.md` cross-wave injection）
 
 ## R17 · 原子提交规范
 
@@ -144,7 +144,7 @@
 
 - **R18.1** 格式：`[checkpoint][wave:N][task:X]`
 - **R18.2** 每完成一个 task 输出 heartbeat，记录状态和产物路径
-- **R18.3** 连续 2 个 heartbeat 失败 → 触发 Investigator specialist（见 ROLE-DISPATCH.md）
+- **R18.3** 连续 2 个 heartbeat 失败 → 触发 Investigator specialist（见 `layers/L1-INTERACTION/gsd-workflows/debug.md` specialist dispatch）
 
 ## R19 · Domain Skills Promotion
 

@@ -2,7 +2,12 @@
 name: code-intelligence
 version: 3.0-draft
 layer: L3-ARCHITECTURE
-description: Code understanding engine providing AST parsing, call chain analysis, dependency graphs, and blast radius impact analysis via MCP Server interface
+deprecated: true
+replaced-by: gitnexus-bridge
+description: >-
+  [DEPRECATED] 此模块已被 gitnexus-bridge 替代。gitnexus-bridge 提供相同的代码理解能力，
+  并增加了 tree-sitter + graphDB 自动降级机制。请使用 layers/L3-ARCHITECTURE/gitnexus-bridge/_SKILL.md。
+  保留此文件仅供参考，不再维护。
 source: GitNexus Tree-sitter + Knowledge Graph + MCP Server
 dependencies:
   - dag-router
@@ -17,7 +22,12 @@ allowed-tools:
   - Read, Bash, WebSearch, WebFetch
 ---
 
-# Code Intelligence — 代码理解引擎
+# ⚠️ DEPRECATED — Code Intelligence — 代码理解引擎
+
+> **此模块已被 `gitnexus-bridge` 替代。**
+> - 替代模块: `layers/L3-ARCHITECTURE/gitnexus-bridge/_SKILL.md`
+> - 迁移指南: gitnexus-bridge 提供相同的 MCP Server 接口 + withFallback 自动降级
+> - 本文件仅保留供参考，不再维护
 
 ## 核心定位
 

@@ -2,11 +2,15 @@
 name: phase-8-memory-keeper
 preamble-tier: 2
 version: 3.0-draft
+layer: L1-INTERACTION
+phase: 8
+parent: phase-8-archive
+gate: G8
+requires: [g7.5-gate-decision, wave-summaries]
+provides: [lessons-md, domain-skills-updated, archive-complete]
 description: |
   Knowledge distillation and archival specialist for Phase 8 Archive.
   Systematically captures, organizes, and preserves project knowledge for cross-session reuse. (devflow)
-layer: L1-INTERACTION
-parent: phase-8-archive
 ---
 
 # Memory Keeper — Knowledge Distillation & Archival

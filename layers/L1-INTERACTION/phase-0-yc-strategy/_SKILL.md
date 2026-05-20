@@ -5,14 +5,14 @@ layer: L1-INTERACTION
 phase: 0
 description: Apply Y Combinator's due diligence framework to validate project viability before implementation
 requires: [project-context]
-provides: [g1-gate-decision, strategy-document, follow-up-queue]
+provides: [g0-gate-decision, strategy-document, follow-up-queue]
 dependencies:
   - phase-0-strategy
-gate: G1
+gate: G0
 triggers:
   - YC strategy validation
   - six questions assessment
-  - g1-gate
+  - g0-gate
   - strategy phase
 allowed-tools:
   - Read

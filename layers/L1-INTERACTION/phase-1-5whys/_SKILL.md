@@ -4,16 +4,16 @@ version: 3.0-draft
 layer: L1-INTERACTION
 phase: 1
 description: Apply the "5 Whys" root cause analysis technique to uncover true user needs beneath surface-level requests
-requires: [g1-gate-decision, strategy-document]
-provides: [user-stories, acceptance-criteria, glossary, scope-boundaries, g2-gate-decision]
+requires: [g0-gate-decision, strategy-document]
+provides: [user-stories, acceptance-criteria, glossary, scope-boundaries, g1-gate-decision]
 dependencies:
   - phase-0-strategy
-gate: G2
+gate: G1
 triggers:
   - requirements clarification
   - root cause analysis
   - user stories
-  - g2-gate
+  - g1-gate
   - phase 1
 allowed-tools:
   - Read

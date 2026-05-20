@@ -2,12 +2,15 @@
 name: executor
 preamble-tier: 2
 version: 3.0-draft
+layer: L2-ENGINE
+gate: internal
+requires: [wave-plan, single-task-definition]
+provides: [implemented-code, test-results, commit-hash]
 description: |
   TDD implementation engine operating within Wave-based parallel execution framework.
   Implements tasks with Red→Green→Refactor cycle, R6 anti-hallucination checks,
   and atomic commits. Use when: "implement feature", "TDD development", "execute wave tasks",
   "run tests first". (devflow)
-layer: L2-ENGINE
 source: 引擎层 Executor + Wave Engine + TDD Workflow
 dependencies:
   - dag-router (input: wave-plan.yaml with task dependencies)

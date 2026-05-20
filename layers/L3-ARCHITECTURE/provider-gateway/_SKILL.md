@@ -2,11 +2,14 @@
 name: provider-gateway
 preamble-tier: 2
 version: 3.0-draft
+layer: L3-ARCHITECTURE
+gate: internal
+requires: [task-types, cost-constraints]
+provides: [provider-assignments, fallback-chains]
 description: |
   Intelligent model routing engine that selects optimal AI providers based on task type,
   complexity, and cost constraints with fallback chains (exponential backoff).
   Use when: "route to provider", "select model", "provider fallback", "cost-aware routing". (devflow)
-layer: L3-ARCHITECTURE
 source: 引擎层 Provider Gateway + Cost-Aware Model Router
 dependencies:
   - dag-router (input: task types from WAVE-PLAN.md)

@@ -2,12 +2,15 @@
 name: wave-executor
 preamble-tier: 2
 version: 3.0-draft
+layer: L2-ENGINE
+gate: internal
+requires: [wave-plan, task-list]
+provides: [wave-summaries, task-results, lessons-nominations]
 description: |
   Dependency-aware parallel execution engine using Kahn's topological sort.
   Achieves wave-level and task-level parallelism with strict dependency validation,
   heartbeat checkpoints, and LearningWorkflow integration. Use when: "execute waves",
   "run parallel tasks", "execute phase plan". (devflow)
-layer: L2-ENGINE
 source: 引擎层 Wave Engine + 架构层 DAG Router + Kahn Algorithm
 dependencies:
   - dag-router (Phase 3 output required before execution)

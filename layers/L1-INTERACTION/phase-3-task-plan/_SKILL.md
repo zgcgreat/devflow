@@ -4,9 +4,13 @@ description: Phase 3 任务规划 — ADR 映射、Task 拆分、DAG 依赖分�
 preamble-tier: 2
 version: 3.0-draft
 layer: L1-INTERACTION
+phase: 3
+requires: [g3.5-gate-decision, design-document]
+provides: [task-list, dag-dependencies, wave-plan, g4-gate-decision]
 source: 交互层 Phase 3 (Task Plan & DAG)
 dependencies:
   - writing-plans
+gate: G4
 triggers:
   - "拆分任务"
   - "任务规划"

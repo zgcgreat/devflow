@@ -2,11 +2,14 @@
 name: learning-workflow
 preamble-tier: 2
 version: 3.0-draft
+layer: L2-ENGINE
+gate: internal
+requires: [wave-summaries, execution-data]
+provides: [lessons-updated, domain-skills-promoted, cross-wave-injections]
 description: |
   Automatic evolution engine that extracts lessons from execution data, promotes high-frequency
   patterns (≥3 occurrences) to domain skills, and injects relevant knowledge into future waves.
   Use when: "extract lessons", "learn from wave", "domain skill promotion", "knowledge consolidation". (devflow)
-layer: L2-ENGINE
 source: 引擎层 LearningWorkflow + 架构层 Memory Manager
 dependencies:
   - phase-8-archive (post-archive: LESSONS update + domain skill graduation)

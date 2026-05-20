@@ -2,6 +2,9 @@
 name: context-rot-prevention
 version: 3.0-draft
 layer: L2-ENGINE
+gate: internal
+requires: [memory-files]
+provides: [freshness-report, cleaned-memory]
 description: Prevents context rot — stale memory, outdated references, and drift between documentation and reality
 source: superpowers context management + caveman memory hygiene
 dependencies:

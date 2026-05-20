@@ -2,6 +2,9 @@
 name: mvp-vertical-slice
 version: 3.0-draft
 layer: L2-ENGINE
+gate: internal
+requires: [feature-list, architecture-design]
+provides: [sliced-features, delivery-order]
 description: Vertical slicing strategy for MVP delivery — cut through all layers to deliver working end-to-end features incrementally
 source: superpowers MVP strategy + GSD milestones + devflow Phase flow
 dependencies:

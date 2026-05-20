@@ -6,9 +6,13 @@ description: |
   Multi-variant design generation specialist for Phase 2a.
   Generates 4-6 design variants with clear trade-offs and AI recommendation based on maintainability/cost/UX scoring. (devflow)
 layer: L1-INTERACTION
+phase: 2a
+requires: [g3-gate-decision, design-document]
+provides: [variant-proposals, weighted-scores, g3.5-gate-decision]
 parent: phase-2a-shotgun
 dependencies:
   - phase-2-design
+gate: G3.5
 triggers:
   - design variant generation
   - shot gun design

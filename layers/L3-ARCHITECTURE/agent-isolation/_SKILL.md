@@ -1,17 +1,15 @@
 ---
 name: agent-isolation
-description: L3 Agent 上下文隔离 — 每个Agent ~200K token独立上下文窗口
-version: 3.0
+version: 3.0-draft
 layer: L3-ARCHITECTURE
+gate: internal
+requires: [wave-plan, provider-assignments]
+provides: [isolated-agent-contexts, agent-boundaries]
+description: L3 Agent 上下文隔离 — 每个Agent ~200K token独立上下文窗口
 source: Agent isolation from v3 architecture, R7 rule enforcement
 dependencies:
   - wave-executor
 token_budget: "inherited from parent execution (~200K per child agent)"
-v3_upgrade:
-  token_budget_per_agent: ~200K tokens enforced
-  context_rotation_at_wave_boundary: true
-  six_module_loading_order: true
-  cross_agent_communication_channels: true
 ---
 
 # L3-Agent Isolation — Agent 上下文隔离 (~200K/Agent)

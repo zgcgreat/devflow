@@ -2,6 +2,9 @@
 name: model-selection-strategy
 version: 3.0-draft
 layer: L3-ARCHITECTURE
+gate: internal
+requires: [task-type, complexity-assessment]
+provides: [model-assignment, fallback-chain]
 description: Intelligent model selection strategy mapping task types to optimal AI models with fallback chains
 source: devflow Provider-Gateway + superpowers model routing
 dependencies:

@@ -2,6 +2,9 @@
 name: memory-auto-maintenance
 version: 3.0-draft
 layer: L2-ENGINE
+gate: internal
+requires: [memory-files]
+provides: [deduplicated-memory, archival-report]
 description: Automatic memory file maintenance — deduplication, archival, freshness checks, and size management
 source: devflow LESSONS + caveman + context-rot-prevention
 dependencies:

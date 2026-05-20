@@ -2,6 +2,9 @@
 name: token-compression-v2
 version: 3.0-draft
 layer: L2-ENGINE
+gate: internal
+requires: [context-data, compression-trigger]
+provides: [compressed-context, budget-report]
 description: Enhanced token compression with tiered strategies, auto-trigger on phase transitions, and context budget management
 source: caveman-compress + GSD context-budget + superpowers Karpathy rules
 dependencies:

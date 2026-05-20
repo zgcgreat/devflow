@@ -1,5 +1,10 @@
 ---
-name: caveman-compress
+name: memory-compression
+version: 3.0-draft
+layer: L2-ENGINE
+gate: internal
+requires: [memory-file-input]
+provides: [compressed-file, original-backup]
 description: >
   Compress natural language memory files (CLAUDE.md, todos, preferences) into caveman format
   to save input tokens. Preserves all technical substance, code, URLs, and structure.

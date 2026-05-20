@@ -3,12 +3,16 @@ name: phase-0-strategy
 preamble-tier: 2
 version: 3.0-draft
 layer: L1-INTERACTION
+phase: 0
 description: |
   Strategy and ideation phase — capture forward-looking ideas as structured seeds,
   define project scope, and establish initial context before formal Phase 1 analysis.
   Use when: "strategy phase", "seed capture", "project kickoff", "ideation".
+requires: [project-context]
+provides: [g0-gate-decision, strategy-seeds, project-scope]
 dependencies:
   - writing-plans
+gate: G0
 triggers:
   - strategy phase
   - seed capture

@@ -3,10 +3,14 @@ name: phase-5-test
 description: Phase 5 测试阶段 — 测试策略制定、测试用例执行、覆盖度验证与 Bug 修复循环
 preamble-tier: 2
 version: 3.0-draft
-layer: L1-INTERACTION (协调), L2-ENGINE (QA via core-bridge)
+layer: L1-INTERACTION
+phase: 5
+requires: [g5-gate-decision, wave-summaries, code-commits]
+provides: [test-report, coverage-metrics, bug-fix-commits, g6-gate-decision]
 source: 交互层 Phase 5 + 引擎层 QA
 dependencies:
   - writing-plans
+gate: G6
 triggers:
   - "运行测试"
   - "验证功能"

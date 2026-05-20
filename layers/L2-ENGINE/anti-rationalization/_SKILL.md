@@ -2,6 +2,9 @@
 name: anti-rationalization
 version: 3.0-draft
 layer: L2-ENGINE
+gate: internal
+requires: [pending-decision]
+provides: [challenge-report, assumption-risks]
 description: Anti-rationalization tables that challenge assumptions and prevent post-hoc justification of bad decisions
 source: superpowers anti-rationalization + doubt-driven-development
 dependencies: []

@@ -52,7 +52,7 @@ Step 12 · Phase 7-8: Canary发布 + 知识归档
 | v3规则集 R1-R20 | `references/RULES-v3.md` |
 | Delta Specs 差量规范 | `references/delta-specs.md` |
 | Stage Skills | `skills/stage-skills/` |
-| **L1 Phase 0-8 Skills** | `layers/L1-INTERACTION/*/README.md` (每 Phase README) |
+| **L1 Phase 0-8 Skills** | `layers/L1-INTERACTION/README.md` + `layers/L1-INTERACTION/phase-*/*_SKILL.md` |
 | **L2 LearningWorkflow** | `layers/L2-ENGINE/learning-workflow/_SKILL.md` |
 | **L2 Wave Executor** | `layers/L2-ENGINE/wave-executor/_SKILL.md` |
 | **L2 PartyMode** | `layers/L2-ENGINE/party-mode/_SKILL.md` |
@@ -169,8 +169,8 @@ Step 3.4: Grep降级能力声明
 Phase 0结束后，可设定Token预算上限：
 
 ```bash
-/budget set 300K              # 设定300K预算
-/budget preset medium         # 使用预设（small/medium/large/enterprise）
+/devflow budget set 300K              # 设定300K预算
+/devflow budget preset medium         # 使用预设（small/medium/large/enterprise）
 ```
 
 详见: `docs/SURFACE-BUDGET.md`
@@ -247,9 +247,9 @@ Phase 0结束后，可设定Token预算上限：
 如果用户需求复杂或涉及架构变更，可启用SDD模式：
 
 ```bash
-/spec define "需求描述"    # 生成 specs/XXX/spec.md
-/spec plan "技术描述"      # 生成 specs/XXX/plan.md
-/spec tasks                # 生成 specs/XXX/tasks.md
+/devflow spec define "需求描述"    # 生成 specs/XXX/spec.md
+/devflow spec plan "技术描述"      # 生成 specs/XXX/plan.md
+/devflow spec tasks                # 生成 specs/XXX/tasks.md
 ```
 
 SDD完成后自动生成CONTEXT.md，然后进入Phase 2。

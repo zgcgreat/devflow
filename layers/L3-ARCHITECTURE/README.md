@@ -13,7 +13,7 @@ L3-ARCHITECTURE/
 ├── PROVIDER-GATEWAY.md    # ⭐Provider智能网关 (多模型按需路由)
 ├── AGENT-ISOLATION.md     # ⭐Agent上下文隔离协议
 ├── PARALLEL-ENGINE.md     # 并行执行引擎 (~4.4x-5x加速)
-├── MEMORY-MANAGER.md      # 跨会话记忆管理
+├── MEMORY-MANAGER.md      # → 已迁移至 L2-ENGINE/learning-workflow
 └── QA-CROSS-WAVE.md       # 交叉波测试策略矩阵
 ```
 

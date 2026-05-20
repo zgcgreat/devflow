@@ -2,6 +2,9 @@
 name: install-profiles
 version: 3.0-draft
 layer: L3-ARCHITECTURE
+gate: internal
+requires: [project-type, team-size]
+provides: [configured-profile, enabled-modules]
 description: Pre-configured installation profiles for different project types and team sizes
 source: devflow adapters + superpowers templates
 dependencies:

@@ -2,8 +2,11 @@
 name: party-mode
 preamble-tier: 2
 version: 3.0-draft
-description: Multi-agent roundtable consensus protocol for complex decisions requiring diverse perspectives and structured debate. Use when "technical debate", "multi-agent consensus", "architectural decision". (devflow)
 layer: L2-ENGINE
+gate: internal
+requires: [decision-topic, perspectives-list]
+provides: [consensus-report, escalated-decisions]
+description: Multi-agent roundtable consensus protocol for complex decisions requiring diverse perspectives and structured debate. Use when "technical debate", "multi-agent consensus", "architectural decision". (devflow)
 source: 交互层 PartyMode + Cavecrew sub-agent delegation
 dependencies: []
 triggers:

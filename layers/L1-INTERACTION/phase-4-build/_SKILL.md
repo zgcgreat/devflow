@@ -3,10 +3,14 @@ name: phase-4-build
 description: Phase 4 构建阶段 — Wave 执行、原子 Task 编码、Verify 验证与 Commit
 preamble-tier: 2
 version: 3.0-draft
-layer: L1-INTERACTION (协调), L2-ENGINE (执行)
+layer: L1-INTERACTION
+phase: 4
+requires: [g4-gate-decision, task-list, wave-plan]
+provides: [wave-summaries, code-commits, g5-gate-decision]
 source: 交互层 Phase 4 + 引擎层 Wave Executor
 dependencies:
   - subagent-driven-development
+gate: G5
 triggers:
   - "开始开发"
   - "执行任务"

@@ -3,10 +3,14 @@ name: phase-2-design
 description: Phase 2 设计阶段 — 架构设计、技术选型、API 定义与设计文档输出
 preamble-tier: 2
 version: 3.0-draft
-layer: L1-INTERACTION (交互层)
+layer: L1-INTERACTION
+phase: 2
+requires: [g2.5-gate-decision, context-md, analysis-md]
+provides: [design-document, adr-records, g3-gate-decision]
 source: 交互层 Phase 2 + 架构层 DAG Routing
 dependencies:
   - writing-plans
+gate: G3
 triggers:
   - "设计方案"
   - "技术选型"

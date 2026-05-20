@@ -1,7 +1,10 @@
 ---
-name: systematic-debugging
-version: 3.1-draft
+name: debugging-workflow
+version: 3.0-draft
 layer: L2-ENGINE
+gate: internal
+requires: [failed-test, bug-report]
+provides: [root-cause-analysis, fix-proposal, defense-in-depth]
 source: devflow-kit systematic-debugging (~500 lines across multiple files)
 description: Four-phase methodology for systematic debugging — inserted between Phase 4 code and Phase 5 testing
 ---

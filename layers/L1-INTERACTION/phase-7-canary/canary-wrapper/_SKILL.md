@@ -1,12 +1,13 @@
 ---
 name: canary-wrapper
-version: 1.0-draft
+version: 3.0-draft
 layer: L1-INTERACTION
 phase: 7
+parent: phase-7-canary
+gate: G7.5
+requires: [phase-7-canary, deploy-ready]
+provides: [script-lifecycle-report, health-check-log, rollback-log, g7.5-gate-decision]
 description: Lifecycle wrapper that manages canary-health-check.sh and auto-rollback.sh scripts, ensuring proper initialization, execution, error handling, and cleanup during Phase 7 canary deployments
-requires: [phase-7-canary]
-provides: [script-lifecycle-report, health-check-log, rollback-log]
-gate: G5
 triggers:
   - canary deployment starts
   - health check triggered

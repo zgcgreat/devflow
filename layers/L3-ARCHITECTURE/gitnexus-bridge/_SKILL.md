@@ -3,10 +3,12 @@ name: gitnexus-bridge
 layer: L3-ARCHITECTURE
 category: code-intelligence
 version: 1.0.0
+gate: internal
+requires: [code-analysis-request]
+provides: [ast-results, call-chains, impact-analysis, dependency-graph]
 description: GitNexus 深度代码分析引擎桥接层，为 devflow 提供知识图谱驱动的代码智能能力
 dependencies:
   - gitnexus (>=1.6.0)
-  - code-intelligence (fallback)
 triggers:
   - code analysis needed
   - impact analysis requested

@@ -2,6 +2,9 @@
 name: verification-closed-loop
 version: 3.0-draft
 layer: L2-ENGINE
+gate: internal
+requires: [change-applied]
+provides: [verification-passed, verification-failed-report]
 description: Closed-loop verification ensuring every change is validated end-to-end: spec → implement → test → verify → deploy → monitor
 source: superpowers Karpathy rules + GSD verify-phase + OpenSpec verify 3D
 dependencies:

@@ -7,9 +7,13 @@ description: |
   Detects PRD gaps, edge cases, acceptance failures, and blind spots in Phase 4 implementation.
   Use when: "review phase", "two-stage review", "spec compliance check", "adversarial review". (devflow)
 layer: L1-INTERACTION
+phase: 6
+requires: [g6-gate-decision, test-report, coverage-metrics]
+provides: [review-report, fix-recommendations, g7-gate-decision]
 source: 交互层 Three-Layer Adversarial Review + gstack Cross-Model Review (R14) + Two-Stage Spec Compliance
 dependencies:
   - code-quality, spec-compliance
+gate: G7
 triggers:
   - review phase
   - two-stage review

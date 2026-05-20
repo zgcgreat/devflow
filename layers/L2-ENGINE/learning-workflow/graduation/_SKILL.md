@@ -1,7 +1,11 @@
 ---
 name: graduation
-version: 3.1-draft
+version: 3.0-draft
 layer: L2-ENGINE
+gate: internal
+parent: learning-workflow
+requires: [learnings-files, phase-transition]
+provides: [project-patterns, graduation-backlog]
 source: get-shit-done graduation.md (adapted to devflow)
 description: Cross-phase pattern clustering and promotion from LEARNINGS → project-level knowledge
 ---

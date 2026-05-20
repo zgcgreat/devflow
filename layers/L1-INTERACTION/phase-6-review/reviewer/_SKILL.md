@@ -2,12 +2,16 @@
 name: phase-6-reviewer
 preamble-tier: 2
 version: 3.0-draft
+layer: L1-INTERACTION
+phase: 6
+parent: phase-6-review
+gate: G7
+requires: [g6-gate-decision, test-report]
+provides: [review-findings, fix-recommendations]
 description: |
   Three-layer adversarial code review specialist for Phase 6 Review.
   Blind Hunter / Edge Case Hunter / Acceptance Auditor pipeline.
   Defaults to "NEEDS WORK" unless overwhelming evidence proves readiness. (devflow)
-layer: L1-INTERACTION
-parent: phase-6-review
 ---
 
 # Reviewer — Three-Layer Adversarial Code Review
