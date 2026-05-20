@@ -1,6 +1,6 @@
 ---
 name: stage-6-review
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第6阶段 - 三轮代码审查
 author: devflow-kit
 dependencies:

@@ -2,7 +2,7 @@
 name: phase-4-build
 description: Phase 4 构建阶段 — Wave 执行、原子 Task 编码、Verify 验证与 Commit
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 4
 requires: [g4-gate-decision, task-list, wave-plan]

@@ -2,7 +2,7 @@
 name: phase-5-test
 description: Phase 5 测试阶段 — 测试策略制定、测试用例执行、覆盖度验证与 Bug 修复循环
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 5
 requires: [g5-gate-decision, wave-summaries, code-commits]

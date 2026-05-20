@@ -1,6 +1,6 @@
 ---
 name: stage-a-architect
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit可选命令 - 架构梳理与文档化
 author: devflow-kit
 dependencies:

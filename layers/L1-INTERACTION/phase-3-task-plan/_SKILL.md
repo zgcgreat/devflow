@@ -2,7 +2,7 @@
 name: phase-3-task-plan
 description: Phase 3 任务规划 — ADR 映射、Task 拆分、DAG 依赖分析与 Wave 分组
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 3
 requires: [g3.5-gate-decision, design-document]

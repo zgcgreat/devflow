@@ -1,7 +1,7 @@
 ---
 name: learning-workflow
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L2-ENGINE
 gate: internal
 requires: [wave-summaries, execution-data]

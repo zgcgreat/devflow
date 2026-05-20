@@ -1,6 +1,6 @@
 ---
 name: phase-0-yc-strategy
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 0
 description: Apply Y Combinator's due diligence framework to validate project viability before implementation

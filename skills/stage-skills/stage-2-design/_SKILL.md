@@ -1,6 +1,6 @@
 ---
 name: stage-2-design
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第2阶段 - 技术设计与架构决策
 author: devflow-kit
 dependencies:

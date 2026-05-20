@@ -1,7 +1,16 @@
+---
+name: stage-orchestrator
+version: 3.0.0
+deprecated: true
+replaced-by: GO.md direct routing
+description: >-
+  [DEPRECATED] 阶段编排器已被 GO.md 直接路由替代。保留供参考设计。
+---
+
 # devflow-kit Stage Orchestrator（阶段编排器）- DEPRECATED
 
 > ⚠️ **已废弃**：GO.md 直接管理路由，不再需要 orchestrator
-> 
+>
 > **保留原因**：参考设计，未来可能重新启用
 >
 > **当前架构**：SKILL.md → GO.md → Stage Skill（直接）

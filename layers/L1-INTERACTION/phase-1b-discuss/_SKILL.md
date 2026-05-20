@@ -1,7 +1,7 @@
 ---
 name: phase-1b-discuss
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 1b
 gate: G2.5
@@ -63,7 +63,7 @@ Before starting discuss phase, verify ALL of the following:
 
 ```yaml
 name: phase-1b-discuss
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 source: get-shit-done /gsd-discuss-phase
 dependencies:

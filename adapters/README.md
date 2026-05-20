@@ -1,6 +1,6 @@
 ---
 name: adapter-bridge
-version: 3.0-draft
+version: 3.0.0
 layer: L2-ENGINE
 description: Unified runtime bridge that adapts devflow-evo hooks, skills, and configurations to multiple AI coding runtimes (Claude Code, Cursor, Copilot, Codex, Gemini CLI, Windsurf, Kilo, etc.)
 source: get-shit-done Sync Runtime Bridge

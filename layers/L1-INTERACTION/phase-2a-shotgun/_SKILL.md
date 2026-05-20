@@ -1,7 +1,7 @@
 ---
 name: phase-2a-shotgun
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 description: |
   Multi-variant design generation specialist for Phase 2a.
   Generates 4-6 design variants with clear trade-offs and AI recommendation based on maintainability/cost/UX scoring. (devflow-evo)

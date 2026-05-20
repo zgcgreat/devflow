@@ -1,6 +1,6 @@
 ---
 name: stage-a-evolve
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit可选命令 - 架构演进与经验沉淀
 author: devflow-kit
 dependencies:

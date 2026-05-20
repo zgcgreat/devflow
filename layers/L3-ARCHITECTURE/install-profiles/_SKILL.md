@@ -1,6 +1,6 @@
 ---
 name: install-profiles
-version: 3.0-draft
+version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
 requires: [project-type, team-size]

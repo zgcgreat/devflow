@@ -2,7 +2,7 @@
 name: gitnexus-bridge
 layer: L3-ARCHITECTURE
 category: code-intelligence
-version: 1.0.0
+version: 3.0.0
 gate: internal
 requires: [code-analysis-request]
 provides: [ast-results, call-chains, impact-analysis, dependency-graph]

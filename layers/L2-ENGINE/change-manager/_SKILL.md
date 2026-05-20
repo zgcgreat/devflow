@@ -1,6 +1,6 @@
 ---
 name: change-manager
-version: 3.0-draft
+version: 3.0.0
 layer: L2-ENGINE
 gate: internal
 requires: [change-proposal]

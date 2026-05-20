@@ -1,6 +1,6 @@
 ---
 name: stage-0-confirm
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第0阶段 - 需求确认与模式判定
 author: devflow-kit
 dependencies:

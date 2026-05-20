@@ -1,6 +1,6 @@
 ---
 name: anti-rationalization
-version: 3.0-draft
+version: 3.0.0
 layer: L2-ENGINE
 gate: internal
 requires: [pending-decision]

@@ -1,6 +1,6 @@
 ---
 name: stage-i-intel-scan
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit可选命令 - 项目入场扫描与上下文化
 author: devflow-kit
 dependencies:

@@ -1,7 +1,7 @@
 ---
 name: phase-6-reviewer
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 6
 parent: phase-6-review

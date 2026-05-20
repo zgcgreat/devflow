@@ -1,6 +1,6 @@
 ---
 name: stage-3-task
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第3阶段 - 任务拆分与并行规划
 author: devflow-kit
 dependencies:

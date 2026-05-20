@@ -1,7 +1,7 @@
 ---
 name: provider-gateway
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
 requires: [task-types, cost-constraints]

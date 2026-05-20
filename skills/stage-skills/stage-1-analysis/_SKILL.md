@@ -1,6 +1,6 @@
 ---
 name: stage-1-analysis
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第1阶段 - 需求分析与AC拆解
 author: devflow-kit
 dependencies:

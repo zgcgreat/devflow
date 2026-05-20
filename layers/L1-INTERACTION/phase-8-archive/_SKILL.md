@@ -1,7 +1,7 @@
 ---
 name: phase-8-archive
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 8
 requires: [g7.5-gate-decision, canary-report]
@@ -71,7 +71,7 @@ Before starting archive phase, verify ALL of the following:
 
 ```yaml
 name: phase-8-archive
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION (collaborates with L2-ENGINE for knowledge archival; L3 access via L2 only)
 source: 交互层 Phase 8 + 引擎层 LearningWorkflow + 架构层 Memory Manager
 dependencies:

@@ -1,6 +1,6 @@
 ---
 name: l3-architecture-index
-version: 3.0-draft
+version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
 requires: [l2-engine-output]

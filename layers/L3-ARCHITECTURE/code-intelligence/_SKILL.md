@@ -1,6 +1,6 @@
 ---
 name: code-intelligence
-version: 3.0-draft
+version: 3.0.0
 layer: L3-ARCHITECTURE
 deprecated: true
 replaced-by: gitnexus-bridge

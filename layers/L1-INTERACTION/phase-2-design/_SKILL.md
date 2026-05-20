@@ -2,7 +2,7 @@
 name: phase-2-design
 description: Phase 2 设计阶段 — 架构设计、技术选型、API 定义与设计文档输出
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 2
 requires: [g2.5-gate-decision, context-md, analysis-md]
@@ -35,7 +35,7 @@ allowed-tools:
 
 ```yaml
 name: phase-2-design
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 source: 交互层 Phase 2 + 架构层 DAG Routing
 dependencies:

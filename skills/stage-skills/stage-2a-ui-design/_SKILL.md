@@ -1,6 +1,6 @@
 ---
 name: stage-2a-ui-design
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第2a阶段 - UI设计与交互规范
 author: devflow-kit
 dependencies:

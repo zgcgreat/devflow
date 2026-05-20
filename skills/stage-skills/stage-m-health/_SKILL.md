@@ -1,6 +1,6 @@
 ---
 name: stage-m-health
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit可选命令 - 项目健康检查
 author: devflow-kit
 dependencies:

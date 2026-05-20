@@ -1,7 +1,7 @@
 # Spec-Driven Development (SDD) 集成
 
 > **状态**: Draft
-> **版本**: v3.0-draft
+> **版本**: v3.0.0
 > **创建日期**: 2026-05-20
 
 ## 概述

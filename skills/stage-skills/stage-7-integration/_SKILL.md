@@ -1,6 +1,6 @@
 ---
 name: stage-7-integration
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第7阶段 - 集成发布与回滚方案
 author: devflow-kit
 dependencies:

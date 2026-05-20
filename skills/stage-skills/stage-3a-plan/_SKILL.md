@@ -1,6 +1,6 @@
 ---
 name: stage-3a-plan
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第3a阶段 - 详细实施计划生成
 author: devflow-kit
 dependencies:

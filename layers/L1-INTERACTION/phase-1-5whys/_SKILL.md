@@ -1,6 +1,6 @@
 ---
 name: phase-1-5whys
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 1
 description: Apply the "5 Whys" root cause analysis technique to uncover true user needs beneath surface-level requests

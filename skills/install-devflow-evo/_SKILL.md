@@ -1,7 +1,7 @@
 ---
 name: install-devflow-evo
 description: 自动安装和初始化 DevFlow Evo 到当前项目。当用户想要开始使用 DevFlow Evo 时触发。
-version: 3.0-draft
+version: 3.0.0
 phase: setup
 triggers:
   - 用户说"安装 devflow-evo"

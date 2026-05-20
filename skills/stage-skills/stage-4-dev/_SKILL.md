@@ -1,6 +1,6 @@
 ---
 name: stage-4-dev
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第4阶段 - 按任务执行开发
 author: devflow-kit
 dependencies:

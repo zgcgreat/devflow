@@ -1,7 +1,7 @@
 ---
 name: parallel-engine
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
 requires: [wave-plan, provider-chains]
@@ -40,7 +40,7 @@ allowed-tools:
 
 ```yaml
 name: parallel-engine
-version: 3.0
+version: 3.0.0
 layer: L3-ARCHITECTURE
 source: DAG-based wave scheduling from L2 wave-executor + L3 dag-router, error recovery from GSD
 dependencies:

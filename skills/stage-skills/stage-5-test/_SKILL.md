@@ -1,6 +1,6 @@
 ---
 name: stage-5-test
-version: 1.0.0
+version: 3.0.0
 description: devflow-kit工作流第5阶段 - 测试验证与报告生成
 author: devflow-kit
 dependencies:

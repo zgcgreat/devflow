@@ -1,6 +1,6 @@
 ---
 name: mcp-protocol
-version: 3.0-draft
+version: 3.0.0
 layer: L3-ARCHITECTURE
 description: MCP (Model Context Protocol) integration layer exposing devflow-evo capabilities as MCP tools for any MCP-compatible runtime
 source: GitNexus MCP Server + GSD Sync Bridge

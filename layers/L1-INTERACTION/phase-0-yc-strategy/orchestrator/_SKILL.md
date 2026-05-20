@@ -1,7 +1,7 @@
 ---
 name: orchestrator
 preamble-tier: 2
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 0
 parent: phase-0-yc-strategy

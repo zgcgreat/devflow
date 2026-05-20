@@ -540,7 +540,7 @@ Mode: <Fast/Standard/Strict>
 
 ## 版本
 
-### v3.0-draft (2026-05-17)
+### v3.0.0 (2026-05-17)
 - **三层架构路由**: Layer 1 → Layer 3 → Layer 2 决策树
 - **12步执行流程**: Step 1(状态) → Step 2(入场) → Step 3(GitNexus) → Phase 0-8
 - **GitNexus可选检测协议**: detect → prompt → grep fallback (Step 3)

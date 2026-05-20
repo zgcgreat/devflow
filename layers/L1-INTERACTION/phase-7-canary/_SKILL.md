@@ -1,6 +1,6 @@
 ---
 name: phase-7-canary
-version: 3.0-draft
+version: 3.0.0
 layer: L1-INTERACTION
 phase: 7
 description: Deploy changes in staged batches (10% → 50% → 100%) with automatic health checks and rollback on threshold breach

@@ -1,6 +1,6 @@
 ---
 name: devflow-evo
-version: 3.0-draft
+version: 3.0.0
 description: |
   AI programming workflow v3.0 — zero-config, zero-threshold, zero-dependency.
   Three-layer pyramid: 交互层 + 引擎层 + 架构层.
@@ -631,7 +631,7 @@ Phase 4: + L2/wave-executor/_SKILL.md + L1/phase-4-build/_SKILL.md (按需加载
 
 ## 版本历史
 
-### v3.0-draft (2026-05-17)
+### v3.0.0 (2026-05-17)
 - **三层金字塔架构**: 交互层 + 引擎层 + 架构层
 - **五大独有能力**: LearningWorkflow自进化 / Provider路由 / Agent隔离 / 设计枪战 / Canary发布
 - **零配置入口**: 加载SKILL.md → 一句话需求 → 自动执行

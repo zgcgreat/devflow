@@ -1,6 +1,6 @@
 ---
 name: model-selection-strategy
-version: 3.0-draft
+version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
 requires: [task-type, complexity-assessment]
