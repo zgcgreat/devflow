@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevFlow-Evo v3.2 架构详细流程图</title>
+<style>
+  :root {
+    --l1-color: #e74c3c;
+    --l2-color: #3498db;
+    --l3-color: #2ecc71;
+    --gate-color: #f39c12;
+    --bg: #0a0a0f;
+    --card-bg: #12121a;
+    --text: #e0e0e0;
+    --border: #2a2a3a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.6;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  }
+  .header h1 {
+    font-size: 28px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    color: #888;
+    font-size: 14px;
+  }
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+  }
+  .pyramid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .layer-section {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .layer-header {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .layer-header h2 {
+    font-size: 18px;
+    color: #fff;
+  }
+  .layer-header .layer-badge {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+  .l1 .layer-header { background: linear-gradient(135deg, #c0392b22, #e74c3c11); }
+  .l1 .layer-badge { background: var(--l1-color); color: #fff; }
+  .l2 .layer-header { background: linear-gradient(135deg, #2980b922, #3498db11); }
+  .l2 .layer-badge { background: var(--l2-color); color: #fff; }
+  .l3 .layer-header { background: linear-gradient(135deg, #27ae6022, #2ecc7111); }
+  .l3 .layer-badge { background: var(--l3-color); color: #fff; }
+  .layer-body {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .phase-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .phase-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .phase-card .phase-num {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-bottom: 4px;
+  }
+  .phase-card .phase-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+  }
+  .phase-card .phase-desc {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+  }
+  .gate-section {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+  .gate-badge {
+    background: linear-gradient(135deg, #f39c1222, #e67e2211);
+    border: 1px solid var(--gate-color);
+    color: var(--gate-color);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .flow-diagram {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 30px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .flow-diagram h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  .flow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .flow-node {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .flow-arrow {
+    color: #555;
+    font-size: 16px;
+  }
+  .flow-l1 { background: var(--l1-color); }
+  .flow-l2 { background: var(--l2-color); }
+  .flow-l3 { background: var(--l3-color); }
+  .flow-gate { background: var(--gate-color); }
+  .flow-start { background: #8e44ad; }
+  .flow-end { background: #34495e; }
+  .mode-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 30px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .mode-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+  }
+  .mode-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .mode-card h3 {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .mode-card .mode-conditions {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: var(--card-bg);
+    border-radius: 4px;
+  }
+  .mode-card .mode-steps {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .mode-card .mode-steps span {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px;
+    font-size: 10px;
+  }
+  .step-done { background: #2ecc7133; color: #2ecc71; }
+  .step-skip { background: #34495e33; color: #555; text-decoration: line-through; }
+  .step-active { background: #f39c1233; color: #f39c12; }
+  .collapsible {
+    cursor: pointer;
+    user-select: none;
+  }
+  .collapsible:hover { opacity: 0.8; }
+  .collapsible::after {
+    content: ' ▼';
+    font-size: 10px;
+  }
+  .collapsed .detail {
+    display: none;
+  }
+  .detail {
+    margin-top: 10px;
+    padding: 10px;
+    background: var(--bg);
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  @media (max-width: 768px) {
+    .layer-body { grid-template-columns: 1fr; }
+    .mode-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏗️ DevFlow-Evo v3.2 架构详细流程图</h1>
+  <div class="subtitle">三层金字塔架构 | 四档模式路由 | 选择题交互模式 | 零配置·零门槛·零依赖</div>
+</div>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-dot" style="background: var(--l1-color);"></div>
+    <span>Layer 1: 交互层</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background: var(--l2-color);"></div>
+    <span>Layer 2: 引擎层</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background: var(--l3-color);"></div>
+    <span>Layer 3: 架构层</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background: var(--gate-color);"></div>
+    <span>阶段门</span>
+  </div>
+</div>
+
+<div class="pyramid-container">
+  <!-- Layer 1: 交互层 -->
+  <div class="layer-section l1">
+    <div class="layer-header">
+      <h2>🎨 Layer 1: 交互层 — 零门槛入口</h2>
+      <span class="layer-badge">PHASE 0-8</span>
+    </div>
+    <div class="layer-body">
+      <div class="phase-card">
+        <div class="phase-num">PHASE 0</div>
+        <div class="phase-name">YC六问战略评估</div>
+        <div class="phase-desc">6个尖锐问题验证需求真伪</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 1</div>
+        <div class="phase-name">5 Whys需求追问</div>
+        <div class="phase-desc">穷追模糊表述</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 1b</div>
+        <div class="phase-name">决策捕获 (Discuss)</div>
+        <div class="phase-desc">技术选型 + CONTEXT.md生成</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 2</div>
+        <div class="phase-name">方案设计</div>
+        <div class="phase-desc">DAG路由 + Provider选择</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 2a</div>
+        <div class="phase-name">⚡ 设计枪战</div>
+        <div class="phase-desc">4-6方案变体生成，用户选最优</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 3</div>
+        <div class="phase-name">任务拆分</div>
+        <div class="phase-desc">拓扑排序 + 依赖图</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 4</div>
+        <div class="phase-name">实施</div>
+        <div class="phase-desc">Wave并行执行</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 5</div>
+        <div class="phase-name">测试</div>
+        <div class="phase-desc">浏览器QA + 交叉波测试</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 6</div>
+        <div class="phase-name">⚡ 三层对抗审查</div>
+        <div class="phase-desc">Blind Hunter / Edge Case / Auditor</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 7</div>
+        <div class="phase-name">⚡ Canary灰度集成</div>
+        <div class="phase-desc">分批次上线 + 自动回滚</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PHASE 8</div>
+        <div class="phase-name">知识归档</div>
+        <div class="phase-desc">LESSONS nomination + Domain Skills</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gates -->
+  <div class="gate-section">
+    <div class="gate-badge">G1: Plan Quality</div>
+    <div class="gate-badge">G2.5: Decision Clarity</div>
+    <div class="gate-badge">G3: Analysis Complete</div>
+    <div class="gate-badge">G3.5: Design Clear</div>
+    <div class="gate-badge">G4: Phase Gates</div>
+    <div class="gate-badge">G5: Integration</div>
+    <div class="gate-badge">G6: Code Quality</div>
+    <div class="gate-badge">G7: Test Pass</div>
+    <div class="gate-badge">G7.5: Review Pass</div>
+    <div class="gate-badge">G8: Canary Pass</div>
+  </div>
+
+  <!-- Layer 2: 引擎层 -->
+  <div class="layer-section l2">
+    <div class="layer-header">
+      <h2>⚙️ Layer 2: 引擎层 — 持续进化核心</h2>
+      <span class="layer-badge">ENGINE</span>
+    </div>
+    <div class="layer-body">
+      <div class="phase-card">
+        <div class="phase-num">GSD</div>
+        <div class="phase-name">六命令闭环</div>
+        <div class="phase-desc">wave并行 + 拓扑排序 + 原子提交</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">⭐ LEARNING</div>
+        <div class="phase-name">LearningWorkflow</div>
+        <div class="phase-desc">失败教训→LESSONS→跨波注入</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PARTY</div>
+        <div class="phase-name">PartyMode共识</div>
+        <div class="phase-desc">多Agent讨论，投票达成共识</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">TOKEN</div>
+        <div class="phase-name">Token压缩引擎</div>
+        <div class="phase-desc">4级(lite/full/ultra/extreme)，最高~90%节省</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 3: 架构层 -->
+  <div class="layer-section l3">
+    <div class="layer-header">
+      <h2>🏛️ Layer 3: 架构层 — 企业级编排</h2>
+      <span class="layer-badge">ARCHITECTURE</span>
+    </div>
+    <div class="layer-body">
+      <div class="phase-card">
+        <div class="phase-num">DAG</div>
+        <div class="phase-name">DAG依赖路由</div>
+        <div class="phase-desc">Topological sort (Kahn算法)，依赖感知并行</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">⭐ PROVIDER</div>
+        <div class="phase-name">Provider智能网关</div>
+        <div class="phase-desc">多模型按需路由：创意→编码→审查</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">⭐ AGENT</div>
+        <div class="phase-name">Agent上下文隔离</div>
+        <div class="phase-desc">Orchestrator(~50K) / Research(~200K) / Execution(~200K)</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">PARALLEL</div>
+        <div class="phase-name">并行执行引擎</div>
+        <div class="phase-desc">~4.4x-5x 加速比</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">MCP</div>
+        <div class="phase-name">MCP集成</div>
+        <div class="phase-desc">编辑器直连</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 执行管线流程图 -->
+<div class="flow-diagram">
+  <h2>🔄 v3.2 执行管线流程图</h2>
+  <div class="flow-row">
+    <div class="flow-node flow-start">用户输入</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-l1">Step 0.5: 模式预判定</div>
+  </div>
+  <div class="flow-row">
+    <span class="flow-arrow">↓</span>
+  </div>
+  <div class="flow-row">
+    <div class="flow-node flow-l1">Step 1: 读取项目状态</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-l1">Step 1.5: 模式确认</div>
+  </div>
+  <div class="flow-row">
+    <span class="flow-arrow">↓</span>
+  </div>
+  <div class="flow-row">
+    <div class="flow-node flow-l1">Step 2: 入场检测</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-l1">Step 3: GitNexus检测</div>
+  </div>
+  <div class="flow-row">
+    <span class="flow-arrow">↓</span>
+  </div>
+  <div class="flow-row">
+    <div class="flow-node flow-l1">Phase 0: YC六问</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-gate">G1</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-l1">Phase 1: 5 Whys</div>
+  </div>
+  <div class="flow-row">
+    <span class="flow-arrow">↓</span>
+  </div>
+  <div class="flow-row">
+    <div class="flow-node flow-l1">Phase 1b: 决策捕获</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-gate">G2.5</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-l1">Phase 2: 方案设计</div>
+  </div>
+  <div class="flow-row">
+    <span class="flow-arrow">↓</span>
+  </div>
+  <div class="flow-row">
+    <div class="flow-node flow-l1">Phase 2a: 设计枪战</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-gate">G3.5</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-l3">Phase 3: 任务拆分</div>
+  </div>
+  <div class="flow-row">
+    <span class="flow-arrow">↓</span>
+  </div>
+  <div class="flow-row">
+    <div class="flow-node flow-l2">Phase 4: 实施 (Wave并行)</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-gate">G6</div>
+  </div>
+  <div class="flow-row">
+    <span class="flow-arrow">↓</span>
+  </div>
+  <div class="flow-row">
+    <div class="flow-node flow-l3">Phase 5: 测试</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-gate">G7</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-l1">Phase 6: 三层对抗审查</div>
+  </div>
+  <div class="flow-row">
+    <span class="flow-arrow">↓</span>
+  </div>
+  <div class="flow-row">
+    <div class="flow-node flow-gate">G7.5</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-l1">Phase 7: Canary发布</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-gate">G8</div>
+  </div>
+  <div class="flow-row">
+    <span class="flow-arrow">↓</span>
+  </div>
+  <div class="flow-row">
+    <div class="flow-node flow-l2">Phase 8: 知识归档</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node flow-end">完成 ✓</div>
+  </div>
+</div>
+
+<!-- 四档模式路由 -->
+<div class="mode-section">
+  <h2>🎯 四档模式路由矩阵</h2>
+  <div class="mode-grid">
+    <div class="mode-card">
+      <h3 style="color: var(--l1-color);">⚡ Fast 模式</h3>
+      <div class="mode-conditions">≤2文件 · <50行 · 低风险 · 需求明确</div>
+      <div class="mode-steps">
+        <span class="step-skip">Phase 0</span>
+        <span class="step-skip">Phase 1</span>
+        <span class="step-skip">Phase 2</span>
+        <span class="step-active">Phase 4</span>
+        <span class="step-active">Phase 5 (窄验证)</span>
+        <span class="step-active">Phase 6 (自检)</span>
+        <span class="step-skip">Phase 7-8</span>
+      </div>
+    </div>
+    <div class="mode-card">
+      <h3 style="color: #9b59b6;">🚀 Lean 模式</h3>
+      <div class="mode-conditions">≤5文件 · <300行 · brownfield明确需求</div>
+      <div class="mode-steps">
+        <span class="step-skip">Phase 0</span>
+        <span class="step-skip">Phase 1</span>
+        <span class="step-active">Phase 2 (轻量)</span>
+        <span class="step-skip">Phase 2a</span>
+        <span class="step-skip">Phase 3</span>
+        <span class="step-active">Phase 4</span>
+        <span class="step-active">Phase 5 (窄验证)</span>
+        <span class="step-active">Phase 6 (自检)</span>
+        <span class="step-active">Phase 8</span>
+      </div>
+    </div>
+    <div class="mode-card">
+      <h3 style="color: var(--l2-color);">📋 Standard 模式</h3>
+      <div class="mode-conditions">≤10文件 · <500行 · 常规feature</div>
+      <div class="mode-steps">
+        <span class="step-active">Phase 0 (条件跳过)</span>
+        <span class="step-active">Phase 1 (条件跳过)</span>
+        <span class="step-active">Phase 2</span>
+        <span class="step-skip">Phase 2a</span>
+        <span class="step-active">Phase 3 (条件)</span>
+        <span class="step-active">Phase 4</span>
+        <span class="step-active">Phase 5</span>
+        <span class="step-active">Phase 6</span>
+        <span class="step-active">Phase 7</span>
+        <span class="step-active">Phase 8</span>
+      </div>
+    </div>
+    <div class="mode-card">
+      <h3 style="color: var(--l3-color);">🔒 Strict 模式</h3>
+      <div class="mode-conditions">>3模块 / 架构变更 / 数据模型 / 公开API</div>
+      <div class="mode-steps">
+        <span class="step-active">Phase 0</span>
+        <span class="step-active">Phase 1</span>
+        <span class="step-active">Phase 2</span>
+        <span class="step-active">Phase 2a</span>
+        <span class="step-active">Phase 3</span>
+        <span class="step-active">Phase 4</span>
+        <span class="step-active">Phase 5</span>
+        <span class="step-active">Phase 6</span>
+        <span class="step-active">Phase 7</span>
+        <span class="step-active">Phase 8</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 选择题交互模式 -->
+<div class="flow-diagram">
+  <h2>💬 v3.2 选择题交互模式</h2>
+  <div class="detail collapsible" onclick="this.parentElement.classList.toggle('collapsed')">
+    <div class="phase-num" style="margin-bottom:10px;">标准交互四步流</div>
+    <div style="line-height:2;">
+      <strong>① 批量展示进度：</strong> 先展示全局进度面板<br>
+      <strong>② 逐个提问：</strong> 每次只提一个问题<br>
+      <strong>③ 预设选项：</strong> 每题 3-4 个 A/B/C/D 选项 + [D]其他<br>
+      <strong>④ 更新+门控：</strong> 更新进度 → 用户选择 → 进入下一步<br>
+      <br>
+      <em>示例：</em><br>
+      <code>[1/6] ● done [2/6] ○ pending [3/6] ○ pending ...</code><br>
+      <code>问题 2/6: 用户想实现什么？</code><br>
+      <code>[A] 提升性能 (当前方案需要优化)</code><br>
+      <code>[B] 修复Bug (已有明确问题)</code><br>
+      <code>[C] 新增功能 (完全新功能)</code><br>
+      <code>[D] 其他...</code>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

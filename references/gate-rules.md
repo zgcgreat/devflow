@@ -1,7 +1,7 @@
-# 阶段门验证规则 (v3.0)
+# 阶段门验证规则 (v3.2) ⭐v3.2
 
 > 本文件是 GO.md 第四步的详细展开，由 GO.md 按需加载。
-> **版本**: v3.0 — 与 devflow-evo Phase 0-8 和 G0-G8 Gate 编号体系对齐
+> **版本**: v3.2 — 选择题交互模式 + Lean 模式例外规则
 
 ## 阶段依赖关系图
 
@@ -30,6 +30,7 @@ G0:Strategy  G1:5Whys   G2.5:Discuss  G3:Design   G3.5:Shotgun  G4:TaskPlan
 - Phase 2a (G3.5) 设计枪战可选，仅复杂设计需要
 - Phase 7 (G7.5) Canary 门控为全量发布的硬性前置
 - Fast 模式可跳过 Phase 0~3，直接进入 Phase 4（需满足条件）
+- Lean 模式可跳过 Phase 0~2a，进入 Phase 2 轻量方案设计或直接 Phase 4 ⭐v3.1
 
 ---
 
@@ -66,6 +67,47 @@ Fast 模式允许跳过 Phase 0 到 Phase 3 之间的产物，但必须满足：
 ✅ verify 命令：<具体命令>
 ✅ 预期结果：<通过标准>
 ```
+
+---
+
+## Lean 模式例外 ⭐v3.1
+
+Lean 模式允许跳过 Phase 0 到 Phase 2a 之间的产物，但必须满足：
+
+1. AI 已在路由声明中明确判定为 Lean 模式
+2. 改动确实 3~5 文件、50-300 行、不涉及架构/数据模型
+3. 用户未反对该判定
+4. **必须提供轻量方案设计（1段描述）**
+
+**Lean 模式允许的 Phase 跳过**：
+
+| Phase | 产物 | Lean 行为 |
+|-------|------|----------|
+| Phase 0 (YC六问) | `00-strategy.md` | ⏭️ 跳过 |
+| Phase 1 (5 Whys) | `01-analysis.md` | ⏭️ 跳过 |
+| Phase 1b (Discuss) | `01b-context.md` | ⏭️ 跳过 |
+| Phase 2 (Design) | `02-design.md` | ✅ 轻量版（1段方案描述，非完整设计文档） |
+| Phase 2a (Shotgun) | `02a-variants.md` | ⏭️ 跳过 |
+| Phase 3 (Task Plan) | `03-tasks.md` | ⏭️ 跳过（Lean 直接开发） |
+| Phase 4 (Build) | 开发日志 | ✅ 直接开始 |
+| Phase 5 (Test) | 测试 | ✅ 窄验证 |
+| Phase 6 (Review) | 审查 | ✅ 自检清单 |
+| Phase 7-8 | 归档 | ✅ 归档到 LESSONS |
+
+**Lean 模式路由声明必须包含**：
+```
+✅ 模式：Lean
+✅ 改动范围：<文件列表，3~5个>
+✅ 轻量方案：<1段描述，说明改什么、怎么改>
+✅ verify 命令：<具体命令>
+✅ 预期结果：<通过标准>
+```
+
+**Lean → Standard 升级条件**（命中任一即升级）：
+- 实际改动文件数 > 5
+- 涉及架构/数据模型变更
+- 需求模糊需要追问
+- 用户要求更严格的审查
 
 ---
 

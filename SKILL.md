@@ -1,645 +1,205 @@
 ---
 name: devflow-evo
-version: 3.0.0
+version: 3.2.0
 description: |
-  AI programming workflow v3.0 — zero-config, zero-threshold, zero-dependency.
-  Three-layer pyramid: 交互层 + 引擎层 + 架构层.
-
-  Use when: (1) Starting any dev task, (2) User says "use devflow-evo" or "v3",
-  (3) Need structured workflow with auto-routing, learning evolution, and parallel execution.
-
-  Core: Load this file once → read GO.md for routing → execute layered pipeline.
-  GitNexus optional: detect → install prompt → grep fallback if missing.
-
-Architecture: Skill in E:\LLM\skills\devflow-evo, projects only get .devflow-evo/ artifacts.
+  AI programming workflow v3.0 — 零配置·零门槛·零依赖
+  三层架构: 交互层 → 引擎层 → 架构层
+  使用: 加载本文件 → AI自动路由执行。扩展规则在 references/ 中按需加载。
 ---
 
-# Devflow-Evo v3.0 — AI 编程工作流系统
+# Devflow-Evo v3.0 — AI 编程工作流
 
-> **零配置 · 零门槛 · 零依赖**  
-> 三层架构：交互层 → 引擎层 → 架构层  
-> GitNexus 可选检测，不装不影响流程。
-> *(evo = evolution)*
+> **强制声明**：以下规则 AI 必须遵守。不遵守 = 流程失效。
 
-## 🚀 三步启动
+## 🔒 AI 行为约束（强制）
 
-```
-1. AI加载本 SKILL.md          ← 一次读取
-2. 用户说一句话需求             ← "帮我做个登录页"
-3. AI自动 GO.md 路由并执行    ← Layer 1 → Layer 2 → Layer 3
-```
+1. **先路由，后执行**：第一条回复必须是路由声明（模式 + 理由 + 流程裁剪）
+2. **渐进式披露**：禁止一次性加载全部文件。只加载当前 Phase 所需内容
+3. **停等确认**：模式选择、入场检测 D/E、G1/G2 门控未通过 → 必须等用户确认
+4. **产物按模板**：所有产出必须使用模板格式（R19），禁止自由发挥
+5. **不跳过 Phase**：Fast/Lean 允许跳过指定 Phase，Standard/Strict 禁止随意跳过
+6. **先读后改**：修改文件前必须先 `read_file` 确认当前内容
+7. **Token 监控**：>70% 自动压缩，>90% 暂停等待确认
+8. **不隐瞒错误**：工具调用失败、数据缺失、接口报错 → 立即告知用户
+9. **禁止一次性抛问题** ⭐v3.2：Phase 0/1/1b 禁止一次性列出所有问题让用户自己组织答案，必须采用「批量展示 + 逐个选择题」模式
+10. **交互进度可视化** ⭐v3.2：每个 Phase 结束前必须输出进度面板（已完成/进行中/未开始）+ 门控状态
 
 ---
 
-## 🏗️ 三层架构总览
-
-### Layer 1: 交互层 — 零门槛入口
-
-Phase 0-8 全流程，Markdown Skill 驱动：
-
-| Phase | 名称 | 核心能力 |
-|-------|------|---------|
-| 0 | YC六问战略评估 | 尖锐问题验证需求真伪 |
-| 1 | 需求追问 (5 Whys) | 穷追模糊表述 |
-| 2 | 方案设计 | DAG路由 + Provider选择 |
-| 2a | **设计枪战** ⭐ | 4-6方案变体生成，用户选最优 |
-| 3 | 任务拆分 | 拓扑排序 + 依赖图 |
-| 4 | 实施 | Wave并行执行 |
-| 5 | 测试 | 浏览器QA + 交叉波测试 |
-| 6 | **三层对抗审查** ⭐ | Blind Hunter / Edge Case Hunter / Acceptance Auditor |
-| 7 | **Canary灰度集成** ⭐ | 分批次上线 + 自动回滚 |
-| 8 | 知识归档 | LESSONS nomination + Domain Skills Promotion |
-
-### Layer 2: 引擎层 — 持续进化核心
-
-| 组件 | 能力 |
-|------|------|
-| **GSD六命令闭环** | wave并行 + 拓扑排序 + 原子提交 |
-| **LearningWorkflow** ⭐ | 失败教训提取 → LESSONS沉淀 → 跨波经验注入 |
-| **PartyMode共识** | 多Agent讨论，投票达成共识 |
-| **Token压缩引擎** | 4级(lite/full/ultra/extreme)，最高~90%节省 |
-
-### Layer 3: 架构层 — 企业级编排
-
-| 组件 | 能力 |
-|------|------|
-| **DAG依赖路由** | Topological sort (Kahn算法)，依赖感知并行 |
-| **Provider智能网关** ⭐ | 多模型按需路由：创意→高创造，编码→高代码，审查→高分析 |
-| **Agent上下文隔离** ⭐ | Orchestrator(~50K) / Research(~200K) / Execution(~200K)，防context rot |
-| **并行执行引擎** | ~4.4x-5x 加速比 |
-| **MCP集成** | 编辑器直连 |
-
----
-
-## ⭐ v3.0 五大独有能力
-
-### 1. LearningWorkflow 自动进化
-
-系统越用越强。每次 Phase 执行后：
-- 提取失败教训 → 写入 `memory/LESSONS.md`
-- 沉淀领域技能 → `memory/domain-skills/`
-- Wave N+1 启动时自动加载相关经验（跨波上下文读取协议）
-
-### 2. Provider 智能路由
-
-根据任务类型自动选择最佳模型：
-- **创意类** (设计/文案) → 高创造力模型
-- **编码类** (Phase 4) → 高代码能力模型
-- **审查类** (Phase 6) → 高分析能力模型
-- **搜索类** (Phase 1) → 高检索能力模型
-- **简单任务** → lite 模型节省成本
-
-### 3. 分层 Agent 上下文隔离
-
-每层Agent有独立新鲜上下文窗口，避免 context rot：
-- **Orchestrator**: ~50K tokens 全局上下文
-- **Research Agent**: ~200K tokens Phase 1/2 纯新鲜上下文
-- **Execution Agent**: ~200K tokens Phase 4 Wave级新鲜上下文
-
-### 4. 设计枪战变体生成
-
-Phase 2a 自动生成 4-6 个设计方案变体：
-- 每个标注优缺点和风险评估
-- AI 推荐最优选项并说明理由
-- 用户选择或组合 → 最终方案
-- 防决策疲劳
-
-### 5. Canary 灰度发布
-
-Phase 7 分批次上线：10% → 50% → 100%
-- 每批间隔自动健康检查
-- 异常自动回滚
-- 零停机部署
-
----
-
-## 🔄 v3.0 执行管线
-
-```
-用户输入（一句话需求）
-        │
-        ▼
-┌──────────────────────┐     Layer 1: 交互层
-│ Phase 0: YC六问      │ ← 战略评估，6个尖锐问题
-│ Phase 1: 5 Whys追问  │ ← 消除模糊表述
-└──────────┬───────────┘
-           │ 通过 G1 (Plan Quality)
-           ▼
-┌──────────────────────┐     Layer 1 → Layer 2: 决策捕获 ⭐v3新增
-│ Phase 1b: Discuss    │ ← 技术选型确认 + CONTEXT.md生成
-└──────────┬───────────┘
-           │ 通过 G2.5 (Decision Clarity)
-           ▼
-┌──────────────────────┐     Layer 3: 架构层
-│ Phase 2: 方案设计    │ ← DAG路由 + Provider选择
-│ Phase 2a: 设计枪战   │ ← 4-6变体生成，用户选最优 ⭐
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐     Layer 3 → Layer 2
-│ Phase 3: 任务拆分    │ ← DAG拓扑排序 + 依赖图
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐     Layer 2: 引擎层
-│ Phase 4: 实施        │ ← Wave并行 + Learning自进化 ⭐
-│                  ↑    │ ← PartyMode共识（复杂任务）
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐     Layer 3: 架构层 QA
-│ Phase 5: 测试        │ ← 浏览器QA + 交叉波测试矩阵
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐     Layer 1: 对抗审查 ⭐
-│ Phase 6: 三层审查    │ ← Blind Hunter / Edge Case / Auditor
-└──────────┬───────────┘
-           │ 通过 G5 (Integration)
-           ▼
-┌──────────────────────┐     Layer 1: Canary发布 ⭐
-│ Phase 7: Canary发布  │ ← 10%→50%→100% + 自动回滚
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐     Layer 2+3: 知识沉淀
-│ Phase 8: 归档        │ ← LESSONS → Domain Skills
-└──────────────────────┘
-```
-
----
-
-## 🔧 GitNexus 可选检测协议
-
-**何时触发**: Stage 1 (分析) 和 Stage 6 (审查)
-
-```
-检测: gitnexus --version
-  ├─ ✅ 成功 → 启用高级代码理解（调用链/依赖追踪）
-  └─ ❌ 失败 → 弹出一次性提示：
-
-  ┌─────────────────────────────────────┐
-  │ ⚠️ GitNexus 未检测到                 │
-  │                                     │
-  │ GitNexus提供增强代码理解能力          │
-  │                                     │
-  │ [1] 现在安装（推荐）                 │
-  │ [2] 跳过本次会话                    │
-  │ [3] 永久使用 grep 降级              │
-  └─────────────────────────────────────┘
-
-降级能力:
-  ✅ 文件搜索 (glob+grep)
-  ⚠️ 调用链分析 (grep -rn)
-  🟡 依赖影响追踪 (静态分析)
-```
-
----
-
-## 🎯 模式判定（三档 - 量化标准）
+## ⚡ 四档模式判定
 
 | 模式 | 触发条件 | 流程 |
 |------|---------|------|
-| **Fast** | 文件数 ≤3 且总变更 <50 行且影响模块 ≤1 | 直接开发 → 窄验证 |
-| **Standard** | 文件数 ≤10 且总变更 <500 行且影响模块 ≤3（不满足 Fast/Strict） | Phase 0→1→2→4→5→6 (跳过 2a) |
-| **Strict** | 满足以下任一：(a) 影响模块 >3 (b) 新增核心架构 (c) 数据模型变更 (d) 公开 API 变更 | Phase 0→1→2→2a→3→4→5→6→7→8 |
+| **Fast** | ≤2 文件, <50 行, 影响 ≤1 模块 | Phase 4 直接开发 → Phase 5/6 窄验证 |
+| **Lean** | ≤5 文件, <300 行, 不涉及架构/数据模型 | Phase 2(轻量) → 4 → 5/6 窄验证 → 自检 |
+| **Standard** | ≤10 文件, <500 行, 影响 ≤3 模块 | Phase 0→1→2→4→5→6（可条件跳过 0/1） |
+| **Strict** | 影响 >3 模块 / 新增核心架构 / 数据模型变更 / 公开 API 变更 | Phase 0→1→2→2a→3→4→5→6→7→8 全量执行 |
 
-> **降级规则**：Standard 项目中若 Phase 2 检测到 ≥2 个架构层变更 → 自动升级 Strict
-> **升级规则**：Fast 项目中实际变更 >50 行 → Phase 5 后自动升级后续流程为 Standard
+> **默认推荐 Standard**。实际执行中若变更超出预期 → 自动升级模式。
 
 ---
 
-## 🔍 入场检测协议（增强版 - 6种情况判定）
+## 🔄 Phase 执行管线
 
-**执行时机**: Phase 0战略评估开始前强制执行
+```
+Phase 0: YC六问战略评估        (Standard/Strict 可条件跳过)
+Phase 1: 5 Whys需求追问       (Standard/Strict 可条件跳过)
+Phase 2: 方案设计              (Lean: 轻量1段描述)
+Phase 2a: 设计枪战 4-6变体    (前端/UI必跑，其他推荐)
+Phase 3: 任务拆分 DAG         (Strict必跑)
+Phase 4: 实施 Wave并行        (所有模式必跑)
+Phase 5: 测试验证             (Fast/Lean: 窄验证)
+Phase 6: 三层对抗审查          (Fast/Lean: 自检清单)
+Phase 7: Canary灰度发布       (Standard/Strict)
+Phase 8: 知识归档              (Standard/Strict)
+```
 
-### 入场检测结果框
+---
+
+## 🎯 AI 执行流程（统一入口）
+
+```
+Step 0.5 模式预判定 → 输出路由声明 → 等用户确认
+Step 1   读取项目状态 .devflow-evo/STATE.md
+Step 2   入场检测（Fast跳过/Lean简化/Standard/Strict完整）
+Step 3   GitNexus可选检测（Fast/Lean跳过）
+→ 根据模式跳转到对应 Phase 起点
+```
+
+**路由声明模板**：
+```
+🎯 建议模式：<Fast/Lean/Standard/Strict>
+   理由：...
+   📋 流程：<该模式的流程步骤>
+   请确认或选择其他模式：1.<建议模式> 2.Fast 3.Lean 4.Standard 5.Strict
+```
+
+---
+
+## 📋 10 条核心规则
+
+| 规则 | 内容 |
+|------|------|
+| R1 | **PRD驱动**：无 PRD/需求描述不开发 |
+| R2 | **四档模式**：按量化标准判定，不随意选择 |
+| R3 | **入场检测**：brownfield 必跑，Fast跳过/Lean简化 |
+| R4 | **Stage门禁**：缺前置产物不允许进入下一阶段 |
+| R5 | **渐进式披露**：只加载当前 Phase 所需内容 |
+| R6 | **Token压缩**：>70% 自动切换高级压缩 |
+| R7 | **Wave并行**：DAG拓扑排序，依赖感知执行 |
+| R8 | **原子提交**：每 Wave 一个 commit，可追溯 |
+| R9 | **LearningWorkflow**：Phase完成→LESSONS沉淀→跨波注入 |
+| R10 | **三层审查**：Fast/Lean自检，Standard/Strict三层对抗 |
+
+> 完整 24 条规则 → `references/RULES-v3.md`（Standard/Strict 模式 Phase 1 加载）
+
+---
+
+## 📂 文件导航
+
+```
+SKILL.md          ← 本文件（你正在读的）
+GO.md             ← 统一路由入口（Step 1-12 详细流程）
+
+references/
+  RULES-v3.md     ← 完整规则集 R1-R24
+  mode-rules.md   ← 模式判定详细规则
+  entry-check.md  ← 入场检测 7 种情况判定
+  gate-rules.md   ← 门控验证规则
+
+layers/
+  L1-INTERACTION/ ← 交互层 Phase 0-8
+  L2-ENGINE/      ← 引擎层 Wave/Learning/Token
+  L3-ARCHITECTURE/← 架构层 DAG/Provider/Agent
+
+memory/           ← 记忆系统 (LESSONS / domain-skills)
+```
+
+**按需加载指南**：
+- Phase 0 → `references/entry-check.md`
+- Phase 1+ → `references/RULES-v3.md`
+- 模式选择 → `references/mode-rules.md`
+- 门控验证 → `references/gate-rules.md`
+
+---
+
+## 💬 使用方式
+
+**自然语言（推荐）**：
+```
+Use devflow-evo. 帮我做一个登录功能，支持邮箱密码和JWT认证
+```
+
+**明确命令（高级）**：
+```
+/devflow-evo new "项目名称" --tech React,Node.js --mode Standard
+/devflow-evo execute 1         # Phase 4
+/status                       # 查看进度
+/lessons                      # 查看经验教训
+```
+
+---
+
+## 📝 项目产物
+
+```
+.devflow-evo/
+  STATE.md                   ← 跨会话状态追踪
+  memory/
+    PROJECT_CONTEXT.md       ← 项目背景
+    DECISIONS.md             ← 历史决策
+    LESSONS.md               ← 教训库
+  <req-id>/                  ← 需求产物
+```
+
+---
+
+## 📝 每个 Phase 的最小执行清单
+
+> **规则**：每个 Phase 的 AI 输出必须包含"动作摘要 + 产出文件 + 门控状态 + 进度面板"。
+
+| Phase | Fast/Lean 最小清单 | Standard/Strict 完整清单 |
+|-------|-------------------|------------------------|
+| **0** | ⏭️ 跳过 | 批量展示进度 → 逐个选择题 → 自定义输入 → G1 通过 |
+| **1** | ⏭️ 跳过 | 批量展示澄清项 → 逐项选择题 → 多选支持 → 输出 `01-analysis.md` |
+| **2** | 1段轻量方案描述 | 完整方案设计 + 技术选型 + 影响分析 |
+| **2a** | ⏭️ 跳过 | 设计变体对比表 → AI 推荐最优 → 用户快速选择 → 更新设计文档 |
+| **3** | ⏭️ 跳过 | DAG 依赖图 → Wave 计划可视化 → 用户确认/修改/合并/拆分 → 输出 Wave 计划 |
+| **4** | 直接编码 + atom commit | Wave 进度面板 → 实时追踪 → Heartbeat 输出 → LESSONS 提名 |
+| **5** | 窄验证（核心功能） | 测试进度面板 → 质量门交互式确认 → 不通过处理 → G2 门控 |
+| **6** | 自检清单（5项） | 三层对抗审查 → 分级展示(高/中/低风险) → 交互式修复确认 |
+| **7** | ⏭️ 跳过 | 发布进度面板 → 健康检查实时展示 → 一键确认/回滚 → 发布总结 |
+| **8** | ⏭️ 跳过 | 归档进度可视化 → LESSONS 价值分级 → 最终统计汇总 → STATE.md 更新 |
+
+---
+
+## 🚦 门控检查表（AI 自测）
+
+每个 Phase 结束前，AI 必须自评：
 
 ```markdown
-## 入场检测结果框
+## Phase <N> 完成检查
 
-**情况判定**: [A/B/C/D/E/F]
-- A: greenfield新项目，无上下文
-- B: greenfield有零星上下文
-- C: brownfield有完整上下文
-- D: brownfield待用户确认上下文
-- E: brownfield上下文缺失
-- F: 文档解析模式
-
-**项目类型**: [greenfield/brownfield]
-**入场扫描状态**: [已完成/待确认/已跳过]
-
-**上下文文档路径**:
-- PROJECT_CONTEXT.md: [存在/缺失]
-- CURRENT_STATE.md: [存在/缺失]
-- DECISIONS.md: [存在/缺失]
-
-**门控判定**:
-- A/B/C → ✅ 自动进入下一阶段
-- D/E → ⏸️ 暂停，等待用户确认
-- F → 📝 记录跳过原因，继续
-```
-
-### 6种情况定义
-
-| 情况 | 项目类型 | 上下文状态 | 处理方式 |
-|------|---------|-----------|----------|
-| A | greenfield | 无上下文 | 自动进入，初始化记忆系统 |
-| B | greenfield | 零星上下文 | 自动进入，补充缺失文档 |
-| C | brownfield | 完整上下文 | 自动进入，加载现有状态 |
-| D | brownfield | 待确认 | ⏸️ 暂停，展示上下文摘要等待确认 |
-| E | brownfield | 上下文缺失 | ⏸️ 暂停，请求用户提供上下文 |
-| F | 任意 | 文档解析模式 | 记录跳过原因，继续执行 |
-
-### 强制执行规则
-
-1. **未输出入场检测结果框** → 禁止进入后续阶段
-2. **brownfield项目检测结果为D/E** → 必须等用户回复
-3. **检测结果为F时** → 必须注明跳过原因
-
-### 示例输出
-
-```
-## 入场检测结果框
-
-**情况判定**: C
-**项目类型**: brownfield
-**入场扫描状态**: 已完成
-
-**上下文文档路径**:
-- PROJECT_CONTEXT.md: ✅ 存在
-- CURRENT_STATE.md: ✅ 存在
-- DECISIONS.md: ✅ 存在
-
-**门控判定**: ✅ 自动进入下一阶段
-
-检测到brownfield项目，已有完整上下文，直接进入Phase 0战略评估。
-```
-
-**默认推荐 Standard**。AI根据技术复杂度、业务影响、数据敏感性自动评分推荐。
-
----
-
-## 💬 命令格式
-
-### 自然语言交互（推荐）
-
-**最简单的方式**，直接说人话：
-```
-帮我做一个每日简报应用，整合Google Calendar和Notion
-```
-
-AI会自动：
-1. 检测项目类型（greenfield/brownfield）
-2. 执行入场检测
-3. 进入Phase 0战略评估
-4. 按管线逐步执行
-
----
-
-### 明确命令格式（高级用户）
-
-适合熟悉工作流的高级用户，提供更精确的控制。
-
-#### 项目初始化
-
-```bash
-/devflow-evo new "项目名称" --tech React,Node.js,PostgreSQL
-/devflow-evo new "电商平台" --mode Strict --template ecommerce
-```
-
-**参数说明**:
-- `--tech`: 指定技术栈（逗号分隔）
-- `--mode`: 执行模式（Fast/Standard/Strict）
-- `--template`: 使用预置模板
-
-#### 阶段控制
-
-```bash
-/devflow-evo discuss 1        # Phase 1: 需求分析
-/devflow-evo plan 1           # Phase 2: 方案设计
-/devflow-evo execute 1        # Phase 4: 实施开发
-/devflow-evo verify 1         # Phase 5: 测试验证
-/devflow-evo ship 1           # Phase 7: 交付部署
-```
-
-**阶段编号**:
-- 0: 战略评估
-- 1: 需求分析
-- 2: 方案设计
-- 2a: 设计枪战
-- 3: 任务拆分
-- 4: 实施开发
-- 5: 测试验证
-- 6: 代码审查
-- 7: 交付部署
-- 8: 知识归档
-
-#### 横向命令（任何阶段可用）
-
-```bash
-/status                   # 查看当前进度和状态
-/lessons                  # 查看经验教训
-/review                   # 即时代码审查
-/grill                    # 需求追问（5 Whys）
-/diagnose                 # 问题诊断
-/graphify                 # 依赖图谱（需GitNexus）
-/token status             # 查看Token使用率
+- [ ] 产物已按模板生成 → 存到 .devflow-evo/<req-id>/
+- [ ] 门控条件已满足 → <G1/G2/G2.5/G5>
+- [ ] 与用户确认 → <已确认/跳过/无需确认>
+- [ ] Token 使用率 < 70% → <当前: XX%>
 ```
 
 ---
 
-### 命令示例
+## 版本
 
-**示例1: 创建新项目**
-```
-/devflow-evo new "任务管理APP" --tech Next.js,TypeScript,TailwindCSS --mode Standard
-```
+### v3.2.0 (2026-05-20)
+- **交互模式重构** ⭐ 核心改动: 禁止一次性抛给用户大量问题，改为「批量展示 + 逐个选择」
+- **Phase 0-8 全部交互优化**: 每个 Phase 都提供进度可视化、选择题交互、快速确认机制
+- **交互铁律** ⭐ 新增: 4步标准流程（展示全局→逐个提问→更新进度→总结门控）
+- **选择题设计原则** ⭐ 新增: 严重程度/频率/技术选型/UI布局/优先级 的标准选项设计
+- **Phase 4 实时进度**: Wave 执行进度面板 + Heartbeat 自动输出
+- **Phase 5-8 交互式**: 测试进度/审查结果/发布监控/知识归档全部可视化
 
-**示例2: 查看进度**
-```
-/status
-```
-
-输出:
-```
-📊 项目状态
-
-当前阶段: Phase 4 - 实施开发
-进度: 60% (3/5 Waves完成)
-
-已完成:
-✅ Phase 0: 战略评估
-✅ Phase 1: 需求分析
-✅ Phase 2: 方案设计
-✅ Phase 3: 任务拆分
-🔄 Phase 4: 实施开发 (Wave 3/5)
-
-待完成:
-⬜ Phase 5: 测试验证
-⬜ Phase 6: 代码审查
-⬜ Phase 7: 交付部署
-⬜ Phase 8: 知识归档
-```
-
-**示例3: 需求追问**
-```
-/grill
-```
-
-AI启动5 Whys追问流程，挖掘真实需求。
-
----
-
-### 命令 vs 自然语言
-
-| 特性 | 自然语言 | 明确命令 |
-|------|---------|----------|
-| 学习成本 | 低 | 中 |
-| 灵活性 | 高 | 中 |
-| 精确度 | 中 | 高 |
-| 适用人群 | 所有人 | 高级用户 |
-| 推荐场景 | 日常使用 | 批量操作、脚本调用 |
-
-**建议**: 优先使用自然语言，熟悉后再使用明确命令。
-
----
-
-## 📦 架构说明
-
-### Skill 位置（`E:\LLM\skills\devflow-evo`）
-
-```
-SKILL.md          ← 本文件，v3零配置入口（你正在读的）
-GO.md             ← v3路由器，包含完整路由决策树和12步流程
-V3-ARCHITECTURE.md ← 架构设计文档（三层金字塔详解）
-layers/           ← 三层架构核心模块
-  L1-INTERACTION/ ← 交互层封装 (Phase 0-8)
-  L2-ENGINE/      ← 引擎层封装 (GSD/Learning/Wave/Token)
-  L3-ARCHITECTURE/← 架构层 (DAG/Provider/Agent)
-optional/         ← 可选工具链 (GitNexus检测 + Grep降级)
-skills/stage-skills/ ← v1.0向后兼容的Stage Skills
-references/       ← 规则集(R1-R20)、模板、门控规则
-memory/           ← 记忆系统 (PROJECT_CONTEXT/DECISIONS/LESSONS等)
-docs/             ← 扩展功能文档 (SDD/Surface Budget/多项目/插件)
-```
-
-### 项目产物（`<project>/.devflow-evo/`）
-
-```
-STATE.md                  ← 跨会话状态追踪
-memory/
-  PROJECT_CONTEXT.md      ← 项目背景
-  DECISIONS.md            ← 历史决策(ADR风格)
-  KNOWN_FAILURES.md       ← 已知失败模式
-  LESSONS.md              ← LearningWorkflow教训库 ⭐新增
-  domain-skills/          ← 领域技能沉淀 ⭐新增
-<req-id>/                 ← 需求产物 (00-requirements→07-integration)
-```
-
-> **关键原则**: AI从 `E:\LLM\skills\devflow-evo` 读取逻辑，在项目中只生成 `.devflow-evo/` 产物。
-
----
-
-## 🔌 扩展功能
-
-### 多项目管理
-
-**支持同时管理多个项目，快速切换，状态同步，知识共享**
-
-```bash
-/devflow-evo projects list              # 列出所有项目
-/devflow-evo projects new "名称"        # 创建新项目
-/devflow-evo projects switch <id>       # 切换项目
-/devflow-evo projects info <id>         # 查看项目详情
-/devflow-evo workspace stats            # 工作区统计
-```
-
-详见: `docs/MULTI-PROJECT-MANAGEMENT.md`
-
-### 插件系统
-
-**可扩展Phase、Gate、Agent、Template、Command，沙箱隔离，签名验证**
-
-```bash
-/devflow-evo plugins install <plugin>   # 安装插件
-/devflow-evo plugins enable <name>      # 启用插件
-/devflow-evo plugins list --enabled     # 查看已启用插件
-/devflow-evo plugins create <name>      # 创建新插件
-```
-
-**插件类型**:
-- Phase扩展: 添加新Phase
-- Gate增强: 增强质量门控
-- Agent扩展: 添加新角色
-- Template包: 添加新模板
-- Command工具: 添加新命令
-
-详见: `docs/PLUGIN-SYSTEM.md`
-
-## 🎯 使用示例
-
-### 场景1: 开发新功能
-```
-Use devflow-evo.
-帮我做一个用户登录功能，支持邮箱密码和JWT认证
-```
-
-### 场景2: Fast模式修复
-```
-Use devflow-evo. Fast模式: 修复settings页面按钮文案typo
-```
-
-### 场景3: 架构重构（Strict模式）
-```
-Use devflow-evo. Strict模式。
-把单体应用拆分成微服务，先做用户模块
-```
-
-### 场景4: 健康检查
-```
-Use devflow-evo. 健康检查
-```
-
----
-
-## 📖 文档导航
-
-| 需要... | 读取... |
-|---------|---------|
-| v3架构设计 | `V3-ARCHITECTURE.md` |
-| 统一路由入口 | `GO.md` (Step 1-12) |
-| 规则集 R1-R20 | `references/RULES-v3.md` |
-| 模式判定 | `references/mode-rules.md` |
-| 入场检测 | `references/entry-check.md` |
-| 门控验证 | `references/gate-rules.md` |
-| Token压缩 | `references/caveman-rules.md` |
-| 安全规范 | `references/SECURITY.md` |
-| Stage Skills | `skills/stage-skills/` (向后兼容) |
-| 快速上手 | `SKILL.md`「三步启动」 |
-| 模板版本规则 | `references/templates/` 下带 `-delta` 后缀的变体仅增量变更使用，主模板（无后缀）为默认消费源 |
-| 宪法模板 | `references/templates/constitution-template.md` → Phase 0/1 后写入 `.devflow-evo/memory/constitution.md` |
-
----
-
-## ⚡ 渐进式披露规则
-
-> ⚠️ **核心原则**: AI 不应一次性加载所有信息，应按需加载以节省 Token。
-
-### 执行流程
-
-1. **读取 state.md 确定当前 Phase**
-2. **仅加载当前 Phase 相关的 Skill 和 Agent**
-3. **Phase 切换时卸载旧 Skill，加载新 Skill**
-4. **Token > 70% 时自动升级压缩级别**
-
-### Phase → Skill 加载映射
-
-| Phase | 必须加载 | 可选加载 | 必须卸载 |
-|-------|---------|---------|---------|
-| **Phase 0** | SKILL.md, GO.md, `L1/phase-0-yc-strategy/_SKILL.md` | `L1/phase-0-strategy/_SKILL.md` | - |
-| **Phase 1** | + `references/RULES-v3.md` | `L1/phase-1-5whys/_SKILL.md` | Phase 0 特定规则 |
-| **Phase 1b** | + `references/RULES-v3.md` | `L1/phase-1b-discuss/_SKILL.md` | Phase 1 追问规则 |
-| **Phase 2** | + `references/RULES-v3.md` | `L1/phase-2-design/_SKILL.md` | Phase 1b 决策规则 |
-| **Phase 2a** | + `references/RULES-v3.md` | `L1/phase-2a-shotgun/_SKILL.md` | Phase 2 设计规则 |
-| **Phase 3** | + `references/RULES-v3.md`, `L3/dag-router/_SKILL.md` | - | Phase 2a 变体规则 |
-| **Phase 4** | + `references/RULES-v3.md`, `L2/wave-executor/_SKILL.md` | `L2/executor/_SKILL.md` | Phase 3 拆分规则 |
-| **Phase 5** | + `references/RULES-v3.md` | `L1/phase-5-test/_SKILL.md` | Phase 4 开发规则 |
-| **Phase 6** | + `references/RULES-v3.md` | `L1/phase-6-review/_SKILL.md` | Phase 5 测试规则 |
-| **Phase 7** | + `references/RULES-v3.md` | `L1/phase-7-canary/_SKILL.md` | Phase 6 审查规则 |
-| **Phase 8** | + `references/RULES-v3.md`, `L2/learning-workflow/_SKILL.md` | `L1/phase-8-archive/_SKILL.md` | Phase 7 部署规则 |
-
-### Token 监控触发条件
-
-| Token 使用率 | 动作 |
-|-------------|------|
-| < 50% | 不压缩，正常加载 |
-| 50-70% | 提示：建议使用 `lite` 压缩 |
-| 70-85% | 强制：自动切换到 `full` 压缩 |
-| 85-90% | 警告：切换到 `ultra` 压缩 |
-| > 90% | 暂停：强制 `extreme` 压缩，等待人工确认 |
-
-### 正确 vs 错误示例
-
-#### ❌ 错误：一次性加载全部
-
-```
-加载：SKILL.md + GO.md + V3-ARCHITECTURE.md + RULES.md + ... (全部)
-结果：Token 消耗 ~80%，剩余上下文不足
-```
-
-#### ✅ 正确：按 Phase 渐进加载
-
-```
-Phase 0: SKILL.md + GO.md + references/entry-check.md (约 ~15% Token)
-Phase 1: + references/RULES-v3.md + L1/phase-1-5whys/_SKILL.md (约 +20% Token)
-Phase 4: + L2/wave-executor/_SKILL.md + L1/phase-4-build/_SKILL.md (按需加载)
-```
-
----
-
-## 🌟 v3.0 vs 对比
-
-| 维度 | 旧版 | 引擎版 | 交互版 | 架构版 | **v3.0** |
-|------|------|--------|--------|--------|----------|
-| 配置要求 | 低 | 中(npm) | 极低 | 高 | **零** |
-| 门槛 | 低 | 高 | 极低 | 中 | **极低** |
-| 功能覆盖 | ~60% | ~70% | ~60% | ~95% | **~98%** |
-| 自学习进化 | ❌ | ✅ | ❌ | ❌ | **✅** |
-| Agent隔离 | ❌ | ❌ | ❌ | ✅ | **✅** |
-| Provider路由 | ❌ | ❌ | ❌ | ✅ | **✅** |
-| Token压缩 | ~50% | ~75% | ~70% | ~80% | **~90%** |
-| 设计变体 | ❌ | ❌ | ✅ | ❌ | **✅** |
-| Canary发布 | ❌ | ❌ | ✅ | ❌ | **✅** |
-| 对抗审查 | ❌ | ❌ | ✅ | ❌ | **✅** |
-| 并行执行 | ❌ | ✅ | ❌ | ~4.4x | **~5x+** |
-| GitNexus | 必选 | 可选 | ❌ | ❌ | **可选+降级** |
-
----
-
-## 📋 v3.0 规则集摘要 (R1-R24)
-
-| 编号 | 规则 | 说明 |
-|------|------|------|
-| R1 | PRD驱动 | 无PRD不开发 |
-| R2 | 三档模式 | Fast/Standard/Strict自动判定 |
-| R3 | 入场检测 | brownfield必跑，stop-on-D/E |
-| R4 | Stage门禁 | 缺前置产物不允许进入 |
-| R5 | 渐进式披露 | 只加载当前Stage Skill |
-| R6 | Token压缩 | 默认full，可选ultra/extreme |
-| R7 | Agent隔离 | Research/Execution各自~200K fresh |
-| R8 | Wave并行 | DAG拓扑排序，依赖感知执行 |
-| R9 | LearningWorkflow | Phase完成→LESSONS沉淀→跨波注入 |
-| R10 | Provider路由 | 按任务类型选模型 |
-| R11 | GitNexus可选 | detect→prompt→grep fallback |
-| R12 | 三层对抗审查 | Blind/Edge/Auditor并行 |
-| R13 | Canary发布 | 10%→50%→100%，异常回滚 |
-| R14 | 设计枪战 | Phase 2a必跑(前端/UI) |
-| R15 | 跨波上下文读取 | Wave N SUMMARY → N+1注入 |
-| R16 | 原子提交 | 每Wave一个commit，可追溯 |
-| R17 | Heartbeat检查点 | [checkpoint][wave:N][task:X] |
-| R18 | Domain Skills Promotion | LESSONS→domain-skills/持久化 |
-| R19 | 产物模板强制 | 所有输出严格按模板；Phase 4/5/6 结束前必须运行合规检查：读取对应模板，逐项确认必填段落存在、元数据块完整、占位符已替换 |
-| R20 | 向后兼容 | v1.0产物零改动迁移 |
-| R21 | Path Standardization | 产物路径统一为 `.devflow-evo/`，旧 `.devflow-kit/` 兼容迁移 |
-| R21.2 | 目录结构保持与 .devflow-evo 兼容 |
-| R22 | Quality Scoring | Phase 6 输出质量评分报告（详见 references/RULES-v3.md） |
-| R23 | Stage-Skills Sync | Stage Skills 与 Core Skills 同步维护，≥7 天差异报 P2 |
-| R24 | Call Chain Ownership | L1→L2/L3 调用链必须在 call-chain-inventory.md 注册 |
-
----
-
-## 版本历史
-
-### v3.0.0 (2026-05-17)
-- **三层金字塔架构**: 交互层 + 引擎层 + 架构层
-- **五大独有能力**: LearningWorkflow自进化 / Provider路由 / Agent隔离 / 设计枪战 / Canary发布
-- **零配置入口**: 加载SKILL.md → 一句话需求 → 自动执行
-- **GitNexus可选检测**: detect → prompt → grep fallback
-- **24条规则集**: R1-R24，覆盖全流程
-- **向后兼容**: v1.0产物零改动迁移
-
-### v1.0 (previous)
-- 整合 devflow-kit + superpowers + OpenSpec + GitNexus + caveman
-- GO.md统一路由 + Stage Skills按需加载
-- 跨会话记忆系统 + Token优化支持
+### v3.1.0 (2026-05-20)
+- 四档模式升级: Fast/Lean/Standard/Strict
+- 模式自适应流程: 模式×前置步骤矩阵
+- 入场检测模式适配: Fast跳过/Lean简化/Standard/Strict完整
+- Phase 0/1 条件跳过规则
