@@ -11,10 +11,10 @@
 
 | 指标 | 数值 |
 |------|------|
-| 测试案例总数 | 58 |
-| 已完成测试 | 58 |
+| 测试案例总数 | 71 |
+| 已完成测试 | 71 |
 | 通过率 | 100% |
-| 测试报告数量 | 9 |
+| 测试报告数量 | 10 |
 
 ---
 
@@ -108,6 +108,24 @@
 | TC-057 | 跨波上下文读取 | ✅ | test-boundary-and-learning.md |
 | TC-058 | LearningWorkflow 自进化 | ✅ | test-boundary-and-learning.md |
 
+### 7. 产物模板合规性（13/13 = 100%）
+
+| 测试 ID | 场景 | 状态 | 报告文件 |
+|---------|------|------|---------|
+| TC-059.1 | Phase 0 `00-strategy.md` frontmatter + 章节 | ✅ | test-template-compliance.md |
+| TC-059.2 | Phase 1 `01-analysis.md` frontmatter + 产物结构 | ✅ | test-template-compliance.md |
+| TC-059.3 | Phase 1b `CONTEXT.md` frontmatter + 产物结构 | ✅ | test-template-compliance.md |
+| TC-059.4 | Phase 2 `02-design.md` spec 模板合规 | ✅ | test-template-compliance.md |
+| TC-059.5 | Phase 2a `02a-design-variants.md` 变体模板合规 | ✅ | test-template-compliance.md |
+| TC-059.6 | Phase 3 `03-tasks.md` DAG 模板合规 | ✅ | test-template-compliance.md |
+| TC-059.7 | Phase 4 Wave SUMMARY 模板合规 | ✅ | test-template-compliance.md |
+| TC-059.8 | Phase 5 `05-test-report.md` verification-report 模板合规 | ✅ | test-template-compliance.md |
+| TC-059.9 | Phase 6 `06-review.md` review 模板合规 | ✅ | test-template-compliance.md |
+| TC-059.10 | Phase 7 `07-canary.md` canary 模板合规 | ✅ | test-template-compliance.md |
+| TC-059.11 | Phase 8 LESSONS + domain-skill 模板合规 | ✅ | test-template-compliance.md |
+| TC-059.12 | 命名规范统一性 | ✅ | test-template-compliance.md |
+| TC-059.13 | Gate 链一致性 | ✅ | test-template-compliance.md |
+
 ---
 
 ## 三、核心验证点
@@ -169,8 +187,9 @@
 | `test-interaction.md` | ~270 | TC-028~TC-035 |
 | `test-gates.md` | ~430 | TC-036~TC-045 |
 | `test-boundary-and-learning.md` | ~450 | TC-046~TC-058 |
-| `test-verification-report.md` | ~360 | 全部 58 项交叉验证 |
-| `TEST-SUMMARY.md` | 本文档 | 全部 58 项汇总 |
+| `test-template-compliance.md` | ~600 | TC-059.1~TC-059.13 |
+| `test-verification-report.md` | ~360 | 全部 71 项交叉验证 |
+| `TEST-SUMMARY.md` | 本文档 | 全部 71 项汇总 |
 
 ---
 
@@ -178,13 +197,14 @@
 
 **DevFlow-Evo v3.2 三层架构测试全部通过 ✅**
 
-所有 55 个测试用例（100%）均已完成模拟测试，覆盖：
+所有 71 个测试用例（100%）均已完成模拟测试，覆盖：
 - ✅ 三层架构（L1 Interaction / L2 Engine / L3 Architecture）
 - ✅ 四档模式路由（Fast / Lean / Standard / Strict）
 - ✅ 选择题交互模式（进度面板 / 逐个提问 / 防决策疲劳）
 - ✅ 门控机制（G1 ~ G8 共 10 个门控）
 - ✅ 边界情况 & 错误处理（8 个场景）
 - ✅ LearningWorkflow & 知识沉淀（5 个场景）
+- ✅ 产物模板合规性（13 项 frontmatter + 产物结构 + Gate 链一致性检查）
 
 ---
 
