@@ -209,16 +209,20 @@ acceptance_auditor:
 
 ### 验收标准覆盖矩阵
 
-| # | PRD要求 | 实现状态 | Delta Spec | 测试覆盖 | 审查结果 |
-|---|--------|---------|-----------|---------|---------|
-| 1 | 支持邮箱密码登录 | ✅已实现 | N/A (full) | ✅有单测 | PASS |
-| 2 | JWT有效期30分钟 | ✅已实现 | [MODIFIED] from 60m | ✅有集成测试 | PASS |
-| 3 | 失败锁定5分钟 | ✅已实现 | N/A (full) | ⚠️缺少压力测试 | PASS with note |
-| 4 | 支持记住我(7天) | ✅未实现 | [ADDED] from delta spec | ❌无测试 | FAIL — missing implementation |
+使用 caveman-review 生成一行审查评论（`L{line}: {severity} {category}: {finding}. {action}.`）：
+
+| # | PRD要求 | 审查评论 | 审查结果 |
+|---|--------|---------|---------|
+| 1 | 支持邮箱密码登录 | `L23-L67: ✅ impl. All AC pass.` | PASS |
+| 2 | JWT有效期30分钟 | `L89: ✅ impl. [MODIFIED] 60m→30m. Test OK.` | PASS |
+| 3 | 失败锁定5分钟 | `L112: ⚠️ impl. Missing stress test.` | PASS with note |
+| 4 | 支持记住我(7天) | `L145: 🔴 missing. [ADDED] delta spec. Add impl.` | FAIL |
 
 总覆盖: 3/4需求 = 75% (不通过 Stage A)
 Stage A 判定: FAIL
 退回阶段: Phase 3/4 — 补充实现记住我功能后再审
+
+> caveman-review 规则详见 `layers/L2-ENGINE/caveman-review/_SKILL.md`。
 ```
 
 ### Step A2: Stage A Gate Decision

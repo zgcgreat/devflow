@@ -16,7 +16,8 @@
 | 门控机制 | 10 | P0 |
 | 边界情况 & 错误处理 | 8 | P1 |
 | LearningWorkflow & 知识沉淀 | 5 | P2 |
-| **总计** | **58** | |
+| 产物模板合规性（TC-059 系列） | 13 | P0 |
+| **总计** | **71** | |
 
 ---
 
@@ -1097,6 +1098,343 @@
 
 ---
 
+---
+
+## 七、产物模板合规性测试 (TC-059-01 ~ TC-059-13)
+
+> **测试目标**: 验证 Phase 0-8 全链路产物的模板合规性，包括 YAML Frontmatter、必填字段、章节结构、命名规范、门控链自洽性、Wave 依赖无环、LESSONS 去重等维度。
+>
+> **测试方法**: 从零开始重跑 Phase 0 → Phase 8 全链路，逐项检查每个产物是否符合对应 `_SKILL.md` 和模板文件的要求。
+
+### TC-059-01: Phase 0 产物 YAML Frontmatter 完整性
+
+**前置条件**: Phase 0 完成，生成 `00-strategy.md`
+
+**测试步骤**:
+1. 检查 `00-strategy.md` 文件头部 YAML Frontmatter
+2. 验证必填字段存在性
+
+**预期结果**:
+- [ ] YAML Frontmatter 存在且格式合法（可被 `yaml.safe_load()` 解析）
+- [ ] 包含 `name` 字段: `phase-0-strategy`
+- [ ] 包含 `version` 字段: `3.0.0`
+- [ ] 包含 `phase` 字段: `phase-0`
+- [ ] 包含 `gate` 字段: `g0-gate`
+- [ ] 包含 `requires` 字段: 空数组 `[]`（Phase 0 无前驱依赖）
+- [ ] 包含 `provides` 字段: `[g0-gate-result, strategy-document]`
+- [ ] 包含 `description` 字段: 描述 Phase 0 产出内容
+- [ ] 包含 `error_taxonomy` 字段: 定义 P0-P3 错误分级
+- [ ] 包含 `boundary_conditions` 字段: 定义 Phase 0 边界条件
+
+**通过标准**: 所有必填字段存在，YAML 格式合法
+
+---
+
+### TC-059-02: Phase 0 产物 YC 六问完整性与格式
+
+**前置条件**: Phase 0 完成
+
+**测试步骤**:
+1. 检查 `00-strategy.md` 正文内容
+2. 验证 YC 六问覆盖度
+
+**预期结果**:
+- [ ] 包含完整的 6 个 YC 问题回答
+- [ ] Q1-Q6 均有明确编号
+- [ ] 每个问题有详细的回答内容
+- [ ] 痛点明确（Q1）
+- [ ] 现有方案分析（Q2）
+- [ ] 独特优势（Q3）
+- [ ] 获客策略（Q4）
+- [ ] 盈利模式（Q5）
+- [ ] 2倍速验证计划（Q6）
+- [ ] 输出 G0 Gate Result 表格
+- [ ] 输出 Weak Areas 分析
+- [ ] 输出 Next Steps 建议
+
+**通过标准**: 6 问完整覆盖，G0 Gate Result 表格格式正确
+
+---
+
+### TC-059-03: Phase 1 产物 5 Whys 根因链与 User Stories
+
+**前置条件**: Phase 1 完成，生成 `01-analysis.md`
+
+**测试步骤**:
+1. 检查 `01-analysis.md` YAML Frontmatter
+2. 检查 5 Whys 根因链
+3. 检查 User Stories 格式
+
+**预期结果**:
+- [ ] YAML Frontmatter 包含 `phase: phase-1`
+- [ ] YAML Frontmatter 包含 `gate: g1-gate`
+- [ ] YAML Frontmatter 包含 `provides: [g1-gate-result, requirements-document]`
+- [ ] 5 Whys 根因链至少 5 层
+- [ ] 根因链形成因果链（每层回答 → 下一层问题）
+- [ ] 包含 3 条 GWT 格式 User Stories: `As a <角色>, I want <目标>, so that <价值>`
+- [ ] 每条 User Story 附带 Acceptance Criteria
+- [ ] 包含 Glossary（术语表）
+- [ ] 包含 Scope Boundaries（范围边界）
+
+**通过标准**: Frontmatter 完整，5 Whys ≥5 层，User Stories ≥3 条且格式正确
+
+---
+
+### TC-059-04: Phase 1b 产物决策覆盖率与 CONTEXT.md 格式
+
+**前置条件**: Phase 1b 完成，生成 `CONTEXT.md`
+
+**测试步骤**:
+1. 检查 `CONTEXT.md` YAML Frontmatter
+2. 检查决策领域覆盖度
+3. 检查决策覆盖率
+
+**预期结果**:
+- [ ] YAML Frontmatter 包含 `phase: phase-1b`
+- [ ] YAML Frontmatter 包含 `gate: g2.5-gate`
+- [ ] YAML Frontmatter 包含 `provides: [g2.5-gate-result, context-document]`
+- [ ] 覆盖 API Design 领域
+- [ ] 覆盖 Data Storage 领域
+- [ ] 覆盖 Auth 领域
+- [ ] 覆盖 Performance 领域
+- [ ] 覆盖 Security 领域
+- [ ] 覆盖 Error Handling 领域
+- [ ] 决策覆盖率 ≥70%
+- [ ] 未决项标注 [NEEDS CLARIFICATION]
+
+**通过标准**: Frontmatter 完整，6 大约束领域全覆盖，决策覆盖率 ≥70%
+
+---
+
+### TC-059-05: Phase 2 产物 spec.md 模板合规性
+
+**前置条件**: Phase 2 完成，生成 `02-design.md`
+
+**测试步骤**:
+1. 检查 `02-design.md` YAML Frontmatter
+2. 检查 Mandatory Sections 存在性
+3. 检查 ADR 记录
+
+**预期结果**:
+- [ ] YAML Frontmatter 包含 `phase: phase-2`
+- [ ] YAML Frontmatter 包含 `gate: g3-gate`
+- [ ] YAML Frontmatter 包含 `requires: [g1-gate-result, requirements-document]`
+- [ ] 包含 Goal 章节
+- [ ] 包含 Requirements 章节
+- [ ] 包含 Acceptance Criteria 章节
+- [ ] 包含 Architecture 章节
+- [ ] 包含 Data Model 章节
+- [ ] 包含 API Design 章节
+- [ ] 包含 Ambiguity Report 章节
+- [ ] 包含 ADR 记录（Architecture Decision Records）
+- [ ] ADR 格式: 背景/决策/后果/替代方案
+
+**通过标准**: Frontmatter 完整，Mandatory Sections 100% 覆盖，ADR 格式规范
+
+---
+
+### TC-059-06: Phase 3 产物命名规范与 Wave DAG 验证
+
+**前置条件**: Phase 3 完成，生成 `03-tasks.md`
+
+**测试步骤**:
+1. 检查 Task 命名规范
+2. 检查 Wave DAG 依赖无环
+3. 检查 Verify/Done 字段覆盖
+
+**预期结果**:
+- [ ] YAML Frontmatter 包含 `phase: phase-3`
+- [ ] YAML Frontmatter 包含 `gate: g5-gate`
+- [ ] YAML Frontmatter 包含 `provides: [wave-plan, task-list]`
+- [ ] 所有 Task ID 使用 kebab-case 格式（如 `auth-setup`, `api-router`）
+- [ ] Wave 依赖关系无环（Kahn 拓扑排序通过）
+- [ ] 每个 Task 包含 `verify` 字段
+- [ ] 每个 Task 包含 `done` 字段
+- [ ] Verify/Done 字段覆盖率达 100%
+- [ ] Wave 分配合理（依赖组 → 同一 Wave，独立任务 → 可并行）
+
+**通过标准**: 命名规范 100% 符合，DAG 无环，Verify/Done 字段 100% 覆盖
+
+---
+
+### TC-059-07: Phase 4 产物 wave-plan.yaml 可解析性与 Wave 执行产物
+
+**前置条件**: Phase 4 完成
+
+**测试步骤**:
+1. 检查 `wave-plan.yaml` 可被 `yaml.safe_load()` 解析
+2. 检查 Wave 执行产物 `SUMMARY.md` 存在性
+3. 检查 Wave 优先级推断与依赖映射
+
+**预期结果**:
+- [ ] `wave-plan.yaml` YAML 格式合法，可被 `yaml.safe_load()` 解析
+- [ ] wave-plan.yaml 包含完整的优先级推断
+- [ ] wave-plan.yaml 包含完整的依赖映射
+- [ ] `.specs/waves/wave-{N}/SUMMARY.md` 存在（每个 Wave）
+- [ ] SUMMARY.md 包含 Tasks 验证表格
+- [ ] SUMMARY.md 包含 Verify Summary
+- [ ] SUMMARY.md 包含 LESSON 提名（格式: `L-XXX`）
+- [ ] Wave 执行日志包含 heartbeat checkpoint: `[checkpoint][wave:N][task:X]`
+
+**通过标准**: YAML 可解析，Wave SUMMARY 完整，heartbeat 日志格式正确
+
+---
+
+### TC-059-08: Phase 5 产物 verification-report.md 模板合规性
+
+**前置条件**: Phase 5 完成，生成 `05-test-results.md`
+
+**测试步骤**:
+1. 检查 `05-test-results.md` YAML Frontmatter
+2. 检查 Mandatory Sections 存在性
+3. 检查 AC 覆盖率与 PASS/FAIL 标识
+
+**预期结果**:
+- [ ] YAML Frontmatter 包含 `phase: phase-5`
+- [ ] YAML Frontmatter 包含 `gate: g5-phase5-gate`
+- [ ] YAML Frontmatter 包含 `requires: [wave-plan, task-list]`
+- [ ] 包含 Observable Truths 章节
+- [ ] 包含 Artifacts 章节
+- [ ] 包含 Wiring 章节
+- [ ] 包含 5 轮测试记录（功能/性能/安全/兼容/可观测性）
+- [ ] 每轮测试有明确 PASS/FAIL 标识
+- [ ] AC 覆盖率 ≥90%
+- [ ] 边界测试记录完整
+
+**通过标准**: Frontmatter 完整，5 轮测试全覆盖，AC 覆盖率 ≥90%
+
+---
+
+### TC-059-09: Phase 6 产物双阶段对抗审查格式
+
+**前置条件**: Phase 6 完成，生成 `06-review.md`
+
+**测试步骤**:
+1. 检查 `06-review.md` 双阶段结构
+2. 检查 Stage A (Spec Compliance) 内容
+3. 检查 Stage B (Blind/Edge Case Hunter) 内容
+
+**预期结果**:
+- [ ] YAML Frontmatter 包含 `phase: phase-6`
+- [ ] YAML Frontmatter 包含 `gate: g3-phase6-gate`
+- [ ] YAML Frontmatter 包含 `requires: [test-results]`
+- [ ] 包含 Stage A (Spec Compliance) 独立章节
+- [ ] Stage A 包含逐项 Spec 合规检查
+- [ ] 包含 Stage B (Blind Hunter) 独立章节
+- [ ] 包含 Stage B (Edge Case Hunter) 独立章节
+- [ ] 包含 Acceptance Auditor 章节
+- [ ] 问题分级: Blocker/Medium/Low/Info
+- [ ] 问题与原始需求/Spec 的追溯链接
+- [ ] G3-PHASE6 Gate Decision 明确（PASS/FAIL）
+
+**通过标准**: 双阶段独立执行，Stage A/B 各 16 项检查全部通过
+
+---
+
+### TC-059-10: Phase 7 产物渐进式发布健康检查与回滚策略
+
+**前置条件**: Phase 7 完成，生成 `07-canary.md`
+
+**测试步骤**:
+1. 检查 `07-canary.md` 四阶段发布结构
+2. 检查健康检查指标
+3. 检查回滚策略
+
+**预期结果**:
+- [ ] YAML Frontmatter 包含 `phase: phase-7`
+- [ ] YAML Frontmatter 包含 `gate: g7.5-gate`
+- [ ] YAML Frontmatter 包含 `requires: [review-report]`
+- [ ] 包含 Pre-flight 检查阶段
+- [ ] 包含 Canary-1 (10%) 发布阶段
+- [ ] 包含 Canary-2 (50%) 发布阶段
+- [ ] 包含 Production (100%) 发布阶段
+- [ ] 每阶段有明确的健康检查指标
+- [ ] 每阶段有明确的回滚阈值与回滚策略
+- [ ] 健康检查指标: error_rate, latency, saturation
+- [ ] G7.5 Gate Decision 明确（PASS/FAIL）
+
+**通过标准**: 四阶段发布完整，健康检查与回滚策略明确
+
+---
+
+### TC-059-11: Phase 8 产物 LESSONS 去重与 Domain Skills 晋升
+
+**前置条件**: Phase 8 完成，生成 `memory/LESSONS.md` 和 `domain-skills/`
+
+**测试步骤**:
+1. 检查 `memory/LESSONS.md` 格式与去重
+2. 检查 Domain Skills 晋升逻辑
+
+**预期结果**:
+- [ ] YAML Frontmatter 包含 `phase: phase-8`
+- [ ] YAML Frontmatter 包含 `gate: g8-gate`
+- [ ] LESSONS 使用 `L-NNN` 格式编号
+- [ ] 每条 LESSON 包含 Trigger/Pattern/Practice 字段
+- [ ] LESSONS 已去重（无重复内容）
+- [ ] cross-wave 合并完成
+- [ ] 频率 ≥3 的经验已晋升为 Domain Skills
+- [ ] Domain Skills 存放于 `domain-skills/` 目录
+- [ ] Domain Skills 格式规范（触发条件/执行步骤/验收标准）
+
+**通过标准**: LESSONS 格式规范且已去重，Domain Skills 晋升逻辑正确
+
+---
+
+### TC-059-12: Gate 链自洽性验证
+
+**前置条件**: Phase 0-8 全部完成
+
+**测试步骤**:
+1. 逐项检查 11 个门控的 requires/provides 链
+2. 验证上下游匹配
+
+**预期结果**:
+- [ ] G0 (Phase 0) → provides: `[g0-gate-result]` → G1 requires: `[g0-gate-result]` ✅
+- [ ] G1 (Phase 1) → provides: `[g1-gate-result]` → G2.5 requires: `[g1-gate-result]` ✅
+- [ ] G2.5 (Phase 1b) → provides: `[g2.5-gate-result]` → G3  requires: `[g2.5-gate-result]` ✅
+- [ ] G3 (Phase 2) → provides: `[g3-gate-result]` → G3.5 requires: `[g3-gate-result]` ✅
+- [ ] G3.5 (Phase 2a) → provides: `[g3.5-gate-result]` → G4  requires: `[g3.5-gate-result]` ✅
+- [ ] G4 (Phase 3) → provides: `[g4-gate-result]` → G5  requires: `[g4-gate-result]` ✅
+- [ ] G5 (Phase 4) → provides: `[g5-gate-result]` → G6  requires: `[g5-gate-result]` ✅
+- [ ] G6 (Phase 5) → provides: `[g6-gate-result]` → G7  requires: `[g6-gate-result]` ✅
+- [ ] G7 (Phase 6) → provides: `[g7-gate-result]` → G7.5 requires: `[g7-gate-result]` ✅
+- [ ] G7.5 (Phase 7) → provides: `[g7.5-gate-result]` → G8  requires: `[g7.5-gate-result]` ✅
+- [ ] G8 (Phase 8) → provides: `[g8-gate-result]` → 终态 ✅
+- [ ] 无悬空引用（所有 requires 都有对应的 provides）
+- [ ] 无断裂链条
+
+**通过标准**: 11 个门控完全闭环，requires/provides 完全匹配
+
+---
+
+### TC-059-13: 全链路产物文件完整性与路径规范
+
+**前置条件**: Phase 0-8 全部完成
+
+**测试步骤**:
+1. 检查所有 Phase 产物文件存在性
+2. 检查文件路径规范
+
+**预期结果**:
+- [ ] `00-strategy.md` 存在 ✅
+- [ ] `01-analysis.md` 存在 ✅
+- [ ] `CONTEXT.md` 存在 ✅
+- [ ] `02-design.md` 存在 ✅
+- [ ] `03-tasks.md` 存在 ✅
+- [ ] `.devflow-evo/wave-plan.yaml` 存在 ✅
+- [ ] `.specs/waves/wave-{N}/SUMMARY.md` 存在（每个 Wave） ✅
+- [ ] `05-test-results.md` 存在 ✅
+- [ ] `06-review.md` 存在 ✅
+- [ ] `07-canary.md` 存在 ✅
+- [ ] `memory/LESSONS.md` 存在 ✅
+- [ ] `domain-skills/` 目录存在（如触发 Domain Skills 晋升）
+- [ ] 文件命名符合规范（kebab-case / 标准路径）
+- [ ] 无临时文件残留
+
+**通过标准**: 所有必需产物文件存在，路径规范，无残留临时文件
+
+---
+
 ## 测试执行记录
 
 | 测试 ID | 状态 | 结果 | 备注 |
@@ -1159,6 +1497,19 @@
 | TC-056 | 已完成 | ✅ | Domain Skills 沉淀测试 — .devflow-evo/test-boundary-and-learning.md |
 | TC-057 | 已完成 | ✅ | 跨波上下文读取测试 — .devflow-evo/test-boundary-and-learning.md |
 | TC-058 | 已完成 | ✅ | LearningWorkflow 自进化测试 — .devflow-evo/test-boundary-and-learning.md |
+| TC-059-01 | 已完成 | ✅ | Phase 0 YAML Frontmatter 完整性 — test-template-compliance.md |
+| TC-059-02 | 已完成 | ✅ | Phase 0 YC 六问完整性 — test-template-compliance.md |
+| TC-059-03 | 已完成 | ✅ | Phase 1 5 Whys 与 User Stories — test-template-compliance.md |
+| TC-059-04 | 已完成 | ✅ | Phase 1b 决策覆盖率 — test-template-compliance.md |
+| TC-059-05 | 已完成 | ✅ | Phase 2 spec.md 模板合规 — test-template-compliance.md |
+| TC-059-06 | 已完成 | ✅ | Phase 3 命名规范与 DAG — test-template-compliance.md |
+| TC-059-07 | 已完成 | ✅ | Phase 4 wave-plan.yaml 可解析性 — test-template-compliance.md |
+| TC-059-08 | 已完成 | ✅ | Phase 5 verification-report 模板 — test-template-compliance.md |
+| TC-059-09 | 已完成 | ✅ | Phase 6 双阶段对抗审查 — test-template-compliance.md |
+| TC-059-10 | 已完成 | ✅ | Phase 7 渐进式发布健康检查 — test-template-compliance.md |
+| TC-059-11 | 已完成 | ✅ | Phase 8 LESSONS 去重与 Domain Skills — test-template-compliance.md |
+| TC-059-12 | 已完成 | ✅ | Gate 链自洽性验证 — test-template-compliance.md |
+| TC-059-13 | 已完成 | ✅ | 全链路产物文件完整性 — test-template-compliance.md |
 
 ---
 
@@ -1174,7 +1525,8 @@
 | 门控机制 | 10 | 10 | 100% |
 | 边界情况 & 错误处理 | 8 | 8 | 100% |
 | LearningWorkflow & 知识沉淀 | 5 | 5 | 100% |
-| **总计** | **55** | **55** | **100%** |
+| 产物模板合规性 | 13 | 13 | 100% |
+| **总计** | **68** | **68** | **100%** |
 
 > ⚠️ 注意：原始测试案例文档中 Phase 0-8 标准交互流程列为 15 个（TC-001~TC-015），实际内容为 12 个（TC-001~TC-012）。TC-013~TC-015 已归入 Phase 跳过测试类别。四档模式路由中 TC-016~TC-027 共 12 个全部完成。
 

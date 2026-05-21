@@ -139,6 +139,10 @@ Step 4-12 · 模式对应的 Phase 执行（见下方模式流程矩阵）
 | **L3 Provider Gateway** | `layers/L3-ARCHITECTURE/provider-gateway/_SKILL.md` |
 | **L3 Agent Isolation** | `layers/L3-ARCHITECTURE/agent-isolation/_SKILL.md` |
 | **L3 Parallel Engine** | `layers/L3-ARCHITECTURE/parallel-engine/_SKILL.md` |
+| **L2 Caveman Shrink** | `layers/L2-ENGINE/caveman-shrink/_SKILL.md` — MCP工具组压缩 |
+| **L2 CodeGraph Bridge** | `layers/L2-ENGINE/codegraph-bridge/_SKILL.md` — 本地知识图谱 |
+| **L2 Hooks System** | `layers/L2-ENGINE/hooks-system/_SKILL.md` — 运行时钩子 |
+| **L2 Surface Switch** | `layers/L2-ENGINE/surface-switch/_SKILL.md` — 运行时技能簇切换 |
 
 ---
 
@@ -1128,6 +1132,9 @@ G2 质量门: 通过 → 进入 Phase 6
 | "我的需求变了" | Phase 0+1 | 归档旧Req，重新确认 |
 | "继续" | 下一阶段Phase | 按顺序执行 |
 | "caveman extreme" | - | 通信压缩到最简 |
+| "/dfevo:surface [mode]" | - | 运行时技能簇切换 (lite/standard/strict/audit/extreme) |
+| "/dfevo:compress [level]" | - | 手动触发压缩 (lite/full/ultra/extreme/wenyan) |
+| "/dfevo:budget [action]" | - | 预算管理 (set/preset/status) |
 
 ### C. 阶段门验证
 
@@ -1208,6 +1215,23 @@ Mode: <Fast/Lean/Standard/Strict>               ← ⭐v3.1新增 Lean
 ---
 
 ## 版本
+
+### v3.2.2 (2026-05-20) — Scale & Revert Intelligence
+
+- **scale-domain-adaptive** ⭐ 动态规划深度引擎 — 基于项目规模(模块数)与领域信号(fintech/iot/saas/iot/healthcare/gamedev)自动映射 Lite/Standard/Enhanced/Advanced 四级 Phase 流程，Hooks 默认值 Scale 自适应覆盖
+- **conductor-revert** ⭐ 逻辑单元回滚协议 — Git-aware 四阶段回滚 (交互选择 → Git对账 → 计划确认 → 执行验证)，支持 Track/Phase/Task 粒度精准回滚，幽灵Commit自动处理，plan.md 状态同步
+- **hooks-system 增强** ⭐ 链式触发 (Chain-Trigger) — One-to-Many/Many-to-Many 级联执行 (parallel/serial 模式)，context-monitor → caveman-shrink → surface-switch 自动化联动；配置校验算法 (阈值递增约束 + Scale 自适应覆盖)
+- **L2-ENGINE README** 更新 — 新增 6 模块文件树 + L2↔L3/L2↔L1 协作协议表扩展 (Scale-Domain-Adaptive × DAG-Router, Conductor Revert × LearningWorkflow, Hooks Chain-Trigger × Agent-Isolation)
+- **GO.md 索引** 更新 — 新增 `/dfevo:scale` 命令 + `/dfevo:revert` 命令 + Chain-Trigger 配置语法
+
+### v3.2.1 (2026-05-20) — Runtime Intelligence Sprint
+
+- **caveman-shrink** ⭐ MCP 工具组压缩引擎 — `TASK_MASTER_TOOLS` 三级加载模式 (core/standard/all)，70-76% context 节省
+- **codegraph-bridge** ⭐ CodeGraph 本地知识图谱桥接 — SQLite+FTS5+Auto-Sync，94% 工具调用减少，`codegraph affected` 测试影响分析
+- **hooks-system** ⭐ 运行时钩子系统 — context-monitor (阈值自动压缩)、prompt-guard (脱敏/注入检测)、phase-transition (checkpoint)、tool-execution (审计/重试)
+- **surface-switch** ⭐ 运行时技能簇切换 — `/dfevo:surface [lite|standard|strict|audit|extreme]` 动态切换工具集/压缩级别，平滑过渡不丢上下文
+- **L2-ENGINE README** 更新 — 新增 4 模块文件树 + 协作协议表扩展
+- **GO.md 索引** 更新 — 新增 4 模块索引 + 3 新命令 (/dfevo:surface, /dfevo:compress, /dfevo:budget)
 
 ### v3.2.0 (2026-05-20)
 - **交互模式重构** ⭐ 核心改动: 禁止一次性抛给用户大量问题让用户自己组织答案

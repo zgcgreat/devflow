@@ -22,8 +22,29 @@ L2-ENGINE/
 │   └── SKILL.md
 ├── wave-executor/         # Wave并行执行器 + Kahn拓扑排序
 │   └── _SKILL.md
+├── token-compression-v2/  # Token压缩调度层（7级，整合caveman）
+│   └── _SKILL.md
+├── memory-compression/    # 文件内容压缩（caveman-compress）
+│   └── _SKILL.md
+├── output-compression/    # AI输出压缩（caveman输出模式）
+│   └── _SKILL.md
+├── caveman-review/        # Phase 6一行PR评论（caveman-review）
+│   └── _SKILL.md
+├── caveman-stats/         # Token节省统计（caveman-stats）
+│   └── _SKILL.md
+├── caveman-shrink/        # ⭐v3.2新增 MCP工具组压缩引擎（70-76% context节省）
+│   └── _SKILL.md
+├── codegraph-bridge/      # ⭐v3.2新增 CodeGraph知识图谱桥接（94%工具调用减少）
+│   └── _SKILL.md
+├── hooks-system/          # ⭐v3.2新增 运行时钩子系统（context-monitor/prompt-guard）
+│   └── _SKILL.md
+├── surface-switch/        # ⭐v3.2新增 运行时技能簇切换（/dfevo:surface）
+│   └── _SKILL.md
+├── scale-domain-adaptive/ # ⭐v3.2.2新增 BMAD规模自适应（动态规划深度）
+│   └── _SKILL.md
+├── conductor-revert/      # ⭐v3.2.2新增 Conductor逻辑单元回滚（四阶段协议）
+│   └── _SKILL.md
 ├── GSDFlow                # (stub — 通过 Phase 3-4 prompts 间接实现)
-├── Token Compressor       # (stub — R6 规则定义, 通过 token-manager.js 运行时调用)
 └── Wave Summary           # 见 `layers/L1-INTERACTION/phase-4-build/_SKILL.md` Step 3
 ```
 
@@ -138,6 +159,12 @@ def kahn_topological_sort(tasks):
 | LearningWorkflow | Agent Isolation | Learning提取在Execution Agent ~200K context中运行 |
 | Token Compressor | Provider Gateway | 压缩级别影响Provider成本计算 |
 | Party Mode | Specialist Pool | 共识任务 → 分派给对应专家角色 |
+| **caveman-shrink** | **Provider Gateway** | **工具组加载 → Provider 成本优化** ⭐v3.2 |
+| **codegraph-bridge** | **DAG Router** | **代码智能 → 影响分析输入** ⭐v3.2 |
+| **hooks-system** | **Agent Isolation** | **Phase 转换 → 资源释放/快照** ⭐v3.2 |
+| **surface-switch** | **Provider Gateway** | **运行时模式切换 → 工具集/压缩动态调整** ⭐v3.2 |
+| **scale-domain-adaptive** | **DAG Router + Agent Isolation** | **项目规模检测 → Phase 粒度自适应 + Hooks默认值绑定** ⭐v3.2.2 |
+| **conductor-revert** | **Agent Isolation + DAG Router** | **回滚目标 → Commit对账 → Plan同步** ⭐v3.2.2 |
 
 ### Layer 2 ↔ Layer 1 协作协议
 
@@ -147,3 +174,9 @@ def kahn_topological_sort(tasks):
 | LearningWorkflow | Phase 8 | LESSONS提名 → Phase 8归档 |
 | Token Compressor | 所有Phase | 全生命周期Token优化 |
 | GSDFlow | Phase 1-6 | GSD闭环覆盖需求→集成全流程 |
+| **caveman-shrink** | **Phase 0/1** | **模式判定 → 工具组加载** ⭐v3.2 |
+| **codegraph-bridge** | **Phase 2+** | **代码探索 → DAG 构建** ⭐v3.2 |
+| **hooks-system** | **Phase 4→5/6→7** | **Phase 转换 → Checkpoint 保存** ⭐v3.2 |
+| **surface-switch** | **所有Phase** | **/dfevo:surface → 动态模式切换** ⭐v3.2 |
+| **scale-domain-adaptive** | **Phase 0** | **项目规模检测 → Phase 粒度自适应** ⭐v3.2.2 |
+| **conductor-revert** | **Phase 4/6** | **逻辑单元回滚 → Git对账 + Plan同步** ⭐v3.2.2 |

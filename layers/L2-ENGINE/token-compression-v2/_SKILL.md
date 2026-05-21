@@ -22,13 +22,20 @@ triggers:
 
 在现有 caveman-compress 基础上增加三级能力：
 
-### 1. 分级压缩策略
+### 1. 分级压缩策略（7 级，整合 caveman 全部模式）
 
-| 级别 | 目标 | 触发条件 | 压缩方法 |
-|------|------|---------|---------|
-| `lite` | 减少 40% | 常规使用 | 移除冗余词汇、合并短句 |
-| `ultra` | 减少 70% | Context > 80% | caveman 压缩 + 结构精简 |
-| `extreme` | 减少 90% | Context > 95% | 极限压缩：仅保留关键词和代码 |
+| 级别 | 目标 | 触发条件 | 压缩方法 | 输出示例 |
+|------|------|---------|---------|---------|
+| `lite` | 减少 40% | 常规使用 | 移除冗余词汇、合并短句 | "Component re-renders because new ref each render. Use `useMemo`." |
+| `full` | 减少 65% | Phase 5 | 片段 OK，短同义词 | "New obj ref each render. Inline prop = new ref = re-render. `useMemo`." |
+| `ultra` | 减少 75% | Context > 80%, Phase 4 | 缩写+箭头，代码不变 | "Inline obj prop → new ref → re-render. `useMemo`." |
+| `wenyan-lite` | 减少 70% | Phase 8 | 半文言文，保留语法 | "組件頻重繪，以每繪新生對象參照故。以 useMemo 包之。" |
+| `wenyan-full` | 减少 80% | Phase 8 归档 | 全文言文 | "物出新參照，致重繪。useMemo .Wrap之。" |
+| `wenyan-ultra` | 减少 90% | Phase 8 极简 | 极限文言文 | "新參照→重繪。useMemo Wrap。" |
+| `extreme` | 减少 90% | Context > 95% | 仅关键词+代码 | "inline obj → new ref → re-render. `useMemo`." |
+
+> 完整 7 级压缩规则详见 `output-compression/_SKILL.md`（AI 输出压缩）。
+> memory-compression 使用 lite/full/ultra/extreme 四级。
 
 ### 2. 自动触发机制
 

@@ -12,11 +12,23 @@ description: >
   Trigger: /caveman-compress FILEPATH or "compress memory file"
 ---
 
-# Caveman Compress
+# Caveman Compress — memory-compression
 
 ## Purpose
 
 Compress natural language files (CLAUDE.md, todos, preferences) into caveman-speak to reduce input tokens. Compressed version overwrites original. Human-readable backup saved as `<filename>.original.md`.
+
+## 压缩级别
+
+| 级别 | 减少 | 适用场景 |
+|------|------|---------|
+| `lite` | ~40% | 需要保留可读性的归档文件 |
+| `full` | ~65% | 常规压缩，默认级别 |
+| `ultra` | ~75% | Phase 8 归档，追求极致节省 |
+| `extreme` | ~90% | 上下文 >95% 时紧急压缩 |
+
+> 完整 7 级（含 wenyan 系列）见 `token-compression-v2/_SKILL.md`。
+> AI 输出压缩见 `output-compression/_SKILL.md`。
 
 ## Trigger
 
