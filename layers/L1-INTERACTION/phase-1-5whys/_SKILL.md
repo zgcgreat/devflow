@@ -642,14 +642,16 @@ echo "✅ STATE.md updated with Phase 1 results"
 
 ### Step 7: 用户确认
 
-> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
+**交互协议**: 先展示完整确认清单,再逐项逐个确认(避免并列提问)。
 
+```markdown
 📍 当前阶段: Phase 1 · 5 Whys — G2 Analysis Quality Gate
 🎯 本步目标: 确认五问分析结果和 G2 Gate 决策
 
+---
 ## 📋 确认清单 (共 3 项)
 
-请按顺序逐项确认以下问题。回答选项编号 [1]/[2]/[3] 或输入自定义内容：
+请按顺序逐项确认以下问题。回答选项编号 [1]/[2]/[3] 或输入自定义内容:
 
 ### ❓ 问题 1/3：G2 Gate 决策是否合理（5 项检查全部 PASS）？
 
@@ -678,6 +680,7 @@ echo "✅ STATE.md updated with Phase 1 results"
 [3] 回退到 Phase 0 重审战略
 
 → 回答: _← 确认所有问题后流程继续_
+```→ 回答: _← 确认所有问题后流程继续_
 
 ---
 

@@ -448,14 +448,16 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 
 ### 用户确认
 
-> 格式参考: `CONSTITUTION.md` 规则 #8（用户确认协议）
+**交互协议**: 先展示完整确认清单,再逐项逐个确认(避免并列提问)。
 
+```markdown
 📍 当前阶段: Phase 1b · Discuss — Decision Capture
 🎯 本步目标: 确认 CONTEXT.md 中的技术决策是否合理
 
+---
 ## 📋 确认清单 (共 3 项)
 
-请按顺序逐项确认以下问题。回答选项编号 [1]/[2]/[3] 或输入自定义内容：
+请按顺序逐项确认以下问题。回答选项编号 [1]/[2]/[3] 或输入自定义内容:
 
 ### ❓ 问题 1/3：已确认决策是否覆盖关键实现细节（≥70%）？
 
@@ -484,6 +486,7 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 [3] 回退到 Phase 1
 
 → 回答: _← 确认所有问题后流程继续_
+```
 | **PartyMode Gate 集成** | 所有 PartyMode 审议的决策均已消费 gate output 并标记 | 未消费 gate result 的决策计为 [NEEDS CLARIFICATION] |
 | **PartyMode Gate Report** | `.devflow-evo/<req-id>/partymode-gate-report.md` 存在（如有 PartyMode 调用） | 缺失则回溯 PartyMode Step D |
 
