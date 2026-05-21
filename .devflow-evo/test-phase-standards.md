@@ -462,7 +462,7 @@ STATE.md 已更新:
 | Phase 3 | `03-tasks.md` | ✅ |
 | Phase 4 | `*-dev-log.md` | ✅ |
 | Phase 5 | `05-test-report.md` | ✅ |
-| Phase 6 | `06-code-review.md` | ✅ |
+| Phase 6 | `06-review.md` | ✅ |
 | Phase 7 | `07-canary.md` | ✅ |
 | Phase 8 | `LESSONS.md` + domain-skills | ✅ |
 

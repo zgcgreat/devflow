@@ -11,10 +11,10 @@
 
 | 指标 | 数值 |
 |------|------|
-| 测试案例总数 | 55 |
-| 已完成测试 | 55 |
+| 测试案例总数 | 58 |
+| 已完成测试 | 58 |
 | 通过率 | 100% |
-| 测试报告数量 | 8 |
+| 测试报告数量 | 9 |
 
 ---
 
@@ -37,7 +37,7 @@
 | TC-011 | Phase 8 — 知识归档 | ✅ | test-phase-standards.md |
 | TC-012 | Phase 0-8 端到端 | ✅ | test-phase-standards.md |
 
-### 2. Phase 跳过 & 模式路由（18/18 = 100%）
+### 2. Phase 跳过 & 模式路由（15/15 = 100%）
 
 | 测试 ID | 场景 | 状态 | 报告文件 |
 |---------|------|------|---------|
@@ -161,15 +161,16 @@
 
 | 文件 | 行数 | 覆盖 |
 |------|------|------|
-| `test-phase-standards.md` | ~350 | TC-001~TC-012 |
-| `test-phase-skip-fast-standard.md` | ~250 | TC-013~TC-018 |
+| `test-phase-standards.md` | ~500 | TC-001~TC-012 |
+| `test-phase-skip-fast-standard.md` | ~340 | TC-013~TC-016, TC-018 |
 | `test-lean-mode.md` | ~100 | TC-017 |
-| `test-strict-mode.md` | ~100 | TC-019 |
-| `test-mode-upgrade.md` | ~150 | TC-020~TC-023 |
-| `test-interaction.md` | ~200 | TC-028~TC-035 |
-| `test-gates.md` | ~350 | TC-036~TC-045 |
-| `test-boundary-and-learning.md` | ~300 | TC-046~TC-058 |
-| `TEST-SUMMARY.md` | 本文档 | 全部 55 个 |
+| `test-strict-mode.md` | ~120 | TC-019 |
+| `test-mode-upgrade.md` | ~140 | TC-020~TC-023 |
+| `test-interaction.md` | ~270 | TC-028~TC-035 |
+| `test-gates.md` | ~430 | TC-036~TC-045 |
+| `test-boundary-and-learning.md` | ~450 | TC-046~TC-058 |
+| `test-verification-report.md` | ~360 | 全部 58 项交叉验证 |
+| `TEST-SUMMARY.md` | 本文档 | 全部 58 项汇总 |
 
 ---
 

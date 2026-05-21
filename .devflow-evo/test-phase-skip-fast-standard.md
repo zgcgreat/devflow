@@ -326,9 +326,9 @@
 | TC-014 | Phase 1 条件跳过 | ✅ |
 | TC-015 | Phase 2a 条件触发 | ✅ |
 | TC-016 | Fast 模式路由 | ✅ |
-| TC-017 | Lean 模式路由 | ✅ (已执行) |
+| TC-017 | Lean 模式路由 | ✅ (见 test-lean-mode.md) |
 | TC-018 | Standard 模式路由 | ✅ |
-| TC-019 | Strict 模式路由 | ✅ (已执行) |
+| TC-019 | Strict 模式路由 | ✅ (见 test-strict-mode.md) |
 
 **结论**: ✅ **全部通过** — Phase 跳过及四档模式路由逻辑正确
 
