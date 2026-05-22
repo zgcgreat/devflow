@@ -24,7 +24,7 @@
 
 ### 用途
 
-在项目中创建 `.devflow-evo/` 目录结构，包括 STATE.md、config.yaml、memory/ 等标准文件。
+在项目中创建 `.devflow-evo/` 目录结构，与各 Phase prompt 实际引用路径严格对齐。
 
 ### 等效命令
 
@@ -47,13 +47,18 @@ python bin/init.py --project-dir <path> --mode <fast|standard|strict>
 1. 在项目中创建 `.devflow-evo/` 目录结构
 2. 创建 `.devflow-evo/STATE.md`，包含阶段进度清单
 3. 创建 `.devflow-evo/config.yaml`，写入模式和技术栈配置
-4. 在 `.devflow-evo/memory/` 下创建：
-   - PROJECT_CONTEXT.md（项目背景模板）
+4. 在 `.devflow-evo/` 根级创建项目级常驻文件：
+   - CONTEXT.md（项目上下文快照模板，由 I-intel-scan 填充）
+   - lessons-learned.md（经验教训模板，跨 req 累积）
    - DECISIONS.md（ADR 决策记录模板）
    - KNOWN_FAILURES.md（已知失败模式模板）
-   - LESSONS.md（经验教训模板）
-5. 在项目根目录创建或更新 `.gitignore`，加入 `.devflow-evo/`
-6. 验证所有文件已创建
+5. 创建 `.devflow-evo/adr/` 目录（ADR 子目录）
+6. 创建 `.devflow-evo/archive/` 目录（已完成 req 归档）
+7. 创建 `.devflow-evo/evolve/` 目录（A-evolve 演进报告）
+8. 创建 `.devflow-evo/health/` 目录（M-health 巡检报告）
+9. 创建 `.devflow-evo/memory/domain-skills/` 目录（Domain Skills 沉淀）
+10. 在项目根目录创建或更新 `.gitignore`，加入 `.devflow-evo/`
+11. 验证所有文件和目录已创建
 ```
 
 ### 预期产物
@@ -61,17 +66,22 @@ python bin/init.py --project-dir <path> --mode <fast|standard|strict>
 ```
 <project>/
 ├── .devflow-evo/
-│   ├── STATE.md
-│   ├── config.yaml
-│   ├── memory/
-│   │   ├── PROJECT_CONTEXT.md
-│   │   ├── DECISIONS.md
-│   │   ├── KNOWN_FAILURES.md
-│   │   └── LESSONS.md
-│   └── hooks/
-│   └── templates-gsd/
-└── .gitignore  # 包含 .devflow-evo/
+│   ├── STATE.md                    ← 全局状态（所有 Phase 读写）
+│   ├── config.yaml                 ← 项目配置（模式 + 技术栈）
+│   ├── CONTEXT.md                  ← 项目上下文快照（I-intel-scan 创建）
+│   ├── lessons-learned.md          ← 经验教训（跨 req 累积，4-dev/5-test/7-int 写入）
+│   ├── DECISIONS.md                ← ADR 决策记录（8-archive 读取）
+│   ├── KNOWN_FAILURES.md           ← 已知失败模式（8-archive 读取）
+│   ├── adr/                        ← ADR 子目录（2-design 创建 <NNN>-<title>.md）
+│   ├── archive/                    ← 已归档 req（7-integration 移入 <YYYY-MM-DD>-<req-id>/）
+│   ├── evolve/                     ← A-evolve 演进报告
+│   ├── health/                     ← M-health 巡检报告
+│   └── memory/
+│       └── domain-skills/          ← Domain Skills 沉淀（8-archive 读取）
+└── .gitignore                      # 包含 .devflow-evo/
 ```
+
+> **按需创建**：constitution.md / system-architecture.md / requirements-baseline.md / design-baseline.md / 需求LOG.md 不在 init 阶段创建，由对应 Phase（0-confirm / A-architect / 7-integration）按需生成。`<req-id>/` 子目录由 0-confirm 创建。
 
 ---
 
@@ -220,7 +230,7 @@ python bin/hook-manager.py session-end
 
 1. 检查 `.devflow-evo/STATE.md` 是否存在且内容有效
 2. 验证当前 Phase 状态
-3. 检查记忆文件完整性（PROJECT_CONTEXT.md, DECISIONS.md, LESSONS.md）
+3. 检查项目级常驻文件完整性（CONTEXT.md, lessons-learned.md, DECISIONS.md）
 4. 检测 GitNexus 是否可用，不可用则提示降级方案
 5. 输出会话初始化报告
 ```
@@ -232,7 +242,7 @@ python bin/hook-manager.py session-end
 
 1. 更新 `.devflow-evo/STATE.md`，记录当前进度
 2. 检查所有产物是否已保存
-3. 更新 LESSONS.md（如有经验教训）
+3. 更新 lessons-learned.md（如有经验教训）
 4. 生成会话结束摘要
 ```
 
@@ -354,13 +364,15 @@ python bin/external-adapter.py call-chain <function>
 
 ### 用途
 
-管理 `.devflow-evo/memory/` 下的记忆文件。
+管理 `.devflow-evo/` 下的项目级常驻文件和记忆目录。
+
+> **路径约定**：核心文件位于 `.devflow-evo/` 根级（非 `memory/` 子目录），与各 Phase prompt 实际引用路径一致。
 
 ### 等效命令
 
 ```bash
-python bin/memory-system.py read PROJECT_CONTEXT
-python bin/memory-system.py write LESSONS
+python bin/memory-system.py read CONTEXT
+python bin/memory-system.py write lessons-learned
 ```
 
 ### 纯 Markdown 指令
@@ -368,18 +380,19 @@ python bin/memory-system.py write LESSONS
 #### 读取记忆文件
 
 ```markdown
-请读取 `.devflow-evo/memory/` 下的记忆文件：
+请读取 `.devflow-evo/` 下的项目级常驻文件：
 
-1. 读取 PROJECT_CONTEXT.md，提取项目背景
-2. 读取 DECISIONS.md，提取历史决策
-3. 读取 LESSONS.md，提取经验教训
-4. 输出摘要报告
+1. 读取 CONTEXT.md，提取项目上下文快照
+2. 读取 lessons-learned.md，提取经验教训
+3. 读取 DECISIONS.md，提取历史决策
+4. 读取 KNOWN_FAILURES.md，提取已知失败模式
+5. 输出摘要报告
 ```
 
-#### 写入记忆文件
+#### 写入经验教训
 
 ```markdown
-请将以下内容写入 `.devflow-evo/memory/LESSONS.md`：
+请将以下内容写入 `.devflow-evo/lessons-learned.md`：
 
 经验教训: <教训内容>
 
@@ -392,7 +405,7 @@ python bin/memory-system.py write LESSONS
 #### 更新决策记录
 
 ```markdown
-请在 `.devflow-evo/memory/DECISIONS.md` 中新增 ADR 条目：
+请在 `.devflow-evo/DECISIONS.md` 中新增 ADR 条目：
 
 - 标题: <决策标题>
 - 日期: <日期>
@@ -401,6 +414,16 @@ python bin/memory-system.py write LESSONS
 - 理由: <选择理由>
 - 后果: <正面/负面后果>
 - 状态: <已接受/已替代/已废弃>
+```
+
+#### 更新项目上下文
+
+```markdown
+请更新 `.devflow-evo/CONTEXT.md`：
+
+> ⚠️ 禁止直接修改——更新统一走 `A-evolve` 或 `I-intel-scan`
+
+如需更新，请使用 A-evolve 或 I-intel-scan 流程。
 ```
 
 ---
@@ -556,15 +579,16 @@ python bin/memory-system.py write LESSONS
 
 ### Python 脚本 → Markdown 指令映射
 
-| Python 脚本 | Markdown 指令 | 保留 .py 文件 |
-|------------|--------------|--------------|
-| `init.py` | [init](#init) | ✅ 保留 |
-| `hook-manager.py` | [hook-manager](#hook-manager) | ✅ 保留 |
-| `external-adapter.py` | [external-adapter](#external-adapter) | ✅ 保留 |
-| `memory-system.py` | [memory-system](#memory-system) | ✅ 保留 |
-| `stage-executor.py` | [stage-executor](#stage-executor) | ✅ 保留 |
-| `token-manager.py` | [token-manager](#token-manager) | ✅ 保留 |
-| `gate-check.sh` | [gate-check](#gate-check) | ✅ 保留 |
+| Python 脚本 | Markdown 指令 | 说明 |
+|------------|--------------|------|
+| `init.py` | [init](#init) | 纯 Markdown 指令即可完成 |
+| `hook-manager.py` | [hook-manager](#hook-manager) | 纯 Markdown 指令即可完成 |
+| `external-adapter.py` | [external-adapter](#external-adapter) | 纯 Markdown 指令即可完成 |
+| `memory-system.py` | [memory-system](#memory-system) | 纯 Markdown 指令即可完成 |
+| `stage-executor.py` | [stage-executor](#stage-executor) | 纯 Markdown 指令即可完成 |
+| `token-manager.py` | [token-manager](#token-manager) | 纯 Markdown 指令即可完成 |
+
+> **注意**：Python 脚本保留为可选增强，但所有功能均可通过纯 Markdown 指令完成，无需任何运行时环境。
 
 ### 旧版 .js 文件
 
@@ -592,7 +616,8 @@ rm bin/*.js
 
 ## 版本信息
 
-- **bin README 版本**: v1.0.0 (2025-05-19)
-- **覆盖脚本**: 6 个 Python 脚本 + 1 个 Shell 脚本
+- **bin README 版本**: v1.1.0 (2026-05-22)
+- **覆盖脚本**: 6 个 Python 脚本
 - **等效 Markdown 指令**: 全部已提供
 - **零依赖**: ✅ 验证通过
+- **路径对齐**: ✅ 与 references/prompts/ 实际引用路径一致
