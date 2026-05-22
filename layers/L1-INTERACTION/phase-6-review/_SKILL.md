@@ -9,7 +9,7 @@ description: |
 layer: L1-INTERACTION
 phase: 6
 requires: [g6-gate-decision, test-report, coverage-metrics]
-provides: [review-report, fix-recommendations, g7-gate-decision]
+provides: [review-report, fix-recommendations, g7-gate-decision, review-context]
 source: 交互层 Three-Layer Adversarial Review + gstack Cross-Model Review (R14) + Two-Stage Spec Compliance
 dependencies:
   - code-quality, spec-compliance

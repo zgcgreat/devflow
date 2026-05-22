@@ -3,13 +3,14 @@ name: memory-compression
 version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [memory-file-input]
+requires: []
 provides: [compressed-file, original-backup]
 description: >
   Compress natural language memory files (CLAUDE.md, todos, preferences) into caveman format
   to save input tokens. Preserves all technical substance, code, URLs, and structure.
   Compressed version overwrites the original file. Human-readable backup saved as FILE.original.md.
   Trigger: /caveman-compress FILEPATH or "compress memory file"
+external-inputs: [memory-file-input]
 ---
 
 # Caveman Compress — memory-compression
@@ -123,3 +124,32 @@ Compressed:
 - If unsure whether something is code or prose, leave it unchanged
 - Original file is backed up as FILE.original.md before overwriting
 - Never compress FILE.original.md (skip it)
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Code block or URL corrupted during compression | Restore from .original.md backup immediately | Compression blocked; original file preserved |
+| **P1** | RECOVERABLE | Structure lost — heading hierarchy flattened or table broken | Targeted repair of affected section (do not recompress) | Minor data quality loss; recoverable |
+| **P2** | WARNING | Over-compression — technical terms abbreviated beyond recognition | Flag for review; add to exclusion list | Continue; document in SUMMARY |
+| **P3** | DEGRADATION | Backup .original.md missing or corrupted | Proceed with caution; flag for manual verification | Reduced safety net; higher risk |
+
+**Severity Assignment Rules**:
+- Default to P1 for any structural damage
+- Escalate to P0 if code blocks or URLs are affected (never-modify rule violation)
+- Never demote: once P0, only manual verification can clear
+
+## Boundary Conditions
+
+### When to Refuse Compression
+- File is not natural language (.py, .js, .ts, .json, .yaml, .toml, .env) → refuse
+- File already compressed (.original.md backup exists) → skip
+- File contains >50% code by line count → compress only prose sections
+
+### When to Use Conservative Compression
+- File contains legal/compliance text → lite level only
+- File is shared across team → warn that compression changes readability
+- First time compressing → use lite or full, never extreme
+
+### Degradation Path
+1. lite → full → ultra → extreme (only when context > 95%)

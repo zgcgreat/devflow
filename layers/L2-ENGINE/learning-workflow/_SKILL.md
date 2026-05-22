@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [wave-summaries, execution-data]
+requires: [wave-summaries]
 provides: [lessons-updated, domain-skills-promoted, cross-wave-injections]
 description: |
   Automatic evolution engine that extracts lessons from execution data, promotes high-frequency
@@ -23,6 +23,7 @@ allowed-tools:
   - Write
   - Edit
   - Bash
+external-inputs: [execution-data]
 ---
 
 # LearningWorkflow — Automatic Evolution Engine

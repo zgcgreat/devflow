@@ -6,7 +6,7 @@ version: 3.0.0
 layer: L1-INTERACTION
 phase: 5
 requires: [g5-gate-decision, wave-summaries, code-commits]
-provides: [test-report, coverage-metrics, bug-fix-commits, g6-gate-decision]
+provides: [test-report, coverage-metrics, bug-fix-commits, g6-gate-decision, all-tests-passed]
 source: 交互层 Phase 5 + 引擎层 QA
 dependencies:
   - writing-plans

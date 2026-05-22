@@ -1,13 +1,17 @@
 ---
 name: stage-1-analysis
 version: 3.0.0
-description: devflow-kit工作流第1阶段 - 需求分析与AC拆解
+deprecated: true
+replaced-by: phase-1-5whys
+description: [DEPRECATED] devflow-kit工作流第1阶段 - 需求分析与AC拆解 — 已被 L1 phase-1-5whys 替代
 author: devflow-kit
 dependencies:
   - executing-plans
 ---
 
 # devflow-kit Stage: 1-Analysis（需求分析）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-1-5whys` 替代。请使用 Phase 技能。
 
 > **阶段定位**：将模糊需求转化为明确的验收标准
 > **前置条件**：00-requirements.md 已完成

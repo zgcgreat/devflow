@@ -6,7 +6,7 @@ layer: L1-INTERACTION
 phase: 6
 parent: phase-6-review
 gate: G7
-requires: [g6-gate, test-results]
+requires: [g6-gate-decision, test-results]
 provides: [test-coverage-analysis, edge-case-findings]
 description: Testing Specialist for Phase 6+ code review — coverage gaps, edge cases, isolation, negative paths. Use when "test review", "coverage analysis", "mutation testing". (devflow-evo)
 source: 架构层 / supercorp-ultimate fusion

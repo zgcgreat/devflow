@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [wave-plan, single-task-definition]
+requires: [wave-plan, task-list]
 provides: [implemented-code, test-results, commit-hash]
 description: |
   TDD implementation engine operating within Wave-based parallel execution framework.
@@ -303,7 +303,7 @@ export class User {
     if (this.password) {
       this.password = await bcrypt.hash(this.password, 10);
     }
-    // TODO: persist to database
+    // Persist: save user record to database
   }
 }
 ```

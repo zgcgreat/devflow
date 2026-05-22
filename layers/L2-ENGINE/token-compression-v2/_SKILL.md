@@ -3,7 +3,7 @@ name: token-compression-v2
 version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [context-data, compression-trigger]
+requires: []
 provides: [compressed-context, budget-report]
 description: Enhanced token compression with tiered strategies, auto-trigger on phase transitions, and context budget management
 source: caveman-compress + GSD context-budget + superpowers Karpathy rules
@@ -14,6 +14,7 @@ triggers:
   - phase transition
   - context window threshold
   - manual compress command
+external-inputs: [context-data, compression-trigger]
 ---
 
 # Token Compression v2 — 分级压缩引擎
@@ -119,3 +120,30 @@ layers/L2-ENGINE/token-compression-v2/
 4. **结构 > 内容** — 良好的结构比内容更重要
 
 应用方式：在 ultra/extreme 级别压缩时，优先保留代码块和结构，移除描述性文本。
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Core operation fails with unrecoverable state corruption | Halt, rollback to last checkpoint, escalate | Blocks dependent operations |
+| **P1** | RECOVERABLE | Operation fails but state remains consistent | Retry 3x with exponential backoff (1s→2s→4s); if still fails → document, mark NEEDS_WORK | No cross-skill impact |
+| **P2** | WARNING | Operation succeeds with quality degradation | Document in SUMMARY, do NOT block execution | Continue normally |
+| **P3** | DEGRADATION | Operation timeout or resource exhaustion | Cancel current sub-operation, mark PARTIAL_PASS, log to heartbeat | Cancels current op; next cycle may proceed |
+
+**Severity Assignment Rules**:
+- Default to P1 for any operation failure
+- Escalate to P0 if state corruption detected or dependent operations affected
+- Never demote: once P0, only manual override can clear
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- Operation produces corrupted output → halt and rollback
+- Dependency unavailable and no fallback → halt, report missing dependency
+
+### When to Skip Operation
+- Input preconditions not met → skip, log reason, proceed to next step
+- Already completed in current session → skip (idempotency)
+
+### Degradation Path
+1. Full operation → 2. Retry with backoff → 3. Fallback/skip → 4. Halt and report

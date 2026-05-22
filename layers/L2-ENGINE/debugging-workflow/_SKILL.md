@@ -3,10 +3,11 @@ name: debugging-workflow
 version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [failed-test, bug-report]
+requires: []
 provides: [root-cause-analysis, fix-proposal, defense-in-depth]
 source: devflow-kit systematic-debugging (~500 lines across multiple files)
 description: Four-phase methodology for systematic debugging — inserted between Phase 4 code and Phase 5 testing
+external-inputs: [failed-test, bug-report]
 ---
 
 # Systematic Debugging — 系统化调试方法论
@@ -309,3 +310,32 @@ phase_4_completion:
 > **Source files**: SKILL.md (~297 lines) + root-cause-tracing.md (~170 lines) + condition-based-waiting.md (~116 lines) + defense-in-depth.md (~123 lines) + condition-based-waiting-example.ts (~159 lines)  
 > **Total source**: ~865 lines condensed to integrated format  
 > **Key adaptation**: Inserted as Phase 4→5 transition hook in devflow-evo-evo's DAG; aligned with Wave Executor post-phase hooks
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Root cause indeterminate after 3+ systematic attempts | Halt, escalate to architectural review | Debugging blocked; may require design change |
+| **P1** | RECOVERABLE | Flaky test — passes intermittently, no stable reproduction | Collect more evidence; add condition-based-waiting; mark FLAKY | Debugging continues with uncertainty flag |
+| **P2** | WARNING | Fix introduced new symptom in different area | Document new symptom; return to Phase 1 | Continue with expanded investigation scope |
+| **P3** | DEGRADATION | Evidence incomplete (missing logs, no stack trace) | Best-effort analysis; mark as LOW_CONFIDENCE | Proceed; flag for re-investigation |
+
+**Severity Assignment Rules**:
+- Default to P2 for any unexpected behavior post-fix
+- Escalate to P0 if 3+ fix attempts fail (Iron Law: STOP and question architecture)
+- Never demote: once 3+ failures logged, must go to architectural review
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- 3+ failed fix attempts → STOP, question architecture (per Iron Law)
+- Fix requires changes to >5 files → likely architectural issue
+- Bug affects security-critical path → escalate to security specialist
+
+### When to Skip Debugging Workflow
+- Trivial typo with obvious root cause → direct fix + test
+- Known fix documented in LESSONS → apply known fix, verify
+- Emergency hotfix (production down) → minimal fix, schedule full debugging later
+
+### Degradation Path
+1. Full systematic debugging → 2. Abbreviated investigation → 3. Best-effort fix + schedule follow-up

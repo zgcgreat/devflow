@@ -6,7 +6,7 @@ version: 3.0.0
 layer: L1-INTERACTION
 phase: 3
 requires: [g3.5-gate-decision, design-document]
-provides: [task-list, dag-dependencies, wave-plan, g4-gate-decision]
+provides: [task-list, dag-dependencies, wave-plan, g4-gate-decision, dependency-annotations]
 source: 交互层 Phase 3 (Task Plan & DAG)
 dependencies:
   - writing-plans
@@ -89,7 +89,7 @@ Wave N3: [T05, T06]  ← T03 完成后并行执行
 
 ### Step 3: 编写任务拆分文档
 
-按模板 `templates/03-tasks.md` 输出每个 Task：
+按模板 `references/templates/03-tasks.md` 输出每个 Task：
 
 ```markdown
 ### Task ID: {kebab-case-id}

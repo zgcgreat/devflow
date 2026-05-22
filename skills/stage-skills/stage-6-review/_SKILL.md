@@ -1,7 +1,9 @@
 ---
 name: stage-6-review
 version: 3.0.0
-description: devflow-kit工作流第6阶段 - 三轮代码审查
+deprecated: true
+replaced-by: phase-6-review
+description: [DEPRECATED] devflow-kit工作流第6阶段 - 三轮代码审查 — 已被 L1 phase-6-review 替代
 author: devflow-kit
 dependencies:
   - verification-before-completion
@@ -9,6 +11,8 @@ dependencies:
 ---
 
 # devflow-kit Stage: 6-Review（代码审查）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-6-review` 替代。请使用 Phase 技能。
 
 > **阶段定位**：三轮审查确保代码质量、安全、业务正确性
 > **前置条件**：05-test-report.md 已完成且通过

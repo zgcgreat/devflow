@@ -1,9 +1,9 @@
 ---
 name: caveman-shrink
-version: 3.2.0
+version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [mcp-tools, tool-group-config]
+requires: [config-validation]
 provides: [compressed-tool-descriptions, reduced-context-window]
 description: MCP tool/group-level compression engine — shrinks tool descriptions and group metadata from context, reducing 70-76% context consumption
 source: claude-task-master TASK_MASTER_TOOLS + GSD context-budget + caveman compression
@@ -14,6 +14,7 @@ triggers:
   - session start
   - tool group switch
   - context window > 70%
+external-inputs: [mcp-tools]
 ---
 
 # Caveman Shrink — MCP 中间件压缩引擎
@@ -164,3 +165,32 @@ layers/L2-ENGINE/caveman-shrink/
 | all 模式 | ~40K | ~40K | 0% |
 
 > 与 claude-task-master 的 `TASK_MASTER_TOOLS` 环境变量方案对齐，确保跨 agent 兼容。
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Tool description corruption — compressed schema lost critical parameter info | Restore from .original.md backup, increase compression level | Blocks tool usage until restored |
+| **P1** | RECOVERABLE | Context threshold misjudged — wrong tool group loaded | Re-evaluate context usage, switch to appropriate group | Auto-correct on next trigger |
+| **P2** | WARNING | Tool description ambiguous after compression — parameter type unclear | Document in SUMMARY; add inline annotation | Continue normally; flag for review |
+| **P3** | DEGRADATION | Context > 95% triggered extreme compression, lost tool discoverability | Operate with tool name map only | Reduced tool access; recover when context frees |
+
+**Severity Assignment Rules**:
+- Default to P1 for any tool invocation failure after compression
+- Escalate to P0 if lost info affects a tool currently in use
+- Never demote: once P0, only manual override can clear
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- Context > 95% even after extreme compression → halt, request user to prune session
+- >3 consecutive tool-not-found errors after group switch → disable compression, load full descriptions
+- MCP tool schema changed upstream → invalidate cached compressed descriptions
+
+### When to Skip Compression
+- Context < 30% — no benefit
+- Tool count ≤ 5 — minimal savings
+- Active debugging session — need full tool descriptions
+
+### Degradation Path
+1. extreme (tool names only) → 60s timeout → ask user to reduce scope → halt

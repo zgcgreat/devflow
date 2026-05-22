@@ -1,5 +1,7 @@
 ---
 name: manage-memory
+version: 3.0.0
+standalone: true
 description: 管理 DevFlow Kit 的记忆系统。用于初始化、更新、验证和清理 .superpowers-memory/ 目录中的记忆文件。
 ---
 

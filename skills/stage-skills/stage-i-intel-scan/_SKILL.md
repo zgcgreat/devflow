@@ -1,13 +1,17 @@
 ---
 name: stage-i-intel-scan
 version: 3.0.0
-description: devflow-kit可选命令 - 项目入场扫描与上下文化
+deprecated: true
+replaced-by: phase-0-strategy
+description: [DEPRECATED] devflow-kit可选命令 - 项目入场扫描与上下文化 — 已被 L1 phase-0-strategy 替代
 author: devflow-kit
 dependencies:
   - writing-plans
 ---
 
 # devflow-kit Stage: I-Intel-Scan（项目扫描）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-0-strategy` 替代。请使用 Phase 技能。
 
 > **阶段定位**：新项目或大改动前的代码库扫描，生成上下文
 > **前置条件**：无（首次执行或项目结构大变化时执行）

@@ -1,13 +1,17 @@
 ---
 name: stage-3-task
 version: 3.0.0
-description: devflow-kit工作流第3阶段 - 任务拆分与并行规划
+deprecated: true
+replaced-by: phase-3-task-plan
+description: [DEPRECATED] devflow-kit工作流第3阶段 - 任务拆分与并行规划 — 已被 L1 phase-3-task-plan 替代
 author: devflow-kit
 dependencies:
   - writing-plans
 ---
 
 # devflow-kit Stage: 3-Task（任务拆分）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-3-task-plan` 替代。请使用 Phase 技能。
 
 > **阶段定位**：将设计拆分为可并行的原子任务，并生成详细实施计划
 > **前置条件**：02-design.md 已完成

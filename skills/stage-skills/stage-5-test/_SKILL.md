@@ -1,13 +1,17 @@
 ---
 name: stage-5-test
 version: 3.0.0
-description: devflow-kit工作流第5阶段 - 测试验证与报告生成
+deprecated: true
+replaced-by: phase-5-test
+description: [DEPRECATED] devflow-kit工作流第5阶段 - 测试验证与报告生成 — 已被 L1 phase-5-test 替代
 author: devflow-kit
 dependencies:
   - testing-suite
 ---
 
 # devflow-kit Stage: 5-Test（测试验证）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-5-test` 替代。请使用 Phase 技能。
 
 > **阶段定位**：验证所有AC是否通过
 > **前置条件**：4-dev阶段所有任务完成

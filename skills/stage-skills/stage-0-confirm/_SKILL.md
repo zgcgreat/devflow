@@ -1,7 +1,9 @@
 ---
 name: stage-0-confirm
 version: 3.0.0
-description: devflow-kit工作流第0阶段 - 需求确认与模式判定
+deprecated: true
+replaced-by: phase-0-strategy
+description: [DEPRECATED] devflow-kit工作流第0阶段 - 需求确认与模式判定 — 已被 L1 phase-0-strategy 替代
 author: devflow-kit
 dependencies:
   - brainstorming
@@ -9,6 +11,8 @@ dependencies:
 ---
 
 # devflow-kit Stage: 0-Confirm（需求确认）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-0-strategy` 替代。请使用 Phase 技能。
 
 > **阶段定位**：工作流入口，澄清需求并判定执行模式
 > **前置条件**：无

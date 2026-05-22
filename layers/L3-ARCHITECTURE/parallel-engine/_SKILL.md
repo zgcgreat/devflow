@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
-requires: [wave-plan, provider-chains]
+requires: [wave-plan]
 provides: [parallel-execution-plan, dispatch-coordination]
 description: |
   Dependency-aware wave scheduling engine for parallel task orchestration.
@@ -27,6 +27,7 @@ allowed-tools:
   - Bash
   - Glob
   - Edit
+runtime-inputs: [provider-chains]
 ---
 
 # L3-Parallel Engine — Wave N 并行编排引擎

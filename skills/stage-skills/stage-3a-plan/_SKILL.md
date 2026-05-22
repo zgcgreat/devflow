@@ -1,13 +1,17 @@
 ---
 name: stage-3a-plan
 version: 3.0.0
-description: devflow-kit工作流第3a阶段 - 详细实施计划生成
+deprecated: true
+replaced-by: phase-3-task-plan
+description: [DEPRECATED] devflow-kit工作流第3a阶段 - 详细实施计划生成 — 已被 L1 phase-3-task-plan 替代
 author: devflow-kit
 dependencies:
   - planning-and-context
 ---
 
 # devflow-kit Stage: 3a-Plan（实施计划）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-3-task-plan` 替代。请使用 Phase 技能。
 
 > **阶段定位**：为每个任务提供详细技术方案
 > **前置条件**：03-tasks.md 已完成

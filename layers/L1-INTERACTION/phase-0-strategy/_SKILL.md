@@ -8,7 +8,7 @@ description: |
   Strategy and ideation phase — capture forward-looking ideas as structured seeds,
   define project scope, and establish initial context before formal Phase 1 analysis.
   Use when: "strategy phase", "seed capture", "project kickoff", "ideation".
-requires: [project-context]
+requires: []
 provides: [g0-gate-decision, strategy-seeds, project-scope]
 dependencies:
   - writing-plans
@@ -24,6 +24,7 @@ allowed-tools:
   - Bash
   - Write
   - Edit
+external-inputs: [project-context]
 ---
 
 # Phase 0: 战略与种子 (Strategy & Seed Capture)
@@ -79,11 +80,11 @@ Phase 0 是 devflow-evo 工作流的起点，负责：
 🎯 本步目标: 确认种子捕获和项目范围
 
 ---
-## 📋 确认清单 (共 2 项)
+## 📋 确认清单 (共 3 项)
 
 请按顺序逐项确认以下问题。回答选项编号 [1]/[2]/[3] 或输入自定义内容：
 
-### ❓ 问题 1/2：种子捕获是否完整？
+### ❓ 问题 1/3：种子捕获是否完整？
 
 [1] ✅ 完整，继续 ← 推荐
 [2] 需要添加更多种子
@@ -93,7 +94,17 @@ Phase 0 是 devflow-evo 工作流的起点，负责：
 
 ---
 *(确认后显示)*
-### ❓ 问题 2/2：是否同意进入 Phase 1 分析？
+### ❓ 问题 2/3：项目风险级别评估？
+
+[1] 🟢 低风险 — 纯新项目，无历史约束 ← 推荐(新项目)
+[2] 🟡 中风险 — 有既有系统，需要兼容
+[3] 🔴 高风险 — 关键业务系统，严格变更控制
+
+→ 回答: _← 请先确认此题后再看下一题_
+
+---
+*(确认后显示)*
+### ❓ 问题 3/3：是否同意进入 Phase 1 分析？
 
 [1] ✅ 同意，开始 Phase 1 ← 推荐
 [2] 需要修改种子
@@ -115,6 +126,14 @@ Phase 0 是 devflow-evo 工作流的起点，负责：
 | P0 | NO_SEEDS | 无种子文件，项目无方向 | 执行种子捕获流程 |
 | P1 | INCOMPLETE_SEED | 种子缺少 trigger_when 或 scope | 使用 --enrich 补充 |
 | P2 | STALE_SEED | 种子长期 dormant 未被触发 | 审查触发条件，调整或归档 |
+
+## Boundary Conditions (Phase 0 Strategy)
+
+| Condition | Action | Rationale |
+|-----------|--------|-----------|
+| **Escalate**: 无 project-context 且用户沉默 >3 轮 | 中止并请求用户提供项目背景 | Phase 0 需要项目上下文才能产出有意义种子 |
+| **Skip**: 已有 strategy-seeds 且无变更需求 | 直接 PASS G0，进入 Phase 1 | 避免重复捕获已稳定的战略 |
+| **Degradation**: 项目上下文不足 | 输出 CONDITIONAL PASS + 标记 `[TODO: enrich context]` | 低上下文仍可产出种子，但需后续补充 |
 
 ## Provider 路由
 

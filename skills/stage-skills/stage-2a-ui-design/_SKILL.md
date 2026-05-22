@@ -1,13 +1,17 @@
 ---
 name: stage-2a-ui-design
 version: 3.0.0
-description: devflow-kit工作流第2a阶段 - UI设计与交互规范
+deprecated: true
+replaced-by: phase-2a-shotgun
+description: [DEPRECATED] devflow-kit工作流第2a阶段 - UI设计与交互规范 — 已被 L1 phase-2a-shotgun 替代
 author: devflow-kit
 dependencies:
   - frontend-ui-engineering
 ---
 
 # devflow-kit Stage: 2a-UI Design（UI设计）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-2a-shotgun` 替代。请使用 Phase 技能。
 
 > **阶段定位**：前端项目的视觉和交互设计
 > **前置条件**：02-design.md 已完成，项目类型为前端

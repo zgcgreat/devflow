@@ -1,12 +1,17 @@
 ---
 name: conductor-revert
-version: 3.2.2
+version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [phase-6, hooks-system, codegraph-bridge]
+requires: []
 provides: [logical-unit-revert, git-aware-rollback, checkpoint-sync]
+dependencies:
+  - phase-6 (module dependency)
+  - hooks-system (module dependency)
+  - codegraph-bridge (module dependency)
 description: Conductor-inspired four-phase logical unit rollback — tracks, phases, tasks → git history reconciliation → execution → verification
 source: Conductor revert.toml (4-phase protocol: Interactive Selection → Git Reconciliation → Execution Plan → Execution & Verification)
+external-inputs: [project-context]
 ---
 
 # Conductor Revert — 逻辑单元回滚
@@ -216,3 +221,32 @@ revert:
 - Phase 8 归档后,Track 标记为 IMMUTABLE
 - 回滚归档 Track → 触发 LESSONS 重新沉淀
 - 回滚 Domain-Skills → 标记为 DEPRECATED + 保留引用
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Git revert conflicts that cannot be auto-resolved on critical files | Halt revert, present conflict diff, ask user to resolve | Revert blocked; no state change |
+| **P1** | RECOVERABLE | Ghost commit — SHA in plan.md not found in git log | Fuzzy match via git log --all --grep; ask user confirmation | Revert delayed; may proceed with confirmed replacement |
+| **P2** | WARNING | Merge commit in revert list — cherry-pick duplication risk | Warn user, offer skip or include option | Proceed with caution; document in SUMMARY |
+| **P3** | DEGRADATION | Plan.md state not cleanly reset (stale checkpoint SHA) | Manual fix + commit; non-blocking | Proceed; log for Phase 8 cleanup |
+
+**Severity Assignment Rules**:
+- Default to P1 for any SHA mismatch
+- Escalate to P0 if revert affects files also modified in current wave
+- Never demote: once P0, only manual override clears
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- Revert target includes merge commits → warn and require explicit confirmation
+- Revert would affect >10 files → present impact analysis, require approval
+- No checkpoint exists before revert → refuse revert, force checkpoint first
+
+### When to Refuse Revert
+- Target Track is IMMUTABLE (Phase 8 archived) → refuse, suggest new Track
+- Revert chain would break git history (rebase detected) → refuse, suggest manual approach
+- Active wave execution in progress → queue revert, execute after wave completes
+
+### Degradation Path
+1. Auto-resolve conflicts → 2. Ask user for conflict strategy → 3. Halt and report

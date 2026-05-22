@@ -1,13 +1,17 @@
 ---
 name: stage-a-architect
 version: 3.0.0
-description: devflow-kit可选命令 - 架构梳理与文档化
+deprecated: true
+replaced-by: phase-2-design
+description: [DEPRECATED] devflow-kit可选命令 - 架构梳理与文档化 — 已被 L1 phase-2-design 替代
 author: devflow-kit
 dependencies:
   - stage-a-architect
 ---
 
 # devflow-kit Stage: A-Architect（架构梳理）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-2-design` 替代。请使用 Phase 技能。
 
 > **阶段定位**：建立或更新项目级架构文档
 > **前置条件**：无（可随时执行）

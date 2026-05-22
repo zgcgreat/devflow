@@ -1,13 +1,17 @@
 ---
 name: stage-2-design
 version: 3.0.0
-description: devflow-kit工作流第2阶段 - 技术设计与架构决策
+deprecated: true
+replaced-by: phase-2-design
+description: [DEPRECATED] devflow-kit工作流第2阶段 - 技术设计与架构决策 — 已被 L1 phase-2-design 替代
 author: devflow-kit
 dependencies:
   - stage-a-architect
 ---
 
 # devflow-kit Stage: 2-Design（方案设计）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-2-design` 替代。请使用 Phase 技能。
 
 > **阶段定位**：将需求转化为可执行的技术设计
 > **前置条件**：01-analysis.md 已完成

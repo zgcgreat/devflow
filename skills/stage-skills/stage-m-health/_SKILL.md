@@ -1,7 +1,9 @@
 ---
 name: stage-m-health
 version: 3.0.0
-description: devflow-kit可选命令 - 项目健康检查
+deprecated: true
+replaced-by: phase-6-review
+description: [DEPRECATED] devflow-kit可选命令 - 项目健康检查 — 已被 L1 phase-6-review 替代
 author: devflow-kit
 dependencies:
   - verification-before-completion
@@ -9,6 +11,8 @@ dependencies:
 ---
 
 # devflow-kit Stage: M-Health（健康检查）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-6-review` 替代。请使用 Phase 技能。
 
 > **阶段定位**：定期检查项目代码健康和架构一致性
 > **前置条件**：无（可随时执行）

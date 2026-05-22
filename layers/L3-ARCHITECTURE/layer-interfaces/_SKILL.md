@@ -3,7 +3,7 @@ name: layer-interfaces
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
-requires: [cross-layer-call]
+requires: []
 provides: [interface-contract, coupling-report]
 description: Formal interface contracts between L1, L2, and L3 layers to reduce coupling and enable independent evolution
 source: devflow-evo architecture + clean architecture principles
@@ -11,6 +11,7 @@ dependencies: []
 triggers:
   - cross-layer call
   - architecture validation
+runtime-inputs: [cross-layer-call]
 ---
 
 # Layer Interfaces — 层接口契约

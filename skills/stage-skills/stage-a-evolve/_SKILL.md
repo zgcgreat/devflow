@@ -1,13 +1,17 @@
 ---
 name: stage-a-evolve
 version: 3.0.0
-description: devflow-kit可选命令 - 架构演进与经验沉淀
+deprecated: true
+replaced-by: phase-8-archive
+description: [DEPRECATED] devflow-kit可选命令 - 架构演进与经验沉淀 — 已被 L1 phase-8-archive 替代
 author: devflow-kit
 dependencies:
   - planning-and-context
 ---
 
 # devflow-kit Stage: A-Evolve（架构演进）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-8-archive` 替代。请使用 Phase 技能。
 
 > **阶段定位**：从历史需求中提取架构级经验，同步到上下文
 > **前置条件**：`.devflow-evo/system-architecture.md` 存在

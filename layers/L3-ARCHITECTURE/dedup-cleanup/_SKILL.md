@@ -3,8 +3,9 @@ name: dedup-cleanup
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
-requires: [duplication-report]
+requires: []
 provides: [cleanup-plan, deduplicated-structure]
+external-inputs: [duplication-report]
 description: Deduplication plan for stage-skills/ and references/ directories
 source: Gap Analysis P2+Architecture
 status: planned
@@ -35,7 +36,7 @@ status: planned
 ### 独有内容检查清单
 - [ ] stage-3a-plan: 检查是否有 phase-3 没有的内容
 - [ ] stage-a-evolve: 检查是否与 learning-workflow 重叠
-- [ ] stage-i-intel-scan: 检查是否与 code-intelligence 重叠
+- [ ] stage-i-intel-scan: 检查是否与 gitnexus-bridge 重叠
 - [ ] stage-m-health: 检查是否与 verification-closed-loop 重叠
 
 ## 2. references/ 去重

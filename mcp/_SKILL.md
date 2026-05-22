@@ -5,7 +5,7 @@ layer: L3-ARCHITECTURE
 description: MCP (Model Context Protocol) integration layer exposing devflow-evo capabilities as MCP tools for any MCP-compatible runtime
 source: GitNexus MCP Server + GSD Sync Bridge
 dependencies:
-  - code-intelligence
+  - gitnexus-bridge
   - dag-router
 triggers:
   - mcp tool call
@@ -76,7 +76,7 @@ MCP Client (Runtime)
 | `devflow_change_archive` | 归档变更 | `{ projectDir, changeName }` |
 | `devflow_change_list` | 列出变更 | `{ projectDir }` |
 
-### Code Intel Tools (代理到 code-intelligence)
+### Code Intel Tools (代理到 gitnexus-bridge)
 
 | 工具名 | 说明 | 参数 |
 |--------|------|------|

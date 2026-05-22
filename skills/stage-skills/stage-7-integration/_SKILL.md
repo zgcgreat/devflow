@@ -1,13 +1,17 @@
 ---
 name: stage-7-integration
 version: 3.0.0
-description: devflow-kit工作流第7阶段 - 集成发布与回滚方案
+deprecated: true
+replaced-by: phase-7-canary
+description: [DEPRECATED] devflow-kit工作流第7阶段 - 集成发布与回滚方案 — 已被 L1 phase-7-canary 替代
 author: devflow-kit
 dependencies:
   - devops
 ---
 
 # devflow-kit Stage: 7-Integration（集成发布）
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-7-canary` 替代。请使用 Phase 技能。
 
 > **阶段定位**：生成发布清单，准备上线
 > **前置条件**：06-review审查通过

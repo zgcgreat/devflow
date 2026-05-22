@@ -4,7 +4,7 @@ version: 3.0.0
 layer: L1-INTERACTION
 phase: 0
 description: Apply Y Combinator's due diligence framework to validate project viability before implementation
-requires: [project-context]
+requires: []
 provides: [g0-gate-decision, strategy-document, follow-up-queue]
 dependencies:
   - phase-0-strategy
@@ -23,6 +23,7 @@ allowed-tools:
   - WebSearch
   - WebFetch
 token_budget: "~200K per execution agent"
+external-inputs: [project-context]
 ---
 
 # Phase 0: YC Six Questions — Strategic Assessment

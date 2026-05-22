@@ -1,12 +1,16 @@
 ---
 name: stage-4-dev
 version: 3.0.0
-description: devflow-kit工作流第4阶段 - 按任务执行开发
+deprecated: true
+replaced-by: phase-4-build
+description: [DEPRECATED] devflow-kit工作流第4阶段 - 按任务执行开发 — 已被 L1 phase-4-build 替代
 author: devflow-kit
 dependencies:
   - executing-plans
   - testing-suite
   - karpathy-rules  # 12条编码行为准则
+
+> ⚠️ **已废弃**：此 Stage Skill 已被 L1 `phase-4-build` 替代。请使用 Phase 技能。
 ---
 
 # devflow-kit Stage: 4-Dev（开发执行）

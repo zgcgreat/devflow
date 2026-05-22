@@ -3,7 +3,7 @@ name: install-profiles
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
-requires: [project-type, team-size]
+requires: []
 provides: [configured-profile, enabled-modules]
 description: Pre-configured installation profiles for different project types and team sizes
 source: devflow-evo adapters + superpowers templates
@@ -12,6 +12,7 @@ dependencies:
 triggers:
   - project initialization
   - devflow-evo install
+external-inputs: [project-type, team-size]
 ---
 
 # Install Profiles — 安装配置文件

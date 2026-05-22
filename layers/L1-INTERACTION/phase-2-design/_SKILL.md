@@ -6,7 +6,7 @@ version: 3.0.0
 layer: L1-INTERACTION
 phase: 2
 requires: [g2.5-gate-decision, context-md, analysis-md]
-provides: [design-document, adr-records, g3-gate-decision]
+provides: [design-document, adr-records, g3-gate-decision, architecture-design]
 source: 交互层 Phase 2 + 架构层 DAG Routing
 dependencies:
   - writing-plans
@@ -131,7 +131,7 @@ v3_upgrade:
 
 ### Step 3: 编写设计文档
 
-按模板 `templates/02-design.md` 输出：
+按模板 `references/templates/02-design.md` 输出：
 - 架构图必须清晰标注模块边界
 - API 定义包含请求/响应示例
 - 数据模型覆盖核心实体和关系

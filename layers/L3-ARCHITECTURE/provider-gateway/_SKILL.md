@@ -4,7 +4,7 @@ preamble-tier: 2
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
-requires: [task-types, cost-constraints]
+requires: []
 provides: [provider-assignments, fallback-chains]
 description: |
   Intelligent model routing engine that selects optimal AI providers based on task type,
@@ -22,6 +22,8 @@ triggers:
 allowed-tools:
   - Read
   - Bash
+external-inputs: [cost-constraints]
+runtime-inputs: [task-types]
 ---
 
 # Provider Gateway — Intelligent Model Routing & Fallback

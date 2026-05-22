@@ -3,7 +3,7 @@ name: change-manager
 version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [change-proposal]
+requires: []
 provides: [applied-change, verification-result]
 description: OpenSpec-inspired change lifecycle manager implementing proposal → apply → verify → archive workflow with dynamic Delta Specs merging
 source: OpenSpec proposal→apply→archive lifecycle + ArtifactGraph + Delta Specs
@@ -15,6 +15,7 @@ triggers:
   - change verify
   - change archive
   - delta specs merge
+external-inputs: [change-proposal]
 ---
 
 # Change Manager — 变更生命周期管理器
@@ -231,3 +232,30 @@ Schema 操作：
 - `schema init <name>` — 从零创建
 - `schema fork spec-driven <name>` — 从默认 Schema fork
 - `schema validate <name>` — 验证 Schema 合法性
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Core operation fails with unrecoverable state corruption | Halt, rollback to last checkpoint, escalate | Blocks dependent operations |
+| **P1** | RECOVERABLE | Operation fails but state remains consistent | Retry 3x with exponential backoff (1s→2s→4s); if still fails → document, mark NEEDS_WORK | No cross-skill impact |
+| **P2** | WARNING | Operation succeeds with quality degradation | Document in SUMMARY, do NOT block execution | Continue normally |
+| **P3** | DEGRADATION | Operation timeout or resource exhaustion | Cancel current sub-operation, mark PARTIAL_PASS, log to heartbeat | Cancels current op; next cycle may proceed |
+
+**Severity Assignment Rules**:
+- Default to P1 for any operation failure
+- Escalate to P0 if state corruption detected or dependent operations affected
+- Never demote: once P0, only manual override can clear
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- Operation produces corrupted output → halt and rollback
+- Dependency unavailable and no fallback → halt, report missing dependency
+
+### When to Skip Operation
+- Input preconditions not met → skip, log reason, proceed to next step
+- Already completed in current session → skip (idempotency)
+
+### Degradation Path
+1. Full operation → 2. Retry with backoff → 3. Fallback/skip → 4. Halt and report

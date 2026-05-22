@@ -4,7 +4,7 @@ layer: L3-ARCHITECTURE
 category: code-intelligence
 version: 3.0.0
 gate: internal
-requires: [code-analysis-request]
+requires: []
 provides: [ast-results, call-chains, impact-analysis, dependency-graph]
 description: GitNexus 深度代码分析引擎桥接层，为 devflow-evo 提供知识图谱驱动的代码智能能力
 dependencies:
@@ -13,6 +13,7 @@ triggers:
   - code analysis needed
   - impact analysis requested
   - git-diff change detection
+external-inputs: [code-analysis-request]
 ---
 
 # GitNexus Bridge — 深度代码分析引擎

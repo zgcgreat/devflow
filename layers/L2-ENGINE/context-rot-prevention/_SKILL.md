@@ -3,7 +3,7 @@ name: context-rot-prevention
 version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [memory-files]
+requires: []
 provides: [freshness-report, cleaned-memory]
 description: Prevents context rot — stale memory, outdated references, and drift between documentation and reality
 source: superpowers context management + caveman memory hygiene
@@ -14,6 +14,7 @@ triggers:
   - memory load
   - phase transition
   - stale detection
+external-inputs: [memory-files]
 ---
 
 # Context Rot Prevention — 上下文腐化防护
@@ -97,3 +98,30 @@ node context-rot.js mark-stale /path/to/project --days 14
 # 清理过期条目
 node context-rot.js clean /path/to/project --confirm
 ```
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Memory corruption > 60% — majority of entries stale/inaccurate | Halt workflow; force full memory cleanup | All Phase work blocked until cleaned |
+| **P1** | RECOVERABLE | Stale entry incorrectly marked as valid (false negative) | Re-verify entry; update timestamp or mark [STALE] | Proceed with caution; flag for review |
+| **P2** | WARNING | Auto-verification unavailable for entry type (e.g., DECISIONS) | Mark as [NEEDS_MANUAL_REVIEW]; proceed | Continue; schedule manual review |
+| **P3** | DEGRADATION | Partial memory scan — time budget exceeded | Process only high-priority entries; defer rest | Reduced coverage; next trigger completes scan |
+
+**Severity Assignment Rules**:
+- Default to P2 for any verification failure
+- Escalate to P0 if corruption > 60% (structural integrity at risk)
+- Never demote: once P0, only full cleanup can clear
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- Memory corruption > 60% → halt and force cleanup before any Phase work
+- Critical entry (KNOWN_FAILURES for security bug) is stale → immediate re-verification
+
+### When to Skip Rot Check
+- Session just started (< 5 minutes of work) → defer to first Phase transition
+- Only 1-2 memory entries total → check is trivially fast, always run
+
+### Degradation Path
+1. Full scan → 2. High-priority only (time budget) → 3. Defer to next trigger

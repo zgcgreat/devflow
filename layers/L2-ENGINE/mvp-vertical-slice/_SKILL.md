@@ -3,7 +3,7 @@ name: mvp-vertical-slice
 version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [feature-list, architecture-design]
+requires: [architecture-design]
 provides: [sliced-features, delivery-order]
 description: Vertical slicing strategy for MVP delivery — cut through all layers to deliver working end-to-end features incrementally
 source: superpowers MVP strategy + GSD milestones + devflow-evo Phase flow
@@ -14,6 +14,7 @@ triggers:
   - project initialization
   - milestone planning
   - feature scoping
+external-inputs: [feature-list]
 ---
 
 # MVP Vertical Slice — 垂直切片策略
@@ -203,3 +204,30 @@ search  export
 1. 提取共享模块为独立切片
 2. 共享切片优先构建
 3. 后续切片依赖共享切片
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Core operation fails with unrecoverable state corruption | Halt, rollback to last checkpoint, escalate | Blocks dependent operations |
+| **P1** | RECOVERABLE | Operation fails but state remains consistent | Retry 3x with exponential backoff (1s→2s→4s); if still fails → document, mark NEEDS_WORK | No cross-skill impact |
+| **P2** | WARNING | Operation succeeds with quality degradation | Document in SUMMARY, do NOT block execution | Continue normally |
+| **P3** | DEGRADATION | Operation timeout or resource exhaustion | Cancel current sub-operation, mark PARTIAL_PASS, log to heartbeat | Cancels current op; next cycle may proceed |
+
+**Severity Assignment Rules**:
+- Default to P1 for any operation failure
+- Escalate to P0 if state corruption detected or dependent operations affected
+- Never demote: once P0, only manual override can clear
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- Operation produces corrupted output → halt and rollback
+- Dependency unavailable and no fallback → halt, report missing dependency
+
+### When to Skip Operation
+- Input preconditions not met → skip, log reason, proceed to next step
+- Already completed in current session → skip (idempotency)
+
+### Degradation Path
+1. Full operation → 2. Retry with backoff → 3. Fallback/skip → 4. Halt and report

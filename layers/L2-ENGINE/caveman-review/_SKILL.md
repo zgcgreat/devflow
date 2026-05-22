@@ -3,7 +3,7 @@ name: caveman-review
 version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [code-file, diff, review-context]
+requires: [implemented-code, code-commits, review-context]
 provides: [one-line-comments, severity-badge]
 description: >
   Caveman-style one-line PR comments for Phase 6 Review.
@@ -103,3 +103,30 @@ L203: 🔴 edge: race condition in checkout. Add mutex.
 - 不修改代码本身
 - 保留代码行号、错误字符串、API 名称
 - 如果一行评论产生歧义，自动展开为两句（见 output-compression 的 auto-clarity 规则）
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Core operation fails with unrecoverable state corruption | Halt, rollback to last checkpoint, escalate | Blocks dependent operations |
+| **P1** | RECOVERABLE | Operation fails but state remains consistent | Retry 3x with exponential backoff (1s→2s→4s); if still fails → document, mark NEEDS_WORK | No cross-skill impact |
+| **P2** | WARNING | Operation succeeds with quality degradation | Document in SUMMARY, do NOT block execution | Continue normally |
+| **P3** | DEGRADATION | Operation timeout or resource exhaustion | Cancel current sub-operation, mark PARTIAL_PASS, log to heartbeat | Cancels current op; next cycle may proceed |
+
+**Severity Assignment Rules**:
+- Default to P1 for any operation failure
+- Escalate to P0 if state corruption detected or dependent operations affected
+- Never demote: once P0, only manual override can clear
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- Operation produces corrupted output → halt and rollback
+- Dependency unavailable and no fallback → halt, report missing dependency
+
+### When to Skip Operation
+- Input preconditions not met → skip, log reason, proceed to next step
+- Already completed in current session → skip (idempotency)
+
+### Degradation Path
+1. Full operation → 2. Retry with backoff → 3. Fallback/skip → 4. Halt and report

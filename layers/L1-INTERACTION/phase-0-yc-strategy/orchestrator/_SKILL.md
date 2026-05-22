@@ -6,13 +6,14 @@ layer: L1-INTERACTION
 phase: 0
 parent: phase-0-yc-strategy
 gate: G0
-requires: [project-context]
+requires: []
 provides: [pipeline-state, agent-coordination, g0-gate-decision]
 description: |
   Workflow pipeline manager and agent coordinator for Phase 0 YC Strategy.
   Autonomously manages complete development pipelines from specification to production.
   Coordinates specialist agents, enforces quality gates, maintains project state throughout multi-phase workflows. (devflow-evo)
 token_budget: "~200K per execution agent"
+external-inputs: [project-context]
 ---
 
 # Orchestrator — Workflow Pipeline Manager & Agent Coordinator

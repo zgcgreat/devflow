@@ -475,7 +475,7 @@ Proceeding to generate detailed variants.
 
 ```markdown
 # AI 生成设计变体
-# 1. 读取 02-design.md 作为上下文
+# 1. 读取 .devflow-evo/<req-id>/02-design.md 作为上下文
 # 2. 按维度（layout, interaction, visual）生成 N 个变体
 # 3. 每个变体包含：描述、评分维度、优劣势
 # 4. 输出到 .devflow-evo/<req-id>/02a-design-variants.md

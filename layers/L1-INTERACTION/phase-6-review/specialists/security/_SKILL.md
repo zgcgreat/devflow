@@ -6,7 +6,7 @@ layer: L1-INTERACTION
 phase: 6
 parent: phase-6-review
 gate: G7
-requires: [g6-gate, diff-output]
+requires: [g6-gate-decision, code-commits]
 provides: [security-findings, vulnerability-report]
 description: Security Specialist for Phase 6+ code review — input validation, auth bypass, injection vectors, crypto misuse, secrets exposure. Use when "security review", "penetration test", "trust boundary". (devflow-evo)
 source: 架构层 / supercorp-ultimate fusion

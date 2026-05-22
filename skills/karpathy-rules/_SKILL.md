@@ -1,5 +1,7 @@
 ---
 name: karpathy-rules
+version: 3.0.0
+standalone: true
 description: |
   Karpathy 的 12 条 CLAUDE.md 编码行为准则。
   来源：Andrej Karpathy原始4条 + Mnimiy经30个代码库验证后添加的8条。

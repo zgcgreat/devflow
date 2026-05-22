@@ -1,10 +1,10 @@
 ---
 name: hooks-system
-version: 3.2.2
+version: 3.0.0
 layer: L2-ENGINE
 gate: internal
-requires: [session-state, phase-boundary, scale-domain-adaptive]
-provides: [context-monitor, prompt-guard, phase-transition-hooks, tool-execution, chain-trigger, config-validation, scale-adaptive-defaults]
+requires: [pipeline-state, phase-transition-hooks]
+provides: [context-monitor, prompt-guard, phase-transition-hooks, tool-execution, chain-trigger, config-validation, scale-adaptive-defaults, session-active]
 description: Runtime hooks system with chain-triggering, config validation, and scale-adaptive defaults. Extends GSD hooks with cascade support and Conductor lifecycle hooks.
 source: GSD hooks (context-monitor, prompt-guard, phase-boundary) + conductor lifecycle hooks + scale-domain-adaptive integration
 dependencies:
@@ -383,3 +383,31 @@ layers/L2-ENGINE/hooks-system/
 1. 按 hooks.yaml 配置读取阈值和开关
 2. 在对应触发点自动执行钩子逻辑
 3. 钩子动作记录到 dev-log
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Hook chain causes infinite loop (>10 sequential triggers) | Break loop immediately, disable offending hook, log to dev-log | Hook system halted for current event |
+| **P1** | RECOVERABLE | Phase transition hook fails (e.g., checkpoint save fails) | Retry 3x with exponential backoff (1s→2s→4s); if still fails → skip hook, proceed with transition | Transition proceeds without hook side-effect |
+| **P2** | WARNING | Hook execution exceeds time budget (e.g., context monitor >5s) | Log slow execution, skip remaining hooks in chain for this event | Reduced hook coverage for current event |
+| **P3** | DEGRADATION | Hook configuration malformed (invalid hooks.yaml) | Use defaults, log warning, proceed | Operate with default hook settings |
+
+**Severity Assignment Rules**:
+- Default to P1 for any hook execution failure
+- Escalate to P0 if infinite loop detected or state corruption occurs
+- Never demote: once P0, only manual hook re-enable can clear
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- Hook execution causes infinite loop (detected by >10 sequential triggers) → break loop, disable hook chain
+- Phase transition hook fails critically → halt transition, keep current Phase, report
+
+### When to Skip Hook
+- No hooks registered for current event → skip silently
+- Hook marked as disabled → skip, log reason
+- Phase transition in progress → queue hook, execute after transition completes
+
+### Degradation Path
+1. Full hook chain → 2. Skip non-critical hooks → 3. Disable failing hook → 4. Halt hook system

@@ -5,8 +5,10 @@ layer: L1-INTERACTION
 phase: 7
 parent: phase-7-canary
 gate: G7.5
-requires: [phase-7-canary, deploy-ready]
+requires: []
 provides: [script-lifecycle-report, health-check-log, rollback-log, g7.5-gate-decision]
+dependencies:
+  - phase-7-canary (module dependency)
 description: Lifecycle wrapper that manages canary-health-check.sh and auto-rollback.sh scripts, ensuring proper initialization, execution, error handling, and cleanup during Phase 7 canary deployments
 triggers:
   - canary deployment starts
@@ -18,6 +20,7 @@ allowed-tools:
   - Bash
   - Write
   - Edit
+runtime-inputs: [deploy-ready]
 ---
 
 # Canary Wrapper — Script Lifecycle Management for Phase 7
