@@ -3,7 +3,7 @@
 > ⚠️ **进入本阶段前，必须先加载**：
 > - **skill**：`devflow-kit/agent-skills/skills/development-core/_SKILL.md`、`devflow-kit/agent-skills/skills/testing-suite/_SKILL.md`
 > - **reference（按任务类型按节读取）**：
->   - 所有任务：`references/reference/4-dev-rules.md` § 1.4 + § 1.5（按节读取）
+>   - 所有任务：`references/4-dev-rules.md` § 1.4 + § 1.5（按节读取）
 >   - UI 任务：追加 § 1.6 + § 1.8
 >   - Schema 任务：追加 § 1.7 + § 1.8
 >   - 破坏性变更：追加 § 1.8
@@ -77,7 +77,7 @@ AI 不允许自行编造临时最小 TASK；缺字段必须反问用户或回到
 
 ### 1.4–1.8 开发前规则检查
 
-见 `@devflow-kit/references/reference/4-dev-rules.md`，按任务类型加载相关节。**1.4 沿用既有抽象 grep 与 1.5 lessons-learned扫描是所有生产代码任务的基础必检**；UI / schema / 破坏性变更是在基础必检上追加。
+见 `@devflow-kit/references/4-dev-rules.md`，按任务类型加载相关节。**1.4 沿用既有抽象 grep 与 1.5 lessons-learned扫描是所有生产代码任务的基础必检**；UI / schema / 破坏性变更是在基础必检上追加。
 
 | 任务类型 | 必读节 |
 |---|--------|

@@ -1,7 +1,7 @@
 # DESIGN (Delta): <req-id>
 
 - **Req ID**: <id>
-- **关联**: `@.devflow-evo/<id>/01-analysis.md`、`@.devflow-evo/CONTEXT.md`、`@.devflow-evo/references/reference/tech-stacks.md`
+- **关联**: `@.devflow-evo/<id>/01-analysis.md`、`@.devflow-evo/CONTEXT.md`、`@.devflow-evo/references/tech-stacks.md`
 - **作者**: AI（Architect 角色）+ 人工 review
 - **基线版本**: <如有design-baseline.md，填写版本号；首次创建写"初始"">
 

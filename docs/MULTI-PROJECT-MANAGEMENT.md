@@ -32,7 +32,7 @@ devflow-evo v3.0 支持同时管理多个项目，实现快速切换、状态同
 
 - **LESSONS 跨项目**: 同工作区内项目共享 `memory/LESSONS.md` 中标记为 `cross-project` 的教训
 - **Domain Skills 复用**: `memory/domain-skills/` 下的领域技能对同工作区所有项目可见
-- **模板复用**: `templates/` 目录的模板对同工作区所有项目可用
+- **模板复用**: `templates-gsd/` 目录的 GSD 模板对同工作区所有项目可用（核心流程模板在 `references/templates/`）
 
 ## 多项目状态管理
 

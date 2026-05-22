@@ -82,8 +82,9 @@ devflow-evo/
 │   ├── mode-rules.md          # 模式判定
 │   ├── gate-rules.md          # 阶段门验证
 │   ├── entry-check.md         # 入场检测
-│   └── templates/             # 产物模板
-├── memory/                    # 记忆系统模板
+│   └── templates/             # Phase 产物模板
+├── memory/                    # 记忆系统
+├── templates-gsd/             # GSD 遗留模板（非核心流程）
 └── adapters/                  # 工具适配器（可选）
 ```
 

@@ -11,7 +11,7 @@ DevFlow-Evo v3.2.3 的完整技术文档集合。本目录包含架构设计、A
 | [快速开始](getting-started.md) | 5分钟上手 DevFlow-Evo | 新用户 |
 | [架构设计](architecture.md) | L1/L2/L3 三层架构详解 | 架构师/高级开发者 |
 | [模式判定](modes.md) | Fast/Lean/Standard/Strict 四档模式详解 | 所有用户 |
-| [Stage Skills 参考](stage-skills.md) | 15个阶段技能完整参考 | 深度用户 |
+| [Phase Skills 参考](stage-skills.md) | L1 阶段技能完整参考（原 stage-skills 已移除） | 深度用户 |
 | [门控规则](gates-reference.md) | G0-G8 阶段门验证规则 | 质量负责人 |
 | [Token 预算管理](token-budget.md) | Surface Budget 策略 | 成本优化者 |
 | [集成指南](integration.md) | 与 spec-kit / OpenSpec / GitNexus 集成 | 集成开发者 |
@@ -32,7 +32,7 @@ DevFlow-Evo v3.2.3 的完整技术文档集合。本目录包含架构设计、A
 → 阅读 [模式判定](modes.md)，特别是「模式决策树」章节
 
 ### 「我想自定义流程」
-→ 阅读 [Stage Skills 参考](stage-skills.md) + [进阶主题](advanced.md)中的 Hooks 系统
+→ 阅读 [Phase Skills 参考](stage-skills.md) + [进阶主题](advanced.md)中的 Hooks 系统
 
 ### 「Token 花费太高」
 → 阅读 [Token 预算管理](token-budget.md) + [modes.md]中的 Lean/Fast 模式

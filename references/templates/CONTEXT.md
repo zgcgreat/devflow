@@ -99,7 +99,7 @@
 - **数据库**: <如有>
 - **测试**: <例如 frontend: vitest + playwright；backend: pytest>
 - **构建/部署**: <例如 frontend: Vite + Vercel；backend: Docker + Railway>
-- **栈卡片编号**（来自 `@.devflow-evo/references/reference/tech-stacks.md`）: <如 5 FastAPI + React>
+- **栈卡片编号**（来自 `@.devflow-evo/references/tech-stacks.md`）: <如 5 FastAPI + React>
 
 ## 域语言（术语表）
 

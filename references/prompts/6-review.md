@@ -2,7 +2,7 @@
 
 > ⚠️ **进入本阶段前，必须先加载**：
 > - **skill**：`devflow-kit/agent-skills/skills/code-quality/_SKILL.md`
-> - **reference（前端项目）**：`references/reference/ui-anti-patterns.md`（可全读，111 行）
+> - **reference（前端项目）**：`references/ui-anti-patterns.md`（可全读，111 行）
 > - **可选 skill（按需加载）**：`security-and-performance/_SKILL.md` 在发现相关问题时再加载
 
 ```
@@ -101,7 +101,7 @@
 - `@.devflow-evo/<req-id>/03-tasks.md`
 - `@.devflow-evo/<req-id>/05-test-report.md`
 - 本次变更的 git diff（用户提供或 AI 通过工具获取）
-- `@devflow-kit/references/reference/ui-anti-patterns.md`（如是前端项目）
+- `@devflow-kit/references/ui-anti-patterns.md`（如是前端项目）
 
 ## 你的职责
 
@@ -376,7 +376,7 @@ UI 审查触发判定：
 | ... | ... | ... | ... |
 ```
 
-逐项对照 `@devflow-kit/references/reference/ui-anti-patterns.md` 的"强制禁忌"段：
+逐项对照 `@devflow-kit/references/ui-anti-patterns.md` 的"强制禁忌"段：
 
 - ⏳ 字体类（无 AI slop 默认字体）
 - ⏳ 颜色类（无纯黑/纯白、无紫色渐变、无彩底灰字、无第二个强调色）

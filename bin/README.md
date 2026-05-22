@@ -69,7 +69,7 @@ python bin/init.py --project-dir <path> --mode <fast|standard|strict>
 │   │   ├── KNOWN_FAILURES.md
 │   │   └── LESSONS.md
 │   └── hooks/
-│   └── templates/
+│   └── templates-gsd/
 └── .gitignore  # 包含 .devflow-evo/
 ```
 

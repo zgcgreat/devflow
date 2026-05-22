@@ -2,7 +2,7 @@
 
 > ⚠️ **进入本阶段前，必须先加载**：
 > - **skill**：`devflow-kit/agent-skills/skills/idea-refine/_SKILL.md`、`devflow-kit/agent-skills/skills/development-core/_SKILL.md`
-> - **reference（前端项目按节读取）**：`references/reference/ui-aesthetics.md` § 调性（用于展示调性卡片）
+> - **reference（前端项目按节读取）**：`references/ui-aesthetics.md` § 调性（用于展示调性卡片）
 
 ---
 
@@ -147,7 +147,7 @@
       ```
       从 67 styles 里选出 **9 个最匹配项目类型**的，按下面的标准卡片格式呈现。
       优势：后期 2a-ui-design 能联动调调色板（161 palettes）/ 字体（57 pairings）/ 图表（25 charts）。
-   2. **没装 uipro** → 回退到 flow-kit 内置基线：加载 `@devflow-kit/references/reference/ui-aesthetics.md` 的「调性」一节，按其末尾的「给 AI 在 0-confirm 阶段展示用的标准模板」呈现 9 张调性卡片。
+   2. **没装 uipro** → 回退到 flow-kit 内置基线：加载 `@devflow-kit/references/ui-aesthetics.md` 的「调性」一节，按其末尾的「给 AI 在 0-confirm 阶段展示用的标准模板」呈现 9 张调性卡片。
 
    ### 呈现要求（两条路径都适用）
 

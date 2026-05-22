@@ -60,6 +60,16 @@ DevFlow-Evo 采用 **L1/L2/L3 三层架构**，每一层有明确的职责边界
 | Gate 依赖链 | G0→G8 自洽 | 无断裂，无循环 |
 | 健康度评分 | 88/100 | 较审计前 +16 |
 
+## 文件命名约定
+
+| 位置 | 命名格式 | 原因 |
+|------|---------|------|
+| `layers/` 内（L1/L2/L3） | `_SKILL.md`（下划线前缀） | 防止 WorkBuddy 扫描引擎将其识别为独立 skill 并自动加载 |
+| `skills/` 目录 | `SKILL.md`（无前缀） | WorkBuddy 扫描格式，需要被识别为可安装 skill |
+| `agent-skills/` 目录 | `SKILL.md`（无前缀） | 同上，WorkBuddy 扫描格式 |
+
+> **设计意图**: `layers/` 内的技能是架构内部组件，不应被 WorkBuddy 独立加载；`skills/` 和 `agent-skills/` 是面向用户的可安装技能，需要被扫描发现。
+
 ## L3: ARCHITECTURE（架构层）
 
 ### DAG-Router — 有向无环图路由引擎

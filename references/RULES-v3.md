@@ -110,7 +110,7 @@
 
 - **R12.1** `gitnexus --version` → 成功则启用增强代码理解；失败则引导安装或走 grep fallback
 - **R12.2** Grep Fallback：文件搜索用 glob + grep，调用链分析用 grep -rn，依赖影响用静态分析
-- **R12.3** GitNexus 未安装时的降级能力矩阵见 V3-ARCHITECTURE.md「Grep Fallback 能力矩阵」
+- **R12.3** GitNexus 未安装时的降级能力矩阵见 docs/V3-ARCHITECTURE.md「Grep Fallback 能力矩阵」
 
 ## R13 · 双阶段审查（Phase 6）
 
@@ -270,45 +270,16 @@ done
 - **R1-R9**: 流程基础（PRD → 模式判定 → 入场检测 → 门禁 → Token 优化 → Agent 隔离 → DAG → LearningWorkflow → Provider）
 - **R10-R21**: 执行保障（Delta Specs → GitNexus → 审查 → Canary → 设计枪战 → 跨波注入 → 原子提交 → Heartbeat → Domain Skills → 模板强制 → 向后兼容）
 - **R22**: 质量评分标准（Quality Scoring）
-- **R23**: Stage Skills Sync Policy（stage-skills 与 core skills 同步）
+- **R23**: ~~Stage Skills Sync Policy~~（已废弃 — stage-skills 目录已移除）
 - **R24**: Call Chain Ownership（L1→L2/L3 调用链维护）
 
-## R23 · Stage Skills Sync Policy（阶段技能同步规范）
+## R23 · ~~Stage Skills Sync Policy~~（已废弃）
 
-**目的**：`skills/stage-skills/` 目录下的 stage skills 必须与 `layers/L1-INTERACTION/` 核心 skills 保持同步，避免版本分裂。
+> ⚠️ **DEPRECATED**: `skills/stage-skills/` 目录已于 2026-05-22 移除。所有阶段技能统一走 `layers/L1-INTERACTION/phase-*`。本规则保留仅作历史参考。
 
-### R23.1 同步触发条件
+**原目的**：`skills/stage-skills/` 目录下的 stage skills 必须与 `layers/L1-INTERACTION/` 核心 skills 保持同步，避免版本分裂。
 
-- 每次修改 `layers/L1-INTERACTION/phase-*` 下的 core skill，必须同步更新 `skills/stage-skills/stage-*` 对应文件
-- 每次修改 `layers/L2-ENGINE/` 或 `layers/L3-ARCHITECTURE/` 必须检查 stage-skills 是否有引用
-
-### R23.2 同步状态跟踪
-
-> ⚠️ **Note**: `SYNC-STATUS.md` 已移除。Stage skills 已标 DEPRECATED，新开发全部走 `layers/L1-INTERACTION/phase-*`。
-> 同步状态通过 git diff 和 phase skill 的 `version` frontmatter 字段追踪。
-
-- 每次同步后验证 `layers/L1-INTERACTION/phase-*` 的 `version` 字段一致性
-- 不再维护独立的 SYNC-STATUS.md 文件
-
-### R23.3 版本一致性检查
-
-```bash
-# Stage Skills Sync Gate 检查脚本
-CORE_VERSION=$(grep "^version:" layers/L1-INTERACTION/phase-*/_SKILL.md | awk -F': ' '{print $2}' | sort -u)
-STAGE_VERSION=$(grep "^version:" skills/stage-skills/stage-*\//_SKILL.md | awk -F': ' '{print $2}' | sort -u)
-
-if [ "$CORE_VERSION" != "$STAGE_VERSION" ]; then
-    echo "⚠️ VERSION MISMATCH: core=$CORE_VERSION vs stage=$STAGE_VERSION"
-    echo "Run: cd skills/stage-skills && bash update-sync-status.sh"
-    exit 1
-fi
-```
-
-### R23.4 违规处理
-
-- **P2**: Stage skill 版本与 core skill 不一致超过 7 天
-- **P1**: Stage skill 包含 core skill 已删除的字段或步骤
-- **Escalation**: 同步失败时检查 phase skill `version` frontmatter → 通知 L2-ENGINE owner → 手动合并冲突
+**现状**：stage-skills 已全部标记 DEPRECATED 后移除，L1 Phase Skills 是唯一的阶段技能来源。无需同步检查。
 
 ---
 

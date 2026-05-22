@@ -3,8 +3,8 @@
 > ⚠️ **进入本阶段前，必须先加载**：
 > - **skill**：`devflow-kit/agent-skills/skills/frontend-ui-engineering/_SKILL.md`
 > - **reference**：
->   - `references/reference/ui-aesthetics.md` § 调性（按节读取）
->   - `references/reference/ui-anti-patterns.md`（可全读，111 行）
+>   - `references/ui-aesthetics.md` § 调性（按节读取）
+>   - `references/ui-anti-patterns.md`（可全读，111 行）
 
 
 > **L 前缀表示这是 lateral / lifecycle 命令**，不在主流程编号里。
@@ -36,8 +36,8 @@ UI Director + Refactor Specialist。**保留功能不变**，只换视觉。
 - 用户的目标（一句话）
 - 现有项目代码（组件、CSS / theme 文件、字体加载）
 - 项目里已有的 `02a-ui-design.md`（如有，作为 v1 调性来源）
-- `@devflow-kit/references/reference/ui-aesthetics.md`（调性卡片）
-- `@devflow-kit/references/reference/ui-anti-patterns.md`
+- `@devflow-kit/references/ui-aesthetics.md`（调性卡片）
+- `@devflow-kit/references/ui-anti-patterns.md`
 - 项目主 `01-analysis.md`（确认要保留的 AC 不变）
 
 ---

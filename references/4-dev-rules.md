@@ -56,8 +56,8 @@
 命中时，进入实现**之前**还必须：
 
 1. 加载 `@.devflow-evo/<id>/02a-ui-design.md`（必须存在；不存在 → 停下来要求先跑 `@devflow-kit/references/prompts/2a-ui-design.md`）
-2. 加载 `@devflow-kit/references/reference/ui-anti-patterns.md`，按当前任务的关键词 grep 相关章节
-3. 加载 `@devflow-kit/references/reference/frontend-engineer-rules.md`（**第 1 + 第 2 + 第 10 节必读**），其他节按输出类型按需读：
+2. 加载 `@devflow-kit/references/ui-anti-patterns.md`，按当前任务的关键词 grep 相关章节
+3. 加载 `@devflow-kit/references/frontend-engineer-rules.md`（**第 1 + 第 2 + 第 10 节必读**），其他节按输出类型按需读：
    - 任务是做交互原型 → 补读第 6.1
    - 任务是做幻灯片 / 演示 → 补读第 6.2
    - 任务是做仪表盘 / 数据可视化 → 补读第 6.3

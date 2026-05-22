@@ -123,7 +123,7 @@ Step 4-12 · 模式对应的 Phase 执行（见下方模式流程矩阵）
 
 | 需要... | 读取... |
 |---------|---------|
-| v3架构设计 | `V3-ARCHITECTURE.md` |
+| v3架构设计 | `docs/V3-ARCHITECTURE.md` |
 | 模式判定规则 | `references/mode-rules.md` |
 | 入场检测流程 | `references/entry-check.md` |
 | 阶段门验证 | `references/gate-rules.md` |

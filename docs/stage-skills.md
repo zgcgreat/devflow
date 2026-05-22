@@ -1,10 +1,12 @@
-# Stage Skills 参考 — DevFlow-Evo v3.2.3
+# Phase Skills 参考 — DevFlow-Evo v3.2.3
 
-本目录列出所有 **15 个阶段技能（Stage Skills）** 的完整描述和执行要点。每个 Stage Skill 对应一个 Phase，是 L1: INTERACTION 层的交互入口。
+本目录列出所有 **阶段技能（Phase Skills）** 的完整描述和执行要点。每个 Phase Skill 是 L1: INTERACTION 层的交互入口。
+
+> **注意**: 原 `skills/stage-skills/` 目录已于 2026-05-22 移除（全部标记 DEPRECATED 后与 L1 Phase 重复）。所有阶段技能统一走 `layers/L1-INTERACTION/phase-*`。
 
 ## Phase 0: YC六问战略评估
 
-**文件**: `skills/stage-skills/stage-0-strategy.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-0/_SKILL.md`
 **门控**: G1 (Plan Quality Gate) — 6题全部回答通过
 
@@ -23,7 +25,7 @@
 
 ## Phase 1: 5 Whys 需求追问
 
-**文件**: `skills/stage-skills/stage-1-analysis.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-1-five-whys/_SKILL.md`
 **门控**: G2 (Requirements Completeness Gate) — AC可执行 + 影响范围明确
 
@@ -60,7 +62,7 @@ CONTEXT.md（含所有技术决策记录）
 
 ## Phase 2: 方案设计
 
-**文件**: `skills/stage-skills/stage-2-design.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-2-design/_SKILL.md`
 **门控**: G3 (Design Quality Gate) — 满足需求 + 文档完整
 
@@ -79,7 +81,7 @@ CONTEXT.md（含所有技术决策记录）
 
 ## Phase 2a: 设计枪战 (Design Shotgun)
 
-**文件**: `skills/stage-skills/stage-2a-shotgun.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-2a-shotgun/_SKILL.md`
 **门控**: G3.5 (Design Diversity Gate) — ≥4个方案变体 + 加权评分通过
 
@@ -98,7 +100,7 @@ CONTEXT.md（含所有技术决策记录）
 
 ## Phase 3: 任务拆分 (DAG + Wave Planning)
 
-**文件**: `skills/stage-skills/stage-3-plan.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-3-task-plan/_SKILL.md`
 **门控**: G4 (Plan Completeness Gate) — DAG有向无环 + 任务原子化
 
@@ -117,7 +119,7 @@ CONTEXT.md（含所有技术决策记录）
 
 ## Phase 4: 实施 (Implementation)
 
-**文件**: `skills/stage-skills/stage-4-build.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-4-build/_SKILL.md`
 **门控**: G5 (Implementation Gate) — Wave完成 + Heartbeat输出
 
@@ -138,7 +140,7 @@ CONTEXT.md（含所有技术决策记录）
 
 ## Phase 5: 测试验证 (QA)
 
-**文件**: `skills/stage-skills/stage-5-test.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-5-test/_SKILL.md`
 **门控**: G2质量门（Code Quality Gate）— 通过率+覆盖率达标
 
@@ -157,7 +159,7 @@ CONTEXT.md（含所有技术决策记录）
 
 ## Phase 6: 三层对抗审查
 
-**文件**: `skills/stage-skills/stage-6-review.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-6-review/_SKILL.md`
 **门控**: G6 (Review Sign-off Gate) — Blind Hunter + Edge Case + Acceptance全通过
 
@@ -176,7 +178,7 @@ CONTEXT.md（含所有技术决策记录）
 
 ## Phase 7: Canary灰度发布
 
-**文件**: `skills/stage-skills/stage-7-canary.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-7-canary/_SKILL.md`
 **门控**: G7 (Canary Health Gate) — error_rate + P99延迟达标
 
@@ -195,7 +197,7 @@ CONTEXT.md（含所有技术决策记录）
 
 ## Phase 8: 知识归档
 
-**文件**: `skills/stage-skills/stage-8-archive.md`
+**文件**: 见下方「路由」字段
 **路由**: `layers/L1-INTERACTION/phase-8-archive/_SKILL.md`
 **门控**: G8 (Archive Gate) — LESSONS去重 + Domain Skills生成 + STATE更新
 

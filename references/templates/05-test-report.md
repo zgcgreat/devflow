@@ -1,7 +1,7 @@
 # TEST: <req-id>
 
 - **Req ID**: <id>
-- **关联**: `@.devflow-evo/<req-id>/01-analysis.md`、`@.devflow-evo/references/reference/test-pyramid.md`
+- **关联**: `@.devflow-evo/<req-id>/01-analysis.md`、`@.devflow-evo/references/test-pyramid.md`
 - **项目类型**: <Web 前端 / 后端 API / 全栈 / 移动 / CLI / 库>
 
 ---

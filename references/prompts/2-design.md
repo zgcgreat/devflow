@@ -2,7 +2,7 @@
 
 > ⚠️ **进入本阶段前，必须先加载**：
 > - **skill**：`devflow-kit/agent-skills/skills/design-and-architecture/_SKILL.md`
-> - **reference（按节读取，禁止整读）**：`references/reference/tech-stacks.md` § 适用矩阵 + § 给 AI 在 2-design 阶段展示用的标准模板
+> - **reference（按节读取，禁止整读）**：`references/tech-stacks.md` § 适用矩阵 + § 给 AI 在 2-design 阶段展示用的标准模板
 
 ## 角色
 
@@ -22,7 +22,7 @@
   - 重点读 `§ 4 跨模块契约`（本需求 改 API / 事件 / Schema 时必查）
   - 不存在则跳过；如果用户从未跑过 `A-architect` 但项目复杂度已较高，提醒一句"建议先跑 `@A-architect.md` 建立项目级架构文档"
 - **design-baseline**（Delta 模式触发）：`@.devflow-evo/design-baseline.md`（如存在）
-- `@devflow-kit/references/reference/tech-stacks.md`（技术栈卡片）
+- `@devflow-kit/references/tech-stacks.md`（技术栈卡片）
 - 已有项目（如有）：`@02-design.md`、`@.devflow-evo/adr/`、相关源码（按需）
 
 ## 你的职责
@@ -83,7 +83,7 @@
 
 #### 常规路径
 
-加载 `@devflow-kit/references/reference/tech-stacks.md`，按其中的「适用矩阵」过滤出 **5~6 张最匹配项目类型**的卡片（不要 8 张全列），按「给 AI 在 2-design 阶段展示用的标准模板」**实际渲染**给用户：
+加载 `@devflow-kit/references/tech-stacks.md`，按其中的「适用矩阵」过滤出 **5~6 张最匹配项目类型**的卡片（不要 8 张全列），按「给 AI 在 2-design 阶段展示用的标准模板」**实际渲染**给用户：
 
 - 5~6 张卡片（编号 + 名称 + 一句话栈描述）
 - **必给 1 首选 + 1 备选**，理由结合 01-analysis.md 的 AC + 非功能需求（QPS / 团队 / 部署环境 / 数据规模）

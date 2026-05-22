@@ -143,7 +143,7 @@ devflow-evo/
 │   │   ├── ...
 │   │   └── stage-7-integration/
 │   └── ...
-└── templates/                # Output templates
+└── templates-gsd/            # GSD legacy templates (non-core)
     ├── 00-requirements.md
     ├── 01-analysis.md
     ├── 02-design.md
@@ -155,7 +155,7 @@ devflow-evo/
 - [Complete Workflow](SKILL.md) — v3 zero-config entry point
 - [Router (GO.md)](GO.md) — Full routing and step-by-step guide
 - [Global Rules v3](references/RULES-v3.md) — R1-R20 rule set
-- [Architecture](V3-ARCHITECTURE.md) — Three-layer pyramid design
+- [Architecture](docs/V3-ARCHITECTURE.md) — Three-layer pyramid design
 
 ## Examples
 
@@ -163,7 +163,7 @@ See the `skills/stage-skills/` directory for example implementations.
 
 ## Contributing
 
-Contributions welcome! See V3-ARCHITECTURE.md「🚀 实施路线图」for v3 development plan.
+Contributions welcome! See docs/V3-ARCHITECTURE.md「🚀 实施路线图」for v3 development plan.
 
 ## License
 

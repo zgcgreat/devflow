@@ -192,7 +192,7 @@ Change Manager 不是替代 Phase 流程，而是增强 Phase 6 Review 和 Phase
 
 ## 模板文件
 
-变更制品使用以下模板（位于 `templates/changes/`）：
+变更制品使用以下模板（位于 `templates-gsd/changes/`）：
 
 | 模板 | 说明 | 对应制品 |
 |------|------|---------|

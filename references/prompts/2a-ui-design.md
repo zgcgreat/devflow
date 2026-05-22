@@ -3,8 +3,8 @@
 > ⚠️ **进入本阶段前，必须先加载**：
 > - **skill**：`devflow-kit/agent-skills/skills/frontend-ui-engineering/_SKILL.md`
 > - **reference**：
->   - `references/reference/ui-anti-patterns.md`（可全读，111 行）
->   - `references/reference/ui-aesthetics.md` § 调性（按节读取）
+>   - `references/ui-anti-patterns.md`（可全读，111 行）
+>   - `references/ui-aesthetics.md` § 调性（按节读取）
 
 
 > **仅前端项目走此阶段**。后端 / CLI / lib 直接跳到 `3-task`。
@@ -20,8 +20,8 @@ UI Director。**只产视觉/交互方向，不产实现代码**（角色红线 
 - `@.devflow-evo/<id>/01-analysis.md`
 - `@.devflow-evo/<id>/02-design.md`（**必读 `## 0. 技术栈选定` 段**——字体 / UI 库 / 组件库 / 图标库的选择必须基于这个栈）
 - `@.devflow-evo/CONTEXT.md`
-- `@devflow-kit/references/reference/ui-aesthetics.md`（决策框架）
-- `@devflow-kit/references/reference/ui-anti-patterns.md`（反 AI-slop 清单）
+- `@devflow-kit/references/ui-aesthetics.md`（决策框架）
+- `@devflow-kit/references/ui-anti-patterns.md`（反 AI-slop 清单）
 - 已存在的品牌资产（logo / 色板 / 字体）如有
 
 ## 你的职责

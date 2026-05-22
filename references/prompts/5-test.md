@@ -2,11 +2,11 @@
 
 > ⚠️ **进入本阶段前，必须先加载**：
 > - **skill**：`devflow-kit/agent-skills/skills/testing-suite/_SKILL.md`、`devflow-kit/agent-skills/skills/debugging-and-error-recovery/_SKILL.md`
-> - **reference（按节读取，禁止整读）**：`references/reference/test-pyramid.md` § 适用矩阵 + 需要的那几轮详情
+> - **reference（按节读取，禁止整读）**：`references/test-pyramid.md` § 适用矩阵 + 需要的那几轮详情
 
 
 > **核心思想**：测试从 AC 和风险派生，不从实现派生。功能覆盖必做；性能、安全、兼容、可观测按风险触发，跳过必须有理由。
-> 本 prompt 先确定风险驱动测试矩阵；具体工具和标准按需查 `@devflow-kit/references/reference/test-pyramid.md`。
+> 本 prompt 先确定风险驱动测试矩阵；具体工具和标准按需查 `@devflow-kit/references/test-pyramid.md`。
 
 ## 角色
 
@@ -19,7 +19,7 @@ Test Engineer。
 - `@.devflow-evo/<req-id>/03-tasks.md`
 - 各任务的 `*-dev-log.md`
 - 已存在的测试代码
-- `@devflow-kit/references/reference/test-pyramid.md`（5 轮的工具 / 标准 / 清单）
+- `@devflow-kit/references/test-pyramid.md`（5 轮的工具 / 标准 / 清单）
 
 ## 你的职责
 

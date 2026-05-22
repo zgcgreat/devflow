@@ -29,9 +29,9 @@ status: planned
 - stage-orchestrator ≈ L2 executor
 
 ### 方案
-1. **短期**: 在 stage-skills/README.md 中标注"已由 L1 Phase 技能替代"
-2. **中期**: 将 stage-skills 中 L1 没有的独有内容合并到对应 Phase
-3. **长期**: 删除 stage-skills/ 目录
+1. ~~**短期**: 在 stage-skills/README.md 中标注"已由 L1 Phase 技能替代"~~ ✅ 已完成
+2. ~~**中期**: 将 stage-skills 中 L1 没有的独有内容合并到对应 Phase~~ ✅ 已完成
+3. ~~**长期**: 删除 stage-skills/ 目录~~ ✅ 2026-05-22 已删除
 
 ### 独有内容检查清单
 - [ ] stage-3a-plan: 检查是否有 phase-3 没有的内容
@@ -62,7 +62,7 @@ references/ 下有重复文件：
 ### 执行步骤
 ```bash
 # 1. 比较重复文件
-diff references/flow-kit-reference/frontend-engineer-rules.md references/reference/frontend-engineer-rules.md
+diff references/flow-kit-reference/frontend-engineer-rules.md references/frontend-engineer-rules.md
 
 # 2. 合并差异
 # 3. 删除重复
