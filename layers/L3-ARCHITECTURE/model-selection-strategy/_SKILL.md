@@ -104,3 +104,22 @@ Wave 执行器根据任务类型选择模型，自动降级。
 
 ### Phase 6 (Review)
 审查使用高端模型，确保质量。
+
+## Error Taxonomy (Model Selection Strategy 专属)
+
+| Level | Name | Action | Impact |
+|-------|------|--------|--------|
+| P0 | ALL_PROVIDERS_DOWN | 所有模型不可用 → 暂停执行 + 通知用户 | 完全阻塞，无法继续 |
+| P1 | FALLBACK_CHAIN_EXHAUSTED | 降级链耗尽 → 升级 tier（预算允许）或暂停 + 标注风险 | 当前任务降级或暂停 |
+| P2 | TIER_MISMATCH | 低 tier 模型执行高复杂度任务 → 检测并建议升级 | 质量风险，非阻塞 |
+| P3 | ROUTING_STALE | providers.yaml 配置过时（模型已下线）→ 自动探测并标记 | 降级链无效，首次调用时才发现 |
+
+## Boundary Conditions (Model Selection Strategy)
+
+| Condition | Action | Rationale |
+|-----------|--------|-----------|
+| 首选模型 rate limit | 指数退避 5s→10s→20s→40s，尝试降级链下一个 | 避免立即失败，给 provider 恢复时间 |
+| 同 tier 所有模型不可用 | 升级 tier（premium）或降级 tier（标注风险） | 不应卡在同一 tier 反复重试 |
+| premium tier 预算耗尽 | 降级到 standard tier + 用户通知 | 成本控制优先于质量最优 |
+| 任务类型未在映射表中 | 默认使用 standard tier（Claude Sonnet / GPT-4o-mini） | 安全默认值，平衡速度和质量 |
+| 指数退避累计 > 5 分钟 | 放弃当前 provider，切换到降级链下一个 | 避免无限等待 |

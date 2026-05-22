@@ -133,6 +133,12 @@ Phase 0 是 devflow-evo 工作流的起点，负责：
 |-----------|--------|-----------|
 | **Escalate**: 无 project-context 且用户沉默 >3 轮 | 中止并请求用户提供项目背景 | Phase 0 需要项目上下文才能产出有意义种子 |
 | **Skip**: 已有 strategy-seeds 且无变更需求 | 直接 PASS G0，进入 Phase 1 | 避免重复捕获已稳定的战略 |
+
+> **⚠️ 防盲飞验证 (P3-4)**: 声称 Skip 时必须执行:
+> 1. `Read(".devflow-evo/00-strategy.md")` 读取战略文档
+> 2. 展示目标+范围+风险级别内容（≥3行）
+> 3. 向用户确认: "战略文档已存在，是否确认跳过 Phase 0？"
+> Fast/Lean 模式下可直接跳过，无需验证。
 | **Degradation**: 项目上下文不足 | 输出 CONDITIONAL PASS + 标记 `[TODO: enrich context]` | 低上下文仍可产出种子，但需后续补充 |
 
 ## Provider 路由

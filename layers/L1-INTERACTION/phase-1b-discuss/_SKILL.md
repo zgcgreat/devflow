@@ -539,6 +539,12 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 | 已有CONTEXT.md | 增量更新，保留历史决策 |
 | Fast模式 | 跳过Discuss，使用默认决策 |
 
+> **⚠️ 防盲飞验证 (P3-4)**: 声称"已有CONTEXT.md"跳过时必须执行:
+> 1. `Read(".devflow-evo/CONTEXT.md")` 读取上下文文件
+> 2. 展示技术决策段内容（≥3行）
+> 3. 向用户确认: "CONTEXT.md 已存在，是否确认跳过 Discuss？"
+> Fast 模式下可直接跳过，无需验证。
+
 ---
 
 ## Error Taxonomy (P0 → P3)

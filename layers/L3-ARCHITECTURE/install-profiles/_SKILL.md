@@ -115,3 +115,21 @@ node install.js /path/to/project --profile small-team
 node install.js . --profile small-team --runtime cursor
 # → .cursor/rules/devflow-evo.mdc
 ```
+
+## Error Taxonomy (Install Profiles 专属)
+
+| Level | Name | Action | Impact |
+|-------|------|--------|--------|
+| P0 | PROFILE_MISMATCH | 安装了错误 profile → 确认项目类型和团队规模后重新选择 | 流程不匹配，Phase 跳过逻辑错误 |
+| P1 | RUNTIME_NOT_FOUND | 指定 runtime 的适配器配置无法生成 → 降级到通用配置 + 警告 | 部分功能缺失（hooks/rules 未生效） |
+| P2 | PHASE_SKIP_CONFLICT | profile 跳过 Phase 但用户手动触发 → 允许执行，标注"非 profile 推荐" | 非阻塞，流程偏移 |
+| P3 | MEMORY_SET_INCOMPLETE | profile 定义的 memory 文件缺失 → 自动创建空模板 | 非阻塞，首次运行自动补齐 |
+
+## Boundary Conditions (Install Profiles)
+
+| Condition | Action | Rationale |
+|-----------|--------|-----------|
+| project-type 无法识别 | 交互式询问，默认 solo-dev | 避免错误 profile 导致流程不适配 |
+| team-size > 20 | 强制使用 enterprise profile | 大团队需完整流程（审计/合规） |
+| profile 包含 skip: phase-4/phase-5 | 拒绝，这两个 Phase 不可跳过 | 构建/测试是底线，跳过将导致质量失控 |
+| 同时指定 --profile 和自定义参数 | 自定义参数覆盖 profile 默认值 | 用户显式意图优先于预设 |

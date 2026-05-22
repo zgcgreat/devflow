@@ -1,6 +1,10 @@
 # 交互层 Ultimate 模板库
 
-整合自 get-shit-done 项目，共 **36个模板**。
+整合自 get-shit-done 项目，共 **55 个模板**。
+
+> **⚠️ 目录定位**: 本目录为 `gsd-workflows/` 遗留模板库，仅被 `layers/L1-INTERACTION/gsd-workflows/` 下的文件引用。
+> devflow-evo 核心流程模板位于 `references/templates/`（25 个 Phase 产物模板），Phase _SKILL.md 统一引用 `references/templates/`。
+> 两个目录**不合并**，避免破坏 gsd-workflows 引用链。
 
 ---
 

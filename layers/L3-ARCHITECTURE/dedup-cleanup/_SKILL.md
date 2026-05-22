@@ -75,3 +75,21 @@ diff references/flow-kit-reference/frontend-engineer-rules.md references/referen
 |------|--------|------|------|
 | stage-skills 去重 | P2 | 低（只影响旧路径引用） | 2h |
 | references 去重 | P2 | 中（需更新所有引用） | 4h |
+
+## Error Taxonomy (Dedup Cleanup 专属)
+
+| Level | Name | Action | Impact |
+|-------|------|--------|--------|
+| P0 | REFERENCE_PATH_BREAK | 合并后旧路径引用断裂 → 全项目 grep 扫描更新所有引用 | 阻塞 Phase 4/6（编译失败/审查报错） |
+| P1 | UNIQUE_CONTENT_LOSS | 合并时覆盖了 stage-skills 独有内容 → 先 diff 再 merge | 功能缺失，需回滚重合并 |
+| P2 | SYMLINK_CYCLE | L3 references symlink 指向已被删除的根级文件 → symlink 校验 | 非阻塞，降级为 inline 引用 |
+| P3 | STAGE_SKILLS_STALE | stage-skills/ 标注替代但仍有用户引用 → README 加迁移指引 | 非阻塞，仅影响旧路径使用 |
+
+## Boundary Conditions (Dedup Cleanup)
+
+| Condition | Action | Rationale |
+|-----------|--------|-----------|
+| 重复文件差异 > 30% | 不自动合并，标记为"需人工判定" | 差异过大可能是有意分化，自动合并会丢失信息 |
+| stage-skills 独有内容 > 50 行 | 先提取到对应 L1 Phase 再删除 | 防止独有知识丢失 |
+| 引用路径更新涉及 > 20 个文件 | 分批更新（每批 ≤10），每批验证 | 降低单次变更风险，便于回滚 |
+| references/ 删除后 L3 symlink 失效 | 重建 symlink 或改为 inline 引用 | 确保架构层参考文件可访问 |

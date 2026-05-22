@@ -1,8 +1,8 @@
-# 阶段门验证参考 — DevFlow-Evo v3.2.3
+# 阶段门验证参考 — DevFlow-Evo v3.2.4
 
 本文档列出所有 **阶段门（Gate）** 的完整验证规则。每个门是 Phase 之间的质量关口，未通过则不可进入下一阶段。
 
-> **v3.2.3 更新**: G0 入口门已确认完整，Gate 依赖链 G0→G8 经审计验证完全自洽
+> **v3.2.4 更新**: 新增 Gate 强制验证机制（防盲飞），P3-4 修复
 
 ## 门控链全景
 
@@ -145,6 +145,55 @@ Phase 8 → [G8]
 - [ ] 产物目录 `.devflow-evo/<req-id>/` 完整
 
 **不通过处理**: 补做缺失的归档步骤 → 重新验证直到所有子项通过
+
+## Gate 强制验证机制（防盲飞）⭐v3.2.4新增
+
+> **问题**: Phase skill 的"跳过条件"仅靠 AI 自判，AI 可声称"已有 02-design.md"跳过 Phase 2，而产物实际不存在或不完整。这构成 **P3-4 盲飞风险**。
+
+### 验证规则
+
+**规则 1 — 产物存在性验证**：任何 Phase 声称"跳过"时，必须先用 `Read` 工具读取产物文件并展示关键内容片段（≥3行），不得仅声称"产物已存在"。
+
+**规则 2 — 产物完整性验证**：产物存在但不完整时（如 02-design.md 缺少架构图段），不得跳过，必须补全后重验。
+
+**规则 3 — 用户确认兜底**：产物存在且完整时，仍须向用户展示产物摘要并取得确认，用户有权拒绝跳过。
+
+### 各 Phase 产物验证清单
+
+| Phase | 产物路径 | 验证关键段 | 跳过条件 |
+|-------|---------|-----------|---------|
+| Phase 0 | `.devflow-evo/00-strategy.md` | 目标+范围+风险级别 | Fast/Lean 模式直接跳过（无需验证） |
+| Phase 1 | `.devflow-evo/01-5whys.md` | 5个Why + 根因 | Fast/Lean 模式直接跳过 |
+| Phase 1b | `.devflow-evo/01b-context.md` | 技术决策 + 未决项 | Fast 模式跳过；Lean/Standard 需验证 CONTEXT.md 存在 |
+| Phase 2 | `.devflow-evo/<req-id>/02-design.md` | 技术栈+架构图+API | 需 Read 验证 `## 0. 技术栈选定` 段已锁定 |
+| Phase 2a | `.devflow-evo/<req-id>/02a-variants.md` | ≥4变体 + 评分 | 简单任务（≤3文件）自动跳过 |
+| Phase 3 | `.devflow-evo/<req-id>/specs/03-tasks.md` | 任务列表+依赖DAG | Fast/Lean 模式直接跳过 |
+| Phase 4 | Wave 产物目录 | 代码文件+commit | 不可跳过 |
+| Phase 5 | `.devflow-evo/<req-id>/specs/test/` | 测试结果+覆盖率 | 不可跳过 |
+| Phase 6 | `.devflow-evo/<req-id>/specs/06-review.md` | 审查结果+修复项 | Fast 模式可自检替代三层对抗 |
+| Phase 7 | `.devflow-evo/<req-id>/specs/07-canary.md` | 健康指标+回滚阈值 | Fast/Lean 模式跳过 |
+| Phase 8 | `LESSONS.md` + `STATE.md` | LESSONS去重+Domain Skills | 不可跳过 |
+
+### 验证指令模板
+
+在每个 Phase 的跳过判定处，应使用以下指令格式：
+
+```markdown
+### 跳过验证（防盲飞）
+
+**声称跳过原因**: _← AI 塰明跳过此 Phase 的原因_
+
+**验证步骤**（必须执行，不可省略）:
+1. 使用 `Read` 工具读取产物文件: `Read("<产物路径>")`
+2. 展示产物关键内容片段（≥3行）
+3. 确认产物完整性（所有必要段存在且非空）
+4. 向用户展示摘要并请求确认: "产物已存在且完整，是否确认跳过此 Phase？"
+
+**验证结果**:
+- ✅ 产物存在且完整 + 用户确认 → 跳过
+- ⚠️ 产物存在但不完整 → 补全后重新验证
+- ❌ 产物不存在 → 执行此 Phase
+```
 
 ## 门控速查表
 
