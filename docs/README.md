@@ -1,6 +1,8 @@
 # DevFlow-Evo 文档中心
 
-DevFlow-Evo v3.2 的完整技术文档集合。本目录包含架构设计、API参考、使用指南和最佳实践。
+DevFlow-Evo v3.2.3 的完整技术文档集合。本目录包含架构设计、API参考、使用指南和最佳实践。
+
+> **v3.2.3**: Audit Sprint 完成 — P0-P2 全量修复，健康度 88/100
 
 ## 📚 文档索引
 
@@ -14,7 +16,9 @@ DevFlow-Evo v3.2 的完整技术文档集合。本目录包含架构设计、API
 | [Token 预算管理](token-budget.md) | Surface Budget 策略 | 成本优化者 |
 | [集成指南](integration.md) | 与 spec-kit / OpenSpec / GitNexus 集成 | 集成开发者 |
 | [进阶主题](advanced.md) | LearningWorkflow、Hooks、DAG路由等 | 高级用户 |
-| [变更日志](changelog.md) | v1.0 → v3.2 完整变更记录 | 维护者 |
+| [审查报告](AUDIT-REPORT-v3.md) | 8维度21项全面深度审查 | 维护者/质量负责人 |
+| [测试验证](TEST-VERIFICATION.md) | 审计修复验证结果 | QA/维护者 |
+| [变更日志](changelog.md) | v1.0 → v3.2.3 完整变更记录 | 维护者 |
 
 ## 🎯 按场景导航
 

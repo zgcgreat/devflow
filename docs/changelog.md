@@ -4,6 +4,63 @@
 
 ---
 
+## [v3.2.3] — 2026-05-21 — Audit Sprint (P0-P2 全量修复)
+
+### 审计概况
+- **审查范围**: 72 _SKILL.md / 330 .md 文件 / L1-L2-L3 三层架构
+- **审查方法**: 8 维度 × P0-P3 严重度分级
+- **健康度评分**: 72/100 → 88/100 (+16)
+
+### P0 修复 (4项，阻塞发布) ✅
+- **P0-1**: specialists requires 命名统一 — `g6-gate` → `g6-gate-decision` 格式
+- **P0-2**: 15 个 stage-skills 补齐 `deprecated: true` + `replaced-by` 标记
+- **P0-3**: 54→0 个 requires 断裂修复 — 命名统一 + external-inputs 迁移 + 缺失逻辑补齐
+- **P0-4**: 8 个文件版本号统一为 3.0.0
+
+### P1 修复 (6项，功能受损) ✅
+- **P1-1**: L2 引擎层 Error Taxonomy 覆盖率 29%→100% (7/24→23/23)
+- **P1-2**: L2 引擎层 Boundary Conditions 覆盖率 25%→100% (6/24→23/23)
+- **P1-3**: L2→L3 跨层引用修正 — L2 requires 中 L3 实现名移至 `dependencies`
+- **P1-4**: 99 个孤立 provides 甄别分类 — pipeline-consumed(28) + on-demand(52) + terminal-output(8) + redundant-child(11)
+- **P1-5**: 3 处关键路径引用修复 — 裸路径补全 `.devflow-evo/<req-id>/` 前缀，模板路径补全 `references/` 前缀
+- **P1-6**: code-intelligence 残留引用替换为 gitnexus-bridge (2处)
+
+### P2 修复 (6项，质量受损) ✅
+- **P2-1**: phase-0-strategy 补齐 Boundary Conditions (escalate/skip/degradation 三条)
+- **P2-2**: mcp + skills/ 下 3 个 utility 标注 `standalone: true`
+- **P2-3**: phase-0-strategy 确认项 2→3 项，新增"项目风险级别评估"（🟢低/🟡中/🔴高）
+- **P2-4**: RULES-v3.md 引用路径评估，确认大部分引用已含 `references/` 前缀
+- **P2-5**: code-intelligence DEPRECATED 标记确认
+- **P2-6**: executor/_SKILL.md `// TODO` 替换为指令式描述
+
+### 健康度评分提升明细
+
+| 维度 | 修复前 | 修复后 | 关键改进 |
+|------|--------|--------|---------|
+| 结构完整性 | 80 | 95 | frontmatter 满分，版本统一，standalone 标注 |
+| 协议合规性 | 55 | 92 | L1/L2 ET+BC 100%，L3 仍有提升空间 |
+| 数据流闭环 | 65 | 85 | requires 0 断裂，orphan provides 已甄别分类 |
+| 层级职责 | 70 | 85 | L2→L3 引用已修正，code-intelligence DEPRECATED |
+| 用户体验 | 90 | 98 | 12 Phase 确认项统一为 3 项 |
+| 代码健康 | 75 | 88 | TODO 已清理，code-intelligence 残留已修复 |
+| 可执行性 | 68 | 80 | 关键路径已统一，RULES 引用已评估 |
+| 安全与健壮 | 73 | 82 | Phase 0 BC 已补齐，Gate 仍无强制机制 |
+
+### Gate 依赖链验证 ✅
+```
+G0 → G1 → G2.5 → G3 → G3.5 → G4 → G5 → G6 → G7 → G7.5 → G8
+```
+完整自洽，无断裂。
+
+### 文档更新
+- `docs/AUDIT-REPORT-v3.md`: 全面深度审查报告（8 维度 21 项发现）
+- `docs/changelog.md`: 新增 v3.2.3 审计修复记录
+- `docs/architecture.md`: 更新协议合规性、数据流闭环状态
+- `docs/gates-reference.md`: 更新 G0 入口门 + 依赖链
+- `docs/TEST-VERIFICATION.md`: 新增测试验证文档
+
+---
+
 ## [v3.2.2] — 2026-05-20 — Scale & Revert Intelligence
 
 ### 新增功能
@@ -191,9 +248,14 @@ v3.2.1 (2026-05-20)
   │ Runtime Intelligence Sprint
   │ Caveman-Shrink v2 + CodeGraph-Bridge + Hooks + Surface Switch
   ▼
-v3.2.2 (当前)
+v3.2.2 (2026-05-20)
   │ Scale & Revert Intelligence
   │ Scale-Domain-Adaptive + Conductor-Revert + Chain-Trigger
+  ▼
+v3.2.3 (2026-05-21)
+  │ ★Audit Sprint: P0-P2 全量修复
+  │ 健康度 72→88/100 +16
+  │ requires 0断裂 + ET/BC 100%覆盖 + Gate链自洽
 ```
 
 ---

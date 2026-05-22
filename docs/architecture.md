@@ -1,6 +1,8 @@
-# 架构设计 — DevFlow-Evo v3.2
+# 架构设计 — DevFlow-Evo v3.2.3
 
 DevFlow-Evo 采用 **L1/L2/L3 三层架构**，每一层有明确的职责边界和协作协议。
+
+> **v3.2.3 审计修复**: 健康度 88/100，requires 0 断裂，ET/BC L1+L2 100% 覆盖，Gate 依赖链 G0→G8 完全自洽
 
 ## 架构图
 
@@ -45,6 +47,18 @@ DevFlow-Evo 采用 **L1/L2/L3 三层架构**，每一层有明确的职责边界
 │  Phase 7 → Phase 8                          │
 └─────────────────────────────────────────────┘
 ```
+
+### 质量指标 (v3.2.3 审计修复后)
+
+| 指标 | 数值 | 说明 |
+|------|------|------|
+| frontmatter 覆盖率 | 100% (72/72) | 所有 _SKILL.md 均有 YAML frontmatter |
+| Error Taxonomy 覆盖率 | 100% (L1+L2) | L1 19/19 + L2 23/23 |
+| Boundary Conditions 覆盖率 | 100% (L1+L2) | L1 19/19 + L2 23/23 |
+| requires 断裂数 | 0 | 所有 requires 均有对应 provides |
+| 孤立 provides | 99 | 已甄别：pipeline(28) + on-demand(52) + terminal(8) + redundant(11) |
+| Gate 依赖链 | G0→G8 自洽 | 无断裂，无循环 |
+| 健康度评分 | 88/100 | 较审计前 +16 |
 
 ## L3: ARCHITECTURE（架构层）
 
@@ -284,3 +298,4 @@ Phase 8: 知识归档      (phase-8-archive/_SKILL.md)
 | v3.2 | Caveman-Shrink / CodeGraph-Bridge / Hooks / Surface-Switch 新增 |
 | v3.2.1 | Runtime Intelligence Sprint（4个新 L2 模块） |
 | v3.2.2 | Scale-Domain-Adaptive / Conductor Revert / Chain-Trigger |
+| v3.2.3 | Audit Sprint: P0-P2 全量修复，健康度 72→88/100 |

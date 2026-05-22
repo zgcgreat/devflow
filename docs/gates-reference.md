@@ -1,17 +1,29 @@
-# 阶段门验证参考 — DevFlow-Evo v3.2
+# 阶段门验证参考 — DevFlow-Evo v3.2.3
 
 本文档列出所有 **阶段门（Gate）** 的完整验证规则。每个门是 Phase 之间的质量关口，未通过则不可进入下一阶段。
+
+> **v3.2.3 更新**: G0 入口门已确认完整，Gate 依赖链 G0→G8 经审计验证完全自洽
 
 ## 门控链全景
 
 ```
-Phase 0 → [G1] → Phase 1 → [G2] → Phase 1b → [G2.5] → Phase 2 → [G3]
+Phase 0 → [G0] → [G1] → Phase 1 → [G2] → Phase 1b → [G2.5] → Phase 2 → [G3]
 Phase 2a → [G3.5] → Phase 3 → [G4] → Phase 4 → [G5]
-Phase 5 → [G2质量门] → Phase 6 → [G6] → Phase 7 → [G7]
+Phase 5 → [G2质量门] → Phase 6 → [G6] → Phase 7 → [G7] → [G7.5]
 Phase 8 → [G8]
 ```
 
-**完整依赖链**: G0 → G1 → G2.5 → G3 → G3.5 → G4 → G5 → G6 → G7 → G8
+**完整依赖链**: G0 → G1 → G2.5 → G3 → G3.5 → G4 → G5 → G6 → G7 → G7.5 → G8
+
+## G0 — Entry Gate（入场门）
+
+**位置**: 入场检测 → Phase 0
+**检查项**:
+- [ ] 项目目录已识别（greenfield / brownfield）
+- [ ] GitNexus 可用性检测完成（就绪 / grep fallback / 关闭）
+- [ ] 模式已判定（Fast / Lean / Standard / Strict）
+
+**不通过处理**: 重新执行入场检测
 
 ## G1 — Plan Quality Gate（计划质量门）
 
@@ -20,6 +32,11 @@ Phase 8 → [G8]
 - [ ] 6个问题全部有回答（有效回答≥4）
 - [ ] 痛点描述有具体场景或数据支撑
 - [ ] 商业模式描述清晰（至少说明怎么赚钱）
+
+**Phase 0 确认项（v3.2.3 统一为 3 项）**:
+1. Gate 决策：PASS / CONDITIONAL / FAIL
+2. 弱点识别：核心问题摘要
+3. 项目风险级别：🟢低 / 🟡中 / 🔴高
 
 **不通过处理**: 退回需求澄清，重新执行 Phase 0
 
@@ -133,6 +150,7 @@ Phase 8 → [G8]
 
 | 门 | 前置Phase | 核心检查 | 失败处理 |
 |----|----------|---------|---------|
+| G0 | 入场检测 | 项目识别+模式判定 | 重新检测 |
 | G1 | Phase 0 | 6题≥4有回答 | 退回Phase 0 |
 | G2 | Phase 1 | AC可执行+影响范围 | 继续追问 |
 | G2.5 | Phase 1b | 决策覆盖率≥70% | 补充决策 |
@@ -145,7 +163,8 @@ Phase 8 → [G8]
 | G7 | Phase 7 | 健康指标达标 | 回滚后重试 |
 | G8 | Phase 8 | 归档完整+去重完成 | 补做归档 |
 
-## v3.2更新记录
+## 版本更新记录
 
+- **v3.2.3**: Audit Sprint — G0 入口门确认完整；Phase 0 确认项统一为 3 项（含风险级别评估）；Gate 依赖链 G0→G8 审计验证自洽；requires 命名统一为 `gX-gate-decision` 格式
 - **v3.2**: 门控编号统一为 `gX-gate` 格式；Phase 1b新增G2.5门；条件跳过规则与门控联动
 - **v3.1**: Lean模式添加简化门控路径

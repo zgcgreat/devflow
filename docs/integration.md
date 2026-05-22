@@ -1,4 +1,4 @@
-# 集成指南 — DevFlow-Evo v3.2
+# 集成指南 — DevFlow-Evo v3.2.3
 
 本文档介绍如何集成外部工具和工作流到 DevFlow-Evo。
 

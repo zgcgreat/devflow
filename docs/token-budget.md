@@ -1,4 +1,4 @@
-# Token 预算管理 — DevFlow-Evo v3.2
+# Token 预算管理 — DevFlow-Evo v3.2.3
 
 本文档介绍如何在 DevFlow-Evo 中进行 Token 预算管理和优化策略。
 
