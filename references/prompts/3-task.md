@@ -1,5 +1,5 @@
 # 阶段 3 · 任务 — 把设计拆成可并行的原子任务
-> ⚠️ **进入本阶段前，必须先加载**：`devflow-kit/agent-skills/skills/planning-and-context/_SKILL.md`
+> ⚠️ **进入本阶段前，必须先加载**：`agent-skills/skills/planning-and-task-breakdown/SKILL.md`
 
 
 ## 角色

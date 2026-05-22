@@ -1,7 +1,7 @@
 # 阶段 4 · 开发 — 在 fresh context 中执行单个任务
 
 > ⚠️ **进入本阶段前，必须先加载**：
-> - **skill**：`devflow-kit/agent-skills/skills/development-core/_SKILL.md`、`devflow-kit/agent-skills/skills/testing-suite/_SKILL.md`
+> - **skill**：`agent-skills/skills/source-driven-development/SKILL.md`、`agent-skills/skills/test-driven-development/SKILL.md`
 > - **reference（按任务类型按节读取）**：
 >   - 所有任务：`references/4-dev-rules.md` § 1.4 + § 1.5（按节读取）
 >   - UI 任务：追加 § 1.6 + § 1.8
@@ -16,8 +16,8 @@
 □ 入场检测已输出检测结果框？
 □ 入场检测结果不是"待用户确认"？
 □ 已读取 .devflow-evo/STATE.md？
-□ 已加载 development-core/_SKILL.md？
-□ 已加载 testing-suite/_SKILL.md？
+□ 已加载 source-driven-development/SKILL.md？
+□ 已加载 test-driven-development/SKILL.md？
 □ 已按节读取 4-dev-rules.md（禁止整读）？
 ```
 
@@ -297,7 +297,7 @@ dev-snapshot.md 是临时文件，不归档。
 
 ## 4. Doubt：完成前反方审查（可选但推荐）
 
-> 本任务涉及**非平凡逻辑**（分支 / 边界 / 并发 / 不可逆操作）时，建议在 完成前加载 `agent-skills/skills/doubt-driven-development/_SKILL.md` 做 fresh-context 审查。
+> 本任务涉及**非平凡逻辑**（分支 / 边界 / 并发 / 不可逆操作）时，建议在 完成前加载 `agent-skills/skills/doubt-driven-development/SKILL.md` 做 fresh-context 审查。
 
 执行路径：
 1. **CLAIM** — 从改动中挑出最值得怀疑的 1~2 个决策/实现

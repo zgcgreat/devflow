@@ -1,6 +1,6 @@
 ﻿---
-name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
+name: tdd-iron-law
+description: Lightweight TDD enforcement skill emphasizing the Iron Law - no production code without a failing test first. Use as a quick-reference reminder alongside the full test-driven-development skill in agent-skills/.
 ---
 
 # Test-Driven Development (TDD)

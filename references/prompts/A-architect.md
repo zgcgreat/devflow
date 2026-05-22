@@ -1,6 +1,6 @@
 # 横向命令 · A-architect — 建立 / 重构项目级 system-architecture.md
 
-> ⚠️ **进入本阶段前，必须先加载**：`devflow-kit/agent-skills/skills/planning-and-context/_SKILL.md`
+> ⚠️ **进入本阶段前，必须先加载**：`agent-skills/skills/planning-and-task-breakdown/SKILL.md`
 
 > **触发方式**：`@devflow-kit/references/GO.md` + `建立架构 / 架构梳理 / 重构架构 / architect / 重审 ADR`
 > 不属于任何 req，不写 00-requirements.md。直接产出 / 重构 `.devflow-evo/system-architecture.md`。

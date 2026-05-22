@@ -1,5 +1,5 @@
 # I-intel-scan · 入场扫描（横向命令）
-> ⚠️ **进入本阶段前，必须先加载**：`devflow-kit/agent-skills/skills/planning-and-context/_SKILL.md`
+> ⚠️ **进入本阶段前，必须先加载**：`agent-skills/skills/planning-and-task-breakdown/SKILL.md`
 
 
 > 在已存在的项目（brownfield）里第一次用 flow-kit 时，**先跑这个**。

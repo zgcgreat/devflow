@@ -1,7 +1,7 @@
 # 阶段 5 · 测试 — 风险驱动测试矩阵
 
 > ⚠️ **进入本阶段前，必须先加载**：
-> - **skill**：`devflow-kit/agent-skills/skills/testing-suite/_SKILL.md`、`devflow-kit/agent-skills/skills/debugging-and-error-recovery/_SKILL.md`
+> - **skill**：`agent-skills/skills/test-driven-development/SKILL.md`、`agent-skills/skills/debugging-and-error-recovery/SKILL.md`
 > - **reference（按节读取，禁止整读）**：`references/test-pyramid.md` § 适用矩阵 + 需要的那几轮详情
 
 

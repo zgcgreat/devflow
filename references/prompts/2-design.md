@@ -1,7 +1,7 @@
 # 阶段 2 · 设计 — 把需求变成可执行的技术设计
 
 > ⚠️ **进入本阶段前，必须先加载**：
-> - **skill**：`devflow-kit/agent-skills/skills/design-and-architecture/_SKILL.md`
+> - **skill**：`agent-skills/skills/api-and-interface-design/SKILL.md`
 > - **reference（按节读取，禁止整读）**：`references/tech-stacks.md` § 适用矩阵 + § 给 AI 在 2-design 阶段展示用的标准模板
 
 ## 角色
@@ -205,7 +205,7 @@
 
 ### 1.6 Doubt：反方审查关键决策（可选但推荐）
 
-> 引入 `agent-skills/skills/doubt-driven-development/_SKILL.md`，对 § 1 决策清单中**非平凡**的决策执行 fresh-context 反方审查。
+> 引入 `agent-skills/skills/doubt-driven-development/SKILL.md`，对 § 1 决策清单中**非平凡**的决策执行 fresh-context 反方审查。
 
 **非平凡判定**：决策涉及分支逻辑 / 跨模块边界 / 类型系统无法验证的属性（线程安全、幂等性）/ 正确性依赖不可见上下文 / 影响面不可逆。
 

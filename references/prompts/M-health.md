@@ -1,5 +1,5 @@
 # 横向命令 · M-health — 代码库health-check
-> ⚠️ **进入本阶段前，必须先加载**：`devflow-kit/agent-skills/skills/code-quality/_SKILL.md`、`devflow-kit/agent-skills/skills/security-and-performance/_SKILL.md`
+> ⚠️ **进入本阶段前，必须先加载**：`agent-skills/skills/code-review-and-quality/SKILL.md`、`agent-skills/skills/security-and-hardening/SKILL.md`
 
 > **可选工具依赖**：步骤 2.5 冗余巡检需要以下工具（未安装时使用内置回退）：
 > - [brooks-lint](https://github.com/hyhmrright/brooks-lint) — 健康仪表板 + 6 维诊断

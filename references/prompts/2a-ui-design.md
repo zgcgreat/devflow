@@ -1,7 +1,7 @@
 # 阶段 2a · 界面设计 — 把"看起来怎样"决策清楚
 
 > ⚠️ **进入本阶段前，必须先加载**：
-> - **skill**：`devflow-kit/agent-skills/skills/frontend-ui-engineering/_SKILL.md`
+> - **skill**：`agent-skills/skills/frontend-ui-engineering/SKILL.md`
 > - **reference**：
 >   - `references/ui-anti-patterns.md`（可全读，111 行）
 >   - `references/ui-aesthetics.md` § 调性（按节读取）

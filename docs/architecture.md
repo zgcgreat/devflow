@@ -70,6 +70,15 @@ DevFlow-Evo 采用 **L1/L2/L3 三层架构**，每一层有明确的职责边界
 
 > **设计意图**: `layers/` 内的技能是架构内部组件，不应被 WorkBuddy 独立加载；`skills/` 和 `agent-skills/` 是面向用户的可安装技能，需要被扫描发现。
 
+### skills/ vs agent-skills/ 定位区分
+
+| 目录 | 技能数 | 定位 | 来源 | 典型技能 |
+|------|--------|------|------|---------|
+| `skills/` | 17 | **流程操作技能** — devflow-evo 工作流各阶段的操作技能 | devflow-evo 自研 | brainstorming, writing-plans, systematic-debugging |
+| `agent-skills/skills/` | 24 | **通用工程能力技能** — 跨项目的工程实践能力 | [Addy Osmani Agent Skills](https://github.com/addyosmani/agent-skills) | code-review-and-quality, security-and-hardening, TDD |
+
+> **关键区分**: `skills/` 是"怎么走流程"，`agent-skills/skills/` 是"怎么做好工程"。两者互补，不应合并。
+
 ## L3: ARCHITECTURE（架构层）
 
 ### DAG-Router — 有向无环图路由引擎
