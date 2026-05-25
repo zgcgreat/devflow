@@ -1,4 +1,4 @@
-# devflow-evo v3.0.0 全面深度审查报告
+# devflow v3.0.0 全面深度审查报告
 
 > 审查时间: 2026-05-21
 > 审查范围: 72 _SKILL.md / 330 .md 文件 / L1-L2-L3 三层架构
@@ -40,7 +40,7 @@
 | P1-2 | 协议合规性 | **L2 引擎层 Boundary Conditions 覆盖率仅 25%** (6/24 有 BC) | 无边界条件 = 无降级策略，引擎层极端情况无保护 | 补量优先级：executor > wave-executor > hooks > provider-gateway | ✅ 100% (23/23) |
 | P1-3 | 层级职责 | **L2 skill 直接引用 L3 模块名作为 requires** | 违反 L2→L3 调用方向约束 | 引入 layer-interfaces 中间契约，L2 requires interface 名而非 L3 实现名 | ✅ 已移至 dependencies |
 | P1-4 | 数据流闭环 | **107→99 个 provides 项无任何 requires 消费** | "产出无人消费"的孤立 provides | 逐一甄别：pipeline-consumed 28 + on-demand 52 + terminal 8 + redundant 11 | ✅ 甄别完成 |
-| P1-5 | 可执行性 | **部分 Phase 引用产物路径格式不统一** | AI 执行时可能无法确定产物写入位置 | 统一为 `.devflow-evo/<req-id>/` 前缀路径规范 | ✅ 关键不一致已修复 |
+| P1-5 | 可执行性 | **部分 Phase 引用产物路径格式不统一** | AI 执行时可能无法确定产物写入位置 | 统一为 `.devflow/<req-id>/` 前缀路径规范 | ✅ 关键不一致已修复 |
 | P1-6 | 代码健康 | **code-intelligence 已 DEPRECATED 但可能存在调用残留** | 残留引用可能导致 AI 误调用废弃模块 | grep 全项目确认无调用残留，如有则替换为 gitnexus-bridge | ✅ 2处残留已修复 |
 
 ### P2 — MINOR (质量受损，6 项) ✅ 全部修复/评估
@@ -157,7 +157,7 @@ Gate 依赖链 G0->G8: 自洽通过
 skills/ 目录归属:
 - stage-skills/ (15个): 与 L1 Phase 高度重复，14/15 无 DEPRECATED 标记
 - karpathy-rules, manage-memory: 独立工具，无 requires/provides
-- install-devflow-evo: 安装器，唯一有声明的 skills/ 文件
+- install-devflow: 安装器，唯一有声明的 skills/ 文件
 
 ### 维度 5: 用户体验
 
@@ -182,9 +182,9 @@ DEPRECATED/TODO/FIXME 扫描结果:
 ### 维度 7: 可执行性
 
 产物路径一致性:
-- `.devflow-evo/<req-id>/02-design.md` — 规范路径
+- `.devflow/<req-id>/02-design.md` — 规范路径
 - `02-design.md` — Phase 2a shotgun 读取时缺少前缀
-- `specs/03-tasks.md` — 与 `.devflow-evo/` 前缀不一致
+- `specs/03-tasks.md` — 与 `.devflow/` 前缀不一致
 - `templates/02-design.md` — 应为 `references/templates/02-design.md`
 
 模板对齐: `references/templates/` 下 25 个模板，`templates/` 下 67 个模板，两套并存

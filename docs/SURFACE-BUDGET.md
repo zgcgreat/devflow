@@ -7,7 +7,7 @@
 
 ## 概述
 
-devflow-evo v3.0 提供精细化的 Token 预算管理，确保 AI 在长流程执行中不会因上下文溢出而丢失关键信息。
+devflow v3.0 提供精细化的 Token 预算管理，确保 AI 在长流程执行中不会因上下文溢出而丢失关键信息。
 
 ## 预算预设
 
@@ -21,9 +21,9 @@ devflow-evo v3.0 提供精细化的 Token 预算管理，确保 AI 在长流程�
 ## 命令
 
 ```bash
-/devflow-evo budget set 300K              # 设定300K预算
-/devflow-evo budget preset medium         # 使用预设（small/medium/large/enterprise）
-/devflow-evo budget status                # 查看当前预算使用情况
+/devflow budget set 300K              # 设定300K预算
+/devflow budget preset medium         # 使用预设（small/medium/large/enterprise）
+/devflow budget status                # 查看当前预算使用情况
 ```
 
 ## 预算分配规则

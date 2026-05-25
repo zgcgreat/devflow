@@ -11,21 +11,21 @@
 
 ```bash
 # 将 .mdc 规则文件复制到 .cursor/rules/ 目录
-cp adapters/cursor/devflow-evo.mdc .cursor/rules/devflow-evo.mdc
+cp adapters/cursor/devflow.mdc .cursor/rules/devflow.mdc
 ```
 
 ### 2. 验证安装
 
-在 Cursor 中打开项目，开始新对话，确认 AI 助手能读取 `.devflow-evo/STATE.md`。
+在 Cursor 中打开项目，开始新对话，确认 AI 助手能读取 `.devflow/STATE.md`。
 
 ### 3. 自定义配置
 
-编辑 `.cursor/rules/devflow-evo.mdc` 中的 `globs` 字段以匹配项目文件模式：
+编辑 `.cursor/rules/devflow.mdc` 中的 `globs` 字段以匹配项目文件模式：
 
 ```yaml
 globs:
   - "src/**"
-  - ".devflow-evo/**"
+  - ".devflow/**"
 ```
 
 ## 限制
@@ -38,5 +38,5 @@ Cursor 不支持原生 hook 机制，以下功能需手动触发：
 ## 卸载
 
 ```bash
-rm .cursor/rules/devflow-evo.mdc
+rm .cursor/rules/devflow.mdc
 ```

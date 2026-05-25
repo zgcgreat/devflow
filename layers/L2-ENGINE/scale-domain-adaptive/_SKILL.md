@@ -22,7 +22,7 @@ external-inputs: [project-context]
 
 ## 设计理念
 
-DevFlow-Evo v3.2 之前是**固定粒度**的 Phase 流程,无论项目是 5 个文件的脚本还是 500 模块的微服务架构。
+DevFlow v3.2 之前是**固定粒度**的 Phase 流程,无论项目是 5 个文件的脚本还是 500 模块的微服务架构。
 Scale-Domain-Adaptive 引入三级粒度映射:
 
 | 项目规模 | Phase 粒度 | Phase 数量 | 适用场景 |
@@ -208,7 +208,7 @@ hooks_defaults_by_scale:
 
 ## 与 BMAD-METHOD 对比
 
-| 特性 | BMAD-METHOD | DevFlow-Evo |
+| 特性 | BMAD-METHOD | DevFlow |
 |------|-----------|-----------|
 | **复杂度评估** | domain-complexity.csv 静态表 | 动态扫描 + 信号检测 |
 | **流程选择** | 硬编码 standard/enhanced/advanced | 自动映射到 Phase 粒度 |

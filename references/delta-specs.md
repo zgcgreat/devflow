@@ -2,7 +2,7 @@
 
 > **Layer**: L1-INTERACTION (Phase 2-3) + L3-ARCHITECTURE (Merge Engine)  
 > **目的**: Brownfield 开发时多人并行修改同一 spec 不冲突，只描述变更而非重写完整文档  
-> **来源**: OpenSpec Delta Specs → devflow-evo v3.0 adaptation
+> **来源**: OpenSpec Delta Specs → devflow v3.0 adaptation
 
 ---
 

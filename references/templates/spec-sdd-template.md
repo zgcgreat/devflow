@@ -218,7 +218,7 @@
 ## 产物文件创建顺序（融合后）
 
 ```
-.devflow-evo/<req-id>/
+.devflow/<req-id>/
 ├── constitution.md          # 项目宪法（首次创建，后续复用）
 ├── 00-requirements.md       # 需求确认（含 SDD 元素）
 ├── 01-analysis.md           # 需求分析（含 NEEDS CLARIFICATION）

@@ -1,6 +1,6 @@
-# 四档模式详解 — DevFlow-Evo v3.2.3
+# 四档模式详解 — DevFlow v3.2.3
 
-DevFlow-Evo 提供 **Fast / Lean / Standard / Strict** 四种执行模式，每种模式裁剪不同的 Phase 流程和检测深度。
+DevFlow 提供 **Fast / Lean / Standard / Strict** 四种执行模式，每种模式裁剪不同的 Phase 流程和检测深度。
 
 ## 模式决策矩阵
 

@@ -11,7 +11,7 @@ cp adapters/copilot/copilot-instructions.md .github/copilot-instructions.md
 
 ### 2. 验证安装
 
-在 VS Code 中打开项目，确认 Copilot Chat 能响应 devflow-evo 相关指令。
+在 VS Code 中打开项目，确认 Copilot Chat 能响应 devflow 相关指令。
 
 ## 限制
 

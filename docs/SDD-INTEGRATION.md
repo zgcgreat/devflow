@@ -6,9 +6,9 @@
 
 ## 概述
 
-devflow-evo v3.0 集成 Spec-Driven Development 方法论，将规范优先的开发流程嵌入 Phase 1b-2 之间，自动生成结构化 Spec 文档作为 Phase 2 的输入。
+devflow v3.0 集成 Spec-Driven Development 方法论，将规范优先的开发流程嵌入 Phase 1b-2 之间，自动生成结构化 Spec 文档作为 Phase 2 的输入。
 
-## SDD 在 devflow-evo 流程中的位置
+## SDD 在 devflow 流程中的位置
 
 ```
 Phase 0 (Strategy) → Phase 1 (5 Whys) → Phase 1b (Discuss)
@@ -21,9 +21,9 @@ Phase 2 (Design) ← CONTEXT.md ← specs/
 ## 命令
 
 ```bash
-/devflow-evo spec define "需求描述"    # 生成 specs/XXX/spec.md
-/devflow-evo spec plan "技术描述"      # 生成 specs/XXX/plan.md
-/devflow-evo spec tasks                # 生成 specs/XXX/tasks.md
+/devflow spec define "需求描述"    # 生成 specs/XXX/spec.md
+/devflow spec plan "技术描述"      # 生成 specs/XXX/plan.md
+/devflow spec tasks                # 生成 specs/XXX/tasks.md
 ```
 
 ## SDD 流程

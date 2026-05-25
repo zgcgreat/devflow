@@ -6,7 +6,7 @@ gate: internal
 requires: [domain-complexity-mapping]
 provides: [model-assignment, fallback-chain]
 description: Intelligent model selection strategy mapping task types to optimal AI models with fallback chains
-source: devflow-evo Provider-Gateway + superpowers model routing
+source: devflow Provider-Gateway + superpowers model routing
 dependencies:
   - provider-gateway
 triggers:
@@ -38,7 +38,7 @@ runtime-inputs: [task-type]
 ## Provider Gateway 集成
 
 ```yaml
-# .devflow-evo/providers.yaml
+# .devflow/providers.yaml
 providers:
   anthropic:
     models:

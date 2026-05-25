@@ -22,7 +22,7 @@ triggers:
 
 **Karpathy Rule**: "If it's not tested, it doesn't exist."
 
-devflow-evo 的验证闭环确保每个变更从规格到部署的完整验证链：
+devflow 的验证闭环确保每个变更从规格到部署的完整验证链：
 
 ```
 Spec ←→ Implement ←→ Test ←→ Verify ←→ Deploy ←→ Monitor
@@ -103,7 +103,7 @@ Canary 部署:
 ## 验证结果记录
 
 ```yaml
-# .devflow-evo/<reqId>/05-test-report.md 中的验证摘要
+# .devflow/<reqId>/05-test-report.md 中的验证摘要
 verification:
   timestamp: 2026-05-19T16:00:00
   layers:
@@ -123,7 +123,7 @@ verification:
 ### GitHub Actions 示例
 
 ```yaml
-# .github/workflows/devflow-evo-verify.yml
+# .github/workflows/devflow-verify.yml
 on:
   pull_request:
     types: [opened, synchronize]

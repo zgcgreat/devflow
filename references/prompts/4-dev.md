@@ -15,7 +15,7 @@
 ```
 □ 入场检测已输出检测结果框？
 □ 入场检测结果不是"待用户确认"？
-□ 已读取 .devflow-evo/STATE.md？
+□ 已读取 .devflow/STATE.md？
 □ 已加载 source-driven-development/SKILL.md？
 □ 已加载 test-driven-development/SKILL.md？
 □ 已按节读取 4-dev-rules.md（禁止整读）？
@@ -31,21 +31,21 @@
 
 ## 输入
 
-- `@.devflow-evo/<req-id>/03-tasks.md`
+- `@.devflow/<req-id>/03-tasks.md`
 - 要执行的 task id（用户指定，例如 `T03`）
-- `@.devflow-evo/<req-id>/02-design.md`（**必读 `## 0. 技术栈选定` + `## 0.5 既有架构对齐`**——install / build / test 命令必须匹配选定的栈；触碰模块 / 禁动清单 / 沿用决策必须严格遵循）
+- `@.devflow/<req-id>/02-design.md`（**必读 `## 0. 技术栈选定` + `## 0.5 既有架构对齐`**——install / build / test 命令必须匹配选定的栈；触碰模块 / 禁动清单 / 沿用决策必须严格遵循）
 - **项目上下文文档**（从 `STATE.md` 读 `ai_context_doc` 字段决定）：
   - 有 `ai_context_doc: <path>` → 读那个文档（如 `AGENTS.md` / `CLAUDE.md`）
-  - 没或为 `CONTEXT.md` → 读 `@.devflow-evo/CONTEXT.md`
+  - 没或为 `CONTEXT.md` → 读 `@.devflow/CONTEXT.md`
   - `none` → 跳过此输入（AI "盲飞"，1.4 沿用既有抽象 grep 必须更彻底以补偿）
-- `@.devflow-evo/lessons-learned.md`
+- `@.devflow/lessons-learned.md`
 - 仅引用与本任务相关的文件，**不要加载整个项目**
 
 ## 入口门禁（Artifact Preflight）
 
 `4-dev` 必须满足二选一：
 
-1. **正式流程**：读取 `.devflow-evo/<req-id>/03-tasks.md` 中的当前 `<task>` 块。
+1. **正式流程**：读取 `.devflow/<req-id>/03-tasks.md` 中的当前 `<task>` 块。
 2. **单点调用**：用户显式提供一份临时最小 TASK。
 
 临时最小 TASK 必须包含：
@@ -60,7 +60,7 @@
 
 AI 不允许自行编造临时最小 TASK；缺字段必须反问用户或回到 `@devflow-kit/references/prompts/3-task.md` 生成正式 `03-tasks.md`。
 
-若当前 task 涉及前端 / UI 文件（`.css` / `.tsx` / `.vue` / `.html` / `.svelte` / 设计 token / 用户可见文案），必须先确认 `.devflow-evo/<req-id>/02a-ui-design.md` 存在。缺失时停止，回到 `@devflow-kit/references/prompts/2a-ui-design.md`。纯后端 / CLI / lib 任务才可跳过。
+若当前 task 涉及前端 / UI 文件（`.css` / `.tsx` / `.vue` / `.html` / `.svelte` / 设计 token / 用户可见文案），必须先确认 `.devflow/<req-id>/02a-ui-design.md` 存在。缺失时停止，回到 `@devflow-kit/references/prompts/2a-ui-design.md`。纯后端 / CLI / lib 任务才可跳过。
 
 触发时输出：
 
@@ -231,7 +231,7 @@ git diff --name-only
 
 ### 6. 写 dev-log.md
 
-**⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/dev-log.md` 模板的完整结构输出，填到 `.devflow-evo/<req-id>/<task-id>-dev-log.md`。**不得省略或改写任何段落**。
+**⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/dev-log.md` 模板的完整结构输出，填到 `.devflow/<req-id>/<task-id>-dev-log.md`。**不得省略或改写任何段落**。
 
 内容必须包含：做了什么 / 改了哪些文件 / verify 输出 / **6 维自查输出**（步骤 4 的 brooks-review 或内置回退结果）/ 是否触发新 fix-plan。
 
@@ -267,12 +267,12 @@ git diff --name-only
 若执行中出现 token > 50k / 自我复读 / 同错重现 / 用户说"打转了"中任一信号：
 
 1. **立即停手**——不要再写代码或跑工具
-2. 用 `@devflow-kit/templates/dev-snapshot.md` 写出 `.devflow-evo/<id>/<task-id>-dev-snapshot.md`，重点填：
+2. 用 `@devflow-kit/templates/dev-snapshot.md` 写出 `.devflow/<id>/<task-id>-dev-snapshot.md`，重点填：
    - 已完成子步骤（勾选清单）
    - 当前正在做（一段话，恢复后能直接续上）
    - **已排除的方案 + 理由 + 失败次数**（这是反重复的核心）
    - 待确认的假设
-3. 更新 `.devflow-evo/STATE.md` 的「中断任务」字段
+3. 更新 `.devflow/STATE.md` 的「中断任务」字段
 4. 输出"重启指令"给用户（见 RULES R1.5 模板）
 5. 检查是否触发 R1.7：若 task 体量明显过大，建议在 `03-tasks.md` 里就地拆为子任务后再恢复
 
@@ -327,7 +327,7 @@ dev-snapshot.md 是临时文件，不归档。
 
 ```
 ✅ 开发 完成
-📝 产物：.devflow-evo/<req-id>/04-dev-log.md
+📝 产物：.devflow/<req-id>/04-dev-log.md
 📊 STATE.md 阶段进度已更新：[x] 开发 → *-dev-log.md
 
 开发统计：
@@ -343,8 +343,8 @@ dev-snapshot.md 是临时文件，不归档。
 ## 触发下一步 & 自动推进
 
 - 还有未完成任务 → 清窗，再次进入 `@devflow-kit/references/prompts/4-dev.md` 跑下一个
-- **全部完成 → 生成 `04-dev-log.md`**：**⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/04-dev-log.md` 模板的完整结构汇总本次开发阶段全部任务的执行情况、关键决策、与设计的偏离、遗留事项和质量证据，保存到 `.devflow-evo/<req-id>/04-dev-log.md`。**不得省略或改写任何段落**。
-- **全部完成 → 更新 `.devflow-evo/STATE.md`**：
+- **全部完成 → 生成 `04-dev-log.md`**：**⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/04-dev-log.md` 模板的完整结构汇总本次开发阶段全部任务的执行情况、关键决策、与设计的偏离、遗留事项和质量证据，保存到 `.devflow/<req-id>/04-dev-log.md`。**不得省略或改写任何段落**。
+- **全部完成 → 更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `dev`
   - `阶段状态` 设为 `completed` 或 `blocked`
   - `上次完成阶段` 设为 `dev`

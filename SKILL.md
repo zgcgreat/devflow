@@ -1,13 +1,13 @@
 ---
-name: devflow-evo
-version: 3.2.0
+name: devflow
+version: 3.2.2
 description: |
   AI programming workflow v3.0 — 零配置·零门槛·零依赖
   三层架构: 交互层 → 引擎层 → 架构层
   使用: 加载本文件 → AI自动路由执行。扩展规则在 references/ 中按需加载。
 ---
 
-# Devflow-Evo v3.0 — AI 编程工作流
+# DevFlow v3.0 — AI 编程工作流
 
 > **强制声明**：以下规则 AI 必须遵守。不遵守 = 流程失效。
 
@@ -60,7 +60,7 @@ Phase 8: 知识归档              (Standard/Strict)
 
 ```
 Step 0.5 模式预判定 → 输出路由声明 → 等用户确认
-Step 1   读取项目状态 .devflow-evo/STATE.md
+Step 1   读取项目状态 .devflow/STATE.md
 Step 2   入场检测（Fast跳过/Lean简化/Standard/Strict完整）
 Step 3   GitNexus可选检测（Fast/Lean跳过）
 → 根据模式跳转到对应 Phase 起点
@@ -127,13 +127,13 @@ memory/           ← 记忆系统 (LESSONS / domain-skills)
 
 **自然语言（推荐）**：
 ```
-Use devflow-evo. 帮我做一个登录功能，支持邮箱密码和JWT认证
+Use devflow. 帮我做一个登录功能，支持邮箱密码和JWT认证
 ```
 
 **明确命令（高级）**：
 ```
-/devflow-evo new "项目名称" --tech React,Node.js --mode Standard
-/devflow-evo execute 1         # Phase 4
+/devflow new "项目名称" --tech React,Node.js --mode Standard
+/devflow execute 1         # Phase 4
 /status                       # 查看进度
 /lessons                      # 查看经验教训
 ```
@@ -143,7 +143,7 @@ Use devflow-evo. 帮我做一个登录功能，支持邮箱密码和JWT认证
 ## 📝 项目产物
 
 ```
-.devflow-evo/
+.devflow/
   STATE.md                   ← 跨会话状态追踪
   memory/
     PROJECT_CONTEXT.md       ← 项目背景
@@ -180,7 +180,7 @@ Use devflow-evo. 帮我做一个登录功能，支持邮箱密码和JWT认证
 ```markdown
 ## Phase <N> 完成检查
 
-- [ ] 产物已按模板生成 → 存到 .devflow-evo/<req-id>/
+- [ ] 产物已按模板生成 → 存到 .devflow/<req-id>/
 - [ ] 门控条件已满足 → <G1/G2/G2.5/G5>
 - [ ] 与用户确认 → <已确认/跳过/无需确认>
 - [ ] Token 使用率 < 70% → <当前: XX%>
@@ -189,6 +189,18 @@ Use devflow-evo. 帮我做一个登录功能，支持邮箱密码和JWT认证
 ---
 
 ## 版本
+
+### v3.2.2 (2026-05-20) — Scale & Revert Intelligence
+- **scale-domain-adaptive** ⭐ 动态规划深度引擎 — 基于项目规模与领域信号自动映射 Lite/Standard/Enhanced/Advanced 四级 Phase 流程
+- **conductor-revert** ⭐ Git-aware 四阶段回滚协议 (Track/Phase/Task 粒度精准回滚，幽灵Commit处理)
+- **hooks-system 增强** ⭐ Chain-Trigger 链式触发 (One-to-Many/Many-to-Many，parallel/serial 模式)
+- L2-ENGINE README 更新 — 新增 6 模块文件树 + L2↔L3/L2↔L1 协作协议表
+
+### v3.2.1 (2026-05-20) — Runtime Intelligence Sprint
+- **caveman-shrink** ⭐ MCP 工具组压缩引擎 — `TASK_MASTER_TOOLS` 三级加载，70-76% context 节省
+- **codegraph-bridge** ⭐ CodeGraph 本地知识图谱桥接 — SQLite+FTS5+Auto-Sync，94% 工具调用减少
+- **hooks-system** ⭐ 运行时钩子 (context-monitor, prompt-guard, phase-transition, tool-execution)
+- **surface-switch** ⭐ `/dfevo:surface [lite|standard|strict|audit|extreme]` 动态切换工具集/压缩级别
 
 ### v3.2.0 (2026-05-20)
 - **交互模式重构** ⭐ 核心改动: 禁止一次性抛给用户大量问题，改为「批量展示 + 逐个选择」

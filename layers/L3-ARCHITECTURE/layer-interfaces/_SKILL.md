@@ -6,7 +6,7 @@ gate: internal
 requires: []
 provides: [interface-contract, coupling-report]
 description: Formal interface contracts between L1, L2, and L3 layers to reduce coupling and enable independent evolution
-source: devflow-evo architecture + clean architecture principles
+source: devflow architecture + clean architecture principles
 dependencies: []
 triggers:
   - cross-layer call
@@ -93,7 +93,7 @@ L3 (ARCHITECTURE)
 
 ```bash
 # 检查层间依赖是否合规
-node validate-layers.js /path/to/devflow-evo
+node validate-layers.js /path/to/devflow
 
 # 输出违规项
 # VIOLATION: L1 phase-4-build references L3 dag-router directly

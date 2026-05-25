@@ -6,7 +6,7 @@ gate: internal
 requires: [session-active]
 provides: [runtime-mode-switch, skill-cluster-toggle]
 description: Runtime skill cluster switching — dynamically swap tool sets and compression levels mid-session, inspired by GSD /gsd:surface
-source: GSD /gsd:surface + devflow-evo /caveman mode
+source: GSD /gsd:surface + devflow /caveman mode
 dependencies:
   - caveman-shrink
   - token-compression-v2
@@ -24,7 +24,7 @@ triggers:
 
 ## 设计理念
 
-DevFlow-Evo 目前通过 `mode-rules.md` 在 Session 启动时**一次性**判定模式（Fast/Lean/Standard/Strict）。但实际开发中，需求复杂度会动态变化：
+DevFlow 目前通过 `mode-rules.md` 在 Session 启动时**一次性**判定模式（Fast/Lean/Standard/Strict）。但实际开发中，需求复杂度会动态变化：
 
 - 实施阶段很顺利 → 从 Strict 降级到 Standard
 - 遇到复杂 bug → 从 Standard 升级到 Strict
@@ -124,7 +124,7 @@ Context-Monitor Hook 检测到 > 95%:
 
 ## 与 GSD /gsd:surface 对比
 
-| 特性 | GSD | DevFlow-Evo |
+| 特性 | GSD | DevFlow |
 |------|-----|-------------|
 | **运行时切换** | `/gsd:surface` | `/dfevo:surface` ✅ |
 | **模式数量** | MVP / Full / Audit | lite / standard / strict / audit / extreme ✅ |

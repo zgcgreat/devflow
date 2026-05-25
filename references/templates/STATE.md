@@ -1,6 +1,6 @@
 # STATE — 跨会话项目状态
 
-> `.devflow-evo/STATE.md` — DevFlow Kit 的跨会话状态文件。Standard / Strict 流程必须维护；Fast 模式可按需创建。
+> `.devflow/STATE.md` — DevFlow Kit 的跨会话状态文件。Standard / Strict 流程必须维护；Fast 模式可按需创建。
 
 ---
 

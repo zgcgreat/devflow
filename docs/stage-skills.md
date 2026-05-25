@@ -1,4 +1,4 @@
-# Phase Skills 参考 — DevFlow-Evo v3.2.3
+# Phase Skills 参考 — DevFlow v3.2.3
 
 本目录列出所有 **阶段技能（Phase Skills）** 的完整描述和执行要点。每个 Phase Skill 是 L1: INTERACTION 层的交互入口。
 
@@ -20,7 +20,7 @@
 ### 产物
 
 ```
-.devflow-evo/<req-id>/00-strategy.md
+.devflow/<req-id>/00-strategy.md
 ```
 
 ## Phase 1: 5 Whys 需求追问
@@ -39,7 +39,7 @@
 ### 产物
 
 ```
-.devflow-evo/<req-id>/01-analysis.md
+.devflow/<req-id>/01-analysis.md
 ```
 
 ## Phase 1b: 技术决策捕获 (Discuss)
@@ -76,7 +76,7 @@ CONTEXT.md（含所有技术决策记录）
 ### 产物
 
 ```
-.devflow-evo/<req-id>/02-design.md
+.devflow/<req-id>/02-design.md
 ```
 
 ## Phase 2a: 设计枪战 (Design Shotgun)
@@ -95,7 +95,7 @@ CONTEXT.md（含所有技术决策记录）
 ### 产物
 
 ```
-.devflow-evo/<req-id>/02-design.md（更新为最终方案）
+.devflow/<req-id>/02-design.md（更新为最终方案）
 ```
 
 ## Phase 3: 任务拆分 (DAG + Wave Planning)
@@ -114,7 +114,7 @@ CONTEXT.md（含所有技术决策记录）
 ### 产物
 
 ```
-.devflow-evo/<req-id>/03-plan.md（含DAG描述 + Wave计划）
+.devflow/<req-id>/03-plan.md（含DAG描述 + Wave计划）
 ```
 
 ## Phase 4: 实施 (Implementation)
@@ -135,7 +135,7 @@ CONTEXT.md（含所有技术决策记录）
 ### 产物
 
 ```
-.devflow-evo/<req-id>/04-implementation.md（实施日志）
+.devflow/<req-id>/04-implementation.md（实施日志）
 ```
 
 ## Phase 5: 测试验证 (QA)
@@ -154,7 +154,7 @@ CONTEXT.md（含所有技术决策记录）
 ### 产物
 
 ```
-.devflow-evo/<req-id>/05-test-report.md
+.devflow/<req-id>/05-test-report.md
 ```
 
 ## Phase 6: 三层对抗审查
@@ -173,7 +173,7 @@ CONTEXT.md（含所有技术决策记录）
 ### 产物
 
 ```
-.devflow-evo/<req-id>/06-review-report.md
+.devflow/<req-id>/06-review-report.md
 ```
 
 ## Phase 7: Canary灰度发布
@@ -192,7 +192,7 @@ CONTEXT.md（含所有技术决策记录）
 ### 产物
 
 ```
-.devflow-evo/<req-id>/07-canary-report.md
+.devflow/<req-id>/07-canary-report.md
 ```
 
 ## Phase 8: 知识归档
@@ -212,9 +212,9 @@ CONTEXT.md（含所有技术决策记录）
 ### 产物
 
 ```
-.devflow-evo/memory/LESSONS.md（经验教训新增条目）
-.devflow-evo/memory/domain-skills/（领域技能沉淀）
-.devflow-evo/STATE.md（项目状态更新）
+.devflow/memory/LESSONS.md（经验教训新增条目）
+.devflow/memory/domain-skills/（领域技能沉淀）
+.devflow/STATE.md（项目状态更新）
 ```
 
 ## Phase -1: 环境准备

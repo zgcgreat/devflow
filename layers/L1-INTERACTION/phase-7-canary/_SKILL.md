@@ -76,7 +76,7 @@ Refer to `canary-wrapper/_SKILL.md` for the full error taxonomy, boundary condit
 
 ```bash
 # Check G3 review status
-grep "^G3 Result:" .devflow-evo/<req-id>/06-review.md
+grep "^G3 Result:" .devflow/<req-id>/06-review.md
 
 # Expected: "G3 Result: PASS"
 if [ $? -ne 0 ]; then
@@ -85,7 +85,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Check Phase 5 test results
-grep "^Test Result:" .devflow-evo/<req-id>/05-test-results.md
+grep "^Test Result:" .devflow/<req-id>/05-test-results.md
 
 # Expected: "Test Result: ALL PASSED"
 if [ $? -ne 0 ]; then
@@ -94,7 +94,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Verify deployment target configured
-if [ ! -f ".devflow-evo/deploy-config.yaml" ]; then
+if [ ! -f ".devflow/deploy-config.yaml" ]; then
   echo "⚠️ No deploy config found, using defaults"
 fi
 ```
@@ -376,7 +376,7 @@ if (( $(echo "$ERROR_RATE < 0.5" | bc -l) )); then
   echo "✅ Rollback successful, error_rate restored to ${ERROR_RATE}%"
   
   # Generate rollback report
-  cat > .devflow-evo/<req-id>/rollback-report.md << EOF
+  cat > .devflow/<req-id>/rollback-report.md << EOF
 # Auto-Rollback Report
 
 **Triggered From**: Canary-${STAGE}  
@@ -738,7 +738,7 @@ During deployment:
 - [ ] Continuous monitoring active
 
 After deployment:
-- [ ] Canary report generated (.devflow-evo/<req-id>/07-canary.md)
+- [ ] Canary report generated (.devflow/<req-id>/07-canary.md)
 - [ ] Integration report created (08-integration-report.md)
 - [ ] G5 gate evaluated (PASS/FAIL)
 - [ ] Lessons documented (if rollback occurred)

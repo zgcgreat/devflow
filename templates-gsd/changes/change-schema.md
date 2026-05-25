@@ -1,4 +1,4 @@
-# .devflow-evo-change.yaml Schema
+# .devflow-change.yaml Schema
 
 变更元数据文件，位于每个变更目录的根目录。
 

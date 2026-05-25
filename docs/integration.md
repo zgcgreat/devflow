@@ -1,6 +1,6 @@
-# 集成指南 — DevFlow-Evo v3.2.3
+# 集成指南 — DevFlow v3.2.3
 
-本文档介绍如何集成外部工具和工作流到 DevFlow-Evo。
+本文档介绍如何集成外部工具和工作流到 DevFlow。
 
 ## 📋 内容索引
 
@@ -11,7 +11,7 @@
 | [GitNexus 配置](#gitnexus-配置) | tree-sitter + graphDB 代码理解 |
 | [CI/CD 流水线集成](#cicd-流水线集成) | GitHub Actions / GitLab CI |
 | [自定义 Hooks](#自定义-hooks) | 扩展运行时钩子系统 |
-| [多项目支持](#多项目支持) | 多个 .devflow-evo 目录隔离 |
+| [多项目支持](#多项目支持) | 多个 .devflow 目录隔离 |
 
 ---
 
@@ -19,13 +19,13 @@
 
 ### 角色定位
 
-spec-kit 是 DevFlow-Evo Phase 2（方案设计）的输入源之一。它负责：
+spec-kit 是 DevFlow Phase 2（方案设计）的输入源之一。它负责：
 
 ```
 PRD → Plan → Tasks → CONTEXT.md (Phase 1b产物)
 ```
 
-DevFlow-Evo 使用 spec-kit 生成的 `tasks.md` 作为 DAG Router 的输入，自动拆分为 Waves。
+DevFlow 使用 spec-kit 生成的 `tasks.md` 作为 DAG Router 的输入，自动拆分为 Waves。
 
 ### 工作流程
 
@@ -38,16 +38,16 @@ spec-kit Plan 生成（从PRD推导技术方案）
     ↓
 spec-kit Tasks 生成（从Plan推导可执行任务列表）
     ↓
-DevFlow-Evo Phase 3 DAG Router 读取 tasks.md → 自动 Wave 拆分
+DevFlow Phase 3 DAG Router 读取 tasks.md → 自动 Wave 拆分
 ```
 
 ### 命令调用
 
 ```bash
-# 在 DevFlow-Evo 的 Phase 1b 决策确认后运行
-/devflow-evo spec define "需求描述"    # 生成 PRD
-/devflow-evo spec plan "技术描述"      # 生成 Plan
-/devflow-evo spec tasks                # 生成 Tasks → DAG输入
+# 在 DevFlow 的 Phase 1b 决策确认后运行
+/devflow spec define "需求描述"    # 生成 PRD
+/devflow spec plan "技术描述"      # 生成 Plan
+/devflow spec tasks                # 生成 Tasks → DAG输入
 ```
 
 ### Delta-Specs 差量集成
@@ -66,7 +66,7 @@ Brownfield 场景下，使用 Delta-Specs 减少 Token 消耗：
 
 ### 角色定位
 
-OpenSpec 是 DevFlow-Evo Phase 8（知识归档）的持久化层。它负责：
+OpenSpec 是 DevFlow Phase 8（知识归档）的持久化层。它负责：
 
 ```
 Phase完成 → proposal → apply → archive → OpenSpec记录
@@ -88,7 +88,7 @@ archive: 标记proposal为已归档，更新索引
 
 ```
 OpenSpec/
-├── proposals/        # DevFlow-Evo 归档的proposal放这里
+├── proposals/        # DevFlow 归档的proposal放这里
 │   └── <req-id>/     # 每个需求一个目录
 ├── archives/         # 已归档proposal
 └── INDEX.md          # proposal索引
@@ -98,7 +98,7 @@ OpenSpec/
 
 | 系统 | 职责 | 持久化 |
 |------|------|--------|
-| `.devflow-evo/memory/` | 运行时快速检索（PROJECT_CONTEXT/DECISIONS/LESSONS） | 项目本地 |
+| `.devflow/memory/` | 运行时快速检索（PROJECT_CONTEXT/DECISIONS/LESSONS） | 项目本地 |
 | `OpenSpec/` | 企业级变更追踪 + proposal生命周期管理 | Git版本控制 |
 
 ---
@@ -107,7 +107,7 @@ OpenSpec/
 
 ### 能力等级
 
-DevFlow-Evo 自动按以下步骤检测并降级：
+DevFlow 自动按以下步骤检测并降级：
 
 ```
 Step 3.1: gitnexus --version
@@ -151,7 +151,7 @@ Step 3.2: 提示用户选择
 ### GitHub Actions 示例
 
 ```yaml
-name: DevFlow-Evo Pipeline
+name: DevFlow Pipeline
 on: [push, pull_request]
 
 jobs:
@@ -160,12 +160,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: DevFlow-Evo Phase Check
+      - name: DevFlow Phase Check
         run: |
           # 验证当前req的Phase门控状态
-          if [ -f .devflow-evo/STATE.md ]; then
-            echo "Found existing devflow-evo state"
-            cat .devflow-evo/STATE.md
+          if [ -f .devflow/STATE.md ]; then
+            echo "Found existing devflow state"
+            cat .devflow/STATE.md
           fi
       
       - name: Run Quality Gate
@@ -185,8 +185,8 @@ jobs:
 devflow-check:
   stage: test
   script:
-    - echo "Running DevFlow-Evo quality gates"
-    - cat .devflow-evo/STATE.md || echo "No devflow state found"
+    - echo "Running DevFlow quality gates"
+    - cat .devflow/STATE.md || echo "No devflow state found"
   only:
     - main
 ```
@@ -197,7 +197,7 @@ devflow-check:
 
 ### Hooks 系统概览
 
-DevFlow-Evo v3.2+ 内置运行时钩子系统（`hooks-system/_SKILL.md`），支持在关键事件发生时触发回调。
+DevFlow v3.2+ 内置运行时钩子系统（`hooks-system/_SKILL.md`），支持在关键事件发生时触发回调。
 
 ### 可用钩子
 
@@ -210,7 +210,7 @@ DevFlow-Evo v3.2+ 内置运行时钩子系统（`hooks-system/_SKILL.md`），�
 
 ### 自定义 Hook 配置
 
-在 `.devflow-evo/hooks.json` 中配置：
+在 `.devflow/hooks.json` 中配置：
 
 ```json
 {
@@ -254,11 +254,11 @@ DevFlow-Evo v3.2+ 内置运行时钩子系统（`hooks-system/_SKILL.md`），�
 
 ### 目录结构
 
-每个项目独立维护自己的 `.devflow-evo/` 目录：
+每个项目独立维护自己的 `.devflow/` 目录：
 
 ```
 project-a/
-├── .devflow-evo/          # 项目A的产物和记忆系统
+├── .devflow/          # 项目A的产物和记忆系统
 │   ├── STATE.md
 │   └── memory/
 │       ├── PROJECT_CONTEXT.md
@@ -266,7 +266,7 @@ project-a/
 └── src/
 
 project-b/
-├── .devflow-evo/          # 项目B独立目录
+├── .devflow/          # 项目B独立目录
 │   ├── STATE.md
 │   └── memory/
 │       └── ...
@@ -284,7 +284,7 @@ project-b/
 
 ```bash
 # 从项目A复制通用LESSON到项目B
-cat project-a/.devflow-evo/memory/LESSONS.md >> project-b/.devflow-evo/memory/LESSONS.md
+cat project-a/.devflow/memory/LESSONS.md >> project-b/.devflow/memory/LESSONS.md
 # 然后运行去重
 ```
 
@@ -292,9 +292,9 @@ cat project-a/.devflow-evo/memory/LESSONS.md >> project-b/.devflow-evo/memory/LE
 
 ## 常见集成问题
 
-### Q: DevFlow-Evo 与其他 AI 工作流工具（如 agent-skills、superpowers）的区别？
+### Q: DevFlow 与其他 AI 工作流工具（如 agent-skills、superpowers）的区别？
 
-**A**: DevFlow-Evo 是 **整合层**。它不是替代其他工具，而是将 spec-kit / devflow-kit / superpowers / OpenSpec / GitNexus 等工具统一编排到标准化流程中。详见 [README.md](../README.md)中的整合图表。
+**A**: DevFlow 是 **整合层**。它不是替代其他工具，而是将 spec-kit / devflow-kit / superpowers / OpenSpec / GitNexus 等工具统一编排到标准化流程中。详见 [README.md](../README.md)中的整合图表。
 
 ### Q: 如何跳过某个 Phase？
 
@@ -306,4 +306,4 @@ cat project-a/.devflow-evo/memory/LESSONS.md >> project-b/.devflow-evo/memory/LE
 
 ### Q: 产物目录可以被删除吗？
 
-**A**: `.devflow-evo/<req-id>/` 可以安全删除（保留 STATE.md 和 memory/ 即可）。删除前确保已归档 LESSONS。
+**A**: `.devflow/<req-id>/` 可以安全删除（保留 STATE.md 和 memory/ 即可）。删除前确保已归档 LESSONS。

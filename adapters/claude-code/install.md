@@ -20,18 +20,18 @@ cp adapters/claude-code/settings.json .claude/settings.json
 在 `.env` 或 shell profile 中添加：
 
 ```bash
-export DEVFLOW_EVO_HOME="$(pwd)/path/to/devflow-evo"
+export DevFlow_HOME="$(pwd)/path/to/devflow"
 ```
 
 ### 3. 验证安装
 
 ```bash
 # 测试 bridge 是否可用
-node $DEVFLOW_EVO_HOME/adapters/shared/core-bridge.js detect-runtime
+node $DevFlow_HOME/adapters/shared/core-bridge.js detect-runtime
 # 应输出: claude-code
 
 # 测试状态读取
-node $DEVFLOW_EVO_HOME/adapters/shared/core-bridge.js read-state .
+node $DevFlow_HOME/adapters/shared/core-bridge.js read-state .
 ```
 
 ### 4. CLAUDE.md 注入
@@ -41,7 +41,7 @@ node $DEVFLOW_EVO_HOME/adapters/shared/core-bridge.js read-state .
 ```markdown
 ## Devflow Integration
 
-This project uses devflow-evo v3.0 workflow. Current phase is tracked in `.devflow-evo/STATE.md`.
+This project uses devflow v3.0 workflow. Current phase is tracked in `.devflow/STATE.md`.
 
 - Use `/df:status` to check current phase
 - Use `/df:next` to advance to next phase

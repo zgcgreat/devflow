@@ -10,7 +10,7 @@ provides: [context-md, decision-coverage, g2.5-gate-decision]
 description: |
   Decision capture engine that identifies implementation ambiguities from Phase 1 analysis,
   conducts interactive Q&A with the user, and generates CONTEXT.md as constraints for Phase 2.
-  Use when: "discuss phase 1", "capture decisions", "clarify requirements", "decision gate". (devflow-evo)
+  Use when: "discuss phase 1", "capture decisions", "clarify requirements", "decision gate". (devflow)
 layer: L1-INTERACTION
 source: get-shit-done /gsd-discuss-phase
 dependencies:
@@ -28,7 +28,7 @@ token_budget: "~200K per execution agent"
 
 > **Layer**: L1-INTERACTION (交互层)  
 > **前置产物**: `01-analysis.md` (Phase 1 通过 G2)  
-> **后置产物**: `.devflow-evo/<req-id>/CONTEXT.md`  
+> **后置产物**: `.devflow/<req-id>/CONTEXT.md`  
 > **门控**: G2.5 — Decision Clarity Gate
 
 ## Preamble
@@ -45,8 +45,8 @@ Before starting discuss phase, verify ALL of the following:
 
 - [ ] Phase 1 `01-analysis.md` exists and has passed G2 (Actionability Gate)
 - [ ] At least one ambiguity area detected (≥3 technical selection ambiguities OR user explicitly requests `/discuss`)
-- [ ] Project context available (`.devflow-evo/memory/PROJECT_CONTEXT.md` or fallback to default assumptions)
-- [ ] Team preferences available (`.devflow-evo/memory/TEAM_PREFERENCES.md` or fallback to best practices)
+- [ ] Project context available (`.devflow/memory/PROJECT_CONTEXT.md` or fallback to default assumptions)
+- [ ] Team preferences available (`.devflow/memory/TEAM_PREFERENCES.md` or fallback to best practices)
 
 **Gate Result**: `[PASS / FAIL]` — If any item FAILS, address before starting. This gate MUST pass for every new requirement.
 
@@ -88,12 +88,12 @@ v3_upgrade:
 ## 输入
 
 - `01-analysis.md` — Phase 1需求分析文档
-- `.devflow-evo/memory/PROJECT_CONTEXT.md` — 项目背景
-- `.devflow-evo/memory/TEAM_PREFERENCES.md` — 团队偏好
+- `.devflow/memory/PROJECT_CONTEXT.md` — 项目背景
+- `.devflow/memory/TEAM_PREFERENCES.md` — 团队偏好
 
 ## 输出
 
-- `.devflow-evo/<req-id>/CONTEXT.md` — 实现决策上下文
+- `.devflow/<req-id>/CONTEXT.md` — 实现决策上下文
 - 决策捕获结果报告
 
 ---
@@ -208,7 +208,7 @@ const ambiguities = detectAmbiguities(analysisDoc);
 
 ### Step 3: 生成CONTEXT.md
 
-将用户决策写入 `.devflow-evo/<req-id>/CONTEXT.md`:
+将用户决策写入 `.devflow/<req-id>/CONTEXT.md`:
 
 ```markdown
 # Implementation Context (Phase 1 Decisions)
@@ -338,8 +338,8 @@ const ambiguities = detectAmbiguities(analysisDoc);
 ## References
 
 - Phase 1 Analysis: `01-analysis.md`
-- Project Context: `.devflow-evo/memory/PROJECT_CONTEXT.md`
-- Team Preferences: `.devflow-evo/memory/TEAM_PREFERENCES.md`
+- Project Context: `.devflow/memory/PROJECT_CONTEXT.md`
+- Team Preferences: `.devflow/memory/TEAM_PREFERENCES.md`
 ```
 
 ### Step 3.5: PartyMode Output Gate 集成（仅当决策需 PartyMode 审议时）
@@ -377,7 +377,7 @@ Phase 1b → PartyMode (Decision Type: Technical Architecture)
 **消费契约注释**（写入 CONTEXT.md 的 PartyMode 决策旁）:
 ```markdown
 > **来源**: PartyMode Consensus Gate (G1:75% PASS | G2:7.4/10 PASS | G3:0 conflicts PASS | G4:4 rounds PASS)
-> **Gate Validation**: `.devflow-evo/<req-id>/partymode-gate-report.md`
+> **Gate Validation**: `.devflow/<req-id>/partymode-gate-report.md`
 ```
 
 **未通过 Gate 的决策不计入覆盖率**:
@@ -418,7 +418,7 @@ Phase 1b → PartyMode (Decision Type: Technical Architecture)
 
 ### 输出文件
 
-- ✅ `.devflow-evo/<req-id>/CONTEXT.md` ← 已生成
+- ✅ `.devflow/<req-id>/CONTEXT.md` ← 已生成
 - 📊 决策报告 ← 本章节
 
 ### 下一步
@@ -488,7 +488,7 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 → 回答: _← 确认所有问题后流程继续_
 ```
 | **PartyMode Gate 集成** | 所有 PartyMode 审议的决策均已消费 gate output 并标记 | 未消费 gate result 的决策计为 [NEEDS CLARIFICATION] |
-| **PartyMode Gate Report** | `.devflow-evo/<req-id>/partymode-gate-report.md` 存在（如有 PartyMode 调用） | 缺失则回溯 PartyMode Step D |
+| **PartyMode Gate Report** | `.devflow/<req-id>/partymode-gate-report.md` 存在（如有 PartyMode 调用） | 缺失则回溯 PartyMode Step D |
 
 ### G2.5 Gate Check 最终验证模板
 
@@ -515,7 +515,7 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 ### PartyMode Decisions (2)
 - [PARTYMODE-CONSENSUS] 状态管理: React Context + useReducer (Weighted Score: 8.1/10, Consensus: 85%)
 - [PARTYMODE-CONSENSUS] API 设计: RESTful (Weighted Score: 7.6/10, Consensus: 75%)
-  > Gate Validation: `.devflow-evo/<req-id>/partymode-gate-report.md`
+  > Gate Validation: `.devflow/<req-id>/partymode-gate-report.md`
 
 ### Gate Approval
 **G2.5 Status**: ✅ PASS — Proceed to Phase 2 with 3 unresolved items marked [NEEDS CLARIFICATION]
@@ -540,7 +540,7 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 | Fast模式 | 跳过Discuss，使用默认决策 |
 
 > **⚠️ 防盲飞验证 (P3-4)**: 声称"已有CONTEXT.md"跳过时必须执行:
-> 1. `Read(".devflow-evo/CONTEXT.md")` 读取上下文文件
+> 1. `Read(".devflow/CONTEXT.md")` 读取上下文文件
 > 2. 展示技术决策段内容（≥3行）
 > 3. 向用户确认: "CONTEXT.md 已存在，是否确认跳过 Discuss？"
 > Fast 模式下可直接跳过，无需验证。
@@ -590,7 +590,7 @@ CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合
 
 | Constraint | Rule | Validation |
 |------------|------|------------|
-| File location | Must be at `.devflow-evo/<req-id>/CONTEXT.md` | Check existence before Phase 2 starts |
+| File location | Must be at `.devflow/<req-id>/CONTEXT.md` | Check existence before Phase 2 starts |
 | Format compliance | Must include all sections from Step 3 template (API Design, Data Storage, Error Handling, etc.) | Phase 2 designer validates schema acceptance |
 | Staleness | Max 7 days between discussion and Phase 2 start | If >7 days, re-verify critical decisions with user |
 

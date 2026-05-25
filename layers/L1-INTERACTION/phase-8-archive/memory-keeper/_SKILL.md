@@ -10,7 +10,7 @@ requires: [g7.5-gate-decision, wave-summaries]
 provides: [lessons-md, domain-skills-updated, archive-complete]
 description: |
   Knowledge distillation and archival specialist for Phase 8 Archive.
-  Systematically captures, organizes, and preserves project knowledge for cross-session reuse. (devflow-evo)
+  Systematically captures, organizes, and preserves project knowledge for cross-session reuse. (devflow)
 ---
 
 # Memory Keeper — Knowledge Distillation & Archival
@@ -468,7 +468,7 @@ done
 tail -20 .specs/memory/LESSONS.md | grep "^### L-" | head -3
 
 # Append to CONTEXT.md under "Lessons Learned" section
-cat >> .devflow-evo/CONTEXT.md <<EOF
+cat >> .devflow/CONTEXT.md <<EOF
 
 ## Lessons Learned (from $(date +%Y-%m-%d) project)
 
@@ -507,8 +507,8 @@ if grep -q "react\|frontend" package.json; then
 fi
 
 # Inject into Phase 0 context
-echo "## Relevant Past Experience" >> .devflow-evo/CONTEXT.md
-grep -A5 "react" .specs/memory/KEYWORD_INDEX.json >> .devflow-evo/CONTEXT.md
+echo "## Relevant Past Experience" >> .devflow/CONTEXT.md
+grep -A5 "react" .specs/memory/KEYWORD_INDEX.json >> .devflow/CONTEXT.md
 ```
 
 ---

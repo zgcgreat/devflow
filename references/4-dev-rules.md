@@ -40,12 +40,12 @@
 
 进入实现**之前**：
 
-1. 用当前任务的 `files` 路径关键词、`action` 中的关键名词，grep `.devflow-evo/lessons-learned.md`
+1. 用当前任务的 `files` 路径关键词、`action` 中的关键名词，grep `.devflow/lessons-learned.md`
 2. 对每条命中且 `状态: active` 的 `L-NNN`，在本次执行计划里写一行：
    - 「已查阅 L-NNN，本次方案与之差异是 X」 或
    - 「已查阅 L-NNN，本次确认仍适用，所以不会重试该方案」
 3. 若计划做的事与某条 active 条目完全相同 → 停下来按 R1.6 回答"本次与上次的差异是什么"，不允许盲目重试
-4. 若 `.devflow-evo/lessons-learned.md` 不存在 → 用 `@devflow-kit/templates/lessons-learned.md` 创建空骨架
+4. 若 `.devflow/lessons-learned.md` 不存在 → 用 `@devflow-kit/templates/lessons-learned.md` 创建空骨架
 
 ---
 
@@ -55,7 +55,7 @@
 
 命中时，进入实现**之前**还必须：
 
-1. 加载 `@.devflow-evo/<id>/02a-ui-design.md`（必须存在；不存在 → 停下来要求先跑 `@devflow-kit/references/prompts/2a-ui-design.md`）
+1. 加载 `@.devflow/<id>/02a-ui-design.md`（必须存在；不存在 → 停下来要求先跑 `@devflow-kit/references/prompts/2a-ui-design.md`）
 2. 加载 `@devflow-kit/references/ui-anti-patterns.md`，按当前任务的关键词 grep 相关章节
 3. 加载 `@devflow-kit/references/frontend-engineer-rules.md`（**第 1 + 第 2 + 第 10 节必读**），其他节按输出类型按需读：
    - 任务是做交互原型 → 补读第 6.1

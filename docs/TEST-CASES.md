@@ -1,4 +1,4 @@
-# DevFlow-Evo v3.2 测试案例文档
+# DevFlow v3.2 测试案例文档
 
 > **文档版本**: v3.2.0
 > **创建日期**: 2026-05-20
@@ -1421,7 +1421,7 @@
 - [ ] `CONTEXT.md` 存在 ✅
 - [ ] `02-design.md` 存在 ✅
 - [ ] `03-tasks.md` 存在 ✅
-- [ ] `.devflow-evo/wave-plan.yaml` 存在 ✅
+- [ ] `.devflow/wave-plan.yaml` 存在 ✅
 - [ ] `.specs/waves/wave-{N}/SUMMARY.md` 存在（每个 Wave） ✅
 - [ ] `05-test-results.md` 存在 ✅
 - [ ] `06-review.md` 存在 ✅
@@ -1439,64 +1439,64 @@
 
 | 测试 ID | 状态 | 结果 | 备注 |
 |---------|------|------|------|
-| TC-001 | 已完成 | ✅ | Phase 0 — YC六问 — .devflow-evo/test-phase-standards.md |
-| TC-002 | 已完成 | ✅ | Phase 1 — 5 Whys — .devflow-evo/test-phase-standards.md |
-| TC-003 | 已完成 | ✅ | Phase 1b — 决策捕获 — .devflow-evo/test-phase-standards.md |
-| TC-004 | 已完成 | ✅ | Phase 2 — 方案设计 — .devflow-evo/test-phase-standards.md |
-| TC-005 | 已完成 | ✅ | Phase 2a — 设计枪战 — .devflow-evo/test-phase-standards.md |
-| TC-006 | 已完成 | ✅ | Phase 3 — 任务拆分 — .devflow-evo/test-phase-standards.md |
-| TC-007 | 已完成 | ✅ | Phase 4 — 实施 Wave — .devflow-evo/test-phase-standards.md |
-| TC-008 | 已完成 | ✅ | Phase 5 — 测试 — .devflow-evo/test-phase-standards.md |
-| TC-009 | 已完成 | ✅ | Phase 6 — 三层审查 — .devflow-evo/test-phase-standards.md |
-| TC-010 | 已完成 | ✅ | Phase 7 — Canary — .devflow-evo/test-phase-standards.md |
-| TC-011 | 已完成 | ✅ | Phase 8 — 知识归档 — .devflow-evo/test-phase-standards.md |
-| TC-012 | 已完成 | ✅ | Phase 0-8 端到端 — .devflow-evo/test-phase-standards.md |
-| TC-013 | 已完成 | ✅ | Phase 0 条件跳过 — .devflow-evo/test-phase-skip-fast-standard.md |
-| TC-014 | 已完成 | ✅ | Phase 1 条件跳过 — .devflow-evo/test-phase-skip-fast-standard.md |
-| TC-015 | 已完成 | ✅ | Phase 2a 条件触发 — .devflow-evo/test-phase-skip-fast-standard.md |
-| TC-016 | 已完成 | ✅ | Fast 模式路由 — .devflow-evo/test-phase-skip-fast-standard.md |
-| TC-017 | 已完成 | ✅ | Lean 模式路由 — .devflow-evo/test-lean-mode.md |
-| TC-018 | 已完成 | ✅ | Standard 模式路由 — .devflow-evo/test-phase-skip-fast-standard.md |
-| TC-019 | 已完成 | ✅ | Strict 模式路由 — .devflow-evo/test-strict-mode.md |
-| TC-020 | 已完成 | ✅ | 模式升级（Fast → Lean/Standard） — .devflow-evo/test-mode-upgrade.md |
-| TC-021 | 已完成 | ✅ | 模式升级（Lean → Standard） — .devflow-evo/test-mode-upgrade.md |
-| TC-022 | 已完成 | ✅ | 模式升级（Standard → Strict） — .devflow-evo/test-mode-upgrade.md |
-| TC-023 | 已完成 | ✅ | 模式降级测试 — .devflow-evo/test-mode-upgrade.md |
+| TC-001 | 已完成 | ✅ | Phase 0 — YC六问 — .devflow/test-phase-standards.md |
+| TC-002 | 已完成 | ✅ | Phase 1 — 5 Whys — .devflow/test-phase-standards.md |
+| TC-003 | 已完成 | ✅ | Phase 1b — 决策捕获 — .devflow/test-phase-standards.md |
+| TC-004 | 已完成 | ✅ | Phase 2 — 方案设计 — .devflow/test-phase-standards.md |
+| TC-005 | 已完成 | ✅ | Phase 2a — 设计枪战 — .devflow/test-phase-standards.md |
+| TC-006 | 已完成 | ✅ | Phase 3 — 任务拆分 — .devflow/test-phase-standards.md |
+| TC-007 | 已完成 | ✅ | Phase 4 — 实施 Wave — .devflow/test-phase-standards.md |
+| TC-008 | 已完成 | ✅ | Phase 5 — 测试 — .devflow/test-phase-standards.md |
+| TC-009 | 已完成 | ✅ | Phase 6 — 三层审查 — .devflow/test-phase-standards.md |
+| TC-010 | 已完成 | ✅ | Phase 7 — Canary — .devflow/test-phase-standards.md |
+| TC-011 | 已完成 | ✅ | Phase 8 — 知识归档 — .devflow/test-phase-standards.md |
+| TC-012 | 已完成 | ✅ | Phase 0-8 端到端 — .devflow/test-phase-standards.md |
+| TC-013 | 已完成 | ✅ | Phase 0 条件跳过 — .devflow/test-phase-skip-fast-standard.md |
+| TC-014 | 已完成 | ✅ | Phase 1 条件跳过 — .devflow/test-phase-skip-fast-standard.md |
+| TC-015 | 已完成 | ✅ | Phase 2a 条件触发 — .devflow/test-phase-skip-fast-standard.md |
+| TC-016 | 已完成 | ✅ | Fast 模式路由 — .devflow/test-phase-skip-fast-standard.md |
+| TC-017 | 已完成 | ✅ | Lean 模式路由 — .devflow/test-lean-mode.md |
+| TC-018 | 已完成 | ✅ | Standard 模式路由 — .devflow/test-phase-skip-fast-standard.md |
+| TC-019 | 已完成 | ✅ | Strict 模式路由 — .devflow/test-strict-mode.md |
+| TC-020 | 已完成 | ✅ | 模式升级（Fast → Lean/Standard） — .devflow/test-mode-upgrade.md |
+| TC-021 | 已完成 | ✅ | 模式升级（Lean → Standard） — .devflow/test-mode-upgrade.md |
+| TC-022 | 已完成 | ✅ | 模式升级（Standard → Strict） — .devflow/test-mode-upgrade.md |
+| TC-023 | 已完成 | ✅ | 模式降级测试 — .devflow/test-mode-upgrade.md |
 | TC-024 | 已完成 | ✅ | 模式预判定前置测试 — 见 TC-020~023 |
 | TC-025 | 已完成 | ✅ | 用户手动选择模式测试 — 见 TC-020~023 |
 | TC-026 | 已完成 | ✅ | 模式×前置步骤矩阵验证 — 见 TC-020~023 |
 | TC-027 | 已完成 | ✅ | 模式切换时路由声明更新 — 见 TC-020~023 |
-| TC-028 | 已完成 | ✅ | 进度面板展示 — .devflow-evo/test-interaction.md |
-| TC-029 | 已完成 | ✅ | 逐个提问 — .devflow-evo/test-interaction.md |
-| TC-030 | 已完成 | ✅ | 选择题选项设计 — .devflow-evo/test-interaction.md |
-| TC-031 | 已完成 | ✅ | 门控选择题 — .devflow-evo/test-interaction.md |
-| TC-032 | 已完成 | ✅ | Critical 问题选择题 — .devflow-evo/test-interaction.md |
-| TC-033 | 已完成 | ✅ | 自定义输入 — .devflow-evo/test-interaction.md |
-| TC-034 | 已完成 | ✅ | 防决策疲劳 — .devflow-evo/test-interaction.md |
-| TC-035 | 已完成 | ✅ | ASCII 进度条 — .devflow-evo/test-interaction.md |
-| TC-036 | 已完成 | ✅ | G1 — Plan Quality Gate — .devflow-evo/test-gates.md |
-| TC-037 | 已完成 | ✅ | G2.5 — Decision Clarity Gate — .devflow-evo/test-gates.md |
-| TC-038 | 已完成 | ✅ | G3 — Analysis Complete Gate — .devflow-evo/test-gates.md |
-| TC-039 | 已完成 | ✅ | G3.5 — Design Clear Gate — .devflow-evo/test-gates.md |
-| TC-040 | 已完成 | ✅ | G4 — Phase Gates — .devflow-evo/test-gates.md |
-| TC-041 | 已完成 | ✅ | G5 — Integration Gate — .devflow-evo/test-gates.md |
-| TC-042 | 已完成 | ✅ | G6 — Code Quality Gate — .devflow-evo/test-gates.md |
-| TC-043 | 已完成 | ✅ | G7 — Test Pass Gate — .devflow-evo/test-gates.md |
-| TC-044 | 已完成 | ✅ | G7.5 — Review Pass Gate — .devflow-evo/test-gates.md |
-| TC-045 | 已完成 | ✅ | G8 — Canary Pass Gate — .devflow-evo/test-gates.md |
-| TC-046 | 已完成 | ✅ | 用户不回复超时处理 — .devflow-evo/test-boundary-and-learning.md |
-| TC-047 | 已完成 | ✅ | 用户输入非法选项处理 — .devflow-evo/test-boundary-and-learning.md |
-| TC-048 | 已完成 | ✅ | 产物文件缺失处理 — .devflow-evo/test-boundary-and-learning.md |
-| TC-049 | 已完成 | ✅ | GitNexus 检测失败处理 — .devflow-evo/test-boundary-and-learning.md |
-| TC-050 | 已完成 | ✅ | Provider 路由失败处理 — .devflow-evo/test-boundary-and-learning.md |
-| TC-051 | 已完成 | ✅ | Wave 执行失败处理 — .devflow-evo/test-boundary-and-learning.md |
-| TC-052 | 已完成 | ✅ | Canary 回滚处理 — .devflow-evo/test-boundary-and-learning.md |
-| TC-053 | 已完成 | ✅ | 用户手动跳过阶段处理 — .devflow-evo/test-boundary-and-learning.md |
-| TC-054 | 已完成 | ✅ | LESSONS 提名测试 — .devflow-evo/test-boundary-and-learning.md |
-| TC-055 | 已完成 | ✅ | LESSONS 去重测试 — .devflow-evo/test-boundary-and-learning.md |
-| TC-056 | 已完成 | ✅ | Domain Skills 沉淀测试 — .devflow-evo/test-boundary-and-learning.md |
-| TC-057 | 已完成 | ✅ | 跨波上下文读取测试 — .devflow-evo/test-boundary-and-learning.md |
-| TC-058 | 已完成 | ✅ | LearningWorkflow 自进化测试 — .devflow-evo/test-boundary-and-learning.md |
+| TC-028 | 已完成 | ✅ | 进度面板展示 — .devflow/test-interaction.md |
+| TC-029 | 已完成 | ✅ | 逐个提问 — .devflow/test-interaction.md |
+| TC-030 | 已完成 | ✅ | 选择题选项设计 — .devflow/test-interaction.md |
+| TC-031 | 已完成 | ✅ | 门控选择题 — .devflow/test-interaction.md |
+| TC-032 | 已完成 | ✅ | Critical 问题选择题 — .devflow/test-interaction.md |
+| TC-033 | 已完成 | ✅ | 自定义输入 — .devflow/test-interaction.md |
+| TC-034 | 已完成 | ✅ | 防决策疲劳 — .devflow/test-interaction.md |
+| TC-035 | 已完成 | ✅ | ASCII 进度条 — .devflow/test-interaction.md |
+| TC-036 | 已完成 | ✅ | G1 — Plan Quality Gate — .devflow/test-gates.md |
+| TC-037 | 已完成 | ✅ | G2.5 — Decision Clarity Gate — .devflow/test-gates.md |
+| TC-038 | 已完成 | ✅ | G3 — Analysis Complete Gate — .devflow/test-gates.md |
+| TC-039 | 已完成 | ✅ | G3.5 — Design Clear Gate — .devflow/test-gates.md |
+| TC-040 | 已完成 | ✅ | G4 — Phase Gates — .devflow/test-gates.md |
+| TC-041 | 已完成 | ✅ | G5 — Integration Gate — .devflow/test-gates.md |
+| TC-042 | 已完成 | ✅ | G6 — Code Quality Gate — .devflow/test-gates.md |
+| TC-043 | 已完成 | ✅ | G7 — Test Pass Gate — .devflow/test-gates.md |
+| TC-044 | 已完成 | ✅ | G7.5 — Review Pass Gate — .devflow/test-gates.md |
+| TC-045 | 已完成 | ✅ | G8 — Canary Pass Gate — .devflow/test-gates.md |
+| TC-046 | 已完成 | ✅ | 用户不回复超时处理 — .devflow/test-boundary-and-learning.md |
+| TC-047 | 已完成 | ✅ | 用户输入非法选项处理 — .devflow/test-boundary-and-learning.md |
+| TC-048 | 已完成 | ✅ | 产物文件缺失处理 — .devflow/test-boundary-and-learning.md |
+| TC-049 | 已完成 | ✅ | GitNexus 检测失败处理 — .devflow/test-boundary-and-learning.md |
+| TC-050 | 已完成 | ✅ | Provider 路由失败处理 — .devflow/test-boundary-and-learning.md |
+| TC-051 | 已完成 | ✅ | Wave 执行失败处理 — .devflow/test-boundary-and-learning.md |
+| TC-052 | 已完成 | ✅ | Canary 回滚处理 — .devflow/test-boundary-and-learning.md |
+| TC-053 | 已完成 | ✅ | 用户手动跳过阶段处理 — .devflow/test-boundary-and-learning.md |
+| TC-054 | 已完成 | ✅ | LESSONS 提名测试 — .devflow/test-boundary-and-learning.md |
+| TC-055 | 已完成 | ✅ | LESSONS 去重测试 — .devflow/test-boundary-and-learning.md |
+| TC-056 | 已完成 | ✅ | Domain Skills 沉淀测试 — .devflow/test-boundary-and-learning.md |
+| TC-057 | 已完成 | ✅ | 跨波上下文读取测试 — .devflow/test-boundary-and-learning.md |
+| TC-058 | 已完成 | ✅ | LearningWorkflow 自进化测试 — .devflow/test-boundary-and-learning.md |
 | TC-059-01 | 已完成 | ✅ | Phase 0 YAML Frontmatter 完整性 — test-template-compliance.md |
 | TC-059-02 | 已完成 | ✅ | Phase 0 YC 六问完整性 — test-template-compliance.md |
 | TC-059-03 | 已完成 | ✅ | Phase 1 5 Whys 与 User Stories — test-template-compliance.md |
@@ -1532,7 +1532,7 @@
 
 ### 测试产物
 
-以下测试报告已生成到 `.devflow-evo/` 目录：
+以下测试报告已生成到 `.devflow/` 目录：
 
 | 测试报告文件 | 覆盖测试 |
 |-------------|---------|
@@ -1555,8 +1555,8 @@
 
 ### 执行环境要求
 
-- 需要访问 `E:\LLM\skills\devflow-evo\` 目录
+- 需要访问 `E:\LLM\skills\devflow\` 目录
 - 需要 SKILL.md、GO.md、references/ 目录完整
-- 需要 .devflow-evo/ 产物目录（如不存在则创建）
+- 需要 .devflow/ 产物目录（如不存在则创建）
 - 需要 WebSearch 工具（可选，用于外部知识检索）
 - 需要 Bash 工具（用于文件操作）

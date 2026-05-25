@@ -22,7 +22,7 @@
    └─ 是 → 情况 A（直接用指定文档）
    └─ 否 → 继续
 
-2. .devflow-evo/memory/CONTEXT.md 存在？
+2. .devflow/memory/CONTEXT.md 存在？
    ├─ 存在且 last_intel_scan < 90天 → 情况 B（直接用）
    ├─ 存在且 last_intel_scan > 90天 → 情况 C（提醒可重扫）
    └─ 不存在 → 继续
@@ -46,7 +46,7 @@
 
 ### 情况 A · STATE.md 已设 ai_context_doc
 
-**判定条件**：`.devflow-evo/memory/STATE.md` 文件存在 **且** 其中有 `ai_context_doc: <路径>` 字段（非空、非 none）。
+**判定条件**：`.devflow/memory/STATE.md` 文件存在 **且** 其中有 `ai_context_doc: <路径>` 字段（非空、非 none）。
 
 **动作**：直接读用户指定的文档，不再询问。
 
@@ -72,7 +72,7 @@
 
 ### 情况 B · 已存在 CONTEXT.md 且在 90 天内
 
-**判定条件**：`.devflow-evo/memory/CONTEXT.md` 文件存在 **且** STATE.md 的 `last_intel_scan` 字段在 90 天内（或字段为空但CONTEXT.md 存在）。
+**判定条件**：`.devflow/memory/CONTEXT.md` 文件存在 **且** STATE.md 的 `last_intel_scan` 字段在 90 天内（或字段为空但CONTEXT.md 存在）。
 
 **动作**：**询问用户是否重新扫描**，不自动继续。
 
@@ -104,7 +104,7 @@
 
 ### 情况 C · 已存在 CONTEXT.md 但超过 90 天
 
-**判定条件**：`.devflow-evo/memory/CONTEXT.md` 文件存在 **且** STATE.md 的 `last_intel_scan` 字段超过 90 天。
+**判定条件**：`.devflow/memory/CONTEXT.md` 文件存在 **且** STATE.md 的 `last_intel_scan` 字段超过 90 天。
 
 **动作**：**询问用户是否重新扫描**，强烈建议重扫。
 
@@ -138,7 +138,7 @@
 
 ### 情况 D · 检测到其他 AI 上下文文档
 
-**判定条件**：`.devflow-evo/memory/CONTEXT.md` 不存在 **且** STATE.md 无 `ai_context_doc` 字段 **且** 检测到以下任一文件：
+**判定条件**：`.devflow/memory/CONTEXT.md` 不存在 **且** STATE.md 无 `ai_context_doc` 字段 **且** 检测到以下任一文件：
 - `AGENTS.md`（仓库根）
 - `CLAUDE.md`（仓库根 / `.claude/`）
 - `.cursor/rules/*.md`
@@ -165,7 +165,7 @@
 🔍 检测到本项目已有以下 AI 上下文文档：
   - <列出找到的，含路径与文件大小>
 
-devflow-evo 默认用 CONTEXT.md 作为单一源。请选择：
+devflow 默认用 CONTEXT.md 作为单一源。请选择：
   1. 跑 intel-scan，综合现有文档 + 代码扫描，生成 CONTEXT.md（推荐）
   2. 以现有文档为准（告诉我哪个），跳过 intel-scan
   3. 跳过 intel-scan，直接进 0-confirm（不推荐 · AI 会"盲飞"）
@@ -177,7 +177,7 @@ devflow-evo 默认用 CONTEXT.md 作为单一源。请选择：
 
 ### 情况 E · 未发现任何 AI 上下文文档
 
-**判定条件**：`.devflow-evo/memory/CONTEXT.md` 不存在 **且** STATE.md 无 `ai_context_doc` 字段 **且** 未检测到任何 AI 上下文文档。
+**判定条件**：`.devflow/memory/CONTEXT.md` 不存在 **且** STATE.md 无 `ai_context_doc` 字段 **且** 未检测到任何 AI 上下文文档。
 
 **动作**：**必须停下来等用户确认**。
 
@@ -197,7 +197,7 @@ devflow-evo 默认用 CONTEXT.md 作为单一源。请选择：
 ```
 🔍 项目里未发现任何 AI 上下文文档。
 
-devflow-evo 后续阶段需要项目上下文。请选择：
+devflow 后续阶段需要项目上下文。请选择：
   1. 现在跑入场扫描，自动生成 CONTEXT.md（~15-30k tokens · 推荐）
   2. 我手动指定项目里某个文档作为开发遵守依据：<请回复路径>
   3. 跳过 intel-scan，直接进 0-confirm（不推荐 · AI 会"盲飞"）
@@ -236,7 +236,7 @@ devflow-evo 后续阶段需要项目上下文。请选择：
 
 ### 情况 G · 检测到外部上下文（已有 .workbuddy/memory/ 等）⭐v3.1新增
 
-**判定条件**：`.devflow-evo/memory/CONTEXT.md` 不存在 **且** STATE.md 无 `ai_context_doc` 字段 **且** 未检测到标准 AI 上下文文档 **且** 检测到以下任一外部上下文：
+**判定条件**：`.devflow/memory/CONTEXT.md` 不存在 **且** STATE.md 无 `ai_context_doc` 字段 **且** 未检测到标准 AI 上下文文档 **且** 检测到以下任一外部上下文：
 - `.workbuddy/memory/MEMORY.md`（WorkBuddy 工作记忆）
 - `.workbuddy/memory/YYYY-MM-DD.md`（WorkBuddy 日志）
 - `CLAUDE.md`（Claude Code 项目上下文）
@@ -293,7 +293,7 @@ devflow-evo 后续阶段需要项目上下文。请选择：
 ```
 1. 检查 .workbuddy/memory/MEMORY.md → 有 → 情况 G（直接用）
 2. 检查 CLAUDE.md / .cursor/rules/ 等 → 有 → 情况 G（直接用）
-3. 检查 .devflow-evo/memory/CONTEXT.md → 有 → 情况 B/C（按原规则）
+3. 检查 .devflow/memory/CONTEXT.md → 有 → 情况 B/C（按原规则）
 4. 都没有 → 输出简短提示"Lean模式：无项目上下文，直接看代码"，继续
 ```
 

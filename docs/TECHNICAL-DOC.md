@@ -1,12 +1,12 @@
-# devflow-evo 技术文档
+# devflow 技术文档
 
 ## 1. 项目概述与背景
 
-**devflow-evo** 是一款开箱即用的 AI 编程工作流系统，整合规格驱动、结构化流程、工程纪律、变更管理、代码理解五大核心能力。"evo"代表 evolution（进化）。
+**devflow** 是一款开箱即用的 AI 编程工作流系统，整合规格驱动、结构化流程、工程纪律、变更管理、代码理解五大核心能力。"evo"代表 evolution（进化）。
 
 项目名称：装好就用的AI编程工作流系统。
 
-通过说"Use devflow-evo."即可触发完整流程，自动完成从需求到交付的全过程。
+通过说"Use devflow."即可触发完整流程，自动完成从需求到交付的全过程。
 
 ## 2. 架构与模块设计
 
@@ -24,7 +24,7 @@
 
 ### 触发流程
 
-"Use devflow-evo." -> GO.md 路由器 -> 入场检测 -> spec-kit 生成规格 -> 判定模式 -> 7阶段流程 -> 产物归档 -> 更新记忆
+"Use devflow." -> GO.md 路由器 -> 入场检测 -> spec-kit 生成规格 -> 判定模式 -> 7阶段流程 -> 产物归档 -> 更新记忆
 
 ### 三档模式
 
@@ -58,8 +58,8 @@ PRD -> Plan -> Tasks 自动化生成，模板约束 LLM 防止过早实现细节
 
 ## 4. 技术选型与决策
 
-- **入口**：说"Use devflow-evo."即可触发
-- **产物存储**：.devflow-evo/<req-id>/
+- **入口**：说"Use devflow."即可触发
+- **产物存储**：.devflow/<req-id>/
 - **变更管理**：归档到 OpenSpec 变更管理系统
 - **安装方式**：Skill 形式安装到 AI 编程工具
 - **许可证**：MIT License
@@ -67,8 +67,8 @@ PRD -> Plan -> Tasks 自动化生成，模板约束 LLM 防止过早实现细节
 ## 5. 文件结构
 
 ```
-devflow-evo/
-├── .devflow-evo/        # 运行时产物目录
+devflow/
+├── .devflow/        # 运行时产物目录
 ├── GO.md                # 路由器（核心入口）
 ├── ARCHITECTURE-DIAGRAM.html # 架构图
 ├── SKILL.md            # Skill 定义
@@ -84,7 +84,7 @@ devflow-evo/
 
 ### 优势
 
-**整合 6 大开源项目最全面，触发简单（说 Use devflow-evo. 即可），三档模式适应不同场景，跨会话记忆机制完善**
+**整合 6 大开源项目最全面，触发简单（说 Use devflow. 即可），三档模式适应不同场景，跨会话记忆机制完善**
 
 ### 不足
 

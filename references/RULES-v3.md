@@ -3,7 +3,7 @@
 > **版本**: v3.0.0  
 > **创建日期**: 2026-05-17  
 > **融合来源**: devflow-kit RULES.md + 架构层 R1-R15 + 交互层 Phase Rules + Karpathy Coding Principles  
-> **适用范围**: devflow-evo 全流程 Phase 0-8
+> **适用范围**: devflow 全流程 Phase 0-8
 
 ---
 
@@ -168,7 +168,7 @@
 ## R21 · 向后兼容
 
 - **R21.1** v3.0 产物零改动可迁移到 v1.0 流程使用
-- **R21.2** `.devflow-evo/` 目录结构保持与 devflow-evo-kit 兼容
+- **R21.2** `.devflow/` 目录结构保持与 devflow-kit 兼容
 - **R21.3** STATE.md 状态机枚举（not_started / in_progress / waiting_user_confirmation / completed / blocked / skipped）保持不变
 
 ---

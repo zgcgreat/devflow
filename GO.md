@@ -1,12 +1,12 @@
-# GO — DevFlow-Evo v3.2 统一路由器
+# GO — DevFlow v3.2 统一路由器
 
 > **AI指令**：
 > 1. 本文件是 v3 路由入口，读完后按第四步路由表匹配用户意图
 > 2. **第一条回复必须输出路由声明**（含选定的模式 Fast/Lean/Standard/Strict + 理由）
-> 3. **所有产物必须保存到 `.devflow-evo/<req-id>/` 下**
+> 3. **所有产物必须保存到 `.devflow/<req-id>/` 下**
 > 4. **⚠️ 所有产物必须严格按模板输出**（见 references/RULES-v3.md R19）
 >
-> 用户使用方式：`Use devflow-evo` 或 `@devflow-evo/SKILL.md` + 一句话需求
+> 用户使用方式：`Use devflow` 或 `@devflow/SKILL.md` + 一句话需求
 
 ---
 
@@ -77,7 +77,7 @@
 3. 问题 3：C → 选项内容
 4. 问题 4：A → 选项内容
 
-已生成：`.devflow-evo/<req-id>/产物文件`
+已生成：`.devflow/<req-id>/产物文件`
 
 G1 门控：4/4 已回答 ✅ 通过
 
@@ -103,7 +103,7 @@ G1 门控：4/4 已回答 ✅ 通过
 
 ```
 Step 0.5 · 模式预判定（在入场检测之前）        ← ⭐v3.1新增
-Step 1   · 读取项目状态 (.devflow-evo/STATE.md)
+Step 1   · 读取项目状态 (.devflow/STATE.md)
 Step 1.5 · 模式确认（读取 mode-rules.md，输出路由声明，等用户确认）← ⭐v3.1移前
 Step 2   · 入场检测（Fast/Lean 可简化，Standard/Strict 必跑完整）
 Step 3   · GitNexus可选检测 (detect → prompt → grep fallback)
@@ -148,14 +148,14 @@ Step 4-12 · 模式对应的 Phase 执行（见下方模式流程矩阵）
 
 ## Step 1 · 读取项目状态
 
-1. 尝试读 `.devflow-evo/STATE.md`。不存在 → 用模板创建
+1. 尝试读 `.devflow/STATE.md`。不存在 → 用模板创建
 2. 关注字段：`活跃req` / `当前阶段` / `中断任务`
 3. 如存在 `中断任务` 非空 → **优先级最高**，直接走恢复分支
 4. **初始化记忆系统**（首次使用必跑）:
-   - 检查 `.devflow-evo/memory/` 是否存在
+   - 检查 `.devflow/memory/` 是否存在
    - **如不存在** → 创建目录并初始化基础文件：
      ```
-     .devflow-evo/memory/
+     .devflow/memory/
      ├── PROJECT_CONTEXT.md    # 项目背景（待填充）
      ├── DECISIONS.md          # 历史决策（空）
      ├── KNOWN_FAILURES.md     # 已知失败（空）
@@ -163,7 +163,7 @@ Step 4-12 · 模式对应的 Phase 执行（见下方模式流程矩阵）
      └── domain-skills/        # 领域技能沉淀 ⭐v3新增
          ```
    - **如存在** → 加载 PROJECT_CONTEXT.md、DECISIONS.md、KNOWN_FAILURES.md、LESSONS.md
-5. **多项目支持**: 每个项目独立 `.devflow-evo/` 目录，记忆系统按项目隔离
+5. **多项目支持**: 每个项目独立 `.devflow/` 目录，记忆系统按项目隔离
 
 ---
 
@@ -273,7 +273,7 @@ Standard 模式下，Phase 0（YC六问）和 Phase 1（5 Whys）可在以下条
 │  检测结果：<情况 A/B/C/D/E/F/G>              │
 │  项目类型：<brownfield / greenfield>         │
 │  上下文文档：<路径 或 "无">                   │
-│  上下文来源：<devflow-evo / 外部复用>         │
+│  上下文来源：<devflow / 外部复用>         │
 └─────────────────────────────────────────────┘
 ```
 
@@ -425,8 +425,8 @@ G1 门控：6/6 已回答 ✅ 通过 → 进入 Phase 1
 Phase 0结束后，可设定Token预算上限：
 
 ```bash
-/devflow-evo budget set 300K              # 设定300K预算
-/devflow-evo budget preset medium         # 使用预设（small/medium/large/enterprise）
+/devflow budget set 300K              # 设定300K预算
+/devflow budget preset medium         # 使用预设（small/medium/large/enterprise）
 ```
 
 详见: `docs/SURFACE-BUDGET.md`
@@ -510,7 +510,7 @@ Phase 0结束后，可设定Token预算上限：
 2. 支付方式：A + B + C → 微信 + 支付宝 + 银行卡
 3. 用户体验：B → 操作流程 < 3步
 
-已生成：`.devflow-evo/<req-id>/01-analysis.md`
+已生成：`.devflow/<req-id>/01-analysis.md`
 
 请确认或输入 /skip 跳过 Phase 1（仅 Standard 模式可条件跳过）：
 ```
@@ -598,7 +598,7 @@ Phase 0结束后，可设定Token预算上限：
 3. 状态管理：B → Context API + useReducer
 4. 错误处理：A → 立即提示 + 重试3次
 
-已生成：`.devflow-evo/<req-id>/CONTEXT.md`
+已生成：`.devflow/<req-id>/CONTEXT.md`
 
 请确认或输入 /skip 跳过 Phase 1b：
 ```
@@ -623,9 +623,9 @@ Phase 0结束后，可设定Token预算上限：
 如果用户需求复杂或涉及架构变更，可启用SDD模式：
 
 ```bash
-/devflow-evo spec define "需求描述"    # 生成 specs/XXX/spec.md
-/devflow-evo spec plan "技术描述"      # 生成 specs/XXX/plan.md
-/devflow-evo spec tasks                # 生成 specs/XXX/tasks.md
+/devflow spec define "需求描述"    # 生成 specs/XXX/spec.md
+/devflow spec plan "技术描述"      # 生成 specs/XXX/plan.md
+/devflow spec tasks                # 生成 specs/XXX/tasks.md
 ```
 
 SDD完成后自动生成CONTEXT.md，然后进入Phase 2。
@@ -723,7 +723,7 @@ AI 推荐：方案 A — 极简风（开发快，适合 MVP）
 - 布局：左侧导航 + 顶部搜索 + 主内容区
 - 技术选型：Ant Design Pro Layout
 
-已更新：`.devflow-evo/<req-id>/02-design.md`
+已更新：`.devflow/<req-id>/02-design.md`
 
 请确认或输入 [E] 选择其他方案：
 ```
@@ -1096,10 +1096,10 @@ G2 质量门: 通过 → 进入 Phase 6
 🎉 项目全流程完成！
 
 已更新:
-- .devflow-evo/<req-id>/ — 所有产物
-- .devflow-evo/STATE.md — 项目状态
-- .devflow-evo/memory/LESSONS.md — 经验教训
-- .devflow-evo/memory/domain-skills/ — 领域技能
+- .devflow/<req-id>/ — 所有产物
+- .devflow/STATE.md — 项目状态
+- .devflow/memory/LESSONS.md — 经验教训
+- .devflow/memory/domain-skills/ — 领域技能
 
 请确认或输入 /commit 提交最终变更：
 ```
@@ -1192,7 +1192,7 @@ G2 质量门: 通过 → 进入 Phase 6
 Mode: <Fast/Lean/Standard/Strict>               ← ⭐v3.1新增 Lean
 前置裁剪: <列出跳过的Step/Phase及理由>           ← ⭐v3.1新增
 入口门禁: GitNexus=<检测状态> | 入场=<检测结果> | Phase0=<跳过/条件跳过/必跑> | Phase1=<跳过/条件跳过/必跑> ← ⭐v3.1扩展
-上下文来源: <devflow-evo CONTEXT.md / .workbuddy memory / CLAUDE.md / 手动指定> ← ⭐v3.1新增
+上下文来源: <devflow CONTEXT.md / .workbuddy memory / CLAUDE.md / 手动指定> ← ⭐v3.1新增
 自检清单: 待执行
 ```
 
@@ -1210,7 +1210,7 @@ Mode: <Fast/Lean/Standard/Strict>               ← ⭐v3.1新增 Lean
 | `references/gate-rules.md` | 保留 + R4升级 |
 | `references/mode-rules.md` | 保留 |
 | `references/entry-check.md` | 保留 |
-| `.devflow-evo/` 产物 | **零改动**，v3直接读取 |
+| `.devflow/` 产物 | **零改动**，v3直接读取 |
 
 ---
 

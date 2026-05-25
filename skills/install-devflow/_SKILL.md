@@ -1,24 +1,24 @@
 ---
-name: install-devflow-evo
-description: 自动安装和初始化 DevFlow Evo 到当前项目。当用户想要开始使用 DevFlow Evo 时触发。
+name: install-devflow
+description: 自动安装和初始化 DevFlow 到当前项目。当用户想要开始使用 DevFlow 时触发。
 version: 3.0.0
 phase: setup
 triggers:
-  - 用户说"安装 devflow-evo"
+  - 用户说"安装 devflow"
   - 用户说"初始化工作流系统"
-  - 用户说"开始使用 devflow-evo"
+  - 用户说"开始使用 devflow"
   - 用户首次提到需要使用结构化开发流程
 ---
 
-# Install DevFlow Evo
+# Install DevFlow
 
-自动将 DevFlow Evo 安装并配置到当前项目中。
+自动将 DevFlow 安装并配置到当前项目中。
 
 ## 触发场景
 
-- 用户说"安装 devflow-evo"
+- 用户说"安装 devflow"
 - 用户说"初始化工作流系统"
-- 用户说"开始使用 devflow-evo"
+- 用户说"开始使用 devflow"
 - 用户首次提到需要使用结构化开发流程
 
 ## 执行流程
@@ -35,12 +35,12 @@ triggers:
 
 **输出**:
 ```
-✅ DevFlow Evo 安装状态:
+✅ DevFlow 安装状态:
 - references/GO.md: 存在/不存在
 - .specs/: 存在/不存在
 - AI工具: <检测到的工具>
 
-→ 如已安装: Use devflow-evo. <你的需求>
+→ 如已安装: Use devflow. <你的需求>
 → 如未安装: 继续下一步
 ```
 
@@ -99,7 +99,7 @@ triggers:
 - adapters/<tool>/          ← 对应AI工具适配器
 ```
 
-**关键原则**: DevFlow Evo 是纯 Markdown 系统，零配置、零依赖、零脚本。所有"执行"由 AI 按指令完成。
+**关键原则**: DevFlow 是纯 Markdown 系统，零配置、零依赖、零脚本。所有"执行"由 AI 按指令完成。
 
 ---
 
@@ -109,7 +109,7 @@ triggers:
 
 **Cursor**:
 ```bash
-cp adapters/cursor/devflow-evo.mdc .cursor/rules/devflow-evo.mdc
+cp adapters/cursor/devflow.mdc .cursor/rules/devflow.mdc
 ```
 
 **Claude Code**:
@@ -130,12 +130,12 @@ cp adapters/cursor/devflow-evo.mdc .cursor/rules/devflow-evo.mdc
 ✅ 安装验证
 - [ ] references/GO.md 可访问
 - [ ] 适配器已配置
-- [ ] AI工具可响应 devflow-evo 指令
+- [ ] AI工具可响应 devflow 指令
 ```
 
 **测试命令**:
 ```
-Use devflow-evo. 健康检查
+Use devflow. 健康检查
 ```
 
 ---
@@ -145,20 +145,20 @@ Use devflow-evo. 健康检查
 安装完成后，引导用户开始首次使用:
 
 ```
-🎉 DevFlow Evo 安装完成！
+🎉 DevFlow 安装完成！
 
 快速开始:
-1. Use devflow-evo. <你的项目需求>
+1. Use devflow. <你的项目需求>
 2. 系统将自动进入 Phase 0 (策略阶段)
 3. 每个Phase结束时会确认是否继续
 
 常用命令:
-- /devflow-evo new "项目名称" --tech <技术栈>
-- /devflow-evo discuss 1    # 需求分析
-- /devflow-evo plan 1       # 方案设计
-- /devflow-evo execute 1    # 实施开发
-- /devflow-evo verify 1     # 测试验证
-- /devflow-evo ship 1       # 交付部署
+- /devflow new "项目名称" --tech <技术栈>
+- /devflow discuss 1    # 需求分析
+- /devflow plan 1       # 方案设计
+- /devflow execute 1    # 实施开发
+- /devflow verify 1     # 测试验证
+- /devflow ship 1       # 交付部署
 ```
 
 ---
@@ -174,6 +174,6 @@ Use devflow-evo. 健康检查
 
 ## Boundary Conditions
 
-- **已安装**: 如果检测到GO.md已存在，提示用户使用 `Use devflow-evo.` 而非重新安装
-- **旧版本迁移**: 如果检测到旧版 devflow-evo 文件，提供迁移步骤
+- **已安装**: 如果检测到GO.md已存在，提示用户使用 `Use devflow.` 而非重新安装
+- **旧版本迁移**: 如果检测到旧版 devflow 文件，提供迁移步骤
 - **多项目**: 支持在同一工作区管理多个项目，每个项目独立配置

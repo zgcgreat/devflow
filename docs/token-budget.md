@@ -1,6 +1,6 @@
-# Token 预算管理 — DevFlow-Evo v3.2.3
+# Token 预算管理 — DevFlow v3.2.3
 
-本文档介绍如何在 DevFlow-Evo 中进行 Token 预算管理和优化策略。
+本文档介绍如何在 DevFlow 中进行 Token 预算管理和优化策略。
 
 ## Surface Budget 概念
 
@@ -20,14 +20,14 @@
 ### 设置预算
 
 ```
-/devflow-evo budget set 300K              # 设定300K预算
-/devflow-evo budget preset medium         # 使用预设（small/medium/large/enterprise）
+/devflow budget set 300K              # 设定300K预算
+/devflow budget preset medium         # 使用预设（small/medium/large/enterprise）
 ```
 
 ### 查看预算状态
 
 ```
-/devflow-evo budget status                # 查看当前预算使用情况
+/devflow budget status                # 查看当前预算使用情况
 ```
 
 ### 预算管理策略
@@ -54,7 +54,7 @@ Lean 和 Fast 模式是 Token 敏感场景的首选：
 
 ## Caveman-Shrink 压缩集成
 
-DevFlow-Evo v3.2+ 内置通信压缩引擎，可进一步降低 Token：
+DevFlow v3.2+ 内置通信压缩引擎，可进一步降低 Token：
 
 | 级别 | 额外节省 | 建议场景 |
 |------|---------|---------|

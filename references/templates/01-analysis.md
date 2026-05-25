@@ -1,7 +1,7 @@
 # ANALYSIS: <req-id>
 
 - **Req ID**: <id>
-- **关联**: `@.devflow-evo/<req-id>/00-requirements.md`、`@.devflow-evo/CONTEXT.md`
+- **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/CONTEXT.md`
 
 ---
 

@@ -6,7 +6,7 @@ version: 3.0.0
 gate: internal
 requires: []
 provides: [ast-results, call-chains, impact-analysis, dependency-graph]
-description: GitNexus 深度代码分析引擎桥接层，为 devflow-evo 提供知识图谱驱动的代码智能能力
+description: GitNexus 深度代码分析引擎桥接层，为 devflow 提供知识图谱驱动的代码智能能力
 dependencies:
   - gitnexus (>=1.6.0)
 triggers:
@@ -20,7 +20,7 @@ external-inputs: [code-analysis-request]
 
 ## 概述
 
-将 devflow-evo 的代码智能需求桥接到 GitNexus，替代旧的 regex 分析器，获得以下升级：
+将 devflow 的代码智能需求桥接到 GitNexus，替代旧的 regex 分析器，获得以下升级：
 
 | 能力 | 旧 (regex) | 新 (GitNexus) |
 |------|-----------|---------------|
@@ -33,7 +33,7 @@ external-inputs: [code-analysis-request]
 
 ## MCP 工具映射
 
-| devflow-evo 工具 | GitNexus 命令 | 说明 |
+| devflow 工具 | GitNexus 命令 | 说明 |
 |---|---|---|
 | `devflow_analyze` | `gitnexus context` | 解析文件结构 |
 | `devflow_trace_chain` | `gitnexus context --direction` | 调用链追踪 |

@@ -24,11 +24,11 @@ triggers:
 
 ## 核心能力
 
-借鉴 GSD（Get Shit Done）的运行时钩子系统，在 DevFlow-Evo 的关键生命周期节点自动执行监控、检查、清理动作。
+借鉴 GSD（Get Shit Done）的运行时钩子系统，在 DevFlow 的关键生命周期节点自动执行监控、检查、清理动作。
 
 ## 设计理念
 
-DevFlow-Evo 目前是一个**响应式系统**——AI 在 Phase 转换时主动触发压缩、归档、检查。但有些动作需要在**运行时自动触发**：
+DevFlow 目前是一个**响应式系统**——AI 在 Phase 转换时主动触发压缩、归档、检查。但有些动作需要在**运行时自动触发**：
 
 - Token 消耗超过阈值 → 自动触发压缩（不等 Phase 转换）
 - 用户 Prompt 包含敏感信息 → 自动脱敏
@@ -94,7 +94,7 @@ Prompt-Guard Hook:
 
 | Phase 转换 | 执行动作 |
 |-----------|---------|
-| **Phase N → N+1** | 保存当前 Phase 的 SUMMARY → `devflow-evo/<req-id>/SUMMARY_N.md` |
+| **Phase N → N+1** | 保存当前 Phase 的 SUMMARY → `devflow/<req-id>/SUMMARY_N.md` |
 | **Phase 3 → 4** | 冻结任务 DAG，创建不可变快照 |
 | **Phase 4 → 5** | 释放 CodeGraph 索引缓存，保存构建产物清单 |
 | **Phase 6 → 7** | 冻结审查报告，创建回滚点 |
@@ -310,7 +310,7 @@ Phase 0 (启动) 配置加载:
 ## 钩子配置模板
 
 ```yaml
-# .devflow-evo/hooks.yaml (可选配置)
+# .devflow/hooks.yaml (可选配置)
 hooks:
   context-monitor:
     enabled: true
@@ -343,7 +343,7 @@ hooks:
 
 ## 与 GSD Hooks 对比
 
-| 特性 | GSD | DevFlow-Evo |
+| 特性 | GSD | DevFlow |
 |------|-----|-------------|
 | **context-monitor** | ✅ JS 文件，自动检测 | ✅ Hook 定义，AI 执行 |
 | **prompt-guard** | ✅ JS 文件，脱敏扫描 | ✅ Hook 定义，AI 执行 |
@@ -359,7 +359,7 @@ hooks:
 ## Phase 集成
 
 ### Phase 0（启动）
-- 加载钩子配置 `.devflow-evo/hooks.yaml`
+- 加载钩子配置 `.devflow/hooks.yaml`
 - 启用 context-monitor + prompt-guard
 
 ### Phase 4-5（实施→测试）

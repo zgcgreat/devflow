@@ -157,7 +157,7 @@ V3-ARCHITECTURE.md 侧重架构设计文档，以下核心内容在 SKILL.md 中
 ## 🏛️ v3.0 文件结构
 
 ```
-devflow-evo/
+devflow/
 ├── SKILL.md                    # 主入口（零配置加载）
 ├── GO.md                       # 统一路由器（升级v3版）
 │
@@ -224,7 +224,7 @@ devflow-evo/
 | OpenSpec集成 | 保留，Phase 8归档接口 |
 | GitNexus集成 | 升级为可选检测协议 |
 
-**迁移成本**: 用户现有 `.devflow-evo/` 产物目录零改动，v3.0 SKILL.md 和 GO.md 自动兼容。
+**迁移成本**: 用户现有 `.devflow/` 产物目录零改动，v3.0 SKILL.md 和 GO.md 自动兼容。
 
 ---
 

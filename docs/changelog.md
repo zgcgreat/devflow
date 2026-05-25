@@ -1,4 +1,4 @@
-# 变更日志 — DevFlow-Evo v3.2
+# 变更日志 — DevFlow v3.2
 
 本文档记录从 v1.0 到 v3.2 的完整变更历史。
 
@@ -22,7 +22,7 @@
 - **P1-2**: L2 引擎层 Boundary Conditions 覆盖率 25%→100% (6/24→23/23)
 - **P1-3**: L2→L3 跨层引用修正 — L2 requires 中 L3 实现名移至 `dependencies`
 - **P1-4**: 99 个孤立 provides 甄别分类 — pipeline-consumed(28) + on-demand(52) + terminal-output(8) + redundant-child(11)
-- **P1-5**: 3 处关键路径引用修复 — 裸路径补全 `.devflow-evo/<req-id>/` 前缀，模板路径补全 `references/` 前缀
+- **P1-5**: 3 处关键路径引用修复 — 裸路径补全 `.devflow/<req-id>/` 前缀，模板路径补全 `references/` 前缀
 - **P1-6**: code-intelligence 残留引用替换为 gitnexus-bridge (2处)
 
 ### P2 修复 (6项，质量受损) ✅
@@ -159,7 +159,7 @@ G0 → G1 → G2.5 → G3 → G3.5 → G4 → G5 → G6 → G7 → G7.5 → G8
 
 ### 执行流程（12步）
 ```
-Step 1: 读取项目状态 (.devflow-evo/STATE.md)
+Step 1: 读取项目状态 (.devflow/STATE.md)
 Step 2: 入场检测 (entry-check.md)
 Step 3: GitNexus可选检测
 Phase 0-8: 各Phase执行（详见GO.md）

@@ -6,7 +6,7 @@ gate: internal
 parent: learning-workflow
 requires: []
 provides: [project-patterns, graduation-backlog]
-source: get-shit-done graduation.md (adapted to devflow-evo)
+source: get-shit-done graduation.md (adapted to devflow)
 description: Cross-phase pattern clustering and promotion from LEARNINGS → project-level knowledge
 external-inputs: [learnings-files]
 runtime-inputs: [phase-transition]
@@ -30,7 +30,7 @@ Phase 4 Wave完成 → LESSONS.md(失败教训) → 下次Wave加载 → ❌ 缺
 Phase 4 Wave完成 → LESSONS.md → Phase过渡Graduation聚类 → HITL确认 → PROJECT.md/PATTERNS.md(项目级知识)
 ```
 
-**为什么是 LearningWorkflow 的唯一缺环**: devflow-evo 的 LearningWorkflow 负责提取 LESSONS（记录教训），但缺少自动发现跨 Phase 模式并提升到项目级知识的能力。Graduation 填补了"记录教训→识别规律→提升到项目级知识"的完整闭环。
+**为什么是 LearningWorkflow 的唯一缺环**: devflow 的 LearningWorkflow 负责提取 LESSONS（记录教训），但缺少自动发现跨 Phase 模式并提升到项目级知识的能力。Graduation 填补了"记录教训→识别规律→提升到项目级知识"的完整闭环。
 
 ## Configuration
 
@@ -195,7 +195,7 @@ elif cluster_suggested_target == STATE.md backlog:
 
 > **Adapted from**: get-shit-done `workflows/graduation.md` (~196 lines)  
 > **Adaptation date**: 2026-05-17  
-> **Key changes from original**: Integrated with devflow-evo's Step 0 Durable/Temporary classification; uses STATE.md instead of `.planning/STATE.md`; aligned cluster_id hash scheme
+> **Key changes from original**: Integrated with devflow's Step 0 Durable/Temporary classification; uses STATE.md instead of `.planning/STATE.md`; aligned cluster_id hash scheme
 
 ## Error Taxonomy (P0 → P3)
 

@@ -11,7 +11,7 @@ provides: [research-findings, dependency-verification, risk-assessment]
 description: |
   Technical investigation specialist for Phase 2 Design.
   Conducts systematic research for architecture decisions, dependency validation, and risk assessment.
-  Output feeds directly into Phase 2 Design spec and Phase 1b Discuss context. (devflow-evo)
+  Output feeds directly into Phase 2 Design spec and Phase 1b Discuss context. (devflow)
 ---
 
 # Researcher — Technical Investigation & Dependency Verification

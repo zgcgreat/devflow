@@ -1,6 +1,6 @@
-# DevFlow-Evo 文档中心
+# DevFlow 文档中心
 
-DevFlow-Evo v3.2.3 的完整技术文档集合。本目录包含架构设计、API参考、使用指南和最佳实践。
+DevFlow v3.2.3 的完整技术文档集合。本目录包含架构设计、API参考、使用指南和最佳实践。
 
 > **v3.2.3**: Audit Sprint 完成 — P0-P2 全量修复，健康度 88/100
 
@@ -8,7 +8,7 @@ DevFlow-Evo v3.2.3 的完整技术文档集合。本目录包含架构设计、A
 
 | 文档 | 说明 | 目标读者 |
 |------|------|---------|
-| [快速开始](getting-started.md) | 5分钟上手 DevFlow-Evo | 新用户 |
+| [快速开始](getting-started.md) | 5分钟上手 DevFlow | 新用户 |
 | [架构设计](architecture.md) | L1/L2/L3 三层架构详解 | 架构师/高级开发者 |
 | [模式判定](modes.md) | Fast/Lean/Standard/Strict 四档模式详解 | 所有用户 |
 | [Phase Skills 参考](stage-skills.md) | L1 阶段技能完整参考（原 stage-skills 已移除） | 深度用户 |
@@ -23,7 +23,7 @@ DevFlow-Evo v3.2.3 的完整技术文档集合。本目录包含架构设计、A
 ## 🎯 按场景导航
 
 ### 「我想快速上手」
-→ 阅读 [快速开始](getting-started.md)，然后直接使用 `Use devflow-evo`
+→ 阅读 [快速开始](getting-started.md)，然后直接使用 `Use devflow`
 
 ### 「我需要理解架构」
 → 阅读 [架构设计](architecture.md) + [进阶主题](advanced.md)

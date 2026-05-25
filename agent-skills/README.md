@@ -1,12 +1,12 @@
 # Agent Skills
 
-通用工程能力技能集合，源自 [Addy Osmani 的 Agent Skills](https://github.com/addyosmani/agent-skills) 项目，经 devflow-evo 适配。
+通用工程能力技能集合，源自 [Addy Osmani 的 Agent Skills](https://github.com/addyosmani/agent-skills) 项目，经 devflow 适配。
 
 ## 定位
 
 | 维度 | 说明 |
 |------|------|
-| **与 `skills/` 的区别** | `skills/` 是 devflow-evo **流程操作技能**（brainstorming、writing-plans 等）；本目录是**通用工程能力技能**（代码审查、安全加固、API 设计等） |
+| **与 `skills/` 的区别** | `skills/` 是 devflow **流程操作技能**（brainstorming、writing-plans 等）；本目录是**通用工程能力技能**（代码审查、安全加固、API 设计等） |
 | **使用方式** | WorkBuddy 自动扫描 `SKILL.md` 格式文件，按 skill name 匹配触发 |
 | **引用方式** | 路径格式：`agent-skills/skills/<skill-name>/SKILL.md` |
 

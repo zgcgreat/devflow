@@ -36,7 +36,7 @@ external-inputs: [project-context]
 
 ## 核心定位
 
-Phase 0 是 devflow-evo 工作流的起点，负责：
+Phase 0 是 devflow 工作流的起点，负责：
 1. **种子捕获** — 将前瞻性想法结构化为种子文件，定义触发条件
 2. **项目初始化** — 建立项目上下文和初始范围
 3. **战略对齐** — 确保想法与项目目标一致
@@ -135,7 +135,7 @@ Phase 0 是 devflow-evo 工作流的起点，负责：
 | **Skip**: 已有 strategy-seeds 且无变更需求 | 直接 PASS G0，进入 Phase 1 | 避免重复捕获已稳定的战略 |
 
 > **⚠️ 防盲飞验证 (P3-4)**: 声称 Skip 时必须执行:
-> 1. `Read(".devflow-evo/00-strategy.md")` 读取战略文档
+> 1. `Read(".devflow/00-strategy.md")` 读取战略文档
 > 2. 展示目标+范围+风险级别内容（≥3行）
 > 3. 向用户确认: "战略文档已存在，是否确认跳过 Phase 0？"
 > Fast/Lean 模式下可直接跳过，无需验证。

@@ -1,4 +1,4 @@
-# 阶段门验证参考 — DevFlow-Evo v3.2.4
+# 阶段门验证参考 — DevFlow v3.2.4
 
 本文档列出所有 **阶段门（Gate）** 的完整验证规则。每个门是 Phase 之间的质量关口，未通过则不可进入下一阶段。
 
@@ -142,7 +142,7 @@ Phase 8 → [G8]
 - [ ] LESSONS去重完成，无重复条目
 - [ ] Domain Skills生成正确（≥3频率的LESSON主题已合并）
 - [ ] STATE.md已更新为最新状态
-- [ ] 产物目录 `.devflow-evo/<req-id>/` 完整
+- [ ] 产物目录 `.devflow/<req-id>/` 完整
 
 **不通过处理**: 补做缺失的归档步骤 → 重新验证直到所有子项通过
 
@@ -162,16 +162,16 @@ Phase 8 → [G8]
 
 | Phase | 产物路径 | 验证关键段 | 跳过条件 |
 |-------|---------|-----------|---------|
-| Phase 0 | `.devflow-evo/00-strategy.md` | 目标+范围+风险级别 | Fast/Lean 模式直接跳过（无需验证） |
-| Phase 1 | `.devflow-evo/01-5whys.md` | 5个Why + 根因 | Fast/Lean 模式直接跳过 |
-| Phase 1b | `.devflow-evo/01b-context.md` | 技术决策 + 未决项 | Fast 模式跳过；Lean/Standard 需验证 CONTEXT.md 存在 |
-| Phase 2 | `.devflow-evo/<req-id>/02-design.md` | 技术栈+架构图+API | 需 Read 验证 `## 0. 技术栈选定` 段已锁定 |
-| Phase 2a | `.devflow-evo/<req-id>/02a-variants.md` | ≥4变体 + 评分 | 简单任务（≤3文件）自动跳过 |
-| Phase 3 | `.devflow-evo/<req-id>/specs/03-tasks.md` | 任务列表+依赖DAG | Fast/Lean 模式直接跳过 |
+| Phase 0 | `.devflow/00-strategy.md` | 目标+范围+风险级别 | Fast/Lean 模式直接跳过（无需验证） |
+| Phase 1 | `.devflow/01-5whys.md` | 5个Why + 根因 | Fast/Lean 模式直接跳过 |
+| Phase 1b | `.devflow/01b-context.md` | 技术决策 + 未决项 | Fast 模式跳过；Lean/Standard 需验证 CONTEXT.md 存在 |
+| Phase 2 | `.devflow/<req-id>/02-design.md` | 技术栈+架构图+API | 需 Read 验证 `## 0. 技术栈选定` 段已锁定 |
+| Phase 2a | `.devflow/<req-id>/02a-variants.md` | ≥4变体 + 评分 | 简单任务（≤3文件）自动跳过 |
+| Phase 3 | `.devflow/<req-id>/specs/03-tasks.md` | 任务列表+依赖DAG | Fast/Lean 模式直接跳过 |
 | Phase 4 | Wave 产物目录 | 代码文件+commit | 不可跳过 |
-| Phase 5 | `.devflow-evo/<req-id>/specs/test/` | 测试结果+覆盖率 | 不可跳过 |
-| Phase 6 | `.devflow-evo/<req-id>/specs/06-review.md` | 审查结果+修复项 | Fast 模式可自检替代三层对抗 |
-| Phase 7 | `.devflow-evo/<req-id>/specs/07-canary.md` | 健康指标+回滚阈值 | Fast/Lean 模式跳过 |
+| Phase 5 | `.devflow/<req-id>/specs/test/` | 测试结果+覆盖率 | 不可跳过 |
+| Phase 6 | `.devflow/<req-id>/specs/06-review.md` | 审查结果+修复项 | Fast 模式可自检替代三层对抗 |
+| Phase 7 | `.devflow/<req-id>/specs/07-canary.md` | 健康指标+回滚阈值 | Fast/Lean 模式跳过 |
 | Phase 8 | `LESSONS.md` + `STATE.md` | LESSONS去重+Domain Skills | 不可跳过 |
 
 ### 验证指令模板

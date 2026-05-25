@@ -6,12 +6,12 @@ gate: internal
 requires: []
 provides: [configured-profile, enabled-modules]
 description: Pre-configured installation profiles for different project types and team sizes
-source: devflow-evo adapters + superpowers templates
+source: devflow adapters + superpowers templates
 dependencies:
   - provider-gateway
 triggers:
   - project initialization
-  - devflow-evo install
+  - devflow install
 external-inputs: [project-type, team-size]
 ---
 
@@ -113,7 +113,7 @@ node install.js /path/to/project --profile small-team
 
 # 生成 Cursor 配置
 node install.js . --profile small-team --runtime cursor
-# → .cursor/rules/devflow-evo.mdc
+# → .cursor/rules/devflow.mdc
 ```
 
 ## Error Taxonomy (Install Profiles 专属)

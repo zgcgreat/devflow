@@ -1,8 +1,8 @@
-# DevFlow-Evo 核心产物模板库
+# DevFlow 核心产物模板库
 
-本目录包含 devflow-evo Phase 0-8 的 **25 个核心产物模板**，被 L1-INTERACTION 层所有 Phase _SKILL.md 引用。
+本目录包含 devflow Phase 0-8 的 **25 个核心产物模板**，被 L1-INTERACTION 层所有 Phase _SKILL.md 引用。
 
-> **目录定位**: 这是 devflow-evo **主模板目录**。Phase _SKILL.md 中的模板引用统一指向 `references/templates/`。
+> **目录定位**: 这是 devflow **主模板目录**。Phase _SKILL.md 中的模板引用统一指向 `references/templates/`。
 > 另一个 `templates/` 目录（55 个）为 gsd-workflows 遗留模板库，仅被 gsd-workflows 引用，两者职责不同不合并。
 
 ## Phase 与模板映射

@@ -1,6 +1,6 @@
-# 进阶主题 — DevFlow-Evo v3.2.3
+# 进阶主题 — DevFlow v3.2.3
 
-本文档深入讲解 DevFlow-Evo 的核心高级特性。适合已掌握基本使用、希望优化工作流的高级用户和架构师。
+本文档深入讲解 DevFlow 的核心高级特性。适合已掌握基本使用、希望优化工作流的高级用户和架构师。
 
 > **v3.2.3 审计修复**: L2 Error Taxonomy + Boundary Conditions 覆盖率 100%，requires 0 断裂，健康度 88/100
 

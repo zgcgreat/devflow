@@ -1,15 +1,15 @@
-# DevFlow-Evo
+# DevFlow
 
 [English](./README.en.md) | [中文](./README.md)
 
-DevFlow-Evo is an AI-powered software development workflow system that provides **structured processes**, **engineering discipline**, **cross-session memory**, and **self-evolving capabilities** for AI-driven development projects.
+DevFlow is an AI-powered software development workflow system that provides **structured processes**, **engineering discipline**, **cross-session memory**, and **self-evolving capabilities** for AI-driven development projects.
 *(evo = evolution)*
 
-## What is DevFlow-Evo?
+## What is DevFlow?
 
-DevFlow-Evo (formerly DevFlow / DevFlow-Kit) is a comprehensive workflow framework designed to structure AI-assisted software development. It guides AI agents and developers through a complete software development lifecycle with:
+DevFlow (formerly DevFlow-Kit) is a comprehensive workflow framework designed to structure AI-assisted software development. It guides AI agents and developers through a complete software development lifecycle with:
 
-- **Structured Stages**: From requirements to deployment (0→1→2→3→4→5→6→7)
+- **Structured Stages**: From requirements to deployment (0→1→2→3→4→5→6→7→8)
 - **Gate Validation**: Each stage has checkpoints to ensure quality
 - **Cross-Session Memory**: Maintains project state and context across sessions
 - **Engineering Discipline**: Enforces best practices throughout the development process
@@ -54,7 +54,7 @@ DevFlow-Evo (formerly DevFlow / DevFlow-Kit) is a comprehensive workflow framewo
 
 ### 🧠 Cross-Session Memory & Self-Evolution
 - Remembers project context, decisions, and failures across sessions
-- Automatic state tracking with `.devflow-evo/STATE.md`
+- Automatic state tracking with `.devflow/STATE.md`
 - Session journals for auditing
 - **LearningWorkflow**: Extracts lessons from failures and injects them into future waves
 
@@ -89,10 +89,10 @@ DevFlow-Evo (formerly DevFlow / DevFlow-Kit) is a comprehensive workflow framewo
 
 ```bash
 # Clone the repository
-git clone https://github.com/zgcgreat/devflow-evo.git
+git clone https://github.com/zgcgreat/devflow.git
 
 # Navigate to the kit
-cd devflow-evo
+cd devflow
 
 # Copy to your project
 # (or use as a reference for your AI coding tool)
@@ -105,7 +105,7 @@ cd devflow-evo
    User: I want to build a new web app
    ```
 
-2. **DevFlow-Evo** automatically:
+2. **DevFlow** automatically:
    - Reads project state
    - Detects entry point (new vs existing)
    - Routes to appropriate stage
@@ -115,13 +115,13 @@ cd devflow-evo
    ```
    User: Continue where we left off
    ```
-   DevFlow-Evo detects interrupted state and continues from the right place.
+   DevFlow detects interrupted state and continues from the right place.
 
 ## Project Structure
 
 ```
-devflow-evo/
-├── SKILL.md                    # Main DevFlow-Evo skill
+devflow/
+├── SKILL.md                    # Main DevFlow skill
 ├── references/                 # Reference documents
 │   ├── GO.md                  # Complete workflow details
 │   ├── RULES.md              # Global rules
@@ -171,4 +171,24 @@ MIT License - feel free to use for your own projects.
 
 ---
 
-**Note**: This project was formerly known as DevFlow / DevFlow-Kit. The name changed to DevFlow-Evo to emphasize its self-evolving LearningWorkflow capability.
+**Note**: This project was formerly known as DevFlow / DevFlow-Kit. The name changed to DevFlow to emphasize its self-evolving LearningWorkflow capability.
+
+## Changelog (Selected)
+
+### v3.2.2 — Scale & Revert Intelligence
+- **scale-domain-adaptive**: Dynamic planning depth engine mapping Lite/Standard/Enhanced/Advanced Phase flows based on project scale and domain signals
+- **conductor-revert**: Git-aware 4-phase rollback protocol with Track/Phase/Task granularity
+- **hooks-system Chain-Trigger**: One-to-Many/Many-to-Many cascade execution
+
+### v3.2.1 — Runtime Intelligence Sprint
+- **caveman-shrink**: MCP tool group compression engine, 70-76% context savings
+- **codegraph-bridge**: Local code knowledge graph bridge (SQLite+FTS5), 94% tool call reduction
+- **surface-switch**: Dynamic tool set/compression level switching at runtime
+
+### v3.2.0 — Interaction Mode Refactor
+- Batch progress display + sequential multiple-choice interaction across all Phases
+- Interactive progress panels, quality gates, and release monitoring
+
+### v3.1.0 — Adaptive Mode System
+- Lean mode added (≤5 files, <300 lines) between Fast and Standard
+- Mode-aware phase pruning matrix with conditional skip rules for Phase 0/1

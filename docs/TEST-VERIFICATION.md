@@ -1,6 +1,6 @@
-# 测试验证文档 — DevFlow-Evo v3.2.3
+# 测试验证文档 — DevFlow v3.2.3
 
-> **项目**: devflow-evo | **验证日期**: 2026-05-21 | **健康度**: 72→88/100 (+16)
+> **项目**: devflow | **验证日期**: 2026-05-21 | **健康度**: 72→88/100 (+16)
 
 本项目为纯 Markdown 指令系统，无独立测试套件。本文档记录 v3.2.3 Audit Sprint 的逐项验证结果。
 
@@ -135,7 +135,7 @@ phase-0-strategy 新增"项目风险级别评估"（🟢低/🟡中/🔴高）�
 `executor/_SKILL.md`: `// TODO: persist to database` → `// Persist: save user record to database`
 
 ### 6.2 路径引用修复 (P1-5): ✅ 3处关键修复
-- phase-2a-shotgun: `02-design.md` → `.devflow-evo/<req-id>/02-design.md`
+- phase-2a-shotgun: `02-design.md` → `.devflow/<req-id>/02-design.md`
 - phase-2-design: `templates/02-design.md` → `references/templates/02-design.md`
 - phase-3-task-plan: `templates/03-tasks.md` → `references/templates/03-tasks.md`
 

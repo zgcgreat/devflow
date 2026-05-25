@@ -23,7 +23,7 @@ external-inputs: [project-context]
 
 ## 设计理念
 
-传统 git revert 只认 commit hash,但 Conductor/DevFlow-Evo 的工作单元是:
+传统 git revert 只认 commit hash,但 Conductor/DevFlow 的工作单元是:
 - **Track** (功能/缺陷追踪)
 - **Phase** (Phase 级别的工作单元)
 - **Task** (具体任务)
@@ -194,7 +194,7 @@ revert:
 
 ## 与 Conductor Revert 对比
 
-| 特性 | Conductor | DevFlow-Evo |
+| 特性 | Conductor | DevFlow |
 |------|---------|-----------|
 | **协议阶段** | 4 阶段 (Selection → Reconciliation → Plan → Execution) | 4 阶段 (完全对齐) |
 | **目标类型** | Track/Phase/Task | Track/Phase/Task (完全对齐) |

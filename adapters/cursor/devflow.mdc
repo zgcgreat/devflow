@@ -6,20 +6,20 @@ alwaysApply: true
 
 # Devflow Workflow
 
-This project uses devflow-evo v3.0 phased workflow. The AI assistant must follow these rules:
+This project uses devflow v3.0 phased workflow. The AI assistant must follow these rules:
 
 ## Phase Awareness
 
-1. Read `.devflow-evo/STATE.md` at the start of every conversation to determine the current phase
+1. Read `.devflow/STATE.md` at the start of every conversation to determine the current phase
 2. Respect gate checks — do not skip phases or advance without meeting prerequisites
-3. Load memory from `.devflow-evo/memory/` for project context
+3. Load memory from `.devflow/memory/` for project context
 
 ## Core Commands
 
-- **Status**: Check `.devflow-evo/STATE.md` for current phase, mode, and progress
+- **Status**: Check `.devflow/STATE.md` for current phase, mode, and progress
 - **Phase Advance**: Only advance when gate requirements are met (artifact files exist)
-- **Memory**: Store important decisions in `.devflow-evo/memory/DECISIONS.md`
-- **Lessons**: Record learnings in `.devflow-evo/memory/LESSONS.md`
+- **Memory**: Store important decisions in `.devflow/memory/DECISIONS.md`
+- **Lessons**: Record learnings in `.devflow/memory/LESSONS.md`
 
 ## Gate Requirements
 
@@ -36,7 +36,7 @@ This project uses devflow-evo v3.0 phased workflow. The AI assistant must follow
 
 ## Token Compression
 
-When `.devflow-evo/config.yaml` has `caveman.level` set, apply corresponding compression to memory files:
+When `.devflow/config.yaml` has `caveman.level` set, apply corresponding compression to memory files:
 - `lite`: 500 chars per file
 - `ultra`: 200 chars per file
 - `extreme`: 100 chars per file

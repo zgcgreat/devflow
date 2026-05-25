@@ -52,7 +52,7 @@ UI Director + Refactor Specialist。**保留功能不变**，只换视觉。
 
 ### 2. 识别现有调性（v1）
 
-**优先**：读 `.devflow-evo/archive/.../02a-ui-design.md` 或仓库里现存的 02a-ui-design.md，提取调性字段
+**优先**：读 `.devflow/archive/.../02a-ui-design.md` 或仓库里现存的 02a-ui-design.md，提取调性字段
 **降级**（无 UI-设计）：从代码反向提取
 - 扫 CSS variables / theme.ts 看主色饱和度、字体家族、圆角值
 - 按以下信号推断：
@@ -104,7 +104,7 @@ UI Director + Refactor Specialist。**保留功能不变**，只换视觉。
 ### 5. 写新 02a-ui-design.md（标 v2）
 
 **⚠️ 强制要求**：必须严格按照 `@devflow-kit/templates/02a-ui-design.md` 模板的完整结构输出。**不得省略或改写任何段落**。
-- 路径：`.devflow-evo/<req-id>/02a-ui-design.md`
+- 路径：`.devflow/<req-id>/02a-ui-design.md`
 - 在 frontmatter 加：
   ```yaml
   version: 2

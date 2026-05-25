@@ -1,6 +1,6 @@
-# 架构设计 — DevFlow-Evo v3.2.3
+# 架构设计 — DevFlow v3.2.3
 
-DevFlow-Evo 采用 **L1/L2/L3 三层架构**，每一层有明确的职责边界和协作协议。
+DevFlow 采用 **L1/L2/L3 三层架构**，每一层有明确的职责边界和协作协议。
 
 > **v3.2.3 审计修复**: 健康度 88/100，requires 0 断裂，ET/BC L1+L2 100% 覆盖，Gate 依赖链 G0→G8 完全自洽
 
@@ -74,7 +74,7 @@ DevFlow-Evo 采用 **L1/L2/L3 三层架构**，每一层有明确的职责边界
 
 | 目录 | 技能数 | 定位 | 来源 | 典型技能 |
 |------|--------|------|------|---------|
-| `skills/` | 17 | **流程操作技能** — devflow-evo 工作流各阶段的操作技能 | devflow-evo 自研 | brainstorming, writing-plans, systematic-debugging |
+| `skills/` | 17 | **流程操作技能** — devflow 工作流各阶段的操作技能 | devflow 自研 | brainstorming, writing-plans, systematic-debugging |
 | `agent-skills/skills/` | 24 | **通用工程能力技能** — 跨项目的工程实践能力 | [Addy Osmani Agent Skills](https://github.com/addyosmani/agent-skills) | code-review-and-quality, security-and-hardening, TDD |
 
 > **关键区分**: `skills/` 是"怎么走流程"，`agent-skills/skills/` 是"怎么做好工程"。两者互补，不应合并。

@@ -3,7 +3,7 @@
 > ⚠️ **进入本阶段前，必须先加载**：`agent-skills/skills/planning-and-task-breakdown/SKILL.md`
 
 > **触发方式**：`@devflow-kit/references/GO.md` + `建立架构 / 架构梳理 / 重构架构 / architect / 重审 ADR`
-> 不属于任何 req，不写 00-requirements.md。直接产出 / 重构 `.devflow-evo/system-architecture.md`。
+> 不属于任何 req，不写 00-requirements.md。直接产出 / 重构 `.devflow/system-architecture.md`。
 
 ## 角色
 
@@ -31,10 +31,10 @@ Chief Architect。**只产架构文档，不动业务代码**。和用户协作�
 
 ## 输入
 
-- `@.devflow-evo/CONTEXT.md`（必读 · 技术栈 + 既有抽象 + 禁动清单）
-- `@.devflow-evo/system-architecture.md`（如有，则是重构跑；如无，则是首跑）
-- `@.devflow-evo/需求LOG.md`（看历史 req 演进轨迹）
-- `@.devflow-evo/archive/*/02-design.md`（按需 · 重构跑时抽样几份）
+- `@.devflow/CONTEXT.md`（必读 · 技术栈 + 既有抽象 + 禁动清单）
+- `@.devflow/system-architecture.md`（如有，则是重构跑；如无，则是首跑）
+- `@.devflow/需求LOG.md`（看历史 req 演进轨迹）
+- `@.devflow/archive/*/02-design.md`（按需 · 重构跑时抽样几份）
 - 仓库代码（必读 · `src/` 顶层结构 + `package.json` / 等价依赖文件）
 - `@devflow-kit/templates/system-architecture.md`（结构模板）
 
@@ -44,7 +44,7 @@ Chief Architect。**只产架构文档，不动业务代码**。和用户协作�
 
 ### 步骤 1 · 判定模式（首跑 vs 重构）
 
-读 `.devflow-evo/system-architecture.md`：
+读 `.devflow/system-architecture.md`：
 
 - **不存在** → 模式 A · 首跑（4 步）
 - **存在但 < 100 行 / 缺关键段** → 模式 A · 首跑（覆盖重写）
@@ -194,11 +194,11 @@ grep -rn "router\\.(get|post|put|patch|delete)\\|@(Get|Post|Put|Patch|Delete)" s
 
 #### 7.1 写入
 
-**首跑**：用 `write_to_file` 创建 `.devflow-evo/system-architecture.md`，**⚠️ 强制要求**：必须严格按 `@devflow-kit/templates/system-architecture.md` 模板的完整结构输出，按模板 8 段全填（不适用的段可留 N/A 但**不能删段**——后续 A-evolve 要按段 append）。**不得省略或改写任何段落**。
+**首跑**：用 `write_to_file` 创建 `.devflow/system-architecture.md`，**⚠️ 强制要求**：必须严格按 `@devflow-kit/templates/system-architecture.md` 模板的完整结构输出，按模板 8 段全填（不适用的段可留 N/A 但**不能删段**——后续 A-evolve 要按段 append）。**不得省略或改写任何段落**。
 
 **重构**：
 
-- 先备份：`cp .devflow-evo/system-architecture.md .devflow-evo/system-architecture.md.bak-<YYYY-MM-DD>`
+- 先备份：`cp .devflow/system-architecture.md .devflow/system-architecture.md.bak-<YYYY-MM-DD>`
 - 用 `multi_edit` 按段改（不要整文件 rewrite）
 - 给用户最终 diff review 后再 commit
 
@@ -228,14 +228,14 @@ grep -rn "router\\.(get|post|put|patch|delete)\\|@(Get|Post|Put|Patch|Delete)" s
 
 ## 输出
 
-- `.devflow-evo/system-architecture.md`（必产，**必须严格按 `@devflow-kit/templates/system-architecture.md` 模板完整结构输出**）
-- `.devflow-evo/system-architecture.md.bak-<date>`（重构跑必产）
-- 0~1 次对 `.devflow-evo/CONTEXT.md` 的同步 patch（仅当步骤 7.3 用户选 1）
+- `.devflow/system-architecture.md`（必产，**必须严格按 `@devflow-kit/templates/system-architecture.md` 模板完整结构输出**）
+- `.devflow/system-architecture.md.bak-<date>`（重构跑必产）
+- 0~1 次对 `.devflow/CONTEXT.md` 的同步 patch（仅当步骤 7.3 用户选 1）
 - 在 `STATE.md` 写 `last_architect_at: <YYYY-MM-DD>`
 
 ## 约束
 
-- **不动业务代码**：本工作流仅写 `.devflow-evo/` 内文件，禁动 `src/`
+- **不动业务代码**：本工作流仅写 `.devflow/` 内文件，禁动 `src/`
 - **重构跑必备份**：写 ARCHITECTURE 前 `cp` 备份不可省
 - **ADR 推翻成本必填**：低 / 中 / 高 三选一，不允许"待评估"
 - **不替用户编理由**：步骤 4.1 / 4.2 中"理由 / 代价"字段必须用户确认，AI 给候选不直接拍板

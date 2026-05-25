@@ -8,7 +8,7 @@ parent: phase-6-review
 gate: G7
 requires: [g6-gate-decision, test-results]
 provides: [test-coverage-analysis, edge-case-findings]
-description: Testing Specialist for Phase 6+ code review — coverage gaps, edge cases, isolation, negative paths. Use when "test review", "coverage analysis", "mutation testing". (devflow-evo)
+description: Testing Specialist for Phase 6+ code review — coverage gaps, edge cases, isolation, negative paths. Use when "test review", "coverage analysis", "mutation testing". (devflow)
 source: 架构层 / supercorp-ultimate fusion
 dependencies:
   - phase-6-review (orchestrator)

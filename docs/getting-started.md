@@ -1,6 +1,6 @@
-# 快速开始 — DevFlow-Evo v3.2.3
+# 快速开始 — DevFlow v3.2.3
 
-本文档带你从零开始使用 DevFlow-Evo，只需 **5 分钟**。
+本文档带你从零开始使用 DevFlow，只需 **5 分钟**。
 
 ## 前置条件
 
@@ -9,16 +9,16 @@
 
 ## 第一步：安装
 
-在你项目的 AI 编程工具中打开 DevFlow-Evo：
+在你项目的 AI 编程工具中打开 DevFlow：
 
 ```
-Use devflow-evo.
+Use devflow.
 ```
 
 或者使用安装 Skill：
 
 ```
-Use install-devflow-evo.
+Use install-devflow.
 ```
 
 **就这么简单！** 无需安装任何依赖、无需运行脚本、无需配置。
@@ -28,7 +28,7 @@ Use install-devflow-evo.
 在 AI 工具中发送：
 
 ```
-Use devflow-evo.
+Use devflow.
 
 我想做一个用户登录功能，支持邮箱密码和 JWT 认证
 ```
@@ -69,10 +69,10 @@ Phase 8: 知识归档            → LESSONS + Domain Skills
 
 ### 5. 产物输出
 
-所有产物保存到 `.devflow-evo/<req-id>/` 目录下：
+所有产物保存到 `.devflow/<req-id>/` 目录下：
 
 ```
-.devflow-evo/
+.devflow/
 ├── <req-id>/
 │   ├── 00-strategy.md      # YC六问回答
 │   ├── 01-analysis.md      # 需求分析
@@ -94,7 +94,7 @@ Phase 8: 知识归档            → LESSONS + Domain Skills
 ### 场景1: 快速修复 Bug
 
 ```
-Use devflow-evo. Fast模式: 修复 settings 页面按钮文案 typo
+Use devflow. Fast模式: 修复 settings 页面按钮文案 typo
 ```
 
 → 直接跳到 Phase 4，完成即归档到 LESSONS。
@@ -102,7 +102,7 @@ Use devflow-evo. Fast模式: 修复 settings 页面按钮文案 typo
 ### 场景2: Brownfield 小功能
 
 ```
-Use devflow-evo. Lean模式: 在已有关账单页面增加筛选功能
+Use devflow. Lean模式: 在已有关账单页面增加筛选功能
 ```
 
 → Phase 2（轻量方案设计）→ Phase 4 → Phase 5 → Phase 8。
@@ -110,7 +110,7 @@ Use devflow-evo. Lean模式: 在已有关账单页面增加筛选功能
 ### 场景3: 探索代码结构
 
 ```
-Use devflow-evo.
+Use devflow.
 
 哪些函数调用了 auth.verify()？修改它会影响到什么？
 ```
@@ -120,7 +120,7 @@ Use devflow-evo.
 ### 场景4: 架构重构
 
 ```
-Use devflow-evo. Strict模式: 把单体应用拆分成微服务，先做用户模块
+Use devflow. Strict模式: 把单体应用拆分成微服务，先做用户模块
 ```
 
 → 完整 Phase 流程，包含设计枪战、DAG 并行任务拆分、Canary 发布。
