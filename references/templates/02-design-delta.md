@@ -1,9 +1,56 @@
 # DESIGN (Delta): <req-id>
 
 - **Req ID**: <id>
+- **template-version**: `v1.0.0`
 - **关联**: `@.devflow/<id>/01-analysis.md`、`@.devflow/CONTEXT.md`、`@.devflow/references/tech-stacks.md`
 - **作者**: AI（Architect 角色）+ 人工 review
 - **基线版本**: <如有design-baseline.md，填写版本号；首次创建写"初始"">
+
+---
+
+<!-- 必填段落清单（实际产物只出现本次变更涉及的段落，其余写"无"）
+1. 0. 技术栈选定
+2. 0.5 既有架构对齐（brownfield 必填）
+3. ADDED 技术决策
+4. MODIFIED 技术决策
+5. DEPRECATED 技术决策
+6. ADDED 数据流 / 架构图
+7. MODIFIED 数据流 / 架构图
+8. ADDED 关键状态机
+9. ADDED ADR
+10. MODIFIED ADR
+11. DEPRECATED ADR
+12. ADDED 风险
+13. MODIFIED 风险
+14. RESOLVED 风险
+15. 不在范围
+16. 9. 架构沉淀建议
+-->
+
+> ⚠️ **模板强制规则（R13.9）**：
+> - 本文件包含 **16 个必填段落**，不得省略或改写
+> - 无变更的段落写"无"，不得省略
+> - 遗漏任何段落 = 产物不完整，必须补齐
+
+**必填段落清单**（输出前逐项确认）：
+```
+□ 0. 技术栈选定
+□ 0.5 既有架构对齐（brownfield 必填）
+□ ADDED 技术决策
+□ MODIFIED 技术决策
+□ DEPRECATED 技术决策
+□ ADDED 数据流 / 架构图
+□ MODIFIED 数据流 / 架构图
+□ ADDED 关键状态机
+□ ADDED ADR
+□ MODIFIED ADR
+□ DEPRECATED ADR
+□ ADDED 风险
+□ MODIFIED 风险
+□ RESOLVED 风险
+□ 不在范围
+□ 9. 架构沉淀建议
+```
 
 ---
 

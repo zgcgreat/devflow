@@ -1,8 +1,43 @@
 # ANALYSIS (Delta): <req-id>
 
 - **Req ID**: <id>
+- **template-version**: `v1.0.0`
 - **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/CONTEXT.md`
 - **基线版本**: <如有requirements-baseline.md，填写版本号；首次创建写"初始"">
+
+---
+
+<!-- 必填段落清单（实际产物只出现本次变更涉及的段落，其余写"无"）
+1. ADDED 用户故事
+2. MODIFIED 用户故事
+3. REMOVED 用户故事
+4. ADDED 验收准则
+5. MODIFIED 验收准则
+6. REMOVED 验收准则
+7. 范围切分
+8. ADDED 非功能性需求
+9. MODIFIED 非功能性需求
+10. 依赖与假设
+-->
+
+> ⚠️ **模板强制规则（R13.9）**：
+> - 本文件包含 **10 个必填段落**，不得省略或改写
+> - 无变更的段落写"无"，不得省略
+> - 遗漏任何段落 = 产物不完整，必须补齐
+
+**必填段落清单**（输出前逐项确认）：
+```
+□ ADDED 用户故事
+□ MODIFIED 用户故事
+□ REMOVED 用户故事
+□ ADDED 验收准则
+□ MODIFIED 验收准则
+□ REMOVED 验收准则
+□ 范围切分
+□ ADDED 非功能性需求
+□ MODIFIED 非功能性需求
+□ 依赖与假设
+```
 
 ---
 

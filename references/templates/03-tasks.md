@@ -3,14 +3,23 @@
 - **Req ID**: `<req-id>`
 - **创建日期**: `<YYYY-MM-DD>`
 - **版本**: `<v1.0>`
+- **template-version**: `v1.0.0`
 - **状态**: `待确认 / 已确认 / 已关闭`
 - **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/<req-id>/01-analysis.md`、`@.devflow/<req-id>/02-design.md`
 - **作者**: AI（Planner 角色）+ 人工 review
 
 ---
 
+<!-- 必填段落清单
+1. 执行顺序
+2. 任务清单
+3. 状态字段说明
+4. 阻塞日志
+5. Fix 任务（来自 REVIEW / INTEGRATION）
+-->
+
 > ⚠️ **模板强制规则（R13.9）**：
-> - 本文件包含 **3 个必填段落**，不得省略或改写
+> - 本文件包含 **5 个必填段落**，不得省略或改写
 > - 每个任务必须包含 **7 个必填子元素**：id、name、read_files、write_files、action、verify、done
 > - 遗漏任何段落或子元素 = 产物不完整，必须补齐
 
@@ -18,7 +27,9 @@
 ```
 □ 执行顺序
 □ 任务清单
-□ 阶段完成声明
+□ 状态字段说明
+□ 阻塞日志
+□ Fix 任务（来自 REVIEW / INTEGRATION）
 ```
 
 **每个任务必填子元素**：
