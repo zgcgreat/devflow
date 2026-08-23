@@ -14,6 +14,8 @@
     "references/",
     "hooks/",
     "rules/",
+    "personas/",
+    "skills/",
     "docs/",
     "adapters/",
     "harnesses/",

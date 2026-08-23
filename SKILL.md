@@ -130,6 +130,7 @@ forge-os status                 # 状态检查
 | 文件 | 触发条件 |
 |------|---------|
 | `references/RULES-v3.md` | Strict/Audit 模式 |
+| `personas/core/*.md` | 多角色协作 / Agent 角色定义（core 8 + extended 12 技术栈 + cavecrew 3） |
 | `references/prompts/*.md` | Phase 交互模板 |
 | `domains/memory/_SKILL.md` | Phase 8 / 跨会话 |
 | `domains/expertise/_SKILL.md` | 专家审查触发 |
