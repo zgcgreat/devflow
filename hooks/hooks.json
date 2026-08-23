@@ -1,0 +1,105 @@
+{
+  "$schema": "https://forgeos.dev/hooks/v1",
+  "version": "2.0.0",
+  "description": "ForgeOS 精选 Hook 注册表 — Gate-Hook 协同模型",
+  "runtime": {
+    "required": "node >= 18",
+    "fallback": "hooks/checklist-fallback.md"
+  },
+  "hooks": {
+    "format-typecheck": {
+      "script": "scripts/format-typecheck.js",
+      "type": "stop",
+      "description": "批量格式化 + TypeScript 类型检查",
+      "gates": ["G5", "G7"],
+      "timeout_ms": 270000,
+      "fail_action": "gate_fail",
+      "scope": "production"
+    },
+    "console-log-check": {
+      "script": "scripts/console-log-check.js",
+      "type": "stop",
+      "description": "检查生产代码中残留的 console.log 语句",
+      "gates": ["G5"],
+      "timeout_ms": 30000,
+      "fail_action": "gate_fail",
+      "scope": "production"
+    },
+    "security-scan": {
+      "script": "scripts/security-scan.js",
+      "type": "stop",
+      "description": "OWASP 安全扫描（注入/SSRF/敏感数据泄露）",
+      "gates": ["G6", "G7"],
+      "timeout_ms": 60000,
+      "fail_action": "gate_fail",
+      "scope": "production",
+      "note": "需要 Python 3 运行 insaits-security-monitor.py"
+    },
+    "context-monitor": {
+      "script": "scripts/context-monitor.js",
+      "type": "post_tool_use",
+      "description": "上下文预算监控（token 耗尽/范围蔓延/工具循环预警）",
+      "gates": [],
+      "timeout_ms": 5000,
+      "fail_action": "advisory",
+      "scope": "advisory"
+    },
+    "compact-suggest": {
+      "script": "scripts/compact-suggest.js",
+      "type": "pre_tool_use",
+      "description": "智能压缩建议（逻辑断点/上下文膨胀时建议 compact）",
+      "gates": [],
+      "timeout_ms": 5000,
+      "fail_action": "advisory",
+      "scope": "advisory"
+    },
+    "cost-tracker": {
+      "script": "scripts/cost-tracker.js",
+      "type": "stop",
+      "description": "会话成本追踪（累计 token + USD 估算）",
+      "gates": [],
+      "timeout_ms": 15000,
+      "fail_action": "advisory",
+      "scope": "advisory"
+    },
+    "token-monitor": {
+      "script": "scripts/token-monitor.js",
+      "type": "post_tool_use",
+      "description": "Token 预算运行时监控（>50%提醒/>70%自动压缩/>90%暂停等待确认）",
+      "gates": [],
+      "timeout_ms": 3000,
+      "fail_action": "advisory",
+      "scope": "advisory",
+      "config": {
+        "budget_model": "claude-sonnet-4-6",
+        "total_budget": 200000,
+        "thresholds": {
+          "advisory": 0.5,
+          "compress": 0.7,
+          "pause": 0.9
+        },
+        "auto_actions": {
+          "compress": "surface-switch lite",
+          "pause": "等待用户确认继续"
+        }
+      }
+    }
+  },
+  "gate_mapping": {
+    "G5": {
+      "phase": "Phase 4 → Phase 5",
+      "hooks": ["format-typecheck", "console-log-check"],
+      "description": "构建完成后，检查代码格式+类型+调试残留"
+    },
+    "G6": {
+      "phase": "Phase 5 → Phase 6",
+      "hooks": ["security-scan"],
+      "description": "测试通过后，检查安全合规"
+    },
+    "G7": {
+      "phase": "Phase 6 → Phase 7",
+      "hooks": ["format-typecheck", "security-scan"],
+      "description": "审查通过后，最终格式+安全检查"
+    }
+  }
+}

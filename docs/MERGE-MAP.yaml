@@ -1,0 +1,376 @@
+# ForgeOS Merge Map
+# 跟踪所有文件来源和转换状态
+
+schema: v1
+project: ForgeOS
+based_on:
+  devflow: v3.2.3
+  ecc: v2.0.0-rc.1
+created: 2026-05-28
+
+entries:
+  # === M0: 项目脚手架 ===
+
+  # ForgeOS 基础文件（直接复制，无修改）
+  - target: SKILL.md
+    source: devflow/SKILL.md
+    transform: copy_then_enhance
+    status: copied
+    milestone: M0
+
+  - target: GO.md
+    source: devflow/GO.md
+    transform: copy_then_enhance
+    status: copied
+    milestone: M0
+
+  - target: CONSTITUTION.md
+    source: devflow/layers/L1-INTERACTION/CONSTITUTION.md
+    transform: merge_devflow_10_plus_ecc_2
+    status: rewritten
+    milestone: M0
+
+  - target: RULES.md
+    source: devflow/references/RULES-v3.md
+    transform: copy_base_then_append_F1_F4
+    status: rewritten
+    milestone: M0
+
+  - target: VERSION
+    source: new
+    transform: create
+    status: created
+    milestone: M0
+
+  # ForgeOS 核心目录（全量复制）
+  - target: layers/
+    source: devflow/layers/
+    transform: full_copy
+    status: copied
+    note: 22 L2 modules + 14 L3 modules + 9 L1 phases + gsd-workflows + superpowers-skills
+    milestone: M0
+
+  - target: references/
+    source: devflow/references/
+    transform: full_copy
+    status: copied
+    milestone: M0
+
+  - target: skills/
+    source: devflow/skills/
+    transform: full_copy
+    status: copied
+    milestone: M0
+
+  - target: agent-skills/
+    source: devflow/agent-skills/
+    transform: full_copy
+    status: copied
+    milestone: M0
+
+  - target: memory/
+    source: devflow/memory/
+    transform: full_copy
+    status: copied
+    milestone: M0
+
+  - target: templates-gsd/
+    source: devflow/templates-gsd/
+    transform: full_copy
+    status: copied
+    milestone: M0
+
+  - target: adapters/
+    source: devflow/adapters/
+    transform: full_copy_then_enhance
+    status: copied
+    note: 6种适配 claude-code/cursor/codex/copilot/gemini-cli/universal
+    milestone: M0
+
+  - target: mcp/
+    source: devflow/mcp/
+    transform: full_copy
+    status: copied
+    milestone: M0
+
+  # ForgeOS 新增文件
+  - target: rules/prompt-defense-baseline.md
+    source: ECC/agents/*.md (extracted common baseline)
+    transform: extract_from_agents_dedup
+    status: created
+    milestone: M0
+
+  - target: adapters/universal/README.md
+    source: new
+    transform: create
+    status: pending
+    milestone: M0
+
+  # === M1: Persona-Phase 映射 (completed) ===
+
+  - target: personas/core/planner.md
+    source: forgeos/agents/core/planner.md
+    transform: rename_agents_to_personas_remove_tools_model_add_references
+    status: created
+    note: v2.0 format: mapped_phases=[P0,P1,P1b,P3], load_policy=always, references=prompt-defense-baseline
+    milestone: M1
+
+  - target: personas/core/architect.md
+    source: forgeos/agents/core/architect.md
+    transform: rename_agents_to_personas_remove_tools_model_add_references
+    status: created
+    note: v2.0 format: mapped_phases=[P1,P1b,P2,P2a], load_policy=always
+    milestone: M1
+
+  - target: personas/core/code-reviewer.md
+    source: forgeos/agents/core/code-reviewer.md
+    transform: rename_agents_to_personas_remove_tools_model_add_references
+    status: created
+    note: v2.0 format: mapped_phases=[P6], load_policy=always
+    milestone: M1
+
+  - target: personas/core/security-reviewer.md
+    source: forgeos/agents/core/security-reviewer.md
+    transform: rename_agents_to_personas_remove_tools_model_add_references
+    status: created
+    note: v2.0 format: mapped_phases=[P5,P6], load_policy=always
+    milestone: M1
+
+  - target: personas/core/build-error-resolver.md
+    source: forgeos/agents/core/build-error-resolver.md
+    transform: rename_agents_to_personas_remove_tools_model_add_references
+    status: created
+    note: v2.0 format: mapped_phases=[P4], load_policy=always
+    milestone: M1
+
+  - target: personas/core/code-explorer.md
+    source: forgeos/agents/core/code-explorer.md
+    transform: rename_agents_to_personas_remove_tools_model_add_references
+    status: created
+    note: v2.0 format: mapped_phases=[P0,P2], load_policy=always
+    milestone: M1
+
+  - target: personas/core/refactor-cleaner.md
+    source: forgeos/agents/core/refactor-cleaner.md
+    transform: rename_agents_to_personas_remove_tools_model_add_references
+    status: created
+    note: v2.0 format: mapped_phases=[P6], load_policy=always
+    milestone: M1
+
+  - target: personas/core/tdd-guide.md
+    source: ECC/agents/tdd-guide.md
+    transform: copy_then_transform_v2_persona_format
+    status: created
+    note: v2.0新增: mapped_phases=[P5], load_policy=always, 原计划遗漏现已补入核心Persona
+    milestone: M1
+
+  - target: personas/extended/
+    source: forgeos/agents/extended/
+    transform: rename_agents_to_personas_remove_tools_model_add_references
+    status: created
+    note: 12技术栈目录, 31个扩展Persona文件, load_policy=on-demand
+    milestone: M1
+
+  - target: personas/cavecrew/cavecrew-investigator.md
+    source: caveman/agents/cavecrew-investigator.md
+    transform: copy_then_transform_v2_persona_format
+    status: created
+    note: mapped_phases=[P2,P6], load_policy=on-demand
+    milestone: M1
+
+  - target: personas/cavecrew/cavecrew-builder.md
+    source: caveman/agents/cavecrew-builder.md
+    transform: copy_then_transform_v2_persona_format
+    status: created
+    note: mapped_phases=[P4], load_policy=on-demand
+    milestone: M1
+
+  - target: personas/cavecrew/cavecrew-reviewer.md
+    source: caveman/agents/cavecrew-reviewer.md
+    transform: copy_then_transform_v2_persona_format
+    status: created
+    note: mapped_phases=[P6], load_policy=on-demand
+    milestone: M1
+
+  - target: docs/PERSONA-PHASE-MAP.md
+    source: new
+    transform: create
+    status: created
+    note: 完整Persona-Phase映射表, 7核心+扩展+Cavecrew, Token预算
+    milestone: M1
+
+  - target: layers/L1-INTERACTION/phase-*/_SKILL.md (9 files)
+    source: existing
+    transform: append_forgeos_enhancement_paragraphs
+    status: modified
+    note: 9个Phase追加ForgeOS增强段落含Persona列表+协作指令
+    milestone: M1
+
+  # === M2: 统一 Hook 抽象层 (completed) ===
+
+  - target: layers/L2-ENGINE/hook-bridge/_SKILL.md
+    source: new
+    transform: create
+    status: created
+    note: 双Layer设计(L0+L1+L2 Chain-Trigger), 8 Hook映射表, 降级协议, Gate-Hook协同
+    milestone: M2
+
+  - target: hooks/markdown-hooks.yaml
+    source: new
+    transform: create
+    status: created
+    note: 8 Markdown Hook定义 + 2 Chain定义(context-cascade, phase6-to-7-cascade)
+    milestone: M2
+
+  - target: layers/L1-INTERACTION/phase-4-build/_SKILL.md
+    source: existing
+    transform: add_gate_hook_recommendation_steps
+    status: modified
+    note: G5 Gate增强: Step1 Hook自动检查 + Step2 人工决策
+    milestone: M2
+
+  - target: layers/L1-INTERACTION/phase-5-test/_SKILL.md
+    source: existing
+    transform: add_gate_hook_recommendation_steps
+    status: modified
+    note: G6 Gate增强: Step1 Hook自动检查(security-scan) + Step2 人工决策
+    milestone: M2
+
+  - target: layers/L1-INTERACTION/phase-6-review/_SKILL.md
+    source: existing
+    transform: add_gate_hook_recommendation_steps
+    status: modified
+    note: G7 Gate增强: Step1 Hook自动检查(format+security) + Step2 人工决策
+    milestone: M2
+
+  # === M3: 安全+回滚增强 (completed) ===
+
+  - target: skills/specialized/security/security-review/SKILL.md
+    source: ECC/skills/security-review/SKILL.md
+    transform: copy_then_transform_forgeos_format
+    status: created
+    note: OWASP Top 10深度安全审查, mapped_phase=P6
+    milestone: M3
+
+  - target: skills/specialized/security/security-scan/SKILL.md
+    source: ECC/skills/security-scan/SKILL.md
+    transform: copy_then_transform_forgeos_format
+    status: created
+    note: 自动化安全扫描, mapped_phase=P5
+    milestone: M3
+
+  - target: skills/specialized/security/gateguard/SKILL.md
+    source: ECC/skills/gateguard/SKILL.md
+    transform: copy_then_transform_forgeos_format
+    status: created
+    note: Gate增强+Hook推荐+人工覆盖, mapped_phase=all
+    milestone: M3
+
+  - target: skills/specialized/security/safety-guard/SKILL.md
+    source: ECC/skills/safety-guard/SKILL.md
+    transform: copy_then_transform_forgeos_format
+    status: created
+    note: 安全防护+危险模式检测, mapped_phase=P4,P5,P6
+    milestone: M3
+
+  - target: rules/golang/*.md (4 files: security/coding-style/patterns/testing)
+    source: new
+    transform: create
+    status: created
+    note: Go语言安全+编码风格+模式+测试规则
+    milestone: M3
+
+  - target: rules/kotlin/*.md (4 files)
+    source: new
+    transform: create
+    status: created
+    milestone: M3
+
+  - target: rules/swift/*.md (4 files)
+    source: new
+    transform: create
+    status: created
+    milestone: M3
+
+  - target: layers/L1-INTERACTION/phase-4-build/_SKILL.md
+    source: existing
+    transform: append_safety_pre_reminder
+    status: modified
+    note: 安全前置提醒段落(硬编码密钥/SQL拼接/XSS/认证检查)
+    milestone: M3
+
+  - target: layers/L1-INTERACTION/phase-5-test/_SKILL.md
+    source: existing
+    transform: append_safety_review_paragraph
+    status: modified
+    note: 安全审查(ForgeOS增强)段落(OWASP/认证绕过/依赖扫描)
+    milestone: M3
+
+  - target: layers/L1-INTERACTION/phase-6-review/_SKILL.md
+    source: existing
+    transform: append_safety_review_paragraph
+    status: modified
+    note: 安全审查(ForgeOS增强)段落(安全影响评估/边界检查/回归)
+    milestone: M3
+
+  # === M4: 双维度自适应引擎 (completed) ===
+
+  - target: docs/TOKEN-BUDGET.md
+    source: new
+    transform: create
+    status: created
+    note: 各Phase Token估算 + Scale×TechStack增量表 + 五档预算 + 优化策略
+    milestone: M4
+
+  - target: layers/L1-INTERACTION/phase-0-strategy/_SKILL.md
+    source: existing
+    transform: append_dual_dimension_detection
+    status: modified
+    note: ForgeOS增强段落含双维度检测(Scale+TechStack)和Gate0报告模板
+    milestone: M4
+
+  # === M5: 渐进式运行时 (completed) ===
+
+  - target: SKILL.md
+    source: existing
+    transform: add_3_level_runtime_detection
+    status: modified
+    note: 头部添加三级运行时检测(Level0/1/2 + 降级规则)
+    milestone: M5
+
+  - target: adapters/claude-code/hooks.json
+    source: new
+    transform: create
+    status: created
+    note: 8 Hook映射到hooks/scripts/含Gate映射
+    milestone: M5
+
+  - target: adapters/copilot/README.md
+    source: new
+    transform: create
+    status: created
+    note: Copilot Level0 适配说明
+    milestone: M5
+
+  - target: adapters/gemini-cli/README.md
+    source: new
+    transform: create
+    status: created
+    note: Gemini CLI Level0 适配说明
+    milestone: M5
+
+  # === M6: 统一进化引擎 (completed) ===
+
+  - target: docs/EVOLUTION-MODEL.md
+    source: new
+    transform: create
+    status: created
+    note: 知识+数据+融合三层统一模型, Jaccard交叉验证算法, 进化周期表
+    milestone: M6
+
+  - target: layers/L1-INTERACTION/phase-8-archive/_SKILL.md
+    source: existing
+    transform: append_unified_evolution_engine
+    status: modified
+    note: ForgeOS增强段落含统一进化引擎(LearningWorkflow+evaluate-session交叉验证)
+    milestone: M6

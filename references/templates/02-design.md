@@ -1,0 +1,272 @@
+# DESIGN: <req-id>
+
+- **Req ID**: `<req-id>`
+- **创建日期**: `<YYYY-MM-DD>`
+- **版本**: `<v1.0>`
+- **template-version**: `v1.0.0`
+- **状态**: `待确认 / 已确认 / 已关闭`
+- **关联**: `@.forgeos/<req-id>/00-requirements.md`、`@.forgeos/<req-id>/01-analysis.md`
+- **作者**: AI（Architect 角色）+ 人工 review
+
+---
+
+<!-- 必填段落清单
+1. 0. 技术栈选定
+2. 0.5 既有架构对齐（brownfield 必填）
+3. 1. 决策清单
+4. 宪法检查
+5. 复杂性追踪
+6. 2. 数据流 / 架构图
+7. 3. 关键状态机（如有）
+8. 4. ADR 索引
+9. 5. 风险
+10. 6. 不在范围
+11. 7. 测试策略
+12. 8. 部署与运维
+13. 9. 架构沉淀建议
+-->
+
+> 📌 **主模板**: 此为 02-design.md 主模板。delta 变体 (02-design-delta.md) 仅用于增量变更场景，由 Phase 1b 判定是否使用。
+
+> ⚠️ **模板强制规则（R13.9）**：
+> - 本文件包含 **13 个必填段落**，不得省略或改写
+> - 所有 `<...>` 占位符必须替换为实际值
+> - 遗漏任何段落 = 产物不完整，必须补齐
+
+**必填段落清单**（输出前逐项确认）：
+```
+□ 0. 技术栈选定
+□ 0.5 既有架构对齐（brownfield 必填）
+□ 1. 决策清单
+□ 宪法检查
+□ 复杂性追踪
+□ 2. 数据流 / 架构图
+□ 3. 关键状态机（如有）
+□ 4. ADR 索引
+□ 5. 风险
+□ 6. 不在范围
+□ 7. 测试策略
+□ 8. 部署与运维
+□ 9. 架构沉淀建议
+```
+
+---
+
+## 0. 技术栈选定
+
+> 由 2-design 步骤 0 锁定。变栈视为开启新需求（R7.1）。
+
+- **选定**：<编号 + 名称>（例：1 Next.js 全栈）
+- **前端**：<具体框架 + 版本>（例：Next.js 14.2 / React 18 / TypeScript 5）
+- **后端**：<具体框架 + 版本>（例：Next.js API Routes / Server Actions）
+- **数据库**：<选型 + 版本>（例：Postgres 16 via Supabase）
+- **部署**：<平台>（例：Vercel + Supabase）
+- **关键依赖**：<3~5 个核心>（例：Tailwind v4 / Drizzle ORM / next-auth）
+- **理由**：<一句话，结合 AC + 非功能性需求>
+- **明确排除**：<1~2 个不选的栈 + 理由>
+
+---
+
+## 0.5 既有架构对齐（brownfield 必填 · 来自 2-design 步骤 0.5 / B2 老项目护栏）
+
+> 新创项目可整段写 N/A。
+
+### 0.5.1 本次需求 触碰的既有模块
+
+```
+触碰模块（grep 出来的实际清单）：
+- src/services/user-service.ts（既有）
+- src/api/auth/*（既有路由组）
+- src/components/Modal.tsx（既有 · 复用）
+
+新增模块：
+- src/features/notifications/*
+
+禁动清单（与本次无关，AI 不许"顺手"碰）：
+- src/services/payment-service.ts
+- src/components/Layout.tsx
+- src/api/admin/*
+```
+
+### 0.5.2 既有抽象沿用对照表
+
+| 本次需要 | 既有有没有？路径 | 决定 |
+|---|---|---|
+| HTTP 客户端 | `src/lib/api-client.ts` | 沿用 |
+| 状态管理 | zustand（package.json） | 用现有 store 范式 |
+| 表单校验 | `src/utils/validation.ts` | 沿用 |
+| 通知组件 | 没有 | 新建（理由：第一次有此需求）|
+
+### 0.5.3 沿用模式 vs 引入新模式
+
+```
+- 数据访问：**沿用** Repository 模式（既有 src/repos/* 都是这风格）
+- 错误处理：**沿用** ErrorBoundary + toast
+- API 路由：**沿用** src/api/<domain>/route.ts 风格
+- 通知存储：**引入新模式** → 理由：通知是新业务域，独立 service + repo（已批准）
+```
+
+---
+
+## 1. 决策清单
+
+| # | 决策 | 备选 | 选择理由 | 取舍代价 |
+|---|---|---|---|---|
+| D1 | <例：使用 React Context 管理主题> | Redux / Zustand | <为什么选 Context> | <跨远距离传递性能不优，本场景不存在> |
+| D2 | …… | | | |
+
+---
+
+## 宪法检查 (Constitution Gate · 融合 spec-kit)
+
+> 来源: 融合 spec-kit Constitutional Foundation
+> 强制门禁: 所有技术决策必须符合 `.forgeos/memory/constitution.md`（新项目首次创建后生效）
+
+### Phase -1: 实现前门禁
+
+#### 简单性门禁 (Article VII)
+
+- [ ] 使用 ≤3 个项目？
+- [ ] 没有过度设计？
+
+#### 反抽象门禁 (Article VIII)
+
+- [ ] 直接使用框架？
+- [ ] 单一模型表示？
+
+#### 集成优先门禁 (Article IX)
+
+- [ ] 契约已定义？
+- [ ] 契约测试已编写？
+
+### 逐条宪法合规
+
+| 宪法条款 | 检查项 | 通过? | 原因 |
+|---|---|---|---|
+| Article I (库优先) | 功能先作为独立库存在 | ☐ | |
+| Article II (CLI 接口) | 库暴露 CLI 接口 | ☐ | |
+| Article III (测试先行) | 测试在实现前编写 | ☐ | |
+| Article VII (简单性) | ≤3 个项目 | ☐ | |
+| Article VIII (反抽象) | 直接使用框架 | ☐ | |
+| Article IX (集成优先) | 契约已定义 | ☐ | |
+
+### 违规说明
+
+如有违规，在下方的复杂性追踪表中填写理由。
+
+---
+
+## 复杂性追踪
+
+> 仅在宪法检查有违规需要充分理由时填写
+
+| 违规项 | 为什么需要 | 被拒绝的更简方案及原因 |
+|--------|-----------|----------------------|
+| <例：第4个项目> | <当前需求> | <为什么3个项目不够> |
+| <例：Repository 模式> | <具体问题> | <为什么直接访问数据库不够> |
+
+---
+
+## 2. 数据流 / 架构图
+
+```
+<ASCII 框图或 Mermaid，例：>
+
+  User ──click──> ThemeToggle
+                      │
+                      v
+                ThemeContext (state)
+                      │
+                      ├──> document.documentElement (data-theme)
+                      └──> localStorage
+```
+
+## 3. 关键状态机（如有）
+
+<状态/事件/转移列表>
+
+## 4. ADR 索引
+
+凡 D1~Dn 中可逆性低的，单独写 ADR：
+- `@.forgeos/adr/001-theme-storage.md`
+- ……
+
+## 5. 风险
+
+| # | 风险 | 影响 | 概率 | 缓解 |
+|---|---|---|---|---|
+| R1 | <例：localStorage 在隐私模式不可用> | 主题不持久 | 中 | 降级到 sessionStorage + 友好提示 |
+| R2 | …… | | | |
+
+> 至少 3 条；含实现风险 / 上线风险 / 长期债务各一条。
+
+## 6. 不在范围
+
+- <列出"这次设计不解决但未来要解决"的事项，避免 TASK 阶段误以为遗漏>
+
+---
+
+## 7. 测试策略
+
+- **测试类型**：<单元/集成/E2E/性能/安全>
+- **测试框架**：<Jest/Playwright/Pytest/其他>
+- **覆盖率目标**：<行覆盖率/分支覆盖率/函数覆盖率，百分比>
+- **关键测试场景**：<对应 AC 的核心场景列表>
+- **Mock/Stub 策略**：<哪些外部依赖需要 mock>
+- **CI 集成**：<测试命令、触发条件、失败策略>
+
+---
+
+## 8. 部署与运维
+
+- **部署方式**：<Docker/K8s/Vercel/其他>
+- **环境变量**：<关键 env vars 列表>
+- **健康检查**：<health check endpoint 或方式>
+- **日志/监控**：<日志级别、监控指标>
+- **回滚策略**：<快速回滚方案>
+- **数据迁移**：<如有数据库变更，迁移方向>
+
+---
+
+## 9. 架构沉淀建议（本需求 完成后供 `A-evolve` 同步用 · 软约束）
+
+> 这是**给未来的礼物**，不是必填。AI 写 DESIGN 时如果发现本需求 引入了"项目级有复用价值"的东西，列在这里。
+> 没引入新东西就整段写 `本需求 无架构层面沉淀建议`。
+> 后续用户跑 `@.forgeos/references/prompts/A-evolve.md` 会扫这段，逐项 review，批准的内容 patch 到 `.forgeos/memory/CONTEXT.md`。
+
+### 9.1 新增的可复用抽象（建议 append 到 CONTEXT 「既有抽象索引」段）
+
+| 路径 | 能力 | 触发场景 | 复用建议 |
+|---|---|---|---|
+| `<例：src/lib/cache.ts>` | <例：通用 LRU 缓存封装> | <例：API 响应缓存> | <例：以后所有需要缓存的地方先用它> |
+
+### 9.2 新增 / 改变的项目级技术决策（建议 append 到 CONTEXT「已锁技术决策」段 · 或将来升 system-architecture.md「ADR 列表」）
+
+| 决策 | 取值 | 影响范围 | 推翻代价 |
+|---|---|---|---|
+| <例：缓存层选型> | <例：Redis（替代 in-memory）> | <例：所有需要缓存的服务> | <例：迁移成本高，至少 1 周> |
+
+### 9.3 新增 / 修改的跨模块契约（API / Schema / 事件总线）（建议 append 到 CONTEXT「跨模块契约」段）
+
+```
+- <例：新增 GET/POST /api/cache/* 一组路由，认证沿用 session>
+- <例：events.cache.invalidated 事件，payload: { keys: string[] }>
+- <例：表 cache_entries 主键 (key, namespace)，TTL 字段必填>
+```
+
+### 9.4 新增 / 升级的依赖（建议 append 到 CONTEXT「技术栈」段）
+
+| 包 | 版本 | 用途 | 是否替换既有 |
+|---|---|---|---|
+| <例：ioredis> | <例：5.4.0> | <例：Redis 客户端> | <例：是 → 替换原本的 node-redis> |
+
+### 9.5 禁动清单变化（建议 patch CONTEXT「禁动清单」段）
+
+```
+- 新增禁动：<例：src/lib/cache.ts 不允许绕过直接 import ioredis>
+- 解禁：<例：原 src/legacy/cache-old.ts 标记 deprecated 可拆，由本需求 替代>
+```
+
+---
+
+> 本文件不包含完整代码实现。函数签名、伪代码、接口定义可以；函数体不行。

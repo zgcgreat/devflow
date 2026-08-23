@@ -1,0 +1,32 @@
+name: minimal
+description: 最小预设 — 适合个人项目和快速原型
+
+overrides:
+  phase-0:
+    skip: true
+  phase-1:
+    skip: true
+  phase-2a:
+    skip: true
+  phase-3:
+    simplified: true
+  phase-4:
+    assumption_declaration: false
+    change_boundary_check: false
+    wip_checkpoint: false
+    real_time_review: light
+  phase-5:
+    browser_qa: false
+  phase-6:
+    owasp_stride: false
+    red_flags: false
+  phase-7:
+    skip: true
+  phase-8:
+    simplified: true
+
+rules:
+  disabled: [R14, R29, R30, R31]
+
+hooks:
+  disabled: [console-log-check, security-scan]

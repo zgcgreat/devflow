@@ -1,0 +1,321 @@
+---
+name: scale-domain-adaptive
+version: 3.0.0
+layer: L2-ENGINE
+gate: internal
+requires: []
+provides: [dynamic-planning-depth, domain-complexity-mapping, scale-detection, techstack-detection, workflow-adaptation]
+dependencies:
+  - phase-0 (module dependency)
+  - hooks-system (module dependency)
+description: BMAD-METHOD inspired dynamic planning depth — auto-adjust Phase granularity based on project scale and domain complexity
+source: BMAD-METHOD domain-complexity.csv + bmad-create-architecture workflow selection
+external-inputs: [project-context]
+---
+
+# Scale-Domain-Adaptive — 动态规划深度
+
+## 核心能力
+
+借鉴 BMAD-METHOD 的领域复杂度矩阵,根据项目规模(domain signals)和领域复杂度自动调整 Phase 规划深度。
+**小项目快速通过,大项目精细打磨。**
+
+## 设计理念
+
+ForgeOS v3.2 之前是**固定粒度**的 Phase 流程,无论项目是 5 个文件的脚本还是 500 模块的微服务架构。
+Scale-Domain-Adaptive 引入三级粒度映射:
+
+| 项目规模 | Phase 粒度 | Phase 数量 | 适用场景 |
+|---------|-----------|-----------|---------|
+| **Lite** (≤3 模块) | 压缩 | 5-7 步 | 个人脚本、demo、快速原型 |
+| **Standard** (4-20 模块) | 标准 | 9-11 步 | 中小型项目、单一功能迭代 |
+| **Enhanced** (21-100 模块) | 增强 | 11-13 步 | 中型项目、跨模块重构 |
+| **Advanced** (>100 模块) | 精细 | 13-15 步 | 大型系统、微服务、架构演进 |
+
+## 领域复杂度映射
+
+基于 BMAD-METHOD 的 `domain-complexity.csv`,扩展为更完整的信号库:
+
+### 复杂度评估规则
+
+```yaml
+# 领域信号扫描 → 复杂度评级
+domain_signal_scanner:
+  high_compliance_domains:
+    - fintech: ["banking", "payment", "trading", "PCI", "GDPR"]
+    - healthcare: ["HIPAA", "FDA", "patient", "clinical"]
+    - government: ["accessibility", "security_clearance", "audit"]
+    → 强制: Enhanced 起步, Phase 2 增加 compliance check
+
+  high_concurrency_domains:
+    - social: ["real-time", "feed", "notification", "websocket"]
+    - iot: ["sensor", "edge", "MQTT", "Kafka"]
+    - gaming: ["multiplayer", "real-time", "matchmaking"]
+    → 强制: Enhanced 起步, Phase 4 增加 load testing
+
+  high_data_domains:
+    - media: ["CDN", "streaming", "encoding", "S3"]
+    - education: ["LMS", "video", "progress_tracking"]
+    - process_control: ["SCADA", "PLC", "MES", "real-time"]
+    → 强制: Enhanced 起步, Phase 5 增加 data integrity test
+
+  standard_domains:
+    - productivity: ["tasks", "workflow", "collaboration"]
+    - e_commerce: ["cart", "checkout", "payment"]
+    - blog: ["posts", "comments", "markdown"]
+    → Standard 粒度
+```
+
+### 信号检测算法
+
+```
+Phase 0 (启动) 自动执行:
+
+1. 扫描项目根目录结构
+   ├── 统计模块数 (package.json dependencies / requirements.txt packages / Go modules)
+   ├── 检测领域信号文件 (.domain-signals / bmads-domain.json)
+   └── 检测项目特征文件 (Dockerfile, docker-compose, monorepo 结构)
+
+2. 根据模块数量定规模等级:
+   - ≤3 模块 → Lite (5-7 Phase)
+   - 4-20 模块 → Standard (9-11 Phase)
+   - 21-100 模块 → Enhanced (11-13 Phase)
+   - >100 模块 → Advanced (13-15 Phase)
+
+3. 根据领域复杂度升/降级:
+   - 检测到 high_compliance 信号 → +1 级粒度
+   - 检测到 high_concurrency 信号 → +1 级粒度
+   - 用户手动指定 /forgeos:scale [lite|standard|enhanced|advanced] → 覆盖自动检测
+
+4. 输出 Scale 报告:
+   "项目规模: Standard (12 模块)
+    领域信号: e_commerce (cart, checkout, payment) → 未触发强制升规
+    最终粒度: Standard (11 Phase, 含标准 Phase 0-8 + G0-G8)"
+```
+
+## TechStack 维度检测
+
+Scale-Domain-Adaptive 在检测项目规模和领域复杂度的同时，也检测项目的技术栈(TechStack)，以决定加载哪些扩展 Persona。
+
+### 检测方法
+
+Phase 0 启动时，扫描项目文件确定技术栈:
+
+1. **文件扩展名扫描**: 检测以下扩展名的出现频率
+   - `.py` / `.go` / `.rs` / `.java` / `.kt` / `.dart` / `.cpp` / `.swift` / `.ts` / `.tsx`
+2. **配置文件扫描**: 检测项目根目录下的构建/依赖配置
+   - `requirements.txt` / `go.mod` / `Cargo.toml` / `pom.xml` / `build.gradle` / `pubspec.yaml` / `CMakeLists.txt` / `Package.swift` / `tsconfig.json`
+
+### TechStack 分类
+
+| TechStack | 触发信号 | 扩展 Persona |
+|-----------|---------|-------------|
+| **Python** | `.py` 文件 + `requirements.txt` | python-specialist, django/flask-specialist |
+| **Go** | `.go` 文件 + `go.mod` | go-specialist, goroutine-concurrency |
+| **Rust** | `.rs` 文件 + `Cargo.toml` | rust-specialist, memory-safety-reviewer |
+| **Java** | `.java` 文件 + `pom.xml`/`build.gradle` | java-specialist, jvm-performance |
+| **Kotlin** | `.kt` 文件 + `build.gradle`(kotlin) | kotlin-specialist, coroutines-specialist |
+| **Flutter** | `.dart` 文件 + `pubspec.yaml` | flutter-specialist, widget-reviewer |
+| **C++** | `.cpp`/`.h` 文件 + `CMakeLists.txt` | cpp-specialist, memory-safety-reviewer |
+| **Swift** | `.swift` 文件 + `Package.swift` | swift-specialist, ios-reviewer |
+| **TypeScript** | `.ts`/`.tsx` 文件 + `tsconfig.json` | typescript-specialist, react/vue-reviewer |
+
+**跨切面 TechStack** (可与任意主栈组合):
+
+| 跨切面维度 | 触发信号 | 扩展 Persona |
+|-----------|---------|-------------|
+| **Database** | ORM/迁移文件 (prisma, alembic, flyway) | db-specialist, migration-reviewer |
+| **Network** | API 定义文件 (openapi.yaml, protobuf, graphql) | api-contract-specialist |
+| **Performance** | 性能配置 (benchmark 文件, k6, jmeter) | performance-optimizer |
+
+### 加载影响
+
+- 每个检测到的 TechStack 触发加载对应的扩展 Persona
+- 主栈 Persona 在 Phase 1(需求)即加载; 跨切面 Persona 在对应 Phase 按需加载
+- 多栈项目(如 TypeScript + Python)同时加载所有检测到的主栈 Persona
+
+### Scale x TechStack 决策矩阵
+
+TechStack 检测与 Scale 检测联合决定 Persona 加载策略:
+
+| Scale | 单 TechStack | 多 TechStack |
+|-------|-------------|-------------|
+| **Lite** | 主栈 Persona + 基础审查 | 每栈仅加载主 specialist |
+| **Standard** | 主栈 + 1 跨切面 Persona | 每栈主 specialist + 共享跨切面 |
+| **Enhanced** | 主栈 + 全跨切面 Persona | 全栈 specialist + 全跨切面 |
+| **Advanced** | 全加载 + 领域专属 Persona | 全加载 + 领域专属 + 交叉审查 |
+
+## Phase 粒度映射
+
+### Lite 模式 (5-7 Phase)
+
+```
+压缩 Phase 序列:
+  G0 → Phase 1 → Phase 3 → Phase 4 → Phase 5 → Phase 8
+  (需求 → 设计 → 实施 → 测试 → 归档)
+  跳过: Phase 0 (快速启动), Phase 2 (精简设计), Phase 6/7 (跳过独立审查)
+```
+
+### Standard 模式 (9-11 Phase)
+
+```
+标准 Phase 序列 (默认):
+  G0 → Phase 0 → Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5 → Phase 6 → Phase 7 → Phase 8
+  (启动 → 需求 → 设计 → 任务分解 → 实施 → 测试 → 审查 → 发布 → 归档)
+```
+
+### Enhanced 模式 (11-13 Phase)
+
+```
+增强 Phase 序列:
+  + Phase 2.5 (compliance/security review, 仅 high_compliance 领域)
+  + Phase 4.5 (load/performance testing, 仅 high_concurrency 领域)
+  + Phase 6.5 (data integrity review, 仅 high_data 领域)
+  → 总计 12-14 Phase
+```
+
+### Advanced 模式 (13-15 Phase)
+
+```
+精细 Phase 序列:
+  + Phase 2.5 (compliance/security review)
+  + Phase 3.5 (dependency impact analysis, 使用 codegraph-bridge)
+  + Phase 4.5 (load/performance testing + integration test)
+  + Phase 6.5 (security audit + data integrity)
+  + Phase 7.5 (canary deployment with metrics)
+  + Phase 8.5 (post-decision monitoring window)
+  → 总计 15-16 Phase
+```
+
+## Hooks 集成
+
+Scale-Domain-Adaptive 与 hooks-system 深度集成:
+
+| Hooks 钩子 | Scale 联动 |
+|-----------|----------|
+| **Phase-Transition** | 根据 Scale 级别决定 checkpoint 详细程度 |
+| **Context-Monitor** | Advanced 模式阈值更严格 (warn:40, compress:60) |
+| **Tool-Execution** | Enhanced/Advanced 模式下自动审计所有工具调用 |
+
+```yaml
+# Scale 感知的 Hooks 默认配置
+hooks_defaults_by_scale:
+  lite:
+    context-monitor:
+      check_interval: 150  # 减少检查频率
+      warn: 60
+      compress: 80
+    phase-transition:
+      checkpoint_detail: minimal  # 仅保存 SUMMARY
+    tool-execution:
+      audit_all: false
+      max_calls_per_phase: 50
+
+  standard:
+    context-monitor:
+      check_interval: 100
+      warn: 50
+      compress: 70
+    phase-transition:
+      checkpoint_detail: normal
+    tool-execution:
+      audit_all: false
+      max_calls_per_phase: 100
+
+  enhanced:
+    context-monitor:
+      check_interval: 80
+      warn: 45
+      compress: 65
+    phase-transition:
+      checkpoint_detail: detailed  # 保存 SUMMARY + DAG snapshot
+    tool-execution:
+      audit_all: true  # 审计所有调用
+      max_calls_per_phase: 150
+
+  advanced:
+    context-monitor:
+      check_interval: 60  # 高频检查
+      warn: 40  # 更低的 warn 阈值
+      compress: 60
+    phase-transition:
+      checkpoint_detail: full  # 保存 SUMMARY + DAG + CodeGraph index + build manifest
+    tool-execution:
+      audit_all: true
+      max_calls_per_phase: 200
+```
+
+## 用户命令
+
+```bash
+# 手动指定 Scale (覆盖自动检测)
+/forgeos:scale lite|standard|enhanced|advanced
+
+# 查看当前 Scale 状态
+/forgeos:scale status
+
+# 运行时动态调整 Scale (触发 surface-switch 联动)
+/forgeos:scale enhanced  # → 自动扩展 Phase 序列 + 调整 Hooks 配置
+```
+
+## 与 BMAD-METHOD 对比
+
+| 特性 | BMAD-METHOD | ForgeOS |
+|------|-----------|-----------|
+| **复杂度评估** | domain-complexity.csv 静态表 | 动态扫描 + 信号检测 |
+| **流程选择** | 硬编码 standard/enhanced/advanced | 自动映射到 Phase 粒度 |
+| **信号来源** | 人工维护 .domain-signals | 自动扫描目录结构 + package.json + Dockerfile |
+| **Phase 映射** | bmad-sprint-planning 手动选择 | 自动映射到 G0-G8 门控链 |
+| **Hooks 联动** | 无 | Context-Monitor/Phase-Transition 自动适配 |
+| **运行时调整** | 不支持 | `/forgeos:scale` 动态切换 |
+
+## Phase 集成
+
+### Phase 0 (启动) — Scale 检测入口
+- 执行信号扫描算法
+- 输出 Scale 报告
+- 用户可手动覆盖
+- 触发 hooks-system 加载对应的 hooks_defaults_by_scale
+
+### Phase 3 (任务分解) — Scale 感知
+- Lite: 直接生成任务列表,不分 Wave
+- Standard: 标准 Wave 分割
+- Enhanced/Advanced: Wave + 依赖 DAG + codegraph affected 影响分析
+
+### Phase 4 (实施) — Scale 感知
+- Lite: 直接实施,Phase 4→5 转换
+- Standard: 标准 Wave 执行
+- Enhanced/Advanced: Wave + Phase-Transition checkpoint 保存详细快照
+
+### Phase 8 (归档) — Scale 感知
+- Lite: 仅保存 SUMMARY
+- Standard: SUMMARY + LESSONS
+- Enhanced: SUMMARY + LESSONS + Domain-Skills
+- Advanced: SUMMARY + LESSONS + Domain-Skills + 完整回滚点
+
+## Error Taxonomy (P0 → P3)
+
+| Level | Name | Definition | Action | Execution Impact |
+|-------|------|------------|--------|------------------|
+| **P0** | BLOCKING | Core operation fails with unrecoverable state corruption | Halt, rollback to last checkpoint, escalate | Blocks dependent operations |
+| **P1** | RECOVERABLE | Operation fails but state remains consistent | Retry 3x with exponential backoff (1s→2s→4s); if still fails → document, mark NEEDS_WORK | No cross-skill impact |
+| **P2** | WARNING | Operation succeeds with quality degradation | Document in SUMMARY, do NOT block execution | Continue normally |
+| **P3** | DEGRADATION | Operation timeout or resource exhaustion | Cancel current sub-operation, mark PARTIAL_PASS, log to heartbeat | Cancels current op; next cycle may proceed |
+
+**Severity Assignment Rules**:
+- Default to P1 for any operation failure
+- Escalate to P0 if state corruption detected or dependent operations affected
+- Never demote: once P0, only manual override can clear
+
+## Boundary Conditions
+
+### When to Escalate Immediately
+- Operation produces corrupted output → halt and rollback
+- Dependency unavailable and no fallback → halt, report missing dependency
+
+### When to Skip Operation
+- Input preconditions not met → skip, log reason, proceed to next step
+- Already completed in current session → skip (idempotency)
+
+### Degradation Path
+1. Full operation → 2. Retry with backoff → 3. Fallback/skip → 4. Halt and report

@@ -1,0 +1,35 @@
+name: enterprise
+description: 企业预设 — 全量 Phase + 最严格审查
+
+overrides:
+  phase-0:
+    push_back: true
+    require_evidence: true
+  phase-2a:
+    variants: 6
+    taste_memory: true
+    accessibility_check: true
+  phase-4:
+    assumption_declaration: true
+    change_boundary_check: true
+    wip_checkpoint: true
+    real_time_review: full
+  phase-5:
+    browser_qa: true
+    visual_regression: true
+  phase-6:
+    owasp_stride: true
+    red_flags: true
+    red_team: true
+  phase-7:
+    canary_required: true
+  phase-8:
+    vector_memory_sync: true
+    graduation_required: true
+
+rules:
+  additional:
+    - "所有 API 必须有 OpenAPI 文档"
+    - "数据库迁移必须有 rollback 脚本"
+    - "所有 PR 必须经过至少 2 人审查"
+    - "生产部署必须有监控告警"

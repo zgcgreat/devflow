@@ -1,0 +1,10 @@
+# ForgeOS 运行时状态（由 init/doctor 生成，非项目源）
+.forgeos/
+
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+
+# 日志
+*.log

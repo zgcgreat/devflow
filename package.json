@@ -1,0 +1,37 @@
+{
+  "name": "forge-os",
+  "version": "3.2.2",
+  "description": "ForgeOS v3.2.2 — AI 开发操作系统 (融合 ForgeOS) — 19 个顶级 AI 开发项目的统一内核",
+  "bin": {
+    "forge-os": "bin/forge-os.js",
+    "forgeos": "bin/forge-os.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "domains/",
+    "layers/",
+    "references/",
+    "hooks/",
+    "memory/",
+    "docs/",
+    "adapters/",
+    "harnesses/",
+    "test/",
+    "SKILL.md",
+    "GO.md",
+    "CONSTITUTION.md",
+    "README.md"
+  ],
+  "keywords": [
+    "ai-development",
+    "development-workflow",
+    "phase-pipeline",
+    "code-intelligence",
+    "party-mode"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

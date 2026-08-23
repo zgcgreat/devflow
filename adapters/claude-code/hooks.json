@@ -1,0 +1,97 @@
+{
+  "$schema": "https://forgeos.dev/adapters/claude-code/hooks/v1",
+  "version": "1.0.0",
+  "description": "ForgeOS Claude Code Adapter — Hook 映射注册表",
+  "runtime": {
+    "required": "node >= 18",
+    "adapter_home": "${FORGEOS_HOME}/adapters/claude-code",
+    "scripts_root": "${FORGEOS_HOME}/hooks/scripts"
+  },
+  "hooks": {
+    "session-startup": {
+      "event": "SessionStart",
+      "script": "scripts/context-monitor.js",
+      "args": ["--mode", "startup"],
+      "description": "Load ForgeOS project state, memory, and token budget on session start",
+      "gates": [],
+      "timeout_ms": 10000,
+      "fail_action": "advisory"
+    },
+    "phase-context-inject": {
+      "event": "UserPromptSubmit",
+      "script": "scripts/context-monitor.js",
+      "args": ["--mode", "phase-context"],
+      "description": "Inject current phase context and persona recommendations before prompt processing",
+      "gates": [],
+      "timeout_ms": 5000,
+      "fail_action": "advisory"
+    },
+    "format-typecheck": {
+      "event": "PreCommit",
+      "script": "scripts/format-typecheck.js",
+      "description": "Batch formatting + TypeScript type check before commit",
+      "gates": ["G5", "G7"],
+      "timeout_ms": 270000,
+      "fail_action": "gate_fail"
+    },
+    "console-log-check": {
+      "event": "PreCommit",
+      "script": "scripts/console-log-check.js",
+      "description": "Detect residual console.log statements in production code",
+      "gates": ["G5"],
+      "timeout_ms": 30000,
+      "fail_action": "gate_fail"
+    },
+    "security-scan": {
+      "event": "PreCommit",
+      "script": "scripts/security-scan.js",
+      "description": "OWASP security scan (injection/SSRF/sensitive data exposure)",
+      "gates": ["G6", "G7"],
+      "timeout_ms": 60000,
+      "fail_action": "gate_fail",
+      "note": "Requires Python 3 for insaits-security-monitor.py"
+    },
+    "compact-suggest": {
+      "event": "PostToolUse",
+      "script": "scripts/compact-suggest.js",
+      "description": "Suggest context compaction at logical breakpoints or when context expands",
+      "gates": [],
+      "timeout_ms": 5000,
+      "fail_action": "advisory"
+    },
+    "cost-tracker": {
+      "event": "PostToolUse",
+      "script": "scripts/cost-tracker.js",
+      "description": "Track cumulative session cost (token count + USD estimate)",
+      "gates": [],
+      "timeout_ms": 15000,
+      "fail_action": "advisory"
+    },
+    "gate-enforcement": {
+      "event": "PreCommit",
+      "script": "scripts/context-monitor.js",
+      "args": ["--mode", "gate-check"],
+      "description": "Run gate-mapped hooks and report pass/fail before phase transition",
+      "gates": ["G5", "G6", "G7"],
+      "timeout_ms": 300000,
+      "fail_action": "gate_fail"
+    }
+  },
+  "gate_mapping": {
+    "G5": {
+      "phase": "Phase 4 -> Phase 5",
+      "hooks": ["format-typecheck", "console-log-check"],
+      "description": "Build complete: check code format + type + debug residuals"
+    },
+    "G6": {
+      "phase": "Phase 5 -> Phase 6",
+      "hooks": ["security-scan"],
+      "description": "Tests pass: check security compliance"
+    },
+    "G7": {
+      "phase": "Phase 6 -> Phase 7",
+      "hooks": ["format-typecheck", "security-scan"],
+      "description": "Review pass: final format + security check"
+    }
+  }
+}

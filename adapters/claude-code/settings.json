@@ -1,0 +1,16 @@
+{
+  "forgeos": {
+    "enabled": true,
+    "autoInject": true,
+    "bridgePath": "../shared/core-bridge.js",
+    "memoryPath": ".forgeos/memory",
+    "statePath": ".forgeos/state.json",
+    "compressionLevel": "full",
+    "gateChecking": true,
+    "statusline": {
+      "enabled": true,
+      "showPhase": true,
+      "showProgress": true
+    }
+  }
+}
