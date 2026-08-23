@@ -39,3 +39,5 @@ node bin/forge-os.js install --target workbuddy
 node bin/forge-os.js doctor   # 核心文件完整性自检
 node test/all.js              # 完整性验证套件（16 项：文件/frontmatter/门控顺序/版本一致性等）
 ```
+
+> Windows cmd 下中文输出可能乱码（GBK 代码页），先执行 `chcp 65001` 切换 UTF-8；或直接看测试结果末尾的 ASCII 行 `RESULT: N/16 passed, M failed`。

@@ -326,6 +326,8 @@ TESTS.forEach(t => {
 console.log('='.repeat(50));
 console.log(`结果: ${passCount} 通过, ${failCount} 失败, ${TESTS.length} 总计`);
 console.log(`状态: ${failCount === 0 ? '✅ 全部通过' : '❌ 存在问题'}`);
+// ASCII-only 结果行：Windows cmd (GBK) 与 CI 日志下中文/emoji 可能乱码，以此行为准
+console.log(`RESULT: ${passCount}/${TESTS.length} passed, ${failCount} failed`);
 console.log('='.repeat(50));
 
 process.exit(failCount > 0 ? 1 : 0);

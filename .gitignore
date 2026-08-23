@@ -9,6 +9,9 @@ build/
 # 日志
 *.log
 
+# Python 编译缓存
+__pycache__/
+
 # 审计/验证工作残留目录（非项目源）
 _e2e*/
 _proj/
