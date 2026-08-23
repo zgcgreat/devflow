@@ -62,11 +62,29 @@ function parseArgs() {
   return opts;
 }
 
+/**
+ * 定位产物文件：先查 dir 根，再查 dir 下一层子目录（req-id 目录）。
+ * GO.md 协议要求产物保存到 .forgeos/<req-id>/ 下，而历史布局为 .forgeos/ 根目录，
+ * 两种位置均视为有效（修复: 只查根目录导致按协议存放的产物被误判 FAIL）。
+ */
+function findArtifact(dir, name) {
+  const direct = path.join(dir, name);
+  if (fs.existsSync(direct)) return direct;
+  try {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (!e.isDirectory()) continue;
+      const p = path.join(dir, e.name, name);
+      if (fs.existsSync(p)) return p;
+    }
+  } catch { /* dir 不可读时仅返回 null */ }
+  return null;
+}
+
 function checkGate(gate, dir) {
   console.log(`\n🔍 ${gate.name} (${gate.artifacts.join(', ')}) [${gate.type}]`);
-  console.log(`   目录: ${dir}/`);
+  console.log(`   目录: ${dir}/ (支持根目录与 <req-id>/ 子目录)`);
 
-  const missing = gate.artifacts.filter(a => !fs.existsSync(path.join(dir, a)));
+  const missing = gate.artifacts.filter(a => !findArtifact(dir, a));
 
   if (missing.length === 0) {
     console.log(`   ✅ PASS — 所有产物存在`);
@@ -105,4 +123,4 @@ if (require.main === module) main();
 
 // 作为库被 adapters/shared/core-bridge.js require 时：绝不运行 CLI、绝不 process.exit，
 // 仅导出派生后的门控映射（修正历史 bug：require 时误触 CLI exit(1) 且未导出）。
-module.exports = { GATES, PHASES, GATE_MAP, findGate, checkGate, buildGateMap };
+module.exports = { GATES, PHASES, GATE_MAP, findGate, checkGate, buildGateMap, findArtifact };

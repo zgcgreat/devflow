@@ -194,6 +194,39 @@ function main() {
     return;
   }
 
+  if (opts.deps) {
+    // 依赖图: 解析每个文件的 import，尝试将相对路径解析到实际文件
+    const files = findFiles(targetDir);
+    const fileSet = new Set(files.map(f => path.resolve(f)));
+    const resolveLocal = (fromFile, spec) => {
+      const base = path.resolve(path.dirname(fromFile), spec);
+      const candidates = [
+        base,
+        `${base}.js`, `${base}.ts`, `${base}.jsx`, `${base}.tsx`,
+        path.join(base, 'index.js'), path.join(base, 'index.ts'),
+      ];
+      return candidates.find(c => fileSet.has(path.resolve(c))) || null;
+    };
+
+    const deps = files.map(f => {
+      const imports = extractSymbols(f).filter(s => s.type === 'import');
+      const internal = [], external = [];
+      for (const imp of imports) {
+        if (imp.name.startsWith('.')) {
+          const hit = resolveLocal(f, imp.name);
+          if (hit) internal.push(hit); else external.push(imp.name); // 未解析的相对路径按外部处理
+        } else {
+          external.push(imp.name);
+        }
+      }
+      return { file: f, internal, external };
+    }).filter(d => d.internal.length > 0 || d.external.length > 0);
+
+    const result = { files: deps.length, edges: deps.flatMap(d => d.internal.map(t => ({ from: d.file, to: t }))) };
+    console.log(opts.json ? JSON.stringify(result, null, 2) : formatDeps(deps));
+    return;
+  }
+
   // Default: show help
   console.log(`🔬 ForgeOS Code Explorer
 
@@ -238,6 +271,17 @@ function formatImpact(result) {
   lines.push(`\n  Impacted files:`);
   result.impactedFiles.forEach(f => lines.push(`    ${f}`));
   if (result.suggested) lines.push(`    ${result.suggested}`);
+  return lines.join('\n');
+}
+
+function formatDeps(deps) {
+  const lines = [`📦 Dependency graph: ${deps.length} files with imports\n`];
+  deps.forEach(d => {
+    const rel = path.relative(process.cwd(), d.file);
+    lines.push(`  ${rel}`);
+    d.internal.forEach(t => lines.push(`    → ${path.relative(process.cwd(), t)}`));
+    if (d.external.length > 0) lines.push(`    ⊘ external: ${d.external.slice(0, 10).join(', ')}${d.external.length > 10 ? ` (+${d.external.length - 10})` : ''}`);
+  });
   return lines.join('\n');
 }
 

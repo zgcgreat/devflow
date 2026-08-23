@@ -238,19 +238,18 @@ const CMDS = {
 
   code: (args) => {
     // 直接调用 code-explorer
+    // execFileSync + 参数数组（不经 shell），避免多词参数/含空格路径被拆词截断
     const child = require('child_process');
     const explorer = path.join(FORGE_OS_HOME, 'domains', 'code-intel', 'code-explorer.js');
     const passArgs = process.argv.slice(process.argv.indexOf('code') + 1);
-    const result = child.execSync(`node "${explorer}" ${passArgs.join(' ')}`, { encoding: 'utf-8' });
-    console.log(result);
+    child.execFileSync(process.execPath, [explorer, ...passArgs], { stdio: 'inherit' });
   },
 
   caveman: (args) => {
     const child = require('child_process');
     const caveman = path.join(FORGE_OS_HOME, 'domains', 'memory', 'caveman.js');
     const passArgs = process.argv.slice(process.argv.indexOf('caveman') + 1);
-    const result = child.execSync(`node "${caveman}" ${passArgs.join(' ')}`, { encoding: 'utf-8' });
-    console.log(result);
+    child.execFileSync(process.execPath, [caveman, ...passArgs], { stdio: 'inherit' });
   },
 
   gates: (args) => {
@@ -258,12 +257,9 @@ const CMDS = {
     const gateCheck = path.join(FORGE_OS_HOME, 'domains', 'hooks', 'gate-check.js');
     const passArgs = process.argv.slice(process.argv.indexOf('gates') + 1);
     try {
-      const result = child.execSync(`node "${gateCheck}" ${passArgs.join(' ')}`, { encoding: 'utf-8' });
-      console.log(result);
+      child.execFileSync(process.execPath, [gateCheck, ...passArgs], { stdio: 'inherit' });
     } catch (err) {
-      // gate-check 在门控未通过时返回非零退出码 (预期行为)，仍打印其输出而非抛异常
-      if (err.stdout) console.log(err.stdout);
-      if (err.stderr) console.error(err.stderr);
+      // gate-check 在门控未通过时返回非零退出码 (预期行为)，输出已通过 stdio inherit 打印，不抛异常
       process.exitCode = 1;
     }
   },

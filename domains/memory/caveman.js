@@ -42,7 +42,8 @@ const ULTRA_RULES = [
 
 const WENYAN_RULES = [
   ...ULTRA_RULES,
-  (t) => t.replace(/[^：。！？\n\w\s\d]/g, ''),
+  // \u4e00-\u9fff: CJK 统一表意文字 — JS 的 \w 不含中文，不保留会删光所有中文字符
+  (t) => t.replace(/[^：。！？\n\w\s\d\u4e00-\u9fff]/g, ''),
   (t) => t.split('\n').filter(l => l.trim().length > 3).join('\n'),
   (t) => t.replace(/\b(?:very|really|quite|extremely|highly|absolutely|completely|totally|definitely)\b/gi, ''),
 ];
@@ -123,7 +124,8 @@ function parseArgs() {
     if (args[i] === '--compress') opts.compress = args[++i];
     else if (args[i] === '--file') opts.file = args[++i];
     else if (args[i] === '--compress-memory') opts.compressMemory = args[++i];
-    else if (args[i] === '--compress-level') opts.level = args[++i];
+    // --level 是 bin/forge-os.js HELP 与 README 文档化的参数名；--compress-level 为兼容别名
+    else if (args[i] === '--level' || args[i] === '--compress-level') opts.level = args[++i];
     else if (args[i] === '--stats') opts.stats = true;
     else if (args[i] === '--json') opts.json = true;
   }
