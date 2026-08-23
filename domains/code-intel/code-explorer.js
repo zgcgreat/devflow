@@ -107,16 +107,18 @@ function extractSymbols(filePath) {
 
 function analyzeCallChain(symbolName, symbols) {
   const definitions = symbols.filter(s => s.name === symbolName && s.type !== 'import');
-  const callers = symbols.filter(s => s.type === 'import' && s.name.includes(symbolName) || s.type === 'function');
+  // 显式括号化（原写法依赖 && 优先于 || 的隐式优先级，易误读）；近似引用计数
+  const callers = symbols.filter(s => (s.type === 'import' && s.name.includes(symbolName)) || s.type === 'function');
   return { symbol: symbolName, definitions, callers: callers.length };
 }
 
 function calculateImpact(filePath, allFiles) {
+  const target = path.resolve(filePath);
   const base = path.basename(filePath, path.extname(filePath));
-  const dir = path.dirname(filePath);
   const impacted = allFiles.filter(f => {
-    const content = fs.readFileSync(f, 'utf-8');
-    return content.includes(base) && f !== filePath;
+    // 用 resolve 后路径比较（原写法相对 vs 绝对路径直接 !==，目标文件会把自己算进影响面）
+    if (path.resolve(f) === target) return false;
+    try { return fs.readFileSync(f, 'utf-8').includes(base); } catch { return false; }
   });
   return {
     target: filePath,

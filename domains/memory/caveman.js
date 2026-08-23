@@ -188,4 +188,6 @@ Usage:
 `);
 }
 
-main();
+// 与其他 lib 模块保持一致: require 时不自动运行 CLI，并导出核心 API
+if (require.main === module) main();
+module.exports = { compress, compressFile, compressDir, RULES };

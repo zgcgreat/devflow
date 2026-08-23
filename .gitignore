@@ -8,3 +8,9 @@ build/
 
 # 日志
 *.log
+
+# 审计/验证工作残留目录（非项目源）
+_e2e*/
+_proj/
+_verify*/
+_skill_list.txt

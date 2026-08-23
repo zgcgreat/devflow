@@ -277,8 +277,8 @@ Step 3.4: Grep降级声明
 | "扫描代码" | `forge-os code --scan <目录>` | 入场扫描 |
 | "我的需求变了" | Phase 0+1 | 归档旧Req，重新确认 |
 | "继续" | 下一阶段Phase | 按顺序执行 |
-| "caveman extreme" | - | 通信压缩到最简 |
-| "压缩文本" | `forge-os caveman --compress [level]` | 手动触发压缩 (lite/full/ultra/extreme/wenyan) |
+| "caveman wenyan" | - | 通信压缩到最简 |
+| "压缩文本" | `forge-os caveman --compress [level]` | 手动触发压缩 (lite/full/ultra/wenyan) |
 | "预算管理" | 参考 `references/token-budget.md` | Token 预算规则 (暂无独立 CLI) |
 
 ### C. 阶段门验证
@@ -318,7 +318,7 @@ Mode: <Fast/Lean/Standard/Strict>
 |-----------|------------|
 | Stage Skills (`skills/stage-skills/`) | 保留，内部重新路由到三层架构 |
 | 记忆系统 (`memory/`) | 保留并扩展 LESSONS + domain-skills |
-| Token压缩 (/caveman) | 保留，统一4级支持(lite/full/ultra/extreme) |
+| Token压缩 (/caveman) | 保留，统一4级支持(lite/full/ultra/wenyan) |
 | spec-kit集成 (Phase 2输入) | 保留，PRD桥接 |
 | OpenSpec集成 (Phase 8归档) | 保留，proposal/design/tasks接口 |
 | `references/gate-rules.md` | 保留 + R4升级 |

@@ -36,7 +36,6 @@ node bin/forge-os.js install --target workbuddy
 ## 验证
 
 ```bash
-node bin/forge-os.js doctor
+node bin/forge-os.js doctor   # 核心文件完整性自检
+node test/all.js              # 完整性验证套件（16 项：文件/frontmatter/门控顺序/版本一致性等）
 ```
-
-> 注：当前仓库以 CLI 自检（doctor）为主要验证入口。完整自动化测试套件处于规划与补齐中，后续将提供 `test/all.js`。

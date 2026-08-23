@@ -13,7 +13,7 @@
     "layers/",
     "references/",
     "hooks/",
-    "memory/",
+    "rules/",
     "docs/",
     "adapters/",
     "harnesses/",

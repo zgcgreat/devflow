@@ -53,6 +53,8 @@
 
 ## R6 · Token 压缩策略
 
+> ⚠️ 级别命名对齐 caveman 引擎的 4 级 (lite/full/ultra/wenyan)：本节 Full/Ultra/Extreme 分别对应 full/ultra/wenyan，触发阈值为上下文规模策略，与引擎压缩率标注 (~50%/~65%/~70%) 互为参考。
+
 - **R6.1** Full 压缩（默认）：wenyan-style 文言压缩，保留结构
 - **R6.2** Ultra 压缩：上下文 > 100K tokens 时触发，压缩率 ~75%
 - **R6.3** Extreme 压缩：上下文 > 180K tokens 时触发，压缩率 ~90%，仅保留关键决策点
@@ -364,7 +366,7 @@ done
 
 ## R27 · 假设声明 ⭐v3.5
 
-- **R27.1** Phase 4 每个 Task 开始前必须声明技术假设（见 `layers/L2-ENGINE/assumption-declaration/SKILL.md`）
+- **R27.1** Phase 4 每个 Task 开始前必须声明技术假设（见 `layers/L2-ENGINE/assumption-declaration/_SKILL.md`）
 - **R27.2** 不确定的假设必须标记为"需确认"，在执行前获得确认
 - **R27.3** 基于已确认假设的执行计划可立即开始，不确定项预留接口
 - **R27.4** Fast 模式可跳过假设声明，Standard/Strict 模式必须执行
