@@ -51,26 +51,18 @@ const CMDS = {
     const mode = args.includes('--mode') ? args[args.indexOf('--mode') + 1] : 'standard';
     const forgeosDir = path.resolve('.forgeos');
 
-    // 使用 ForgeOS Phase 引擎
-    if (fs.existsSync(path.join(FORGE_OS_HOME, 'layers', 'L1-INTERACTION'))) {
-      console.log(`ForgeOS 已初始化
+    // 用 Phase 引擎初始化，确保 currentPhase 与模式匹配 (fast=4 / lean=2 / standard|strict=0)
+    fs.mkdirSync(path.resolve(forgeosDir, 'memory'), { recursive: true });
+    fs.mkdirSync(path.resolve(forgeosDir, 'outputs'), { recursive: true });
+    const engine = require('../lib/phase-engine');
+    const e = new engine.PhaseEngine();
+    const r = e.setMode(mode);
+
+    console.log(`ForgeOS 已初始化
   模式: ${mode.toUpperCase()}
+  起始 Phase: ${r.startPhase}
   目录: ${forgeosDir}
   核心: GO.md (Step 1-12) + layers/L1-INTERACTION/ (Phase 0-8)`);
-
-      // 创建 .forgeos 状态
-      fs.mkdirSync(path.resolve(forgeosDir, 'memory'), { recursive: true });
-      fs.mkdirSync(path.resolve(forgeosDir, 'outputs'), { recursive: true });
-      fs.writeFileSync(path.resolve(forgeosDir, 'state.json'), JSON.stringify({
-        mode, currentPhase: 0, gates: {}, outputs: {}, createdAt: new Date().toISOString()
-      }, null, 2));
-    } else {
-      // 回退到 forge-os 自建引擎
-      const engine = require('../lib/phase-engine');
-      const e = new engine.PhaseEngine();
-      e.setMode(mode);
-      console.log(`ForgeOS 已初始化 (回退模式: Phase 引擎未找到)`);
-    }
 
     // 创建 GO.md Step 1 期望的记忆骨架 + 项目宪法 (单轨一致, 幂等)
     const memDir = path.join(forgeosDir, 'memory');
@@ -123,16 +115,65 @@ const CMDS = {
   phase: (args) => {
     const engine = require('../lib/phase-engine');
     const e = new engine.PhaseEngine();
+    if (args.includes('--mode')) {
+      const mode = args[args.indexOf('--mode') + 1];
+      const r = e.setMode(mode);
+      console.log(`模式设为: ${mode.toUpperCase()}, 从 Phase ${r.startPhase} 开始`);
+      return;
+    }
     if (args.includes('--next')) {
-      const p = e.nextPhase();
+      const force = args.includes('--force');
+      const p = e.nextPhase({ force });
+      if (p.blocked) {
+        console.log(`⛔ 阻止推进: ${p.reason}`);
+        process.exit(1);
+      }
       console.log(`下一阶段: Phase ${p.id} — ${p.name}`);
-    } else if (args.includes('--gate')) {
+      return;
+    }
+    if (args.includes('--output')) {
+      const filePath = args[args.indexOf('--output') + 1];
+      const phase = e.current();
+      e.outputWritten(phase.id, path.resolve(filePath));
+      const after = e._verifyCurrentGate();
+      if (after.passed) {
+        console.log(`Phase ${phase.id} 产物已记录: ${filePath}`);
+        console.log(`Phase ${phase.id} 门控已通过 ✅`);
+      } else {
+        console.log(`Phase ${phase.id} 产物已记录: ${filePath}`);
+        console.log(`⚠️ 仍有门控未通过: ${after.reason}`);
+      }
+      return;
+    }
+    if (args.includes('--gate')) {
       const gate = args[args.indexOf('--gate') + 1];
       e.gatePassed(gate);
-      console.log(`门控 ${gate} 通过`);
-    } else {
-      console.log(e.current());
+      console.log(`门控 ${gate} 已通过`);
+      return;
     }
+    if (args.includes('--status')) {
+      const s = e.status();
+      console.log(`ForgeOS Phase 状态
+  模式: ${s.mode}
+  当前: Phase ${s.currentPhase} — ${s.currentName}
+  进度: ${s.progress}
+  门控: ${Object.keys(s.gates).length} 个已通过
+  产出: ${Object.keys(s.outputs).length} 个已记录
+  门控合规: ${s.gateCompliant ? '✅' : '⛔ ' + s.gateStatus}`);
+      return;
+    }
+    if (args.includes('--list')) {
+      const displayMode = e.state.mode || 'standard';
+      const phases = e.listPhases(displayMode);
+      console.log(`ForgeOS Phase 管线 (模式: ${displayMode})`);
+      phases.forEach(p => {
+        const status = p.active ? '' : ' [跳过]';
+        console.log(`  Phase ${p.id} ${p.name.padEnd(20)} ${p.gate.padEnd(6)} ${p.output.padEnd(20)}${status}`);
+      });
+      return;
+    }
+    // default: 当前 Phase 信息
+    console.log(e.current());
   },
 
   task: (args) => {
