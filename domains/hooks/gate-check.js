@@ -101,4 +101,8 @@ function main() {
   process.exit(allPass ? 0 : 1);
 }
 
-main();
+if (require.main === module) main();
+
+// 作为库被 adapters/shared/core-bridge.js require 时：绝不运行 CLI、绝不 process.exit，
+// 仅导出派生后的门控映射（修正历史 bug：require 时误触 CLI exit(1) 且未导出）。
+module.exports = { GATES, PHASES, GATE_MAP, findGate, checkGate, buildGateMap };

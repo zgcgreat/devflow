@@ -12,7 +12,7 @@ const { findProjectDir, FORGEOS_DIR } = require('./core-bridge');
 
 const MEMORY_DIR = 'memory';
 const LESSONS_FILE = 'LESSONS.md';
-const STATE_FILE = 'STATE.md';
+const STATE_FILE = 'state.json';
 const CONTEXT_FILE = 'CONTEXT.md';
 
 // ─── 加载函数 ───────────────────────────────────────────
@@ -25,7 +25,7 @@ function loadAll(projectDir) {
     domainSkills: [],
   };
 
-  // STATE.md
+  // state.json
   const statePath = path.join(projectDir, FORGEOS_DIR, STATE_FILE);
   if (fs.existsSync(statePath)) {
     result.state = fs.readFileSync(statePath, 'utf8');

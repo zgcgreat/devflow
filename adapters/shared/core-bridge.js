@@ -14,7 +14,7 @@ const path = require('path');
 // ─── 常量 ──────────────────────────────────────────────
 
 const FORGEOS_DIR = '.forgeos';
-const STATE_FILE = 'STATE.md';
+const STATE_FILE = 'state.json';
 const MEMORY_DIR = 'memory';
 const LESSONS_FILE = 'LESSONS.md';
 
@@ -50,19 +50,21 @@ function findProjectDir(startDir = process.cwd()) {
 
 function readState(projectDir) {
   const statePath = path.join(projectDir, FORGEOS_DIR, STATE_FILE);
-  if (!fs.existsSync(statePath)) return { phase: 0, mode: 'standard', progress: 0, gateStatus: {} };
+  if (!fs.existsSync(statePath)) return { phase: 0, mode: 'standard', progress: 0, gates: {}, outputs: {} };
 
-  const content = fs.readFileSync(statePath, 'utf8');
-  const phaseMatch = content.match(/current_phase:\s*(\d+(?:\.\d+)?)/i);
-  const modeMatch = content.match(/mode:\s*(fast|lean|standard|strict)/i);
-  const progressMatch = content.match(/progress:\s*(\d+)%/i);
-
-  return {
-    phase: phaseMatch ? parseFloat(phaseMatch[1]) : 0,
-    mode: modeMatch ? modeMatch[1] : 'standard',
-    progress: progressMatch ? parseInt(progressMatch[1]) : 0,
-    rawContent: content,
-  };
+  try {
+    const state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+    return {
+      phase: typeof state.currentPhase === 'number' ? state.currentPhase : 0,
+      mode: state.mode || 'standard',
+      progress: 0,
+      gates: state.gates || {},
+      outputs: state.outputs || {},
+      rawContent: JSON.stringify(state),
+    };
+  } catch (e) {
+    return { phase: 0, mode: 'standard', progress: 0, gates: {}, outputs: {} };
+  }
 }
 
 // ─── 门禁检查 ───────────────────────────────────────────
@@ -94,24 +96,24 @@ function loadGateRules(projectDir) {
   if (fs.existsSync(gateCheckPath)) {
     try {
       const gateModule = require(gateCheckPath);
-      if (gateModule.GATES) return gateModule.GATES;
+      if (gateModule.GATE_MAP) return gateModule.GATE_MAP;
     } catch (e) { /* fallback */ }
   }
 
-  // Fallback: 静态门控规则
+  // Fallback: 静态门控规则 (与 lib/phase-engine.js 权威定义保持一致)
   return {
-    G0: { phase: 0, artifacts: [], label: 'Strategy', type: 'manual' },
-    G1: { phase: 1, artifacts: ['00-strategy.md'], label: 'Analysis', type: 'manual' },
-    G2: { phase: 1, artifacts: ['01-analysis.md'], label: 'Requirements', type: 'auto' },
-    'G2.5': { phase: 1.5, artifacts: ['CONTEXT.md'], label: 'Discuss', type: 'manual' },
-    G3: { phase: 2, artifacts: ['02-design.md'], label: 'Design', type: 'manual' },
-    'G3.5': { phase: 2.5, artifacts: ['02a-variants.md'], label: 'Shotgun', type: 'manual' },
-    G4: { phase: 3, artifacts: ['03-tasks.md'], label: 'TaskPlan', type: 'auto' },
-    G5: { phase: 4, artifacts: [], label: 'Build', type: 'auto' },
-    G6: { phase: 5, artifacts: ['05-test-results.md'], label: 'Test', type: 'auto' },
-    G7: { phase: 6, artifacts: ['06-review.md'], label: 'Review', type: 'manual' },
-    'G7.5': { phase: 7, artifacts: ['07a-canary-report.md'], label: 'Canary', type: 'manual' },
-    G8: { phase: 8, artifacts: ['08-archive-manifest.md'], label: 'Archive', type: 'auto' },
+    G0:    { phase: 0,   artifacts: ['00-strategy.md'],    label: 'Strategy',     type: 'auto' },
+    G1:    { phase: 1,   artifacts: ['01-analysis.md'],    label: 'Analysis',     type: 'auto' },
+    G2:    { phase: 1,   artifacts: ['01-analysis.md'],    label: 'Architecture', type: 'manual' },
+    'G2.5':{ phase: 1.5, artifacts: ['01b-context.md'],    label: 'Discuss',      type: 'manual' },
+    G3:    { phase: 2,   artifacts: ['02-design.md'],      label: 'Design',       type: 'manual' },
+    'G3.5':{ phase: 2.5, artifacts: ['02a-variants.md'],   label: 'Shotgun',      type: 'manual' },
+    G4:    { phase: 3,   artifacts: ['03-tasks.md'],       label: 'TaskPlan',     type: 'auto' },
+    G5:    { phase: 4,   artifacts: ['04-wave-logs.md'],   label: 'Build',        type: 'manual' },
+    G6:    { phase: 5,   artifacts: ['05-test-report.md'], label: 'Test',         type: 'auto' },
+    G7:    { phase: 6,   artifacts: ['06-review.md'],      label: 'Review',       type: 'manual' },
+    'G7.5':{ phase: 7,   artifacts: ['07-canary.md'],      label: 'Canary',       type: 'manual' },
+    G8:    { phase: 8,   artifacts: ['08-archive.md'],     label: 'Archive',      type: 'auto' },
   };
 }
 
@@ -129,7 +131,7 @@ function loadMemory(projectDir) {
     result.lessons = fs.readFileSync(lessonsPath, 'utf8');
   }
 
-  // 加载 STATE.md 作为项目上下文
+  // 加载 state.json 作为项目上下文
   const statePath = path.join(projectDir, FORGEOS_DIR, STATE_FILE);
   if (fs.existsSync(statePath)) {
     result.projectContext = fs.readFileSync(statePath, 'utf8');

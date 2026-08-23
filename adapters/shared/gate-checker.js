@@ -15,18 +15,18 @@ const { findProjectDir, FORGEOS_DIR } = require('./core-bridge');
 // ─── 门控定义 ───────────────────────────────────────────
 
 const GATES = {
-  G0:   { phase: 0,   artifacts: [],                              label: 'Strategy',  type: 'manual' },
-  G1:   { phase: 1,   artifacts: ['00-strategy.md'],              label: 'Analysis',   type: 'manual' },
-  G2:   { phase: 1,   artifacts: ['01-analysis.md'],              label: 'Requirements', type: 'auto' },
-  'G2.5': { phase: 1.5, artifacts: ['CONTEXT.md'],               label: 'Discuss',    type: 'manual' },
-  G3:   { phase: 2,   artifacts: ['02-design.md'],                label: 'Design',     type: 'manual' },
-  'G3.5': { phase: 2.5, artifacts: ['02a-variants.md'],          label: 'Shotgun',    type: 'manual' },
-  G4:   { phase: 3,   artifacts: ['03-tasks.md'],                  label: 'TaskPlan',   type: 'auto' },
-  G5:   { phase: 4,   artifacts: [],                               label: 'Build',      type: 'auto' },
-  G6:   { phase: 5,   artifacts: ['05-test-results.md'],           label: 'Test',       type: 'auto' },
-  G7:   { phase: 6,   artifacts: ['06-review.md'],                 label: 'Review',     type: 'manual' },
-  'G7.5': { phase: 7,   artifacts: ['07a-canary-report.md'],       label: 'Canary',     type: 'manual' },
-  G8:   { phase: 8,   artifacts: ['08-archive-manifest.md'],       label: 'Archive',    type: 'auto' },
+  G0:   { phase: 0,   artifacts: ['00-strategy.md'],               label: 'Strategy',     type: 'auto' },
+  G1:   { phase: 1,   artifacts: ['01-analysis.md'],               label: 'Analysis',     type: 'auto' },
+  G2:   { phase: 1,   artifacts: ['01-analysis.md'],               label: 'Architecture', type: 'manual' },
+  'G2.5': { phase: 1.5, artifacts: ['01b-context.md'],            label: 'Discuss',      type: 'manual' },
+  G3:   { phase: 2,   artifacts: ['02-design.md'],                 label: 'Design',       type: 'manual' },
+  'G3.5': { phase: 2.5, artifacts: ['02a-variants.md'],           label: 'Shotgun',      type: 'manual' },
+  G4:   { phase: 3,   artifacts: ['03-tasks.md'],                  label: 'TaskPlan',     type: 'auto' },
+  G5:   { phase: 4,   artifacts: ['04-wave-logs.md'],              label: 'Build',        type: 'manual' },
+  G6:   { phase: 5,   artifacts: ['05-test-report.md'],            label: 'Test',         type: 'auto' },
+  G7:   { phase: 6,   artifacts: ['06-review.md'],                 label: 'Review',       type: 'manual' },
+  'G7.5': { phase: 7,   artifacts: ['07-canary.md'],              label: 'Canary',       type: 'manual' },
+  G8:   { phase: 8,   artifacts: ['08-archive.md'],                label: 'Archive',      type: 'auto' },
 };
 
 // ─── 检查逻辑 ───────────────────────────────────────────

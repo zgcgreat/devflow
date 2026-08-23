@@ -216,8 +216,15 @@ const CMDS = {
     const child = require('child_process');
     const gateCheck = path.join(FORGE_OS_HOME, 'domains', 'hooks', 'gate-check.js');
     const passArgs = process.argv.slice(process.argv.indexOf('gates') + 1);
-    const result = child.execSync(`node "${gateCheck}" ${passArgs.join(' ')}`, { encoding: 'utf-8' });
-    console.log(result);
+    try {
+      const result = child.execSync(`node "${gateCheck}" ${passArgs.join(' ')}`, { encoding: 'utf-8' });
+      console.log(result);
+    } catch (err) {
+      // gate-check 在门控未通过时返回非零退出码 (预期行为)，仍打印其输出而非抛异常
+      if (err.stdout) console.log(err.stdout);
+      if (err.stderr) console.error(err.stderr);
+      process.exitCode = 1;
+    }
   },
 
   install: (args) => {
