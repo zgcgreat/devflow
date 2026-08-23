@@ -54,7 +54,7 @@ Step 3   · GitNexus可选检测 (detect → prompt → grep fallback)
   ├─ Standard: Phase 0→1→1b→2→2a→4→5→6→7→8（跳过 3，完整流程）
   └─ Strict:   Phase 0→1→1b→2→2a→3→4→5→6→7→8（全量 Phase）
 
-Phase 详细流程详见 docs/phases/phase-N.md
+Phase 详细流程详见 docs/phases/（phase-0-strategy.md ~ phase-7-canary-archive.md）
 ```
 
 ---

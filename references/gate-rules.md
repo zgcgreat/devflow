@@ -36,9 +36,12 @@ G0:Strategy  G1:5Whys   G2.5:Discuss  G3:Design   G3.5:Shotgun  G4:TaskPlan
 
 ## 阶段门验证表
 
+> 下表「必须存在的前置产物」指**进入该 Phase 前需具备的上游产物**（即上一阶段输出）。
+> 上方依赖图下行（如 `G1 → 01-analysis`）表示该 Gate 的**本阶段产物**，输入/输出语义不同，二者不冲突。
+
 | 路由目标 | Gate | 必须存在的前置产物 | 缺失时处理 |
 |---------|------|-------------------|---|
-| Phase 1 (5 Whys) | G1 | `.forgeos/<id>/00-strategy.md` | 先走 Phase 0 |
+| Phase 1 (5 Whys) | G1 | `00-strategy.md` | 先走 Phase 0 |
 | Phase 1b (Discuss) | G2.5 | `00-strategy.md` + `01-analysis.md` | 先补 Phase 1 |
 | Phase 2 (Design) | G3 | `01-analysis.md` + `01b-context.md` | 先补 Phase 1b |
 | Phase 2a (Shotgun) | G3.5 | `02-design.md` | 先走 Phase 2 |
