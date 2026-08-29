@@ -104,12 +104,19 @@ node adapters/shared/memory-loader.js budget  # Token 预算
 3. 将 shared/ 核心逻辑链接到运行时配置
 4. 验证配置生效
 
-## 与现有 hooks 的关系
+## 与 hooks 的关系（迁移已完成）
 
-现有 `hooks/` 目录下的 3 个 Claude Code hooks 保持不变。新增 `adapters/` 是对它们的抽象和扩展：
-- `hooks/session-start.js` → `adapters/shared/core-bridge.js` + `adapters/claude-code/hooks.json`
-- `hooks/statusline.js` → `adapters/shared/core-bridge.js` + statusline 适配
-- `hooks/user-prompt.js` → `adapters/shared/core-bridge.js` + 各运行时规则注入
+> **历史记录**：原 `hooks/` 下 3 个 Claude Code 专用 hook 已抽象进 `adapters/`，
+> 旧文件均已移除。下表为当时的映射关系，**请勿再按旧路径引用**。
+
+| 旧路径（已删除） | 迁移后 |
+|---|---|
+| `hooks/session-start.js` | `adapters/shared/core-bridge.js` + `adapters/claude-code/hooks.json` |
+| `hooks/statusline.js` | `adapters/shared/core-bridge.js` + statusline 适配 |
+| `hooks/user-prompt.js` | `adapters/shared/core-bridge.js` + 各运行时规则注入 |
+
+当前 `hooks/` 目录仅保留**运行时无关的通用脚本**（`hooks/scripts/`、`hooks/lib/`）
+以及 `hooks/hooks.json`、`hooks/markdown-hooks.yaml`。
 
 ## 未来扩展
 

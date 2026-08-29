@@ -63,18 +63,20 @@ function parseArgs() {
 }
 
 /**
- * 定位产物文件：先查 dir 根，再查 dir 下一层子目录（req-id 目录）。
- * GO.md 协议要求产物保存到 .forgeos/<req-id>/ 下，而历史布局为 .forgeos/ 根目录，
- * 两种位置均视为有效（修复: 只查根目录导致按协议存放的产物被误判 FAIL）。
+ * 递归定位产物文件（限深 3 层）。
+ * GO.md 协议要求产物保存到 .forgeos/<req-id>/ 下；wave 类产物可达
+ * .forgeos/<req-id>/waves/wave-{N}/ 三层，故需递归而非只扫一层。
+ * .forgeos/ 根目录的历史布局同样视为有效。
  */
-function findArtifact(dir, name) {
+function findArtifact(dir, name, depth = 0) {
+  if (depth > 3) return null;
   const direct = path.join(dir, name);
   if (fs.existsSync(direct)) return direct;
   try {
     for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
       if (!e.isDirectory()) continue;
-      const p = path.join(dir, e.name, name);
-      if (fs.existsSync(p)) return p;
+      const found = findArtifact(path.join(dir, e.name), name, depth + 1);
+      if (found) return found;
     }
   } catch { /* dir 不可读时仅返回 null */ }
   return null;

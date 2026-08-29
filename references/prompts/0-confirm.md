@@ -1,7 +1,7 @@
 # 阶段 0 · Confirm — 把模糊想法变成一份需求确认书
 
 > ⚠️ **进入本阶段前，必须先加载**：
-> - **skill**：`agent-skills/skills/idea-refine/SKILL.md`、`agent-skills/skills/source-driven-development/SKILL.md`
+> - **skill**：`skills/engineering/idea-refine/SKILL.md`、`skills/engineering/source-driven-development/SKILL.md`
 > - **reference（前端项目按节读取）**：`references/ui-aesthetics.md` § 调性（用于展示调性卡片）
 
 ---

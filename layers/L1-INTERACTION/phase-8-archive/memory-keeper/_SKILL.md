@@ -38,7 +38,7 @@ Systematically capture, organize, and preserve project knowledge for cross-sessi
 
 ## Step-by-step Workflow
 
-详见 `docs/phases/phase-8-archive.md`（Step 0-5: Memory System初始化 → Extract Lessons from Execution Data → Update Decision Records → Promote Domain Skills (≥3 threshold) → Archive Project Documentation → Update Context for Next Session）
+详见 `docs/phases/phase-7-canary-archive.md`（Step 0-5: Memory System初始化 → Extract Lessons from Execution Data → Update Decision Records → Promote Domain Skills (≥3 threshold) → Archive Project Documentation → Update Context for Next Session）
 
 ### Core Protocols
 

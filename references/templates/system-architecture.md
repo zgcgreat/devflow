@@ -1,6 +1,6 @@
 # ARCHITECTURE — 项目级system-architecture（活文档）
 
-- **维护者**：`prompts/A-architect.md`（首次 / 重构）+ `prompts/A-evolve.md`（增量同步 ADR）
+- **维护者**：`references/prompts/A-architect.md`（首次 / 重构）+ `references/prompts/A-evolve.md`（增量同步 ADR）
 - **首次创建**：<YYYY-MM-DD>
 - **最近修订**：<YYYY-MM-DD>（来自 A-evolve <YYYY-MM-DD> · 详见 `.forgeos/evolve/<date>-EVOLVE.md`）
 - **当前 ADR 编号最大值**：ADR-007

@@ -72,7 +72,7 @@ For each category independently, cluster items using Jaccard similarity on token
 
 ## Step 4: Check graduation_backlog in STATE.md
 
-Read `.planning/STATE.md` or `memory/STATE.md` `graduation_backlog` section:
+Read `.planning/STATE.md` or `.forgeos/memory/STATE.md` `graduation_backlog` section:
 
 ```yaml
 graduation_backlog:
@@ -193,7 +193,7 @@ elif cluster_suggested_target == STATE.md backlog:
 
 ---
 
-> **Adapted from**: get-shit-done `workflows/graduation.md` (~196 lines)  
+> **Adapted from**: 外部项目 get-shit-done 的 `workflows/graduation.md` (~196 行，非本仓库文件)  
 > **Adaptation date**: 2026-05-17  
 > **Key changes from original**: Integrated with ForgeOS's Step 0 Durable/Temporary classification; uses STATE.md instead of `.planning/STATE.md`; aligned cluster_id hash scheme
 

@@ -1,7 +1,7 @@
 # L-restyle — 一键换调性（保留功能，重做视觉）
 
 > ⚠️ **进入本阶段前，必须先加载**：
-> - **skill**：`agent-skills/skills/frontend-ui-engineering/SKILL.md`
+> - **skill**：`skills/engineering/frontend-ui-engineering/SKILL.md`
 > - **reference**：
 >   - `references/ui-aesthetics.md` § 调性（按节读取）
 >   - `references/ui-anti-patterns.md`（可全读，111 行）

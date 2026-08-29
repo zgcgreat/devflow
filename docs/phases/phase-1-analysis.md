@@ -192,7 +192,8 @@
 
 SDD完成后自动生成CONTEXT.md，然后进入Phase 2。
 
-详见: `docs/SDD-INTEGRATION.md`（如存在）
+> **注**: SDD（Spec-Driven Development）集成说明已内联合并到本文件的上述章节，
+> 不再维护独立的 `SDD-INTEGRATION.md`。
 
 ---
 

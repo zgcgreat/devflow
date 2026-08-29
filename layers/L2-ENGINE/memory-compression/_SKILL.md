@@ -28,8 +28,8 @@ Compress natural language files (CLAUDE.md, todos, preferences) into caveman-spe
 | `ultra` | ~75% | Phase 8 归档，追求极致节省 |
 | `extreme` | ~90% | 上下文 >95% 时紧急压缩 |
 
-> 完整 7 级（含 wenyan 系列）见 `token-compression-v2/_SKILL.md`。
-> AI 输出压缩见 `output-compression/_SKILL.md`。
+> 完整 7 级（含 wenyan 系列）见 `layers/L2-ENGINE/token-compression-v2/_SKILL.md`。
+> AI 输出压缩见 `layers/L2-ENGINE/output-compression/_SKILL.md`。
 
 ## Trigger
 

@@ -48,7 +48,7 @@ token_budget: "~200K per execution agent"
 
 ## 执行流程
 
-详见 `docs/phases/phase-1-5whys.md`
+详见 `docs/phases/phase-1-analysis.md`
 
 > **交互协议**: G2 Gate 决策 → 根因充分性 → 是否进入 Phase 2
 

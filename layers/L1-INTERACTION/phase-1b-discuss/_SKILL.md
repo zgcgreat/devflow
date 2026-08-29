@@ -41,7 +41,7 @@ token_budget: "~200K per execution agent"
 
 ## 执行流程
 
-详见 `docs/phases/phase-1b-discuss.md`
+详见 `docs/phases/phase-1-analysis.md` (Phase 1b 决策捕获章节)
 
 > **4大原则**: 歧义检测优先 / 选项式问答 / CONTEXT.md 是契约 / 70% Rule
 > **交互协议**: 决策覆盖率 → 未决项合理性 → 是否进入 Phase 2

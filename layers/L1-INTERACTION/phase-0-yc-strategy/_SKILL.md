@@ -26,11 +26,15 @@ token_budget: "~200K per execution agent"
 external-inputs: [project-context]
 ---
 
-# Phase 0: YC Six Questions — Strategic Assessment
+# Phase 0 (子步骤 2/2): YC Six Questions — Strategic Assessment
 
-> **前置**: 无
+> **⚠️ 定位说明**：本技能与 `phase-0-strategy` 同属**唯一的 Phase 0**，是串联的两个子步骤，
+> 不是两个独立 Phase（`phase-engine.js` 中只有一个 Phase 0，name: `YC六问战略评估`）。
+> 执行顺序：`phase-0-strategy`（创意捕获 / 种子 / 范围）→ 本技能（YC 六问可行性验证）。
+>
+> **前置**: `phase-0-strategy` 的种子与范围界定输出
 > **后置产物**: `.forgeos/<req-id>/00-strategy.md`
-> **门控**: G0 — YC Assessment Gate
+> **门控**: G0 — YC Assessment Gate（两个子步骤均完成后判定）
 
 ## 核心定位
 
@@ -45,7 +49,7 @@ external-inputs: [project-context]
 
 ## 执行流程
 
-详见 `docs/phases/phase-0-yc-strategy.md`
+详见 `docs/phases/phase-0-strategy.md`
 
 > **G1 Gate**: ≥4 questions ≥3/5 → PASS; 弱点项 → Phase 1 follow-up
 

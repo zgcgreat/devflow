@@ -220,13 +220,13 @@ if [ $WAVE_NUM -eq 1 ]; then
 fi
 
 # Check if previous wave SUMMARY exists
-if [ ! -f ".specs/waves/wave-${PREV_WAVE}/SUMMARY.md" ]; then
+if [ ! -f ".forgeos/waves/wave-${PREV_WAVE}/SUMMARY.md" ]; then
   echo "❌ Wave ${PREV_WAVE} SUMMARY not found"
   exit 1
 fi
 
 # Check if previous wave PASSED
-RESULT=$(grep "^Result:" .specs/waves/wave-${PREV_WAVE}/SUMMARY.md | awk '{print $2}')
+RESULT=$(grep "^Result:" .forgeos/waves/wave-${PREV_WAVE}/SUMMARY.md | awk '{print $2}')
 if [ "$RESULT" != "PASS" ]; then
   echo "❌ Wave ${PREV_WAVE} did not PASS (result: $RESULT)"
   echo "Fix required before proceeding to Wave ${WAVE_NUM}"
@@ -251,7 +251,7 @@ For each task in wave (parallel if no shared resources):
 **Atomic Execution Steps**:
 
 1. Read `wave-plan.yaml` to extract the task list for this wave and confirm dependency ordering from dag-router output
-2. Create the wave working directory `.specs/waves/wave-{N}/` (if not already created by pre-flight)
+2. Create the wave working directory `.forgeos/waves/wave-{N}/` (if not already created by pre-flight)
 3. Validate all prerequisites from previous waves are met (Wave N-1 SUMMARY exists with Result: PASS)
 4. Spawn Executor Agent with task spec, injecting only the matched domain skills and Wave N-1 summary (~200K tokens max)
 5. Executor runs TDD cycle (RED → GREEN → REFACTOR) with heartbeat emitted every 30s
@@ -281,7 +281,7 @@ The parallelism level definitions below map concrete scenarios to the canonical 
 ```bash
 # Check for shared file modifications
 for task in $(yq '.waves[] | select(.wave_number == N) | .tasks[].id' wave-plan.yaml); do
-  FILES=$(grep "^files:" .specs/tasks/${task}.yaml | cut -d':' -f2-)
+  FILES=$(grep "^files:" .forgeos/tasks/${task}.yaml | cut -d':' -f2-)
   
   if echo "$SHARED_FILES" | grep -qF "$FILES"; then
     echo "⚠️ Task $task shares files with another task → force serial"
@@ -426,7 +426,7 @@ Extracted from execution logs. Each lesson gets a temporary L-{ID} placeholder; 
 - [ ] All tasks PASSED or documented failures
 - [ ] No BREAKING changes without migration plan
 - [ ] LearningWorkflow hook executed
-- [ ] SUMMARY.md written to `.specs/waves/wave-{N}/`
+- [ ] SUMMARY.md written to `.forgeos/waves/wave-{N}/`
 
 **Result**: [PASS / NEEDS WORK / BLOCKED]
 ```
@@ -435,15 +435,15 @@ Extracted from execution logs. Each lesson gets a temporary L-{ID} placeholder; 
 
 ```bash
 # Create wave directory
-mkdir -p .specs/waves/wave-{N}
+mkdir -p .forgeos/waves/wave-{N}
 
 # Write SUMMARY
-cat > .specs/waves/wave-{N}/SUMMARY.md << 'EOF'
+cat > .forgeos/waves/wave-{N}/SUMMARY.md << 'EOF'
 {summary content}
 EOF
 
 # Emit final checkpoint
-echo "[checkpoint][wave:{N}][all-done] ✓" >> .specs/waves/wave-{N}/heartbeat.log
+echo "[checkpoint][wave:{N}][all-done] ✓" >> .forgeos/waves/wave-{N}/heartbeat.log
 ```
 
 #### Trigger LearningWorkflow Hook
@@ -454,7 +454,7 @@ echo "[checkpoint][wave:{N}][all-done] ✓" >> .specs/waves/wave-{N}/heartbeat.l
 # AI 按 LearningWorkflow 指令从 Wave 结果提取 LESSONS
 # 1. 扫描 wave 目录下所有 task 执行日志
 # 2. 提取失败根因和成功模式
-# 3. 输出到 .specs/memory/LESSONS.md
+# 3. 输出到 .forgeos/memory/LESSONS.md
 # 4. 检查 Domain Skill 提升候选（频率 ≥3）
 # 5. 准备跨波注入到 Wave {N+1}
 ```
@@ -512,13 +512,13 @@ CURRENT_WAVE=$1
 NEXT_WAVE=$((CURRENT_WAVE + 1))
 
 # Check SUMMARY exists
-if [ ! -f ".specs/waves/wave-${CURRENT_WAVE}/SUMMARY.md" ]; then
+if [ ! -f ".forgeos/waves/wave-${CURRENT_WAVE}/SUMMARY.md" ]; then
   echo "❌ Wave ${CURRENT_WAVE} SUMMARY missing"
   exit 1
 fi
 
 # Check result is PASS
-RESULT=$(grep "^Result:" .specs/waves/wave-${CURRENT_WAVE}/SUMMARY.md | awk '{print $2}')
+RESULT=$(grep "^Result:" .forgeos/waves/wave-${CURRENT_WAVE}/SUMMARY.md | awk '{print $2}')
 if [ "$RESULT" != "PASS" ]; then
   echo "❌ Wave ${CURRENT_WAVE} did not PASS (result: $RESULT)"
   exit 1
@@ -528,7 +528,7 @@ fi
 rm -rf .forgeos/execution-context/*
 
 # Inject Wave N SUMMARY
-cp .specs/waves/wave-${CURRENT_WAVE}/SUMMARY.md .forgeos/execution-context/prev-wave-summary.md
+cp .forgeos/waves/wave-${CURRENT_WAVE}/SUMMARY.md .forgeos/execution-context/prev-wave-summary.md
 
 # Load matching domain skills for Wave N+1 tasks
 # AI 按 LearningWorkflow 指令匹配 Wave N+1 任务与 Domain Skills
@@ -578,7 +578,7 @@ heartbeat_format:
 **Where to write**:
 ```bash
 # Append to wave-specific heartbeat log
-echo "[checkpoint][wave:{N}][task:{id}] ✓ (3min)" >> .specs/waves/wave-{N}/heartbeat.log
+echo "[checkpoint][wave:{N}][task:{id}] ✓ (3min)" >> .forgeos/waves/wave-{N}/heartbeat.log
 
 # Also emit to stdout for real-time monitoring
 echo "[checkpoint][wave:{N}][task:{id}] ✓ (3min)"
@@ -587,7 +587,7 @@ echo "[checkpoint][wave:{N}][task:{id}] ✓ (3min)"
 **Crash recovery**:
 ```bash
 # If process crashes, read last checkpoint to determine resume point
-LAST_CHECKPOINT=$(tail -1 .specs/waves/wave-{N}/heartbeat.log)
+LAST_CHECKPOINT=$(tail -1 .forgeos/waves/wave-{N}/heartbeat.log)
 
 if echo "$LAST_CHECKPOINT" | grep -q "✗"; then
   echo "⚠️ Last task failed, re-running from failure point"
@@ -602,7 +602,7 @@ fi
 **Monitoring dashboard** (optional):
 ```bash
 # Real-time wave progress monitor
-watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
+watch -n 5 'grep "checkpoint" .forgeos/waves/wave-*/heartbeat.log | tail -20'
 ```
 
 #### G4 Gate Data Source Priority (F-P2-3 Fix)
@@ -611,8 +611,8 @@ watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
 
 | Priority | Data Source | Purpose | Validation |
 |----------|-------------|---------|------------|
-| **1 (Primary)** | `.specs/waves/wave-{N}/heartbeat.log` | Real-time execution truth | `[all-done]` checkpoint existence and consistency |
-| **2 (Derived)** | `.specs/waves/wave-{N}/SUMMARY.md` | Final status aggregation | `status: PASS/FAIL` field cross-validated against heartbeat |
+| **1 (Primary)** | `.forgeos/waves/wave-{N}/heartbeat.log` | Real-time execution truth | `[all-done]` checkpoint existence and consistency |
+| **2 (Derived)** | `.forgeos/waves/wave-{N}/SUMMARY.md` | Final status aggregation | `status: PASS/FAIL` field cross-validated against heartbeat |
 
 **Cross-validation Rules**:
 1. If `heartbeat.log` has `[all-done]` AND `SUMMARY.md` shows `status: PASS` → **PASS** (consistent)
@@ -703,13 +703,13 @@ Fallback execution order:
 ```bash
 # Queue deferred tasks for next wave
 if [ "$TASK_PRIORITY" = "P1" ] || [ "$TASK_PRIORITY" = "P2" ]; then
-  echo "${TASK_ID}" >> .specs/waves/wave-${WAVE_NUM}/NEXT_WAVE_QUEUE
+  echo "${TASK_ID}" >> .forgeos/waves/wave-${WAVE_NUM}/NEXT_WAVE_QUEUE
   log_warning "Task ${TASK_ID} (${TASK_PRIORITY}) deferred to next wave"
   log_detail "Reason: Non-critical task failed, dependent tasks queued separately"
 fi
 
 # When starting Wave N+1, load deferred tasks first
-if [ -f ".specs/waves/wave-${CURRENT_WAVE}/NEXT_WAVE_QUEUE" ]; then
+if [ -f ".forgeos/waves/wave-${CURRENT_WAVE}/NEXT_WAVE_QUEUE" ]; then
   echo "⚠️ Loading ${TASK_COUNT} deferred tasks from previous wave queue"
   while read TASK_ID; do
     # Verify dependencies now met
@@ -718,7 +718,7 @@ if [ -f ".specs/waves/wave-${CURRENT_WAVE}/NEXT_WAVE_QUEUE" ]; then
     else
       log_error "Task ${TASK_ID} still has unmet deps, keep in queue"
     fi
-  done < .specs/waves/wave-${CURRENT_WAVE}/NEXT_WAVE_QUEUE
+  done < .forgeos/waves/wave-${CURRENT_WAVE}/NEXT_WAVE_QUEUE
 fi
 ```
 
@@ -1074,15 +1074,15 @@ function kahnToWaveAssignment(tasks: Task[]): Wave[] {
 
 ```bash
 # Create wave directory structure
-mkdir -p .specs/waves/wave-{N}
+mkdir -p .forgeos/waves/wave-{N}
 
 # Write SUMMARY
-cat > .specs/waves/wave-{N}/SUMMARY.md << 'EOF'
+cat > .forgeos/waves/wave-{N}/SUMMARY.md << 'EOF'
 {summary content}
 EOF
 
 # Append heartbeat
-echo "[checkpoint][wave:{N}][task:{id}] ✓ (3min)" >> .specs/waves/wave-{N}/heartbeat.log
+echo "[checkpoint][wave:{N}][task:{id}] ✓ (3min)" >> .forgeos/waves/wave-{N}/heartbeat.log
 ```
 
 **Cycle Detection** (AI 按算法执行):
@@ -1116,7 +1116,7 @@ distillator verify original.md compressed.md
 
 ```bash
 # Watch wave progress
-watch -n 5 'grep "checkpoint" .specs/waves/wave-*/heartbeat.log | tail -20'
+watch -n 5 'grep "checkpoint" .forgeos/waves/wave-*/heartbeat.log | tail -20'
 ```
 
 **Automated Retry**:
@@ -1130,7 +1130,7 @@ RETRY_COUNT=0
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
   ./execute-wave.sh --wave-number $1
   
-  RESULT=$(grep "^Result:" .specs/waves/wave-$1/SUMMARY.md | awk '{print $2}')
+  RESULT=$(grep "^Result:" .forgeos/waves/wave-$1/SUMMARY.md | awk '{print $2}')
   if [ "$RESULT" = "PASS" ]; then
     echo "✅ Wave $1 passed"
     exit 0
@@ -1166,7 +1166,7 @@ After wave execution:
 - [ ] Wave SUMMARY generated with all required sections
 - [ ] LearningWorkflow hook executed (lessons extracted)
 - [ ] Domain skills promoted (if frequency ≥3)
-- [ ] SUMMARY.md written to `.specs/waves/wave-{N}/`
+- [ ] SUMMARY.md written to `.forgeos/waves/wave-{N}/`
 - [ ] Final checkpoint emitted: `[checkpoint][wave:{N}][all-done]`
 
 Quality gates:
@@ -1218,7 +1218,7 @@ Quality gates:
 | `Breaking Changes` | ✅ Section header | ✅ Section header | ✅ Parses section | ✅ Aligned |
 | `Next Wave Dependencies` | ✅ `### Standard Dependency Declaration Schema` | ✅ References canonical | ✅ Parses dependencies | ✅ Aligned |
 
-**Canonical Schema**: All three files now use consistent field names. executor Step 3 explicitly references wave-executor as canonical. phase-8-archive Step 1 consumes from canonical path `.specs/waves/wave-{N}/SUMMARY.md` with documented field mapping rules.
+**Canonical Schema**: All three files now use consistent field names. executor Step 3 explicitly references wave-executor as canonical. phase-8-archive Step 1 consumes from canonical path `.forgeos/waves/wave-{N}/SUMMARY.md` with documented field mapping rules.
 
 **Template Location**: The authoritative template lives in this file's Step 2 (line ~293-360). executor references it via `[wave-executor/_SKILL.md](../wave-executor/_SKILL.md#step-2-post-wave-actions)`. phase-8-archive references it via `layers/L2-ENGINE/wave-executor/_SKILL.md`.
 
@@ -1252,13 +1252,13 @@ Quality gates:
 ## Sprint 10 Audit: F-P2-3 Heartbeat Data Source 修复确认
 
 **Issue**: G4 gate reads SUMMARY.md，但实际心跳数据在 heartbeat.log — 数据源不一致
-**Status**: ✅ RESOLVED — 统一心跳日志路径到 `.specs/waves/wave-{N}/heartbeat.log`
+**Status**: ✅ RESOLVED — 统一心跳日志路径到 `.forgeos/waves/wave-{N}/heartbeat.log`
 
 **修复内容**:
-1. `wave-executor/_SKILL.md` Step 4 (lines 558-574) 添加了 "G4 Gate Data Source Priority" 章节
+1. `layers/L2-ENGINE/wave-executor/_SKILL.md` Step 4 (lines 558-574) 添加了 "G4 Gate Data Source Priority" 章节
 2. 定义了数据源优先级层次: heartbeat.log (Priority 1 Primary) > SUMMARY.md (Priority 2 Derived)
 3. 定义了交叉验证规则 (4条规则) 确保一致性
-4. `executor/_SKILL.md` 已统一使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log` 路径
-5. `executor/_SKILL.md` 第30行添加了 deprecation note 说明旧 dev-log.md 路径已废弃
+4. `layers/L2-ENGINE/executor/_SKILL.md` 已统一使用 `.forgeos/waves/wave-${WAVE_NUM}/heartbeat.log` 路径
+5. `layers/L2-ENGINE/executor/_SKILL.md` 第30行添加了 deprecation note 说明旧 dev-log.md 路径已废弃
 
 **验证方式**: AI 按 G4 清单逐项核对，确认 wave plan 满足所有执行前置条件。

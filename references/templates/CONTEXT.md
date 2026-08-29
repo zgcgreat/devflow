@@ -257,7 +257,7 @@
 ## intel-scan 元数据
 
 - **last_intel_scan**: `<YYYY-MM-DD>`
-- **scanner**: `prompts/I-intel-scan.md`
+- **scanner**: `references/prompts/I-intel-scan.md`
 - **下次重扫建议**: `<触发条件：架构重构 / 框架升级 / 主要新增模块 / > 90 天>`
 
 ---

@@ -44,9 +44,9 @@ allowed-tools:
 ## 输入
 
 - 所有 Phase 产物 (`.forge-os/<req-id>/`)
-- Wave SUMMARY.md 文件 — `.specs/waves/wave-{N}/SUMMARY.md`
+- Wave SUMMARY.md 文件 — `.forgeos/waves/wave-{N}/SUMMARY.md`
 - Phase 6/7 审查及 Canary 报告
-- `memory/STATE.md`
+- `.forgeos/memory/STATE.md`
 
 ## 输出
 
@@ -56,7 +56,7 @@ allowed-tools:
 
 ## 执行流程
 
-详见 `docs/phases/phase-8-archive.md`
+详见 `docs/phases/phase-7-canary-archive.md` (Phase 8 归档部分)
 
 **步骤**: Wave SUMMARY 聚合 → LESSONS 提名+去重 → Domain Skills Promotion → TEMPORARY 清理 → STATE 归档+G8 门控
 

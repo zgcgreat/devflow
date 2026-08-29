@@ -69,9 +69,11 @@ Phase 详细流程详见 docs/phases/（phase-0-strategy.md ~ phase-7-canary-arc
 | 阶段门验证 | `references/gate-rules.md` |
 | Token预算 | `references/token-budget.md` |
 | v3规则集 R1-R20 | `references/RULES-v3.md` |
-| **Phase 0: YC六问** | `docs/phases/phase-0-strategy.md` |
+| **Phase 0: 战略 (种子捕获 → YC六问)** | `docs/phases/phase-0-strategy.md` |
 | **Phase 1: 5Whys** | `docs/phases/phase-1-analysis.md` |
+| **Phase 1b: 决策捕获** | `docs/phases/phase-1-analysis.md`（Phase 1b 章节） |
 | **Phase 2: 方案设计** | `docs/phases/phase-2-design.md` |
+| **Phase 2a: 设计枪战** | `docs/phases/phase-2-design.md`（Phase 2a 章节） |
 | **Phase 3: 任务拆分** | `docs/phases/phase-3-tasks.md` |
 | **Phase 4: 实施** | `docs/phases/phase-4-build.md` |
 | **Phase 5: 测试** | `docs/phases/phase-5-test.md` |
@@ -116,11 +118,29 @@ Phase 详细流程详见 docs/phases/（phase-0-strategy.md ~ phase-7-canary-arc
 
 **⚠️ 强制规则**：必须使用 `read_file` 工具读取 `mode-rules.md`。
 
-1. **根据用户需求快速评估模式**（详见 mode-rules.md）：
-   - Fast: ≤2文件, <50行, 低风险, 需求明确
-   - **Lean: ≤5文件, <300行, brownfield明确需求** ← v3.1新增
-   - Standard: ≤10文件, <500行, 常规feature
-   - Strict: 高风险/架构变更/数据模型变更
+**阈值表**（与 `lib/phase-engine.js` 的 `detectMode()` 单一来源一致）：
+
+| 模式 | 文件数 | 行数 | 其他条件 |
+|------|--------|------|---------|
+| Fast | ≤2 | <50 | — |
+| Lean | ≤5 | <300 | brownfield |
+| Standard | ≤10 | <500 | — |
+| Strict | 任意 | 任意 | 高风险 / 架构变更 / 数据模型变更 / >3 模块 |
+
+1. **优先程序化判定**，避免凭感觉估规模：
+
+```bash
+forge-os detect --files 3 --lines 120 --brownfield
+# → 🎯 建议模式: LEAN
+#    理由: 3 文件 / 120 行 / brownfield
+#    命中规则: files<=5 && lines<300 && brownfield
+
+forge-os detect --files 1 --lines 10 --arch-change   # → STRICT
+forge-os phase --mode lean                            # 应用判定结果
+```
+
+未提供 `--files`/`--lines` 时按 `--risk` 降级：low → fast，其余 → standard。
+（详见 `references/mode-rules.md`）
 
 2. **输出模式确认**（必须停等用户）：
 ```
@@ -237,18 +257,19 @@ Step 3.4: Grep降级声明
 
 各 Phase 的详细交互流程、产物模板和门控规则见 `docs/phases/`：
 
-| Phase | 文件 | 核心内容 |
-|-------|------|---------|
-| 0: YC六问 | `docs/phases/phase-0-strategy.md` | 战略评估 + G1门控 |
-| 1: 5Whys | `docs/phases/phase-1-analysis.md` | 需求澄清 + AC列表 |
-| 1b: 决策捕获 | — | 技术选型选择题 + CONTEXT.md |
-| 2: 方案设计 | `docs/phases/phase-2-design.md` | DAG路由 + Provider智能路由 |
-| 2a: 设计枪战 | — | 设计变体对比表 + G3门控 |
-| 3: 任务拆分 | `docs/phases/phase-3-tasks.md` | Wave计划 + Kahn拓扑排序 |
-| 4: 实施 | `docs/phases/phase-4-build.md` | Wave执行 + Heartbeat检查点 |
-| 5: 测试 | `docs/phases/phase-5-test.md` | 测试进度面板 + G2质量门 |
-| 6: 三层对抗审查 | `docs/phases/phase-6-review.md` | Blind/Edge/Acceptance三线并行 |
-| 7-8: Canary+归档 | `docs/phases/phase-7-canary-archive.md` | 灰度发布 + LESSONS沉淀 |
+| 引擎 id | Phase | 文件 | 门控 | 核心内容 |
+|---------|-------|------|------|---------|
+| 0 | 战略 (种子捕获 → YC六问) | `docs/phases/phase-0-strategy.md` | G0 | 战略评估 + 种子捕获 + 范围界定 |
+| 1 | 5Whys | `docs/phases/phase-1-analysis.md` | G1 + G2 | 需求澄清 + AC列表 + 范围确认 |
+| 1.5 | 1b 决策捕获 | `docs/phases/phase-1-analysis.md`（Phase 1b 章节） | G2.5 | 技术选型选择题 + CONTEXT.md |
+| 2 | 方案设计 | `docs/phases/phase-2-design.md` | G3 | DAG路由 + Provider智能路由 |
+| 2.5 | 2a 设计枪战 | `docs/phases/phase-2-design.md`（Phase 2a 章节） | G3.5 | 设计变体对比表 |
+| 3 | 任务拆分 | `docs/phases/phase-3-tasks.md` | G4 | Wave计划 + Kahn拓扑排序 |
+| 4 | 实施 | `docs/phases/phase-4-build.md` | G5 | Wave执行 + Heartbeat检查点 |
+| 5 | 测试 | `docs/phases/phase-5-test.md` | G6 | 测试进度面板 + 质量门 |
+| 6 | 三层对抗审查 | `docs/phases/phase-6-review.md` | G7 | Blind/Edge/Acceptance三线并行 |
+| 7 | Canary | `docs/phases/phase-7-canary-archive.md` | G7.5 | 灰度发布 |
+| 8 | 归档 | `docs/phases/phase-7-canary-archive.md` | G8 | LESSONS沉淀 |
 
 ---
 

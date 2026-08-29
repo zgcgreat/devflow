@@ -1,6 +1,6 @@
 # 阶段 1 · 分析 — 把需求确认书变成可执行需求
 
-> ⚠️ **进入本阶段前，必须先加载**：`agent-skills/skills/source-driven-development/SKILL.md`
+> ⚠️ **进入本阶段前，必须先加载**：`skills/engineering/source-driven-development/SKILL.md`
 
 ## 角色
 

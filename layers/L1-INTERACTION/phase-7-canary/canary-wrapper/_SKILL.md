@@ -140,7 +140,7 @@ This wrapper skill owns the lifecycle of two scripts:
 - **auto-rollback.sh** — Managed by `canary-wrapper` whenever any health check breaches its threshold (Step 5 of phase-7-canary)
 
 **Delegation rules**:
-- The wrapper extracts inline scripts from `phase-7-canary/_SKILL.md` if not available as standalone files
+- The wrapper extracts inline scripts from `layers/L1-INTERACTION/phase-7-canary/_SKILL.md` if not available as standalone files
 - All script invocations pass through this wrapper for consistent parameter validation and logging
 - If a script fails P0 or P1, the wrapper logs the full execution context before escalation
 

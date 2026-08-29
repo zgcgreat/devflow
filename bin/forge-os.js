@@ -31,6 +31,16 @@ const HELP = `ForgeOS v3.2.2 — AI 开发操作系统
 用法:
   forge-os init [--mode fast|lean|standard|strict]   初始化 Phase 管线
   forge-os status                                     当前 Phase 状态
+  forge-os phase --status                             Phase 详情 (进度/门控/产出)
+  forge-os phase --list                               Phase 管线总览
+  forge-os phase --mode <fast|lean|standard|strict>   设置模式 (重置起始 Phase)
+  forge-os phase --set <N> [--force]                  切换到指定 Phase (0/1/1.5/2/2.5/3-8)
+  forge-os phase --next [--force]                     推进到下一阶段 (受门控护卫)
+  forge-os phase --gate <G3>                          标记门控通过
+  forge-os phase --output <文件>                      记录产物并通过门控
+  forge-os detect [--files N] [--lines N] [--modules N] 按规模/风险自动判定模式
+                  [--risk low|medium|high] [--brownfield]
+                  [--arch-change] [--data-change]
   forge-os task --describe <描述> [--visualize]       任务分解 (DAG)
   forge-os mem --save <内容> [--tags a,b]             保存记忆
   forge-os mem --search <关键词>                       搜索记忆
@@ -172,8 +182,37 @@ const CMDS = {
       });
       return;
     }
+    if (args.includes('--set')) {
+      const target = parseFloat(args[args.indexOf('--set') + 1]);
+      try {
+        const r = e.setPhase(target, { force: args.includes('--force') });
+        console.log(`当前 Phase: ${r.phase} — ${r.name}（产物: ${r.output}）`);
+      } catch (err) {
+        console.error(`❌ ${err.message}`);
+        process.exit(1);
+      }
+      return;
+    }
     // default: 当前 Phase 信息
     console.log(e.current());
+  },
+
+  detect: (args) => {
+    const { detectMode } = require('../lib/phase-engine');
+    const num = (flag) => (args.includes(flag) ? parseInt(args[args.indexOf(flag) + 1], 10) : undefined);
+    const d = detectMode({
+      files: num('--files'),
+      lines: num('--lines'),
+      modules: num('--modules'),
+      risk: args.includes('--risk') ? args[args.indexOf('--risk') + 1] : undefined,
+      brownfield: args.includes('--brownfield'),
+      architectureChange: args.includes('--arch-change'),
+      dataModelChange: args.includes('--data-change'),
+    });
+    console.log(`🎯 建议模式: ${d.mode.toUpperCase()}`);
+    console.log(`   理由: ${d.reason}`);
+    console.log(`   命中规则: ${d.matched}`);
+    console.log(`\n   应用该模式: forge-os phase --mode ${d.mode}`);
   },
 
   task: (args) => {
@@ -272,19 +311,50 @@ const CMDS = {
 
   doctor: () => {
     console.log('ForgeOS 健康检查\n');
+    // JS 模块必须「可被加载」，仅 existsSync 无法发现语法错误/缺失依赖
+    const loadable = (rel) => {
+      const p = path.join(FORGE_OS_HOME, rel);
+      if (!fs.existsSync(p)) return { ok: false, note: '文件不存在' };
+      try { require(p); return { ok: true, note: '可加载' }; }
+      catch (e) { return { ok: false, note: `不可加载: ${e.message.split('\n')[0]}` }; }
+    };
+    const present = (p) => {
+      const abs = path.isAbsolute(p) ? p : path.join(FORGE_OS_HOME, p);
+      return fs.existsSync(abs) ? { ok: true, note: '' } : { ok: false, note: '文件不存在' };
+    };
+
     const checks = [
-      { name: 'GO.md (执行流程)', check: () => fs.existsSync(FORGEOS_GO) },
-      { name: 'layers/ (Phase 管线)', check: () => fs.existsSync(FORGEOS_LAYERS) },
-      { name: 'references/ (门控规则)', check: () => fs.existsSync(FORGEOS_REFS) },
-      { name: '记忆系统', check: () => fs.existsSync(path.join(FORGE_OS_HOME, 'lib/memory.js')) },
-      { name: '任务规划', check: () => fs.existsSync(path.join(FORGE_OS_HOME, 'lib/task-planner.js')) },
-      { name: 'Party 仲裁', check: () => fs.existsSync(path.join(FORGE_OS_HOME, 'lib/party-arbiter.js')) },
-      { name: '代码解析', check: () => fs.existsSync(path.join(FORGE_OS_HOME, 'domains/code-intel/code-explorer.js')) },
-      { name: '压缩引擎', check: () => fs.existsSync(path.join(FORGE_OS_HOME, 'domains/memory/caveman.js')) },
-      { name: '门控检查', check: () => fs.existsSync(path.join(FORGE_OS_HOME, 'domains/hooks/gate-check.js')) },
-      { name: '.forgeos 目录', check: () => fs.existsSync(path.resolve('.forgeos')) },
+      { name: 'GO.md (执行流程)', run: () => present(FORGEOS_GO) },
+      { name: 'layers/ (Phase 管线)', run: () => present(FORGEOS_LAYERS) },
+      { name: 'references/ (门控规则)', run: () => present(FORGEOS_REFS) },
+      { name: '记忆系统', run: () => loadable('lib/memory.js') },
+      { name: '任务规划', run: () => loadable('lib/task-planner.js') },
+      { name: 'Party 仲裁', run: () => loadable('lib/party-arbiter.js') },
+      { name: '代码解析', run: () => loadable('domains/code-intel/code-explorer.js') },
+      { name: '压缩引擎', run: () => loadable('domains/memory/caveman.js') },
+      { name: '门控检查', run: () => loadable('domains/hooks/gate-check.js') },
+      { name: 'Phase 引擎', run: () => loadable('lib/phase-engine.js') },
+      { name: '.forgeos 目录', run: () => present(path.resolve('.forgeos')) },
     ];
-    checks.forEach(c => console.log(`  ${c.check() ? 'OK' : '  '} ${c.name}`));
+
+    let failed = 0;
+    for (const c of checks) {
+      let res;
+      try { res = c.run(); } catch (e) { res = { ok: false, note: e.message }; }
+      if (res.ok) {
+        console.log(`  ✅ ${c.name}`);
+      } else {
+        failed++;
+        // 历史 bug: 失败渲染为两个空格，与 ✅ 等宽，失败项看起来像缩进空白
+        console.log(`  ❌ ${c.name} — ${res.note}`);
+      }
+    }
+
+    console.log(`\n  ${checks.length - failed}/${checks.length} 项通过`);
+    if (failed > 0) {
+      console.log(`  ⚠️ 有 ${failed} 项未通过，ForgeOS 可能无法正常执行`);
+      process.exitCode = 1;
+    }
   },
 
   help: () => console.log(HELP),

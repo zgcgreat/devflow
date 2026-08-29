@@ -296,4 +296,6 @@ function formatScan(result) {
   Avg symbols/file: ${result.files > 0 ? (result.symbols / result.files).toFixed(1) : 0}`;
 }
 
-main();
+// 仅在作为 CLI 直接执行时运行；被 require 加载时不得产生副作用输出
+// (历史 bug: 无条件 main() 导致 forge-os doctor 加载检查时打印横幅污染输出)
+if (require.main === module) main();

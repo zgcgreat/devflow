@@ -16,7 +16,7 @@ version: 1.0.0
 | Step 1-12 执行流程 | `GO.md` |
 | 模式判定 + 门规 | `references/mode-rules.md`, `references/gate-rules.md` |
 | 入场检测 | `references/entry-check.md` |
-| 子Agent 实施 | `layers/L1-INTERACTION/superpowers-skills/subagent-driven-development/` |
+| 子Agent 实施 | `sources/superpowers-skills/subagent-driven-development/` |
 | DAG 任务分解 | `lib/task-planner.js` (`forge-os task --describe`) |
 
 ## 门控速查

@@ -37,7 +37,7 @@ allowed-tools:
 ## 输入
 
 - Phase 4 实施代码
-- Phase 5 测试报告 (`05-test-results.md`)
+- Phase 5 测试报告 (`05-test-report.md`)
 - Phase 3 任务计划 (`03-tasks.md`)
 - PRD/需求文档
 

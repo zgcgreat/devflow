@@ -26,7 +26,7 @@ allowed-tools:
 # Phase 5: 测试 (QA + 交叉波测试矩阵)
 
 > **前置产物**: Phase 4 所有 Wave 完成
-> **后置产物**: `.specs/test/05-test-results.md`
+> **后置产物**: `.forgeos/test/05-test-report.md`
 > **门控**: G6 — Test Quality Gate
 
 ## 输入
@@ -37,7 +37,7 @@ allowed-tools:
 
 ## 输出
 
-- `05-test-results.md` — 功能测试 + 边界条件 + 交叉波矩阵 + 回归测试 + 遗留问题
+- `05-test-report.md` — 功能测试 + 边界条件 + 交叉波矩阵 + 回归测试 + 遗留问题
 
 ## 执行流程
 
@@ -51,7 +51,7 @@ allowed-tools:
 5. **Step 4**: 边界条件测试 — 空值/异常路径/并发/大文件
 6. **Step 5**: G6 门控检查
 7. **Step 5.5**: 浏览器 QA (v1.1, 仅前端项目) — Playwright e2e + 截图对比 + Bug 报告
-8. **Step 6**: 产物验证 — 05-test-results.md 存在且含 PASS/FAIL 标记
+8. **Step 6**: 产物验证 — 05-test-report.md 存在且含 PASS/FAIL 标记
 9. **Step 7**: 用户确认
 
 > **测试金字塔适用矩阵**:

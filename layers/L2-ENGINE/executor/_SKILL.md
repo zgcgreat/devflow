@@ -30,7 +30,7 @@ allowed-tools:
 
 # Executor — TDD Implementation & Wave Parallel Execution
 
-> **DEPRECATION NOTE**: `dev-log.md` is deprecated. All heartbeat checkpoints now use the canonical location `.specs/waves/wave-${WAVE_NUM}/heartbeat.log` (unified with wave-executor). Old `dev-log.md` references are retained in comments for backwards compatibility only.
+> **DEPRECATION NOTE**: `dev-log.md` is deprecated. All heartbeat checkpoints now use the canonical location `.forgeos/waves/wave-${WAVE_NUM}/heartbeat.log` (unified with wave-executor). Old `dev-log.md` references are retained in comments for backwards compatibility only.
 
 Implement features using Test-Driven Development (TDD) within Wave-based parallel execution framework. Write failing tests first, then minimal code to pass, then refactor. Execute tasks in dependency-aware parallel waves for maximum throughput.
 
@@ -117,7 +117,7 @@ cat .forgeos/wave-plan.yaml
 # Check if Wave N-1 SUMMARY exists and PASSED
 if [ $WAVE_NUM -gt 1 ]; then
   PREV_WAVE=$((WAVE_NUM - 1))
-  if grep -q "Status: FAIL" .specs/waves/wave-${PREV_WAVE}/SUMMARY.md; then
+  if grep -q "Status: FAIL" .forgeos/waves/wave-${PREV_WAVE}/SUMMARY.md; then
     echo "❌ Wave ${PREV_WAVE} failed. Fix before proceeding."
     exit 1
   fi
@@ -127,7 +127,7 @@ fi
 for task in $(yq '.wave_plan[] | select(.wave_number == '$WAVE_NUM') | .tasks[].id' wave-plan.yaml); do
   deps=$(yq '.wave_plan[].tasks[] | select(.id == "'$task'") | .deps[]' wave-plan.yaml)
   for dep in $deps; do
-    if ! grep -q "\[checkpoint\].*\[task:${dep}\].*✓" .specs/waves/wave-${WAVE_NUM}/heartbeat.log; then
+    if ! grep -q "\[checkpoint\].*\[task:${dep}\].*✓" .forgeos/waves/wave-${WAVE_NUM}/heartbeat.log; then
       echo "❌ Task $task depends on $dep, which is not complete."
       exit 1
     fi
@@ -185,10 +185,10 @@ Execute **Story-level 10-step implementation** for each task:
 
 ```bash
 # Load task specification
-cat .specs/tasks/{task-id}.md
+cat .forgeos/tasks/{task-id}.md
 
 # Extract acceptance criteria
-grep "^AC[0-9]" .specs/tasks/{task-id}.md
+grep "^AC[0-9]" .forgeos/tasks/{task-id}.md
 ```
 
 **Example AC**:
@@ -502,7 +502,7 @@ git log -1 --stat
 
 **Heartbeat checkpoint**:
 ```bash
-echo "[checkpoint][wave:${WAVE_NUM}][task:${TASK_ID}] ✓ (25min)" >> .specs/waves/wave-${WAVE_NUM}/heartbeat.log
+echo "[checkpoint][wave:${WAVE_NUM}][task:${TASK_ID}] ✓ (25min)" >> .forgeos/waves/wave-${WAVE_NUM}/heartbeat.log
 ```
 
 ---
@@ -531,18 +531,18 @@ done
 for pid in "${TASK_PIDS[@]}"; do
   wait $pid
   if [ $? -ne 0 ]; then
-    echo "❌ Task failed. See .specs/waves/wave-${WAVE_NUM}/heartbeat.log for details."
+    echo "❌ Task failed. See .forgeos/waves/wave-${WAVE_NUM}/heartbeat.log for details."
     FAILED_TASKS+=($task)
   fi
 done
 
 # If any failures → stop Wave, don't proceed to next
 if [ ${#FAILED_TASKS[@]} -gt 0 ]; then
-  echo "[checkpoint][wave:${WAVE_NUM}][all-done] ✗ → fix required" >> .specs/waves/wave-${WAVE_NUM}/heartbeat.log
+  echo "[checkpoint][wave:${WAVE_NUM}][all-done] ✗ → fix required" >> .forgeos/waves/wave-${WAVE_NUM}/heartbeat.log
   exit 1
 fi
 
-echo "[checkpoint][wave:${WAVE_NUM}][all-done] ✓" >> .specs/waves/wave-${WAVE_NUM}/heartbeat.log
+echo "[checkpoint][wave:${WAVE_NUM}][all-done] ✓" >> .forgeos/waves/wave-${WAVE_NUM}/heartbeat.log
 ```
 
 **Context isolation enforcement**:
@@ -617,7 +617,7 @@ Wave {N+1} depends on:
 - [ ] All tasks PASSED or documented failures
 - [ ] No BREAKING changes without migration plan
 - [ ] LearningWorkflow hook executed
-- [ ] SUMMARY.md written to `.specs/waves/wave-{N}/`
+- [ ] SUMMARY.md written to `.forgeos/waves/wave-{N}/`
 
 **Result**: [PASS / NEEDS WORK / BLOCKED]
 ```
@@ -658,10 +658,10 @@ Trigger post-wave lesson extraction:
 
 ```bash
 # Extract lessons from heartbeat log entries in this Wave
-grep "Wave ${WAVE_NUM}" .specs/waves/wave-${WAVE_NUM}/heartbeat.log | grep -E "LESSONS|ISSUES" > /tmp/wave-lessons.txt
+grep "Wave ${WAVE_NUM}" .forgeos/waves/wave-${WAVE_NUM}/heartbeat.log | grep -E "LESSONS|ISSUES" > /tmp/wave-lessons.txt
 
 # Feed to LearningWorkflow
-learning-workflow extract --from /tmp/wave-lessons.txt --output .specs/memory/LESSONS.md
+learning-workflow extract --from /tmp/wave-lessons.txt --output .forgeos/memory/LESSONS.md
 
 # Check for domain skill promotion candidates
 # AI 按 LearningWorkflow 指令检查：频率 ≥3 的 LESSONS → 提升为 Domain Skill
@@ -800,7 +800,7 @@ if [ $ELAPSED -gt $TOTAL_TIMEOUT ]; then
   echo "🔴 Task TIMEOUT after ${ELAPSED}s — circuit breaker OPEN"
   echo "Canceling all sub-task processes..."
   kill -- -$PROCESS_GROUP_ID 2>/dev/null || true
-  echo "[checkpoint][wave:${WAVE_NUM}][task:${TASK_ID}] ✗ (CIRCUIT_BREAKER: 30min timeout)" >> .specs/waves/wave-${WAVE_NUM}/heartbeat.log
+  echo "[checkpoint][wave:${WAVE_NUM}][task:${TASK_ID}] ✗ (CIRCUIT_BREAKER: 30min timeout)" >> .forgeos/waves/wave-${WAVE_NUM}/heartbeat.log
   # Mark as P1 RECOVERABLE with circuit breaker flag — escalate to Architect if repeated
   exit 1
 fi
@@ -975,7 +975,7 @@ git add {files} && git commit -m "{caveman-commit-message}"
 git log -1 --stat
 
 # Heartbeat checkpoint
-echo "[checkpoint][wave:{N}][task:{id}] ✓ ({time})" >> .specs/waves/wave-${N}/heartbeat.log
+echo "[checkpoint][wave:{N}][task:{id}] ✓ ({time})" >> .forgeos/waves/wave-${N}/heartbeat.log
 ```
 
 ### Optional Tools
@@ -1089,13 +1089,13 @@ Quality gates:
 ## Sprint 10 Audit: F-P2-3 Heartbeat Data Source 修复确认
 
 **Issue**: executor 与 wave-executor heartbeat 数据源不一致
-**Status**: ✅ RESOLVED — executor 已统一使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log`
+**Status**: ✅ RESOLVED — executor 已统一使用 `.forgeos/waves/wave-${WAVE_NUM}/heartbeat.log`
 
 **修复内容**:
 1. executor 第30行已有 deprecation note 说明旧 dev-log.md 路径已废弃
-2. executor Step 1.10 (line 491) 使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log`
-3. executor Step 2 (line 527, 531) 使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log`
-4. executor Step 1 (line 127) 读取 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log` 验证依赖
-5. executor Step 1.8 (line 771) 使用 `.specs/waves/wave-${WAVE_NUM}/heartbeat.log`
-6. executor Tool Integration (line 946) 使用 `.specs/waves/wave-${N}/heartbeat.log`
+2. executor Step 1.10 (line 491) 使用 `.forgeos/waves/wave-${WAVE_NUM}/heartbeat.log`
+3. executor Step 2 (line 527, 531) 使用 `.forgeos/waves/wave-${WAVE_NUM}/heartbeat.log`
+4. executor Step 1 (line 127) 读取 `.forgeos/waves/wave-${WAVE_NUM}/heartbeat.log` 验证依赖
+5. executor Step 1.8 (line 771) 使用 `.forgeos/waves/wave-${WAVE_NUM}/heartbeat.log`
+6. executor Tool Integration (line 946) 使用 `.forgeos/waves/wave-${N}/heartbeat.log`
 7. executor 与 wave-executor 已完全统一心跳日志路径

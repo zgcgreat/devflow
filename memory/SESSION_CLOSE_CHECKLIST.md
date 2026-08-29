@@ -28,5 +28,9 @@
 
 ## 最终验证
 
-- 当记忆发生变化时，运行 `scripts/validate-superpowers-memory.ps1` 或 `scripts/validate-superpowers-memory.sh`
-- 如果验证器刷新了 `memory-index.yaml`，请审查它
+- 当记忆发生变化时，校验 `memory-index.yaml` 与条目文件是否一致
+  （上游 superpowers 项目的 `scripts/validate-superpowers-memory.{ps1,sh}` 未随 ForgeOS 分发，此处不引用）
+- 如果 `memory-index.yaml` 被刷新，请审查它
+
+> **目录约定**：ForgeOS 运行时记忆目录为 `.forgeos/memory/`（由 `forge-os init` 创建）。
+> 根级 `memory/` 为早期布局的遗留副本，新项目请勿写入此处。

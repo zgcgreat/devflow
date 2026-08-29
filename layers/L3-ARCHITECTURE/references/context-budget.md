@@ -2,7 +2,7 @@
 
 Standard rules for keeping orchestrator context lean. Reference this in workflows that spawn subagents or read significant content.
 
-See also: `references/universal-anti-patterns.md` for the complete set of universal rules.
+See also: `references/ui-anti-patterns.md`（UI 相关反模式）。
 
 ---
 

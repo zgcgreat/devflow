@@ -35,7 +35,7 @@ external-inputs: [context-data, compression-trigger]
 | `wenyan-ultra` | 减少 90% | Phase 8 极简 | 极限文言文 | "新參照→重繪。useMemo Wrap。" |
 | `extreme` | 减少 90% | Context > 95% | 仅关键词+代码 | "inline obj → new ref → re-render. `useMemo`." |
 
-> 完整 7 级压缩规则详见 `output-compression/_SKILL.md`（AI 输出压缩）。
+> 完整 7 级压缩规则详见 `layers/L2-ENGINE/output-compression/_SKILL.md`（AI 输出压缩）。
 > memory-compression 使用 lite/full/ultra/extreme 四级。
 
 ### 2. 自动触发机制

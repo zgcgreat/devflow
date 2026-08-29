@@ -40,7 +40,7 @@ information_gathering:
     - 02-design.md          # 架构设计
     - 03-tasks.md           # 任务列表
     - phase-4-code-changes  # 代码变更
-    - phase-5-test-results  # 测试结果
+    - phase-5-test-report    # 测试结果
     - hooks/security-scan   # 自动安全扫描结果
 
   environment_scan:

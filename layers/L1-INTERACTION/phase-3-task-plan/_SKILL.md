@@ -42,7 +42,7 @@ allowed-tools:
 
 ## 执行流程
 
-详见 `docs/phases/phase-3-task-plan.md`
+详见 `docs/phases/phase-3-tasks.md`
 
 ## Error Taxonomy
 

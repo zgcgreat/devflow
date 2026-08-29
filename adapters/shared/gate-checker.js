@@ -13,49 +13,60 @@ const path = require('path');
 const { findProjectDir, FORGEOS_DIR } = require('./core-bridge');
 
 // ─── 门控定义 ───────────────────────────────────────────
+//
+// 单一权威源: lib/phase-engine.js
+// 历史上此处维护独立硬编码副本，与权威定义漂移（G7.5/G8 产物名错误）。
+// 现与 domains/hooks/gate-check.js 一致，改为派生。
 
-const GATES = {
-  G0:   { phase: 0,   artifacts: ['00-strategy.md'],               label: 'Strategy',     type: 'auto' },
-  G1:   { phase: 1,   artifacts: ['01-analysis.md'],               label: 'Analysis',     type: 'auto' },
-  G2:   { phase: 1,   artifacts: ['01-analysis.md'],               label: 'Architecture', type: 'manual' },
-  'G2.5': { phase: 1.5, artifacts: ['01b-context.md'],            label: 'Discuss',      type: 'manual' },
-  G3:   { phase: 2,   artifacts: ['02-design.md'],                 label: 'Design',       type: 'manual' },
-  'G3.5': { phase: 2.5, artifacts: ['02a-variants.md'],           label: 'Shotgun',      type: 'manual' },
-  G4:   { phase: 3,   artifacts: ['03-tasks.md'],                  label: 'TaskPlan',     type: 'auto' },
-  G5:   { phase: 4,   artifacts: ['04-wave-logs.md'],              label: 'Build',        type: 'manual' },
-  G6:   { phase: 5,   artifacts: ['05-test-report.md'],            label: 'Test',         type: 'auto' },
-  G7:   { phase: 6,   artifacts: ['06-review.md'],                 label: 'Review',       type: 'manual' },
-  'G7.5': { phase: 7,   artifacts: ['07-canary.md'],              label: 'Canary',       type: 'manual' },
-  G8:   { phase: 8,   artifacts: ['08-archive.md'],                label: 'Archive',      type: 'auto' },
-};
+function buildGates() {
+  const { GATES: AUTHORITATIVE, PHASES } = require('../../lib/phase-engine');
+  const map = {};
+  for (const g of AUTHORITATIVE) {
+    map[g.id] = { phase: g.phaseAfter, artifacts: [], label: g.name, type: g.type };
+  }
+  for (const phase of PHASES) {
+    for (const gid of [phase.gate, ...(phase.extraGates || [])]) {
+      if (map[gid] && !map[gid].artifacts.includes(phase.output)) {
+        map[gid].artifacts.push(phase.output);
+      }
+    }
+  }
+  return map;
+}
+
+const GATES = buildGates();
 
 // ─── 检查逻辑 ───────────────────────────────────────────
 
-function resolveArtifactPath(projectDir, artifact) {
-  // 在 .forgeos/<req-id>/ 和项目根目录下查找
-  const candidates = [
-    path.join(projectDir, FORGEOS_DIR, artifact),
-    path.join(projectDir, artifact),
-  ];
-
-  // 检查 .forgeos/ 下的子目录
-  const forgeosDir = path.join(projectDir, FORGEOS_DIR);
-  if (fs.existsSync(forgeosDir)) {
-    try {
-      const entries = fs.readdirSync(forgeosDir, { withFileTypes: true });
-      for (const entry of entries) {
-        if (entry.isDirectory()) {
-          candidates.push(path.join(forgeosDir, entry.name, artifact));
-        }
-      }
-    } catch (e) { /* ignore */ }
+/**
+ * 递归收集 .forgeos/ 下的候选路径。
+ * GO.md 协议: 产物保存到 .forgeos/<req-id>/ 下；wave 类产物可达
+ * .forgeos/<req-id>/waves/wave-{N}/ 三层，故需递归而非只扫一层。
+ */
+function collectForgeosDirs(dir, depth = 0, out = []) {
+  if (depth > 3) return out;
+  let entries;
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true });
+  } catch { return out; }
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const full = path.join(dir, entry.name);
+    out.push(full);
+    collectForgeosDirs(full, depth + 1, out);
   }
+  return out;
+}
 
-  // 检查 .specs/ 和 .specs/test/ 下
-  candidates.push(path.join(projectDir, '.specs', artifact));
-  candidates.push(path.join(projectDir, '.specs', 'test', artifact));
-  candidates.push(path.join(projectDir, '.specs', 'reviews', artifact));
-  candidates.push(path.join(projectDir, '.specs', 'waves', artifact));
+function resolveArtifactPath(projectDir, artifact) {
+  const forgeosDir = path.join(projectDir, FORGEOS_DIR);
+
+  // 优先级: .forgeos/ 根 → <req-id>/ → 更深子目录 → 项目根
+  const candidates = [path.join(forgeosDir, artifact)];
+  for (const sub of collectForgeosDirs(forgeosDir)) {
+    candidates.push(path.join(sub, artifact));
+  }
+  candidates.push(path.join(projectDir, artifact));
 
   for (const candidate of candidates) {
     if (fs.existsSync(candidate)) return candidate;

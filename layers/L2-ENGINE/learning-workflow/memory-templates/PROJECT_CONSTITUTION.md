@@ -3,7 +3,7 @@
 > **本文件定义项目级技术约束和原则，所有 Phase 执行必须遵守。**
 > 由项目团队编写和维护，ForgeOS 在每个 Phase 开始时自动加载。
 > 位置：`.forgeos/PROJECT_CONSTITUTION.md`
-> 与流程宪法 (`layers/L1-INTERACTION/CONSTITUTION.md`) 分离，互不干扰。
+> 与流程宪法 (`CONSTITUTION.md`, 仓库根) 分离，互不干扰。
 
 ---
 

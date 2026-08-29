@@ -49,7 +49,7 @@ L3-ARCHITECTURE/
 
 | 模块 | 职责 | 输入 | 输出 | 当前实现方式 |
 |------|------|------|------|-------------|
-| **dag-router** | 任务依赖分析 → Topological Sort | Task List (Phase 3) | Wave 分组建议 | `phase-3-task-plan/_SKILL.md` Step 2 |
+| **dag-router** | 任务依赖分析 → Topological Sort | Task List (Phase 3) | Wave 分组建议 | `layers/L1-INTERACTION/phase-3-task-plan/_SKILL.md` Step 2 |
 | **provider-gateway** | 按任务类型选模型 | Phase / Task Type | Model/Provider 选择 | R10 规则 + Phase Skills 内联路由 |
 | **agent-isolation** | ~50K/~200K context 隔离 | 全局 Context | Agent 专用 Context | R7 规则 + Phase Skills Agent 定义 |
 | **parallel-engine** | Wave N 并行编排 | DAG (Phase 3 输出) | 并行执行计划 | L2 wave-executor 伪代码 + L1 Phase 4 协调 |

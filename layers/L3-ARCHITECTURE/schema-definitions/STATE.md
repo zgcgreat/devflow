@@ -10,10 +10,10 @@
 - **当前阶段**: CHANGE / REQUIREMENT / DESIGN / TASK / DEV / TEST / REVIEW / INTEGRATION / 无
 - **当前 Task**: `<T03>` 或 "—"
 - **中断任务**（来自 R1.5 清窗）: `<task-id>` 或 "无"
-  - 若非空，下一会话必须先加载 `@.specs/<id>/<task-id>-PROGRESS.md`
+  - 若非空，下一会话必须先加载 `@.forgeos/<id>/<task-id>-PROGRESS.md`
 - **会话开始建议**:
   - 若有「中断任务」：按 R1.5 清窗后加载顺序恢复
-  - 若有活跃 change：先读 `@.specs/<id>/` 下相关产物
+  - 若有活跃 change：先读 `@.forgeos/<id>/` 下相关产物
   - 若无：等用户给新 CHANGE
 
 ## 阻塞与待决策
@@ -24,7 +24,7 @@
 
 ## 决策日志（最近 10 条，倒序）
 
-- `[2026-04-30]` <一句话决策> — `@.specs/<id>/DESIGN.md#D2`
+- `[2026-04-30]` <一句话决策> — `@.forgeos/<id>/DESIGN.md#D2`
 - ……
 
 ## 已归档 Changes（最近 5 个，倒序）
@@ -39,7 +39,7 @@
 
 ```yaml
 # 老项目入场扫描 / AI 上下文文档替代
-ai_context_doc: .specs/CONTEXT.md   # 或 AGENTS.md / CLAUDE.md / 用户指定路径 / none
+ai_context_doc: .forgeos/CONTEXT.md   # 或 AGENTS.md / CLAUDE.md / 用户指定路径 / none
 last_intel_scan: 2026-04-15          # 上次跑 I-intel-scan 的日期；为空表示从未跑
                                      # GO.md 第三步会按 90 天阈值提醒重扫
 
@@ -66,7 +66,7 @@ last_health_score: 78                # 上次综合分（用于本次对比）
 
 ## 健康检查（AI 每次会话开始前自检）
 
-- [ ] `.specs/` 目录存在
+- [ ] `.forgeos/` 目录存在
 - [ ] 当前活跃 change 的工件文件齐全（按当前阶段）
 - [ ] 没有未归档但已合并的 change
 - [ ] 没有 > 3 轮自动重试仍未解决的失败

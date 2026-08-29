@@ -103,21 +103,27 @@ forge-os status                 # 状态检查
 
 ### Phase 按需加载矩阵
 
-| Phase | [必须] 文件 | [推荐] 文件 |
-|-------|-----------|-----------|
-| **0** Strategy | `layers/L1-INTERACTION/phase-0-strategy/_SKILL.md` | `domains/specification/_SKILL.md`, `docs/phases/phase-0-strategy.md` |
-| **0-yc** YC六问 | `layers/L1-INTERACTION/phase-0-yc-strategy/_SKILL.md` | — |
-| **1** 5 Whys | `layers/L1-INTERACTION/phase-1-5whys/_SKILL.md` | `docs/phases/phase-1-analysis.md` |
-| **1b** Discuss | `layers/L1-INTERACTION/phase-1b-discuss/_SKILL.md` | — |
-| **2** Design | `layers/L1-INTERACTION/phase-2-design/_SKILL.md` | `docs/phases/phase-2-design.md`, `domains/code-intel/_SKILL.md` |
-| **3** Task Plan | `layers/L1-INTERACTION/phase-3-task-plan/_SKILL.md` | `docs/phases/phase-3-tasks.md` (原名 phase-3-task-plan) |
+> **命名对照**：引擎 `phase-engine.js` 用数字 id 排序（0 / 1.5 / 2.5），文档用 `1b` / `2a` 称呼同一阶段。
+> 下表同时给出两者，避免歧义。
+
+| 引擎 id | 文档名 | [必须] 文件 | [推荐] 文件 |
+|---------|--------|-----------|-----------|
+| **0** | Phase 0 | `layers/L1-INTERACTION/phase-0-strategy/_SKILL.md` → `phase-0-yc-strategy/_SKILL.md` | `domains/specification/_SKILL.md`, `docs/phases/phase-0-strategy.md` |
+| **1** | Phase 1 | `layers/L1-INTERACTION/phase-1-5whys/_SKILL.md` | `docs/phases/phase-1-analysis.md` |
+| **1.5** | Phase 1b | `layers/L1-INTERACTION/phase-1b-discuss/_SKILL.md` | `docs/phases/phase-1-analysis.md` (Phase 1b 章节) |
+| **2** | Phase 2 | `layers/L1-INTERACTION/phase-2-design/_SKILL.md` | `docs/phases/phase-2-design.md`, `domains/code-intel/_SKILL.md` |
+| **2.5** | Phase 2a | `layers/L1-INTERACTION/phase-2a-shotgun/_SKILL.md` | `docs/phases/phase-2-design.md` (Phase 2a 章节) |
+| **3** | Phase 3 | `layers/L1-INTERACTION/phase-3-task-plan/_SKILL.md` | `docs/phases/phase-3-tasks.md` |
 | **4** Build | `layers/L1-INTERACTION/phase-4-build/_SKILL.md` | — |
 | **5** Test | `layers/L1-INTERACTION/phase-5-test/_SKILL.md` | `docs/phases/phase-5-test.md`, `references/test-pyramid.md` |
 | **6** Review | `layers/L1-INTERACTION/phase-6-review/_SKILL.md` | `docs/phases/phase-6-review.md`, `references/ui-anti-patterns.md` (前端项目), `layers/L1-INTERACTION/phase-6-review/reviewer/_SKILL.md` (审查详情) |
 | **7** Canary | `layers/L1-INTERACTION/phase-7-canary/_SKILL.md` | — |
 | **8** Archive | `layers/L1-INTERACTION/phase-8-archive/_SKILL.md` | `layers/L1-INTERACTION/phase-8-archive/memory-keeper/_SKILL.md` (知识蒸馏) |
 
-> ✅ phase-2a-shotgun 已实现：`layers/L1-INTERACTION/phase-2a-shotgun/_SKILL.md`
+> **Phase 0 的两个技能是串联子步骤，不是两个 Phase**：
+> `phase-0-strategy`（创意捕获 / 种子 / 范围界定）→ `phase-0-yc-strategy`（YC 六问可行性验证）。
+> 引擎中只有**一个** Phase 0（name: `YC六问战略评估`），`phase-0-yc-strategy` 的 frontmatter
+> 已声明 `dependencies: [phase-0-strategy]`。按顺序依次执行两个技能，产出 `00-strategy.md` 后过 G0。
 
 ### 门控检查加载
 

@@ -1,7 +1,7 @@
 # 阶段 4 · 开发 — 在 fresh context 中执行单个任务
 
 > ⚠️ **进入本阶段前，必须先加载**：
-> - **skill**：`agent-skills/skills/source-driven-development/SKILL.md`、`agent-skills/skills/test-driven-development/SKILL.md`
+> - **skill**：`skills/engineering/source-driven-development/SKILL.md`、`skills/engineering/test-driven-development/SKILL.md`
 > - **reference（按任务类型按节读取）**：
 >   - 所有任务：`references/4-dev-rules.md` § 1.4 + § 1.5（按节读取）
 >   - UI 任务：追加 § 1.6 + § 1.8
@@ -297,7 +297,7 @@ dev-snapshot.md 是临时文件，不归档。
 
 ## 4. Doubt：完成前反方审查（可选但推荐）
 
-> 本任务涉及**非平凡逻辑**（分支 / 边界 / 并发 / 不可逆操作）时，建议在 完成前加载 `agent-skills/skills/doubt-driven-development/SKILL.md` 做 fresh-context 审查。
+> 本任务涉及**非平凡逻辑**（分支 / 边界 / 并发 / 不可逆操作）时，建议在 完成前加载 `skills/engineering/doubt-driven-development/SKILL.md` 做 fresh-context 审查。
 
 执行路径：
 1. **CLAIM** — 从改动中挑出最值得怀疑的 1~2 个决策/实现

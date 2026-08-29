@@ -34,7 +34,7 @@
 - **AND** 等待新 token 拿到后重试原请求
 
 ### Requirement: Domain Skill — auth-interceptor
-首次出现在 req-abc123，累计复用 ≥ 3 次后持久化到 `memory/domain-skills/auth-interceptor.md`。
+首次出现在 req-abc123，累计复用 ≥ 3 次后持久化到 `.forgeos/memory/domain-skills/auth-interceptor.md`。
 ```
 
 ### `[MODIFIED]` — 修改现有条目

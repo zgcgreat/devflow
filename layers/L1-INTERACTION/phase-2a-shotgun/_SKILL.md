@@ -42,7 +42,7 @@ allowed-tools:
 
 ## 执行流程
 
-详见 `docs/phases/phase-2a-shotgun.md`
+详见 `docs/phases/phase-2-design.md` (Phase 2a 设计枪战章节)
 
 ## Error Taxonomy
 

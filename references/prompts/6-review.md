@@ -1,9 +1,9 @@
 # 阶段 6 · 审查 — 四轮审查（spec 合规 + 代码质量 + UI + 补充）
 
 > ⚠️ **进入本阶段前，必须先加载**：
-> - **skill**：`agent-skills/skills/code-review-and-quality/SKILL.md`
+> - **skill**：`skills/engineering/code-review-and-quality/SKILL.md`
 > - **reference（前端项目）**：`references/ui-anti-patterns.md`（可全读，111 行）
-> - **可选 skill（按需加载）**：`security-and-hardening/SKILL.md` 或 `performance-optimization/SKILL.md` 在发现相关问题时再加载
+> - **可选 skill（按需加载）**：`skills/engineering/security-and-hardening/SKILL.md` 或 `skills/engineering/performance-optimization/SKILL.md` 在发现相关问题时再加载
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -41,12 +41,12 @@
 
 ```
 ✅ 必须加载：
-[ ] agent-skills/skills/code-review-and-quality/SKILL.md
+[ ] skills/engineering/code-review-and-quality/SKILL.md
 ```
 
 **可选依赖（按需加载）**：
-- `security-and-hardening/SKILL.md` — 第二轮发现安全相关问题时加载
-- `performance-optimization/SKILL.md` — 第二轮发现性能相关问题时加载
+- `skills/engineering/security-and-hardening/SKILL.md` — 第二轮发现安全相关问题时加载
+- `skills/engineering/performance-optimization/SKILL.md` — 第二轮发现性能相关问题时加载
 
 **缺任一项 → 报错退出**："缺少必要依赖文件 X，请先加载"。
 
@@ -85,9 +85,9 @@
 
 ---
 
-> ⚠️ **进入本阶段前，必须先加载**：`agent-skills/skills/code-review-and-quality/SKILL.md`
+> ⚠️ **进入本阶段前，必须先加载**：`skills/engineering/code-review-and-quality/SKILL.md`
 >
-> **按需加载**：`security-and-hardening/SKILL.md` 或 `performance-optimization/SKILL.md` 在发现相关问题时再加载。
+> **按需加载**：`skills/engineering/security-and-hardening/SKILL.md` 或 `skills/engineering/performance-optimization/SKILL.md` 在发现相关问题时再加载。
 
 
 ## 角色

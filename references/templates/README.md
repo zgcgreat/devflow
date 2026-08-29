@@ -1,9 +1,10 @@
 # ForgeOS 核心产物模板库
 
-本目录包含 ForgeOS Phase 0-8 的 **25 个核心产物模板**，被 L1-INTERACTION 层所有 Phase _SKILL.md 引用。
+本目录包含 ForgeOS Phase 0-8 的 **26 个核心产物模板**，被 L1-INTERACTION 层所有 Phase _SKILL.md 引用。
 
 > **目录定位**: 这是 ForgeOS **主模板目录**。Phase _SKILL.md 中的模板引用统一指向 `references/templates/`。
-> 另一个 `templates/` 目录（55 个）为 gsd-workflows 遗留模板库，仅被 gsd-workflows 引用，两者职责不同不合并。
+> 另一个遗留模板库位于 `sources/gsd-workflows/` 下（外部项目副本，仅被
+> `sources/gsd-workflows/` 内部文档引用），两者职责不同，不合并。
 
 ## Phase 与模板映射
 

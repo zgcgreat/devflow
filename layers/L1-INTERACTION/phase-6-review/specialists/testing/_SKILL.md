@@ -16,7 +16,7 @@ dependencies:
 triggers:
   - Always active (runs during every Phase 6)
   - Especially important for critical path changes
-  - Phase 5 test-results.md available
+  - Phase 5 05-test-report.md available
 allowed-tools:
   - Read
   - Bash
@@ -34,7 +34,7 @@ allowed-tools:
 
 ### Step 1: Input Analysis
 
-- Read Phase 5 test results (test-results.md) from `.specs/waves/`
+- Read Phase 5 test results (05-test-report.md) from `.forgeos/waves/`
 - Read changed files from Phase 6 task metadata
 - Compute delta: lines of new/changed code vs lines covered by tests
 

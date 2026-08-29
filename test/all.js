@@ -44,6 +44,25 @@ const REQUIRED_FILES = [
 
 const REQUIRED_FRONTMATTER_KEYS = ['name', 'version'];
 
+/**
+ * 创建隔离工作区。
+ * 历史 bug: 测试直接 new PhaseEngine() 会以 process.cwd() 为工作区，
+ * 跑一次测试就覆写用户真实的 .forgeos/state.json。
+ */
+const os = require('os');
+const _tmpDirs = [];
+function mkWorkspace() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'forgeos-test-'));
+  _tmpDirs.push(dir);
+  return dir;
+}
+function cleanupWorkspaces() {
+  while (_tmpDirs.length) {
+    const d = _tmpDirs.pop();
+    try { fs.rmSync(d, { recursive: true, force: true }); } catch { /* 清理失败可忽略 */ }
+  }
+}
+
 const TESTS = [];
 
 // Test 1: 文件完整性
@@ -91,68 +110,169 @@ TESTS.push({
   },
 });
 
-// Test 4: 宪法 — 8 条规则全部存在
+// Test 4: 宪法 — 规则编号必须连续（历史 bug: 断言 count>=7 恒真，且标题写"8 条"而实际 12 条）
 TESTS.push({
-  name: '宪法完整性 — 8 条规则',
+  name: '宪法完整性 — 规则编号连续无缺号',
   run: () => {
     const constitution = fs.readFileSync(path.join(ROOT, 'CONSTITUTION.md'), 'utf-8');
-    // Updated regex to support multi-digit rule numbers (e.g. ## 10, ## 2.1)
-    const rules = constitution.match(/^## \d+(\.\d+)?/gm);
-    const count = rules ? rules.length : 0;
-    return count >= 7
-      ? { pass: true, detail: `${count} 条宪法规则` }
-      : { pass: false, detail: `只有 ${count} 条规则` };
+    const nums = (constitution.match(/^## (\d+)(?:\.\d+)?/gm) || [])
+      .map(s => parseInt(s.replace(/^##\s*/, ''), 10));
+
+    const errors = [];
+    if (nums.length === 0) errors.push('未找到任何规则标题');
+    for (let i = 0; i < nums.length; i++) {
+      if (nums[i] !== i + 1) {
+        errors.push(`编号不连续: 第 ${i + 1} 条为 ${nums[i]}，应为 ${i + 1}`);
+        break;
+      }
+    }
+    // 防止规则被静默删减
+    if (nums.length < 12) errors.push(`规则数 ${nums.length} < 12，疑似被删减`);
+
+    return errors.length === 0
+      ? { pass: true, detail: `${nums.length} 条宪法规则，编号 1-${nums.length} 连续` }
+      : { pass: false, detail: errors.join('; ') };
   },
 });
 
-// Test 5: 门控 — G0-G8 + G2/G2.5/G3.5/G7.5 全部定义（共 ≥12 个门控）
+// Test 5: 门控 — 从权威定义加载校验（历史 bug: 正则只抽 gate: 不抽 extraGates，导致 G2 结构性不可见）
 TESTS.push({
-  name: '门控完整性 — G0-G8 (含变体)',
+  name: '门控完整性 — 12 个门控全部有派生产物',
   run: () => {
-    const engine = fs.readFileSync(path.join(ROOT, 'lib/phase-engine.js'), 'utf-8');
-    // PHASES array in phase-engine.js should define all gates from gate-rules.md
-    // Including main gates G0-G8 and sub-gates G2/G2.5/G3.5/G7.5
-    const gates = (engine.match(/gate: 'G[0-9][.0-9]*'/g) || []);
-    return gates.length >= 11
-      ? { pass: true, detail: `${gates.length} 个门控在 PHASES 中定义` }
-      : { pass: false, detail: `只有 ${gates.length} 个 (对应字符串: ${gates.join(', ')})` };
+    const { GATES, PHASES } = require(path.join(ROOT, 'lib', 'phase-engine'));
+    const EXPECTED = ['G0', 'G1', 'G2', 'G2.5', 'G3', 'G3.5', 'G4', 'G5', 'G6', 'G7', 'G7.5', 'G8'];
+    const errors = [];
+
+    const ids = GATES.map(g => g.id);
+    for (const id of EXPECTED) if (!ids.includes(id)) errors.push(`缺门控 ${id}`);
+    for (const id of ids) if (!EXPECTED.includes(id)) errors.push(`未知门控 ${id}`);
+
+    // 每个门控都必须能从 PHASES 派生出产物（含 extraGates）
+    const map = {};
+    for (const p of PHASES) {
+      for (const gid of [p.gate, ...(p.extraGates || [])]) {
+        (map[gid] = map[gid] || []).push(p.output);
+      }
+    }
+    for (const id of EXPECTED) {
+      if (!map[id] || map[id].length === 0) errors.push(`门控 ${id} 无派生产物`);
+    }
+
+    return errors.length === 0
+      ? { pass: true, detail: `${GATES.length} 个门控 (${ids.join(', ')})，全部有派生产物` }
+      : { pass: false, detail: errors.join('; ') };
   },
 });
 
 // Test 5b: PhaseEngine gate ordering validation — gates must be sequential in PHASES array
 TESTS.push({
-  name: 'PhaseEngine — 门控顺序与 gate-rules.md 一致',
+  name: 'PhaseEngine — 门控序列含 extraGates 且顺序正确',
   run: () => {
-    const engine = fs.readFileSync(path.join(ROOT, 'lib/phase-engine.js'), 'utf-8');
-    const phasesMatch = engine.match(/id:\s*(\d+(?:\.\d+)?),\s*name:\s*'[^']+',\s*gate:\s*'G[0-9][.0-9]*'/g);
-    if (!phasesMatch || phasesMatch.length < 2) {
-      return { pass: false, detail: 'PHASES 数组定义不完整' };
-    }
-    // Verify gates are in monotonically increasing order (G0 → G1 → G2 → ...)
-    const gateIds = phasesMatch.map(m => m.match(/gate:\s*'([^']+)'/)[1]);
-    // Expected sequence in order of appearance in phase-engine.js (id: 0 → 8)
-    // Phase 1 gate=G1 (5Whys), G2 is extraGates on Phase 1 (Architecture Gate)
-    const expectedSequence = ['G0', 'G1', 'G2.5', 'G3', 'G3.5', 'G4', 'G5', 'G6', 'G7', 'G7.5', 'G8'];
-    const mismatched = gateIds.filter((g, i) => expectedSequence[i] !== g);
-    return mismatched.length === 0
-      ? { pass: true, detail: `门控顺序正确: ${gateIds.join(' → ')}` }
-      : { pass: false, detail: `不匹配预期序列 (${expectedSequence.join(', ')})，差异: ${mismatched.join(', ')}` };
+    // 历史 bug: 用正则只抽 `gate:` 字段，extraGates 中的 G2 结构性不可见，
+    // 且 expectedSequence 里显式省略了 G2 —— 等于把缺陷固化成"预期行为"。
+    // 现改为直接加载权威定义并按 phaseAfter 排序。
+    const { GATES } = require(path.join(ROOT, 'lib', 'phase-engine'));
+    const sorted = [...GATES].sort((a, b) => a.phaseAfter - b.phaseAfter);
+    const ids = sorted.map(g => g.id);
+    const expected = ['G0', 'G1', 'G2', 'G2.5', 'G3', 'G3.5', 'G4', 'G5', 'G6', 'G7', 'G7.5', 'G8'];
+
+    return ids.join(',') === expected.join(',')
+      ? { pass: true, detail: `门控顺序正确: ${ids.join(' → ')}` }
+      : { pass: false, detail: `不匹配预期 (${expected.join(', ')})，实际 (${ids.join(', ')})` };
   },
 });
 
-// Test 5c: CLI integration — bin/forge-os.js --help exits cleanly
+// Test 5c: CLI 集成 — 真实 spawn 子进程执行（历史 bug: 名为"可执行"却只做源码文本 grep）
 TESTS.push({
-  name: 'CLI 集成 — bin/forge-os.js --help 可执行',
+  name: 'CLI 集成 — bin/forge-os.js 真实执行 + help 覆盖全部命令',
   run: () => {
-    const forgeOS = fs.readFileSync(path.join(ROOT, 'bin/forge-os.js'), 'utf-8');
-    // Check CLI has required subcommands
-    const hasInit = forgeOS.includes('--init') || forgeOS.includes('init');
-    const hasStatus = forgeOS.includes('--status') || forgeOS.includes('status');
-    const hasPhase = forgeOS.includes('--phase') || forgeOS.includes('phase');
-    const hasGate = forgeOS.includes('--gate') || forgeOS.includes('gate');
-    return hasInit && hasStatus && hasPhase && hasGate
-      ? { pass: true, detail: 'CLI 包含 init/status/phase/gate 核心命令' }
-      : { pass: false, detail: `CLI 缺少部分核心命令 (init:${hasInit}, status:${hasStatus}, phase:${hasPhase}, gate:${hasGate})` };
+    const { spawnSync } = require('child_process');
+    const cli = path.join(ROOT, 'bin', 'forge-os.js');
+    const errors = [];
+
+    const run = (args) => spawnSync(process.execPath, [cli, ...args], { encoding: 'utf8', cwd: ROOT });
+
+    const help = run(['help']);
+    if (help.status !== 0) {
+      errors.push(`forge-os help 退出码 ${help.status}: ${(help.stderr || '').trim().split('\n')[0]}`);
+    }
+    const doctor = run(['doctor']);
+    if (!doctor.stdout || !doctor.stdout.includes('ForgeOS 健康检查')) {
+      errors.push(`forge-os doctor 无有效输出 (status=${doctor.status})`);
+    }
+
+    // help 必须列出 CMDS 中实现的每一个命令，防止"实现了却不告知"
+    const helpText = help.stdout || '';
+    const CMDS = ['init', 'status', 'phase', 'detect', 'task', 'mem', 'party', 'code', 'caveman', 'gates', 'install', 'doctor'];
+    for (const cmd of CMDS) {
+      if (!new RegExp(`forge-os ${cmd}\\b`).test(helpText)) errors.push(`help 未列出命令: ${cmd}`);
+    }
+
+    return errors.length === 0
+      ? { pass: true, detail: `help/doctor 真实执行通过，help 覆盖全部 ${CMDS.length} 个命令` }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 5e: detectMode — 四档阈值判定（守护 SKILL.md/GO.md 声明与实现一致）
+TESTS.push({
+  name: 'detectMode — 四档阈值判定正确',
+  run: () => {
+    const { detectMode } = require(path.join(ROOT, 'lib', 'phase-engine'));
+    const cases = [
+      [{ files: 1, lines: 20 }, 'fast'],
+      [{ files: 2, lines: 49 }, 'fast'],
+      [{ files: 3, lines: 120, brownfield: true }, 'lean'],
+      [{ files: 5, lines: 299, brownfield: true }, 'lean'],
+      [{ files: 3, lines: 120 }, 'standard'],
+      [{ files: 10, lines: 499 }, 'standard'],
+      [{ files: 20, lines: 900 }, 'strict'],
+      [{ files: 1, lines: 10, architectureChange: true }, 'strict'],
+      [{ files: 1, lines: 10, dataModelChange: true }, 'strict'],
+      [{ files: 1, lines: 10, risk: 'high' }, 'strict'],
+      [{ files: 1, lines: 10, modules: 5 }, 'strict'],
+      [{ risk: 'low' }, 'fast'],
+    ];
+    const errors = [];
+    for (const [input, expect] of cases) {
+      const got = detectMode(input).mode;
+      if (got !== expect) errors.push(`${JSON.stringify(input)} → ${got}，应为 ${expect}`);
+    }
+    return errors.length === 0
+      ? { pass: true, detail: `${cases.length} 组阈值判定全部正确` }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 5f: setPhase — 相位切换与非法值防护（守护 --phase 不再是死参数）
+TESTS.push({
+  name: 'setPhase — 相位切换生效且拒绝非法值',
+  run: () => {
+    const { PhaseEngine } = require(path.join(ROOT, 'lib', 'phase-engine'));
+    const engine = new PhaseEngine(mkWorkspace());
+    const errors = [];
+
+    engine.setMode('standard');
+    engine.setPhase(5);
+    if (engine.state.currentPhase !== 5) errors.push(`setPhase(5) 未生效: ${engine.state.currentPhase}`);
+
+    // 非法 Phase 必须抛错
+    let threw = false;
+    try { engine.setPhase(99); } catch { threw = true; }
+    if (!threw) errors.push('setPhase(99) 未拒绝非法值');
+
+    // 当前模式下被跳过的 Phase 必须拒绝（除非 force）
+    engine.setMode('fast');
+    let blocked = false;
+    try { engine.setPhase(0); } catch { blocked = true; }
+    if (!blocked) errors.push('fast 模式下 setPhase(0) 未被拦截');
+
+    try { engine.setPhase(0, { force: true }); } catch (e) { errors.push(`force 切换失败: ${e.message}`); }
+    if (engine.state.currentPhase !== 0) errors.push('force 切换未生效');
+
+    return errors.length === 0
+      ? { pass: true, detail: '相位切换生效，非法值与跨模式切换均被拒绝' }
+      : { pass: false, detail: errors.join('; ') };
   },
 });
 
@@ -184,16 +304,18 @@ TESTS.push({
   },
 });
 
-// Test 7: 安装器 — 可用目标列表
+// Test 7: 安装器 — 真实语法校验（历史 bug: 名为"可解析"却只做 includes() 文本匹配）
 TESTS.push({
-  name: '安装器 — install.js 存在且可解析',
+  name: '安装器 — install.js 通过 node --check 语法校验',
   run: () => {
-    const installJs = fs.readFileSync(path.join(HARNESSES_DIR, 'install.js'), 'utf-8');
-    const hasTargets = installJs.includes('TARGETS');
-    const hasParseArgs = installJs.includes('parseArgs');
-    return hasTargets && hasParseArgs
-      ? { pass: true, detail: 'install.js 可解析' }
-      : { pass: false, detail: '缺少必要结构' };
+    const { spawnSync } = require('child_process');
+    const p = path.join(HARNESSES_DIR, 'install.js');
+    if (!fs.existsSync(p)) return { pass: false, detail: 'install.js 不存在' };
+
+    const r = spawnSync(process.execPath, ['--check', p], { encoding: 'utf8' });
+    return r.status === 0
+      ? { pass: true, detail: 'node --check 通过（真实语法校验，非文本匹配）' }
+      : { pass: false, detail: `语法错误: ${(r.stderr || '').trim().split('\n').slice(0, 3).join(' ')}` };
   },
 });
 
@@ -299,13 +421,113 @@ TESTS.push({
   name: 'Phase引擎 — 门控护卫阻止非法推进',
   run: () => {
     const { PhaseEngine, PHASES } = require(path.join(ROOT, 'lib/phase-engine'));
-    const e = new PhaseEngine();
+    const e = new PhaseEngine(mkWorkspace());   // 隔离工作区，避免污染真实 .forgeos/
     e.setMode('fast');
     const result = e.nextPhase();
     const blocked = result && result.blocked === true;
     return blocked
       ? { pass: true, detail: `nextPhase() 正确阻止: ${result.reason}` }
       : { pass: false, detail: `nextPhase() 未阻止非法推进 (应被 G5 拦截)` };
+  },
+});
+
+// Test 13: adapters 门控映射 — 按 phaseAfter 反查，杜绝 G${phase} 拼接导致的错位与静默放行
+TESTS.push({
+  name: 'adapters 门控 — 相位映射正确且无静默放行',
+  run: () => {
+    const { checkGate } = require(path.join(ROOT, 'adapters', 'shared', 'core-bridge.js'));
+    const dir = mkWorkspace();
+    fs.mkdirSync(path.join(dir, '.forgeos'), { recursive: true });
+    const errors = [];
+
+    // 全相位映射: phaseAfter 反查结果必须与权威定义一致
+    const expected = {
+      0: ['G0'], 1: ['G1', 'G2'], 1.5: ['G2.5'], 2: ['G3'], 2.5: ['G3.5'],
+      3: ['G4'], 4: ['G5'], 5: ['G6'], 6: ['G7'], 7: ['G7.5'], 8: ['G8'],
+    };
+    for (const [ph, exp] of Object.entries(expected)) {
+      const r = checkGate(dir, Number(ph));
+      // 无产物时必须 FAIL，绝不可静默放行
+      if (r.passed !== false) errors.push(`Phase ${ph} 无产物却判定通过（静默放行）`);
+      const mentioned = exp.every(g => r.reason.includes(g));
+      if (!mentioned) errors.push(`Phase ${ph} 原因未含 ${exp.join('+')}: ${r.reason}`);
+    }
+
+    // 补产物后应通过（含 <req-id>/ 子目录与三层深度）
+    const req = path.join(dir, '.forgeos', 'req-001');
+    fs.mkdirSync(path.join(req, 'waves', 'wave-1'), { recursive: true });
+    fs.writeFileSync(path.join(req, '01b-context.md'), 'x');
+    if (!checkGate(dir, 1.5).passed) errors.push('Phase 1.5 补产物后仍未通过');
+    fs.writeFileSync(path.join(req, 'waves', 'wave-1', '04-wave-logs.md'), 'x');
+    if (!checkGate(dir, 4).passed) errors.push('Phase 4 三层深度产物未找到');
+
+    return errors.length === 0
+      ? { pass: true, detail: '11 个相位映射正确，无静默放行，支持 req-id/ 与三层深度' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 14: 产物目录约定 — 全项目统一 .forgeos/，杜绝 .specs/ 分裂
+TESTS.push({
+  name: '产物目录约定 — 统一为 .forgeos/ (无 .specs/ 残留)',
+  run: () => {
+    const { execFileSync } = require('child_process');
+    let out = '';
+    try {
+      out = execFileSync('git', ['grep', '-ln', '\\.specs/', '--', '*.md', '*.js'],
+        { cwd: ROOT, encoding: 'utf8' });
+    } catch (e) {
+      // git grep 无匹配时退出码为 1，视为通过
+      if (e.status === 1) return { pass: true, detail: '全项目无 .specs/ 引用' };
+      return { pass: false, detail: `git grep 失败: ${e.message}` };
+    }
+    const files = out.trim().split('\n').filter(Boolean)
+      // 排除本测试文件自身（其中的模式字符串）与审计报告（历史记录）
+      .filter(f => !f.includes('DEEP-AUDIT') && !f.startsWith('test/all.js'));
+    return files.length === 0
+      ? { pass: true, detail: '全项目无 .specs/ 引用' }
+      : { pass: false, detail: `仍有 .specs/ 引用: ${files.join(', ')}` };
+  },
+});
+
+// Test 15: 文档↔引擎一致性 — GO.md 的 Phase 表门控编号必须与权威定义一致
+// (历史 bug: GO.md 曾把 Phase 0 标为 G1、Phase 5 标为 G2，与权威定义不符)
+TESTS.push({
+  name: 'GO.md 文档 — Phase 表门控编号与权威定义一致',
+  run: () => {
+    const { PHASES } = require(path.join(ROOT, 'lib', 'phase-engine'));
+    const goMd = fs.readFileSync(path.join(ROOT, 'GO.md'), 'utf-8');
+    const errors = [];
+
+    // 权威映射: phase id -> 门控 id 集合
+    const authoritative = {};
+    for (const p of PHASES) {
+      authoritative[String(p.id)] = [p.gate, ...(p.extraGates || [])].sort().join(' + ');
+    }
+
+    // 解析 GO.md 「Phase 详细执行流程」表: | id | Phase | 文件 | 门控 | 核心内容 |
+    const rows = goMd.split('\n')
+      .filter(l => /^\|\s*\d(\.\d)?\s*\|/.test(l))
+      .map(l => l.split('|').map(c => c.trim()).filter((c, i, a) => i > 0 && i < a.length - 1));
+
+    let checked = 0;
+    for (const row of rows) {
+      const id = row[0];
+      if (/^7-8|^\d+-\d+$/.test(id)) continue;   // 合并行跳过
+      const gateCell = row[3] || '';
+      if (!gateCell) continue;
+      const expected = authoritative[id];
+      if (!expected) { errors.push(`GO.md 出现未知 Phase id: ${id}`); continue; }
+      const got = gateCell.split('+').map(s => s.trim()).sort().join(' + ');
+      if (got !== expected) errors.push(`Phase ${id}: GO.md 写 ${gateCell}，权威定义 ${expected}`);
+      checked++;
+    }
+
+    if (checked < 8) errors.push(`仅校验到 ${checked} 行，GO.md 表格格式可能已变更`);
+
+    return errors.length === 0
+      ? { pass: true, detail: `GO.md ${checked} 行 Phase 门控编号与权威定义一致` }
+      : { pass: false, detail: errors.join('; ') };
   },
 });
 
@@ -322,6 +544,8 @@ TESTS.forEach(t => {
   console.log(`   ${result.detail}\n`);
   if (result.pass) passCount++; else failCount++;
 });
+
+cleanupWorkspaces();
 
 console.log('='.repeat(50));
 console.log(`结果: ${passCount} 通过, ${failCount} 失败, ${TESTS.length} 总计`);

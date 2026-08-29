@@ -9,15 +9,19 @@
 ```
 L1-INTERACTION/
 ├── README.md              ← 本文件
-├── phase-0-yc-strategy/      # YC六问战略评估 ⭐v3入口
+├── phase-0-strategy/         # Phase 0 子步骤 1/2 — 创意捕获/种子/范围界定
 │   └── _SKILL.md
-├── phase-1-5whys/            # ⭐5 Whys需求追问 (v3新增 _SKILL.md)
+├── phase-0-yc-strategy/      # Phase 0 子步骤 2/2 — YC六问战略评估 ⭐v3入口
+│   └── _SKILL.md             #   两者串联合成「唯一的 Phase 0」，非两个 Phase
+├── phase-1-5whys/            # ⭐5 Whys需求追问 (引擎 id 1)
 │   └── _SKILL.md
-├── phase-2-design/           # ⭐方案设计 (v3新增 _SKILL.md, 与L3协作)
+├── phase-1b-discuss/         # ⭐决策捕获 (引擎 id 1.5, 文档称 Phase 1b)
 │   └── _SKILL.md
-├── phase-2a-shotgun/         # ⭐⭐设计枪战变体生成 (v3独有)
+├── phase-2-design/           # ⭐方案设计 (引擎 id 2, 与L3协作)
 │   └── _SKILL.md
-├── phase-3-task-plan/        # ⭐任务拆分/DAG拓扑 (v3新增 _SKILL.md, 与L3 DAG协作)
+├── phase-2a-shotgun/         # ⭐⭐设计枪战变体生成 (引擎 id 2.5, v3独有)
+│   └── _SKILL.md
+├── phase-3-task-plan/        # ⭐任务拆分/DAG拓扑 (引擎 id 3, 与L3 DAG协作)
 │   └── _SKILL.md
 ├── phase-4-build/            # ⭐实施/Wave并行执行 (v3新增 _SKILL.md, 对接L2引擎)
 │   └── _SKILL.md

@@ -44,7 +44,7 @@ Wave Executor (L2-ENGINE) = **执行层**：负责"怎么做完"，含 Kahn 拓�
 ## 输出
 
 - 按 Wave 分组执行的代码变更
-- 消费 `.specs/waves/wave-{N}/SUMMARY.md` — Wave Executor 写入
+- 消费 `.forgeos/waves/wave-{N}/SUMMARY.md` — Wave Executor 写入
 
 ## 执行流程
 

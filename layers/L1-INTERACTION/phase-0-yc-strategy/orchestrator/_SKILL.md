@@ -47,7 +47,7 @@ Orchestrator 是 Phase 0-7 全流水线管理者，负责：
 
 ## 执行流程
 
-详见 `docs/phases/phase-0-yc-strategy.md`
+详见 `docs/phases/phase-0-strategy.md`
 
 > **关键规则**:
 > - 每任务通过 QA 才进入下一任务，禁止批量验证

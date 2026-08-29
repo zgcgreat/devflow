@@ -28,7 +28,7 @@ Conduct systematic technical research for architecture decisions, dependency val
 
 ## 工作流
 
-详见 `docs/phases/phase-2-researcher.md`
+详见 `docs/phases/phase-2-design.md`
 
 ## Error Taxonomy
 

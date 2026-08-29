@@ -94,8 +94,8 @@ Before starting learning workflow, verify ALL of the following:
 
 | Category | Purpose | Lifecycle | Storage Location |
 |----------|---------|-----------|------------------|
-| **Durable Facts** | Domain knowledge reusable across sessions | Permanent (until superseded by newer evidence) | `memory/domain-skills/{domain}/SKILL.md` |
-| **Temporary Notes** | Session-specific observations, not reusable | Current session / cleared at Phase 8 Archive | `memory/TEMPORARY.md` |
+| **Durable Facts** | Domain knowledge reusable across sessions | Permanent (until superseded by newer evidence) | `.forgeos/memory/domain-skills/{domain}/SKILL.md` |
+| **Temporary Notes** | Session-specific observations, not reusable | Current session / cleared at Phase 8 Archive | `.forgeos/memory/TEMPORARY.md` |
 | **Session State** | Request-level workflow tracking | Per req-id, never cross-request reuse | `.forgeos/<req-id>/STATE.md` |
 
 #### Classification Decision Tree
@@ -137,7 +137,7 @@ if grep -q "Wave.*completed\|Task.*started\|Status.*changed" learning_output; th
 fi
 
 # Check frequency in existing lessons
-FREQUENCY=$(grep -c "{keyword}" .specs/memory/LESSONS.md || echo 0)
+FREQUENCY=$(grep -c "{keyword}" .forgeos/memory/LESSONS.md || echo 0)
 ```
 
 **Output format**:
@@ -167,7 +167,7 @@ For each task in wave:
 
 ```bash
 # Load task execution log
-cat .specs/waves/wave-{N}/task-{task-id}/execution.log
+cat .forgeos/waves/wave-{N}/task-{task-id}/execution.log
 
 # Extract key events
 grep -E "FAIL|ERROR|SUCCESS|WARNING|EXCEPTION" execution.log
@@ -451,7 +451,7 @@ Before proceeding to Step 3 (Domain Skills Promotion):
 - [ ] All `[UPDATE]` nominations merged into existing Injection Log entries
 - [ ] Expired nominations (no injection in 30 days) marked `Expired`
 - [ ] Low-scoring injections (avg < 3 over ≥3 waves) flagged for review in Phase 8
-- [ ] Injection Log written to `.specs/memory/injection-log.md`
+- [ ] Injection Log written to `.forgeos/memory/injection-log.md`
 
 **Injection Log Format**:
 
@@ -492,8 +492,8 @@ Before proceeding to Step 3 (Domain Skills Promotion):
 ```bash
 # Count lesson occurrences by keyword
 for keyword in "microservices" "rate-limiting" "auth-jwt"; do
-  count=$(grep -ci "$keyword" .specs/memory/LESSONS.md || echo 0)
-  wave_count=$(grep -l "$keyword" .specs/waves/*/SUMMARY.md | wc -l)
+  count=$(grep -ci "$keyword" .forgeos/memory/LESSONS.md || echo 0)
+  wave_count=$(grep -l "$keyword" .forgeos/waves/*/SUMMARY.md | wc -l)
   
   if [ $count -ge 3 ] && [ $wave_count -ge 2 ]; then
     echo "✅ Promote '$keyword' to domain skill (freq=$count, waves=$wave_count)"
@@ -716,7 +716,7 @@ else
   # 降级: 关键词匹配 (原有逻辑)
   TASK_KEYWORDS=$(grep -oP '\b(auth|rate-limit|jwt|microservice)\b' task-spec.md | sort -u)
 
-  for skill in .specs/memory/domain-skills/*.md; do
+  for skill in .forgeos/memory/domain-skills/*.md; do
     TRIGGER_PATTERN=$(grep "^trigger_pattern:" $skill | cut -d':' -f2-)
 
     if echo "$TASK_KEYWORDS" | grep -qiE "$TRIGGER_PATTERN"; then
@@ -903,7 +903,7 @@ Phase N Complete → graduation_scan() [post-phase hook]
 
 ```markdown
 # AI 按 Jaccard 相似度聚类 LESSONS
-# 输入：.specs/memory/LESSONS.md
+# 输入：.forgeos/memory/LESSONS.md
 # 阈值：0.25
 # 输出：聚类结果
 # 示例：
@@ -941,13 +941,13 @@ Before promoting lessons to domain skills in Steps 5-6, estimate compilation tok
 **Budget enforcement logic**:
 ```bash
 # Budget check before graduation processing
-TOTAL_CANDIDATE_TOKENS=$(wc -c .specs/memory/LESSONS.md 2>/dev/null | awk '{print $1}' || echo 0)
+TOTAL_CANDIDATE_TOKENS=$(wc -c .forgeos/memory/LESSONS.md 2>/dev/null | awk '{print $1}' || echo 0)
 MAX_ALLOWED=$((50 * 1024))  # 50K tokens ≈ 50K * ~1.3 chars per token
 
 if [ "$TOTAL_CANDIDATE_TOKENS" -gt "$MAX_ALLOWED" ]; then
     echo "⚠️ Lesson corpus too large ($TOTAL_CANDIDATE_TOKENS bytes), processing max 50K tokens worth"
     # Take only most recent lessons to stay within budget
-    tail -c $MAX_ALLOWED .specs/memory/LESSONS.md > /tmp/lessons-truncated.md
+    tail -c $MAX_ALLOWED .forgeos/memory/LESSONS.md > /tmp/lessons-truncated.md
 fi
 
 # After clustering, check output size
@@ -1031,7 +1031,7 @@ When domain-skill directory write fails during Step 5-6 graduation:
 2. **Second attempt**: If first fails, retry with 2s backoff (filesystem may be syncing)
 3. **Third attempt**: If second fails, retry with 4s backoff (disk I/O contention)
 4. **Fallback**: If all 3 retries fail, write to `/tmp/learning-workflow-{timestamp}.md` and emit warning: "⚠️ Domain skill graduation failed after 3 retries — output to temp dir for manual copy"
-5. **Notification**: Update `.specs/waves/current/heartbeat.log` with graduation-fail entry including retry count and fallback path
+5. **Notification**: Update `.forgeos/waves/current/heartbeat.log` with graduation-fail entry including retry count and fallback path
 
 **Root Cause Analysis**: After write-fail, determine why:
 - Permission denied → `chmod` directory ownership fix
@@ -1096,7 +1096,7 @@ When domain-skill directory write fails during Step 5-6 graduation:
 
 **Multi-Project Concurrent Development**:
 
-- Maintain separate memory per project (`project-a/.specs/memory/`, `project-b/.specs/memory/`)
+- Maintain separate memory per project (`project-a/.forgeos/memory/`, `project-b/.forgeos/memory/`)
 - Cross-reference via shared domain skills (symlink or copy)
 - Merge lessons only after both projects complete
 
@@ -1240,31 +1240,31 @@ When domain-skill directory write fails during Step 5-6 graduation:
 **File System Operations**:
 ```bash
 # Create directory structure
-mkdir -p .specs/memory/{lessons,domain-skills}
+mkdir -p .forgeos/memory/{lessons,domain-skills}
 
 # Atomic append (prevent duplicates)
-echo "{new_entry}" >> .specs/memory/LESSONS.md
+echo "{new_entry}" >> .forgeos/memory/LESSONS.md
 
 # Find max lesson number
-grep -oP 'L-\d+' .specs/memory/LESSONS.md | sort -t'-' -k2 -n | tail -1
+grep -oP 'L-\d+' .forgeos/memory/LESSONS.md | sort -t'-' -k2 -n | tail -1
 ```
 
 **Text Processing**:
 ```bash
 # Extract lessons by category
-grep "^\[FAILURE\]" .specs/memory/LESSONS.md
+grep "^\[FAILURE\]" .forgeos/memory/LESSONS.md
 
 # Count occurrences for domain skill promotion
-grep -c "microservices" .specs/memory/LESSONS.md
+grep -c "microservices" .forgeos/memory/LESSONS.md
 
 # Build keyword index
-grep -oP '(?<=Applicability: ).*' .specs/memory/LESSONS.md | tr ',' '\n' | sort -u
+grep -oP '(?<=Applicability: ).*' .forgeos/memory/LESSONS.md | tr ',' '\n' | sort -u
 ```
 
 **Clustering** (optional):
 ```markdown
 # AI 按 Jaccard 相似度聚类 LESSONS（阈值 0.25）
-# 读取 .specs/memory/LESSONS.md，输出聚类结果
+# 读取 .forgeos/memory/LESSONS.md，输出聚类结果
 ```
 
 ### Optional Tools
@@ -1281,17 +1281,17 @@ distillator verify original.md compressed.md
 **Semantic Embeddings** (advanced):
 ```markdown
 # AI 使用语义嵌入提升聚类质量（高级，需 embedding 模型支持）
-# 读取 .specs/memory/LESSONS.md，生成向量表示后聚类
+# 读取 .forgeos/memory/LESSONS.md，生成向量表示后聚类
 ```
 
 **Automated Indexing**:
 ```bash
 # Rebuild keyword index on Git commit (pre-commit hook)
 #!/bin/bash
-grep -oP '(?<=Applicability: ).*' .specs/memory/LESSONS.md | \
+grep -oP '(?<=Applicability: ).*' .forgeos/memory/LESSONS.md | \
   tr ',' '\n' | sort -u | \
   jq -R -s 'split("\n") | map(select(length > 0)) | map({(.): []}) | add' > \
-  .specs/memory/KEYWORD_INDEX.json
+  .forgeos/memory/KEYWORD_INDEX.json
 ```
 
 ---
@@ -1299,7 +1299,7 @@ grep -oP '(?<=Applicability: ).*' .specs/memory/LESSONS.md | \
 ## Implementation Checklist
 
 Before extraction:
-- [ ] Memory directory structure verified (.specs/memory/)
+- [ ] Memory directory structure verified (.forgeos/memory/)
 - [ ] Required files exist (LESSONS.md, domain-skills/)
 - [ ] Current max lesson number identified
 - [ ] Source materials collected (dev-log, wave summaries, reviews)

@@ -422,7 +422,7 @@ PROJECT_CONTEXT.md 已自动填充:
 
 ### 记忆 vs 产物
 
-| 维度 | 记忆 (.superpowers-memory/) | 产物 (.specs/<req-id>/) |
+| 维度 | 记忆 (.superpowers-memory/) | 产物 (.forgeos/<req-id>/) |
 |---|---------------------------|---|
 | **作用域** | 整个项目生命周期 | 单个需求/功能 |
 | **持久性** | 长期保留,跨会话有效 | 需求完成后归档 |

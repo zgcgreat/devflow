@@ -19,7 +19,7 @@ token_budget: "inherited from parent execution (~200K per child agent)"
 > **后置产物**: Per-agent isolated context packages + communication channels
 > **门控**: R7 — Context Isolation Rule
 
-> **Note**: This is a documentation-only index file describing the agent-isolation policy. Actual enforcement happens in `executor/_SKILL.md` and `wave-executor/_SKILL.md` (~200K/Agent context window budget). This file's budget is inherited from parent workflow execution.
+> **Note**: This is a documentation-only index file describing the agent-isolation policy. Actual enforcement happens in `layers/L2-ENGINE/executor/_SKILL.md` and `layers/L2-ENGINE/wave-executor/_SKILL.md` (~200K/Agent context window budget). This file's budget is inherited from parent workflow execution.
 
 ## 输入
 
@@ -253,7 +253,7 @@ def enforce_budget(agent_context):
 # Validates agent context budget enforcement at runtime
 
 WAVE_PLAN=$1
-AGENT_LOGS_DIR=${2:-.specs/waves/wave-*/agent-logs/}
+AGENT_LOGS_DIR=${2:-.forgeos/waves/wave-*/agent-logs/}
 
 echo "=== Context Budget Validation Test Harness ==="
 echo "Wave Plan: $WAVE_PLAN"
@@ -322,7 +322,7 @@ done
 # AGENT-05: Wave boundary rotation
 echo ""
 echo "Checking wave boundary context rotation..."
-for wave_dir in .specs/waves/wave-*/; do
+for wave_dir in .forgeos/waves/wave-*/; do
   [ -d "$wave_dir" ] || continue
   wave_num=$(basename $wave_dir | grep -oP '\d+')
   
@@ -374,7 +374,7 @@ fi
 **Usage**:
 ```bash
 # Run before proceeding to next wave
-./context-budget-validation.sh .forgeos/wave-plan.yaml .specs/waves/
+./context-budget-validation.sh .forgeos/wave-plan.yaml .forgeos/waves/
 
 # Integrate into G4 gate validation
 if ./context-budget-validation.sh "$WAVE_PLAN" "$AGENT_LOGS"; then
