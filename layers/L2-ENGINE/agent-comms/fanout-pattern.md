@@ -1,7 +1,7 @@
 # Fan-out 模式 — 一对多广播通信
 
 > **适用场景**: 一个 Agent 的发现需要通知多个依赖方
-> **来源**: Ruflo Fan-out Pattern + ForgeOS Schema 变更广播
+> **来源**: Ruflo Fan-out Pattern + DevFlow Schema 变更广播
 
 ---
 

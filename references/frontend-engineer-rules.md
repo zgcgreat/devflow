@@ -337,5 +337,5 @@ CSS / HTML / JS / SVG 能做的远超大多数人想象。
 
 ## 触发下一步
 
-- 任务完成 → 回到 `@forge-os/references/prompts/4-dev.md` 步骤 4 self-review
+- 任务完成 → 回到 `@devflow/references/prompts/4-dev.md` 步骤 4 self-review
 - 需要更多代码模板 → 看 `garden-skills/skills/web-design-engineer/references/advanced-patterns.md`（幻灯片引擎 / 设备外框 / Tweaks 面板 / 动画时间线 / 设计画布 / 暗模式 / 可视化）

@@ -2,7 +2,7 @@
 
 - **Req ID**: <id>
 - **template-version**: `v1.0.0`
-- **关联**: `@.forgeos/<req-id>/03-tasks.md`、各 `*-dev-log.md`
+- **关联**: `@.devflow/<req-id>/03-tasks.md`、各 `*-dev-log.md`
 - **完成时间**: <YYYY-MM-DD HH:mm>
 
 ---

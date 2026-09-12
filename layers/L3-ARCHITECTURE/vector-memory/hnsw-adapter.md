@@ -154,7 +154,7 @@ Phase 8 归档 / 首次迁移:
   1. 读取所有 lessons
   2. 批量生成嵌入 (batch size = 32)
   3. 写入 HNSW 索引
-  4. 保存索引到 .forgeos/vector_memory.db
+  4. 保存索引到 .devflow/vector_memory.db
 
 增量更新:
 

@@ -1,5 +1,5 @@
 ---
-name: forge-os:memory
+name: devflow:memory
 version: 1.0.0
 ---
 

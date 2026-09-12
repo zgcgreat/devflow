@@ -2,7 +2,7 @@
 name: adapter-bridge
 version: 3.0.0
 layer: L2-ENGINE
-description: Unified runtime bridge that adapts ForgeOS hooks, skills, and configurations to multiple AI coding runtimes (Claude Code, Cursor, Copilot, Codex, Gemini CLI, Windsurf, Kilo, etc.)
+description: Unified runtime bridge that adapts DevFlow hooks, skills, and configurations to multiple AI coding runtimes (Claude Code, Cursor, Copilot, Codex, Gemini CLI, Windsurf, Kilo, etc.)
 source: get-shit-done Sync Runtime Bridge
 triggers:
   - runtime detection
@@ -14,7 +14,7 @@ triggers:
 
 ## 核心原理
 
-借鉴 GSD Sync Runtime Bridge 的零子进程设计，ForgeOS 的核心能力（阶段路由、门禁检查、记忆管理、Token 压缩）应能被任何 AI 编码运行时调用。
+借鉴 GSD Sync Runtime Bridge 的零子进程设计，DevFlow 的核心能力（阶段路由、门禁检查、记忆管理、Token 压缩）应能被任何 AI 编码运行时调用。
 
 **设计目标**: 一次编写，处处运行 — 核心逻辑在 `adapters/shared/` 中，各运行时适配器仅处理配置格式差异。
 
@@ -44,7 +44,7 @@ adapters/
 │   ├── hooks.json         # hooks 注册模板
 │   └── install.md         # 安装指南
 ├── cursor/                # Cursor 适配
-│   ├── ForgeOS.mdc        # .mdc 规则文件模板
+│   ├── DevFlow.mdc        # .mdc 规则文件模板
 │   └── install.md
 ├── copilot/               # GitHub Copilot 适配
 │   ├── copilot-instructions.md  # instructions 模板
@@ -66,7 +66,7 @@ adapters/
 | API | 说明 | 返回 |
 |-----|------|------|
 | `detectRuntime()` | 检测当前 AI 编码环境 | `'claude-code'` / `'cursor'` / ... / `'unknown'` |
-| `findProjectDir()` | 向上查找含 `.forgeos/` 的项目根 | `string \| null` |
+| `findProjectDir()` | 向上查找含 `.devflow/` 的项目根 | `string \| null` |
 | `readState(dir)` | 解析 STATE.md | `{ phase, mode, progress, rawContent }` |
 | `checkGate(dir, targetPhase)` | 门禁检查 | `{ passed, missingArtifacts, reason }` |
 | `loadMemory(dir)` | 加载记忆系统 | `{ projectContext, decisions, knownFailures, lessons }` |
@@ -99,7 +99,7 @@ node adapters/shared/memory-loader.js budget  # Token 预算
 
 ## 安装流程
 
-1. `install-ForgeOS` 技能新增运行时选择步骤
+1. `install-DevFlow` 技能新增运行时选择步骤
 2. 根据选择生成对应适配器配置
 3. 将 shared/ 核心逻辑链接到运行时配置
 4. 验证配置生效

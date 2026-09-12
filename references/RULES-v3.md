@@ -3,8 +3,8 @@
 > **版本**: v3.5.0
 > **创建日期**: 2026-05-17
 > **最近更新**: 2026-05-30 (v3.5: R27-R32 Phase 3-4 规则)
-> **融合来源**: forge-os RULES.md + 架构层 R1-R15 + 交互层 Phase Rules + Karpathy Coding Principles + Ruflo SendMessage
-> **适用范围**: ForgeOS 全流程 Phase 0-8
+> **融合来源**: devflow RULES.md + 架构层 R1-R15 + 交互层 Phase Rules + Karpathy Coding Principles + Ruflo SendMessage
+> **适用范围**: DevFlow 全流程 Phase 0-8
 
 ---
 
@@ -171,7 +171,7 @@
 ## R21 · 向后兼容
 
 - **R21.1** v3.0 产物零改动可迁移到 v1.0 流程使用
-- **R21.2** `.forgeos/` 目录结构保持与 forge-os 兼容
+- **R21.2** `.devflow/` 目录结构保持与 devflow 兼容
 - **R21.3** STATE.md 状态机枚举（not_started / in_progress / waiting_user_confirmation / completed / blocked / skipped）保持不变
 
 ---
@@ -269,7 +269,7 @@ done
   - R3: 入场检测模式适配（Fast跳过、Lean简化、情况G复用外部上下文）
   - R2.7: Lean→Standard 升级条件
   - R3.5-R3.7: Fast/Lean 入场检测简化规则
-- **v3.0.0 (2026-05-17)**: 初始版本，融合 forge-os + 架构层 + supercorp
+- **v3.0.0 (2026-05-17)**: 初始版本，融合 devflow + 架构层 + supercorp
 - **R1-R9**: 流程基础（PRD → 模式判定 → 入场检测 → 门禁 → Token 优化 → Agent 隔离 → DAG → LearningWorkflow → Provider）
 - **R10-R21**: 执行保障（Delta Specs → GitNexus → 审查 → Canary → 设计枪战 → 跨波注入 → 原子提交 → Heartbeat → Domain Skills → 模板强制 → 向后兼容）
 - **R22**: 质量评分标准（Quality Scoring）
@@ -318,7 +318,7 @@ done
 
 ## R25 · Agent 间通信（Wave 内消息板）⭐v3.4
 
-- **R25.1** Wave 内 ≥2 个并行 Agent 时，必须通过消息板通信（`.forgeos/<req-id>/comms/`），禁止绕过消息板直接依赖 Orchestrator 中转
+- **R25.1** Wave 内 ≥2 个并行 Agent 时，必须通过消息板通信（`.devflow/<req-id>/comms/`），禁止绕过消息板直接依赖 Orchestrator 中转
 - **R25.2** 重要发现（schema 变更、API 契约变更、共享类型变更）必须写入 `notifications.md`，优先级 ≥ high
 - **R25.3** 需要其他 Agent 确认的请求必须写入 `requests.md`，等待 `responses.md` 回复或 5 分钟超时
 - **R25.4** 错误（API 契约冲突、代码合并冲突、数据模型不一致）必须写入 `errors.md`，Orchestrator 必须处理
@@ -348,12 +348,12 @@ done
 
 ## R26 · 项目宪法（PROJECT_CONSTITUTION.md）⭐v3.4
 
-- **R26.1** Phase 0 启动时必须检测 `.forgeos/PROJECT_CONSTITUTION.md` 是否存在
+- **R26.1** Phase 0 启动时必须检测 `.devflow/PROJECT_CONSTITUTION.md` 是否存在
 - **R26.2** 存在时自动加载到 Agent 上下文，所有 Phase 执行必须遵守其中的项目级约束
-- **R26.3** 不存在时在路由声明中标注 `项目宪法: ⚠️ 未设置`，建议用户运行 `/forgeos:setup` 生成（不阻塞流程）
+- **R26.3** 不存在时在路由声明中标注 `项目宪法: ⚠️ 未设置`，建议用户运行 `/devflow:setup` 生成（不阻塞流程）
 - **R26.4** 违反项目宪法的代码必须在 Phase 6 审查中标记为 P1 错误
 - **R26.5** 项目宪法与流程宪法 (CONSTITUTION.md) 冲突时，以项目宪法为准（用户约束 > 流程规则）
-- **R26.6** 项目宪法可由用户自由定制，ForgeOS 不覆盖用户修改
+- **R26.6** 项目宪法可由用户自由定制，DevFlow 不覆盖用户修改
 - **R26.7** 项目宪法模板: `layers/L2-ENGINE/learning-workflow/memory-templates/PROJECT_CONSTITUTION.md`
 
 ### R26 违规处理
@@ -413,7 +413,7 @@ done
 
 ## R30 · 品味记忆 ⭐v3.5
 
-- **R30.1** Phase 2a 选择结果必须写入 `.forgeos/memory/DESIGN_PREFERENCES.md`
+- **R30.1** Phase 2a 选择结果必须写入 `.devflow/memory/DESIGN_PREFERENCES.md`
 - **R30.2** 连续 3 次选择同调性 → 设为首选调性，连续 2 次拒绝 → 加入排斥调性
 - **R30.3** Phase 2a 生成变体时必须加载品味记忆，优先推荐符合用户品味的变体
 - **R30.4** 首次使用（无品味记忆）时，不强制偏好引导
@@ -428,7 +428,7 @@ done
 ## R31 · WIP Checkpoint ⭐v3.5
 
 - **R31.1** Phase 4 每 3 个 Task 完成或 Token > 60% 自动执行 git checkpoint commit
-- **R31.2** Checkpoint commit 格式: `wip(forgeos): phase-4 wave-N checkpoint`
+- **R31.2** Checkpoint commit 格式: `wip(devflow): phase-4 wave-N checkpoint`
 - **R31.3** Phase 转换时必须执行 checkpoint（确保转换点有保存点）
 - **R31.4** 会话中断后，从 STATE.md 最后 checkpoint 记录恢复执行
 - **R31.5** Phase 4 完成后，WIP commits 压缩为一个正式 commit

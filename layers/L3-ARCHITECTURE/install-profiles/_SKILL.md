@@ -7,12 +7,12 @@ implementation: spec-only
 requires: []
 provides: [configured-profile, enabled-modules]
 description: Pre-configured installation profiles for different project types and team sizes
-source: ForgeOS adapters + superpowers templates
+source: DevFlow adapters + superpowers templates
 dependencies:
   - provider-gateway
 triggers:
   - project initialization
-  - ForgeOS install
+  - DevFlow install
 external-inputs: [project-type, team-size]
 ---
 
@@ -114,7 +114,7 @@ node install.js /path/to/project --profile small-team
 
 # 生成 Cursor 配置
 node install.js . --profile small-team --runtime cursor
-# → .cursor/rules/ForgeOS.mdc
+# → .cursor/rules/DevFlow.mdc
 ```
 
 ## Error Taxonomy (Install Profiles 专属)

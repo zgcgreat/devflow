@@ -1,12 +1,12 @@
 ---
-name: forge-os:specification
+name: devflow:specification
 version: 1.0.0
 ---
 
 # 规格域
 
 **核心**: `domains/specification/templates/` (4 个产物模板)
-**扩展**: `references/templates/` (ForgeOS 完整模板集)
+**扩展**: `references/templates/` (DevFlow 完整模板集)
 
 ## 加载顺序
 

@@ -2,11 +2,11 @@
 
 - **Req ID**: <id>
 - **template-version**: `v1.0.0`
-- **关联**: `@.forgeos/<id>/03-tasks.md`、`@.forgeos/<id>/02-design.md`、`@.forgeos/CONTEXT.md`
+- **关联**: `@.devflow/<id>/03-tasks.md`、`@.devflow/<id>/02-design.md`、`@.devflow/CONTEXT.md`
 - **作者**: AI（Tech Lead 角色）+ 人工 review
 - **用途**: 在任务拆分后、开发前，提供完整的技术实施方案
 - **触发条件**: Standard/Strict 模式，或用户明确要求"详细设计"
-- **保存位置**: `.forgeos/<req-id>/03a-implementation-plan.md`
+- **保存位置**: `.devflow/<req-id>/03a-implementation-plan.md`
 - **核心原则**: 先设计后编码，所有技术决策在写代码前确认
 
 ---

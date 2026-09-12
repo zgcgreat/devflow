@@ -12,7 +12,7 @@ cp adapters/gemini-cli/GEMINI.md .gemini/GEMINI.md
 ### 2. 验证安装
 
 ```bash
-gemini "what is the current forgeos phase?"
+gemini "what is the current devflow phase?"
 ```
 
 ## 限制

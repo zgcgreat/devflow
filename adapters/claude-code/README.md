@@ -1,6 +1,6 @@
 # Claude Code Adapter
 
-ForgeOS adapter for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI. Enables ForgeOS's phase-gated workflow, persona system, and hook infrastructure within the Claude Code harness.
+DevFlow adapter for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI. Enables DevFlow's phase-gated workflow, persona system, and hook infrastructure within the Claude Code harness.
 
 ## Installation
 

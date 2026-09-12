@@ -58,7 +58,7 @@ L2-ENGINE/
 │   └── _SKILL.md
 ├── hooks-system/          # ⭐v3.2新增 运行时钩子系统（context-monitor/prompt-guard）
 │   └── _SKILL.md
-├── surface-switch/        # ⭐v3.2新增 运行时技能簇切换（/forgeos:surface）
+├── surface-switch/        # ⭐v3.2新增 运行时技能簇切换（/devflow:surface）
 │   └── _SKILL.md
 ├── scale-domain-adaptive/ # ⭐v3.2.2新增 BMAD规模自适应（动态规划深度）
 │   └── _SKILL.md
@@ -201,7 +201,7 @@ def kahn_topological_sort(tasks):
 | **caveman-shrink** | **Phase 0/1** | **模式判定 → 工具组加载** ⭐v3.2 |
 | **codegraph-bridge** | **Phase 2+** | **代码探索 → DAG 构建** ⭐v3.2 |
 | **hooks-system** | **Phase 4→5/6→7** | **Phase 转换 → Checkpoint 保存** ⭐v3.2 |
-| **surface-switch** | **所有Phase** | **/forgeos:surface → 动态模式切换** ⭐v3.2 |
+| **surface-switch** | **所有Phase** | **/devflow:surface → 动态模式切换** ⭐v3.2 |
 | **scale-domain-adaptive** | **Phase 0** | **项目规模检测 → Phase 粒度自适应** ⭐v3.2.2 |
 | **conductor-revert** | **Phase 4/6** | **逻辑单元回滚 → Git对账 + Plan同步** ⭐v3.2.2 |
 | **agent-comms** | **Phase 4** | **Wave内Agent消息板通信 → 发现传播+错误广播** ⭐v1.1 |

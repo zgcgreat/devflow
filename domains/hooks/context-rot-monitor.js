@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ForgeOS context-rot-monitor — 上下文衰减监测仪
+ * DevFlow context-rot-monitor — 上下文衰减监测仪
  *
  * 监测主 Agent 的上下文窗口使用率。
  * 当使用率 > 70% 时建议压缩，> 90% 时强制暂停。

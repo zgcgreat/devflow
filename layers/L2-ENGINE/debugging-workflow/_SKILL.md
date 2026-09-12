@@ -5,7 +5,7 @@ layer: L2-ENGINE
 gate: internal
 requires: []
 provides: [root-cause-analysis, fix-proposal, defense-in-depth]
-source: ForgeOS systematic-debugding (~500 lines across multiple files)
+source: DevFlow systematic-debugding (~500 lines across multiple files)
 description: Four-phase methodology for systematic debugging — inserted between Phase 4 code and Phase 5 testing
 external-inputs: [failed-test, bug-report]
 ---
@@ -18,7 +18,7 @@ external-inputs: [failed-test, bug-report]
 > **后置产物**: Root cause 分析结果 + 修复方案 + Defense-in-depth 验证层  
 > **版本**: v3.1-draft
 
-## Systematic Debugging 在 ForgeOS 中的位置
+## Systematic Debugging 在 DevFlow 中的位置
 
 ```
 Phase 4: Wave代码完成
@@ -35,7 +35,7 @@ Systematic Debugging.run() [Phase 4→5过渡钩子]
 Phase 5: Testing (测试验证)
 ```
 
-**为什么是最大的单一价值遗漏**: ForgeOS 有开发(Wave执行)、测试、审查三个阶段，但没有专门针对"发现问题→定位原因→验证修复"全链路的调试方法论。Systematic Debugging 填补了这个空白，包含真实世界影响数据(15-30分钟vs 2-3小时)。
+**为什么是最大的单一价值遗漏**: DevFlow 有开发(Wave执行)、测试、审查三个阶段，但没有专门针对"发现问题→定位原因→验证修复"全链路的调试方法论。Systematic Debugging 填补了这个空白，包含真实世界影响数据(15-30分钟vs 2-3小时)。
 
 ## 铁律 (The Iron Law)
 
@@ -280,7 +280,7 @@ codesign --sign "$IDENTITY" --verbose=4 "$APP"
 ### `condition-based-waiting.md`
 替代硬编码延迟的条件等待策略。通用轮询函数 + 领域专用助手实现。真实影响：15个 flaky 测试从60%通过率到100%，执行时间减少40%。
 
-## Real-World Impact (来自 ForgeOS-kit)
+## Real-World Impact (来自 DevFlow-kit)
 
 - **Systematic approach**: 15-30分钟定位根因
 - **Random fixes approach**: 2-3小时反复试错
@@ -306,10 +306,10 @@ phase_4_completion:
 
 ---
 
-> **Adapted from**: ForgeOS-kit `skills/systematic-debugging/` directory  
+> **Adapted from**: DevFlow-kit `skills/systematic-debugging/` directory  
 > **Source files**: SKILL.md (~297 lines) + root-cause-tracing.md (~170 lines) + condition-based-waiting.md (~116 lines) + defense-in-depth.md (~123 lines) + condition-based-waiting-example.ts (~159 lines)  
 > **Total source**: ~865 lines condensed to integrated format  
-> **Key adaptation**: Inserted as Phase 4→5 transition hook in ForgeOS's DAG; aligned with Wave Executor post-phase hooks
+> **Key adaptation**: Inserted as Phase 4→5 transition hook in DevFlow's DAG; aligned with Wave Executor post-phase hooks
 
 ## Error Taxonomy (P0 → P3)
 

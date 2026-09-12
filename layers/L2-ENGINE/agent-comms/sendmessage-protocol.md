@@ -1,13 +1,13 @@
 # SendMessage 协议规范
 
 > **版本**: 1.0.0 | **来源**: Ruflo SendMessage + Agent Teams
-> **适用范围**: ForgeOS Wave 内 Agent 间通信
+> **适用范围**: DevFlow Wave 内 Agent 间通信
 
 ---
 
 ## 概述
 
-SendMessage 协议定义了 ForgeOS Wave 内 Agent 间的通信标准。由于 ForgeOS 运行在 AI Agent 宿主（Claude Code / Cursor）中，Agent 间通信不能使用传统 IPC，因此采用 **Markdown 消息板** 模式。
+SendMessage 协议定义了 DevFlow Wave 内 Agent 间的通信标准。由于 DevFlow 运行在 AI Agent 宿主（Claude Code / Cursor）中，Agent 间通信不能使用传统 IPC，因此采用 **Markdown 消息板** 模式。
 
 ---
 

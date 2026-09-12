@@ -1,10 +1,22 @@
-# ForgeOS 变更日志
+# DevFlow 变更日志
 
 所有重要变更记录在此文件中。
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/)。
 
 ---
+
+---
+
+## [3.3.0] - 2026-09-12
+
+### Changed
+
+- **项目更名 DevFlow** — ForgeOS 正式更名回 DevFlow（github.com/zgcgreat/devflow），本仓库为 DevFlow v3 系列的唯一延续
+- 全仓品牌替换 1333+ 处：ForgeOS→DevFlow、forge-os→devflow、.forgeos/→.devflow/、FORGEOS_→DEVFLOW_
+- 文件重命名：`bin/forge-os.js` → `bin/devflow.js`、`references/runtime-adapters-forge.md` → `references/runtime-adapters-devflow.md`
+- 内部标识符统一：`FORGE_OS_HOME`/`FORGE_DIR`/`forgeDir` → `DEVFLOW_HOME`/`DEVFLOW_DIR`/`devflowDir`，`ForgeMemory` → `DevFlowMemory`
+- 本地运行时目录由 `.forgeos/` 变更为 `.devflow/`（升级后需重新 `devflow init` 或改名现有目录）
 
 ---
 
@@ -34,7 +46,7 @@
 
 #### 变更
 
-- **品牌名统一** — FlowForge/flowforge/@devflow-kit 全部替换为 ForgeOS/forgeos/@forge-os（~500+ 处）
+- **品牌名统一** — FlowForge/flowforge/@devflow-kit 全部替换为 DevFlow/devflow/@devflow（~500+ 处）
 - **断裂链接修复** — ARCHITECTURE.md、SKILL.md、plan-phase.md 中所有断裂引用修复
 - **门控检查增强** — gate-check.js 新增 G8（空目录检查），Phase 感知自动加载矩阵完善
 - **MCP 工具加载优化** — Phase 7/8 禁用大部分 MCP 工具，Token 节省 ~1.5K/次
@@ -57,14 +69,14 @@
 #### 变更
 
 - **12个 _SKILL.md 精简** — phase-4-build/5-test/6-review/7-canary/token-monitor/surface-switch/hook-bridge/debugging-workflow 等平均精简 ~75%
-- **CONSTITUTION 体系统一** — L2 CONSTITUTION.md → .forgeos 目录, phases CONSTITUTION → domains/specification/templates/
-- **adapters/ 品牌统一** — devflow.mdc → forgeos.mdc, DevFlow→ForgeOS
+- **CONSTITUTION 体系统一** — L2 CONSTITUTION.md → .devflow 目录, phases CONSTITUTION → domains/specification/templates/
+- **adapters/ 品牌统一** — devflow.mdc → devflow.mdc, DevFlow→DevFlow
 
 ---
 
 ## [3.0.0] - 2026-06-18
 
-### ForgeOS × DevFlow 融合方案 v2.0 实施
+### DevFlow × DevFlow 融合方案 v2.0 实施
 
 #### 新增
 
@@ -75,8 +87,8 @@
 
 #### 变更
 
-- **全项目品牌统一** — FlowForge→ForgeOS, @devflow-kit→@forge-os
-- **CONSTITUTION 层级化** — .forgeos/PROJECT_CONSTITUTION.md + domains/specification/templates/ + cli/templates/
+- **全项目品牌统一** — FlowForge→DevFlow, @devflow-kit→@devflow
+- **CONSTITUTION 层级化** — .devflow/PROJECT_CONSTITUTION.md + domains/specification/templates/ + cli/templates/
 
 ---
 
@@ -84,7 +96,7 @@
 
 ### Phase 4 — 深度集成
 
-ForgeOS v1.4.0 — INTEGRATION-PLAN Phase 4 完成，5 个深度集成特性全部集成。
+DevFlow v1.4.0 — INTEGRATION-PLAN Phase 4 完成，5 个深度集成特性全部集成。
 
 #### 新增
 
@@ -132,7 +144,7 @@ ForgeOS v1.4.0 — INTEGRATION-PLAN Phase 4 完成，5 个深度集成特性全�
 
 ### Phase 3 — 体验优化
 
-ForgeOS v1.3.0 — INTEGRATION-PLAN Phase 3 完成，6 个 P2 特性全部集成。
+DevFlow v1.3.0 — INTEGRATION-PLAN Phase 3 完成，6 个 P2 特性全部集成。
 
 #### 新增
 
@@ -185,7 +197,7 @@ ForgeOS v1.3.0 — INTEGRATION-PLAN Phase 3 完成，6 个 P2 特性全部集成
 
 ### Phase 2 — 质量提升
 
-ForgeOS v1.2.0 — INTEGRATION-PLAN Phase 2 完成，5 个 P1 特性全部集成。
+DevFlow v1.2.0 — INTEGRATION-PLAN Phase 2 完成，5 个 P1 特性全部集成。
 
 #### 新增
 
@@ -246,7 +258,7 @@ ForgeOS v1.2.0 — INTEGRATION-PLAN Phase 2 完成，5 个 P1 特性全部集成
 
 ### Phase 1 — 基础补强
 
-ForgeOS v1.1.0 — INTEGRATION-PLAN Phase 1 完成，4 个 P0 特性全部集成。
+DevFlow v1.1.0 — INTEGRATION-PLAN Phase 1 完成，4 个 P0 特性全部集成。
 
 #### 新增
 
@@ -256,13 +268,13 @@ ForgeOS v1.1.0 — INTEGRATION-PLAN Phase 1 完成，4 个 P0 特性全部集成
   - `layers/L2-ENGINE/agent-comms/pipeline-pattern.md` — Pipeline 串行依赖链模式
   - `layers/L2-ENGINE/agent-comms/fanout-pattern.md` — Fan-out 一对多广播模式
   - `layers/L2-ENGINE/agent-comms/supervisor-pattern.md` — Supervisor 双向协调模式
-  - 消息板路径: `.forgeos/<req-id>/comms/wave-<N>/` (notifications/requests/responses/errors)
+  - 消息板路径: `.devflow/<req-id>/comms/wave-<N>/` (notifications/requests/responses/errors)
 - **Project Constitution 分离** — 流程宪法与项目宪法分离
   - `cli/templates/PROJECT_CONSTITUTION.md` — 项目宪法模板（技术栈/质量标准/测试要求/禁止项）
-  - Phase 0 自动检测 `.forgeos/PROJECT_CONSTITUTION.md`，不存在时提示 setup
+  - Phase 0 自动检测 `.devflow/PROJECT_CONSTITUTION.md`，不存在时提示 setup
   - R26 规则: 所有 Phase 执行必须遵守项目宪法约束
-- **npx forgeos init CLI 安装器** — 一键安装 ForgeOS
-  - `cli/package.json` + `cli/bin/forgeos.js` — CLI 入口
+- **npx devflow init CLI 安装器** — 一键安装 DevFlow
+  - `cli/package.json` + `cli/bin/devflow.js` — CLI 入口
   - `cli/commands/init.js` — 6 步安装流程（检测宿主→创建目录→生成文件→检测技术栈→配置宿主→输出报告）
   - `cli/commands/setup.js` — 交互式项目设置（inquirer 问答）
   - `cli/commands/help.js` — 帮助文档
@@ -276,7 +288,7 @@ ForgeOS v1.1.0 — INTEGRATION-PLAN Phase 1 完成，4 个 P0 特性全部集成
   - `hooks/scripts/token-monitor.js` — Hook 脚本（50%/70%/90% 三级阈值）
   - `layers/L2-ENGINE/token-monitor/_SKILL.md` — Token 监控技能定义
   - `hooks/hooks.json` — 新增 token-monitor Hook 注册（post_tool_use, advisory 模式）
-  - Statusline 集成: `ForgeOS Token: ████████░░ 78% | Mode: lite | Saved: 12.3K`
+  - Statusline 集成: `DevFlow Token: ████████░░ 78% | Mode: lite | Saved: 12.3K`
 
 #### 变更
 
@@ -302,7 +314,7 @@ ForgeOS v1.1.0 — INTEGRATION-PLAN Phase 1 完成，4 个 P0 特性全部集成
 
 ### 初始发布
 
-ForgeOS v1.0.0 — DevFlow v3.2.3 与 ECC v2.0.0-rc.1 的融合产物。
+DevFlow v1.0.0 — DevFlow v3.2.3 与 ECC v2.0.0-rc.1 的融合产物。
 
 #### 新增
 

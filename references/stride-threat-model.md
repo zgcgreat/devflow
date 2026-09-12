@@ -1,6 +1,6 @@
 # STRIDE 威胁建模模板
 
-> ForgeOS Phase 6 安全审查专用威胁建模模板。
+> DevFlow Phase 6 安全审查专用威胁建模模板。
 > 基于 Microsoft STRIDE 框架，对系统数据流进行威胁分析。
 > 来源: gstack /cso + CHANGELOG v1.2.0。
 

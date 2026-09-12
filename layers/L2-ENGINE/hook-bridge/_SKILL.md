@@ -1,7 +1,7 @@
 ---
 name: hook-bridge
 description: |
-  ForgeOS 统一 Hook 桥接层 — 双实现 Hook 体系，将 ForgeOS Markdown 指令式 Hook (L0 基线)
+  DevFlow 统一 Hook 桥接层 — 双实现 Hook 体系，将 DevFlow Markdown 指令式 Hook (L0 基线)
   与 ECC JS 脚本 Hook (L1 运行时增强) 桥接，同一 Hook 双实现 + 自动降级。9个Hook完整覆盖。
 layer: L2-ENGINE
 version: 1.0.0
@@ -11,7 +11,7 @@ provides: [dual-layer-hooks, hook-mapping, degradation-protocol]
 
 # Hook Bridge: 统一 Hook 抽象层
 
-> ForgeOS 核心创新: 同一 Hook 双实现，零运行时基线 + 运行时增强，自动降级。
+> DevFlow 核心创新: 同一 Hook 双实现，零运行时基线 + 运行时增强，自动降级。
 
 ## 三层 Hook 架构
 
@@ -47,15 +47,15 @@ node --version 可执行?
 
 | # | Hook名称 | Markdown(L0) | JS脚本(L1) | 映射Gate | 降级方案 |
 |---|---------|-------------|-----------|---------|---------|
-| 1 | context-monitor | ForgeOS hooks-system定义 | ecc-context-monitor.js | Phase切换 | AI按阈值自检+手动压缩 |
+| 1 | context-monitor | DevFlow hooks-system定义 | ecc-context-monitor.js | Phase切换 | AI按阈值自检+手动压缩 |
 | 2 | format-typecheck | AI按清单检查 | stop-format-typecheck.js | G5(P4后), G7(P6后) | AI手动格式化+类型检查 |
 | 3 | console-log-check | AI自查清单 | check-console-log.js | G5(P4后) | AI自查console.log |
 | 4 | security-scan | AI按安全清单审查 | insaits-security-wrapper | G6(P5后), G7(P6后) | AI按OWASP清单审查 |
-| 5 | prompt-guard | ForgeOS hooks-system定义 | (ECC内置于session-start) | Phase切换 | AI自行检查输入 |
+| 5 | prompt-guard | DevFlow hooks-system定义 | (ECC内置于session-start) | Phase切换 | AI自行检查输入 |
 | 6 | cost-tracker | AI估算+记录 | cost-tracker.js | SessionEnd | 人工记录成本 |
-| 7 | compact-suggest | ForgeOS hooks-system定义 | suggest-compact.js | Phase切换 | 人工判断compact |
-| 8 | phase-transition | ForgeOS hooks-system定义 | (ECC无对应) | Phase切换 | AI按清单保存检查点 |
-| 9 | tool-execution | ForgeOS hooks-system定义 | (ECC内置于tool-call) | 工具调用 | AI按审计清单检查 |
+| 7 | compact-suggest | DevFlow hooks-system定义 | suggest-compact.js | Phase切换 | 人工判断compact |
+| 8 | phase-transition | DevFlow hooks-system定义 | (ECC无对应) | Phase切换 | AI按清单保存检查点 |
+| 9 | tool-execution | DevFlow hooks-system定义 | (ECC内置于tool-call) | 工具调用 | AI按审计清单检查 |
 
 ## Gate-Hook 协同模型
 

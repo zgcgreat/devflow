@@ -1,5 +1,5 @@
-# ForgeOS 运行时状态（由 init/doctor 生成，非项目源）
-.forgeos/
+# DevFlow 运行时状态（由 init/doctor 生成，非项目源）
+.devflow/
 
 # 依赖与构建产物
 node_modules/

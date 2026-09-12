@@ -26,7 +26,7 @@ allowed-tools:
 # Phase 5: 测试 (QA + 交叉波测试矩阵)
 
 > **前置产物**: Phase 4 所有 Wave 完成
-> **后置产物**: `.forgeos/test/05-test-report.md`
+> **后置产物**: `.devflow/test/05-test-report.md`
 > **门控**: G6 — Test Quality Gate
 
 ## 输入
@@ -107,14 +107,14 @@ allowed-tools:
 | Boundary Testing | ≥3 scenarios |
 | Test Timeout | ≤20 min per phase |
 
-## 安全审查 (ForgeOS增强)
+## 安全审查 (DevFlow增强)
 
 - OWASP Top 10 测试用例覆盖
 - 认证/授权绕过测试
 - 输入验证边界测试
 - 依赖安全扫描 (npm audit / pip audit)
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: tdd-guide (always) + security-reviewer (always) + 技术栈Agent (on-demand)
 **Hook**: phase-transition (L0), context-monitor (L0+L1), security-scan (L0+L1)

@@ -29,7 +29,7 @@ allowed-tools:
 
 > **前置产物**: `02-design.md` (Phase 2 通过 G3)
 > **后置产物**: `02a-design-variants.md` + `02a-design-final.md`
-> **门控**: G3.5 — Variant Selection Gate
+> **门控**: G3.5 — Shotgun Gate
 
 ## 核心定位
 
@@ -62,7 +62,7 @@ allowed-tools:
 | Timeout per batch | ≤15 min |
 | Maintainability floor | ≥3/5 for viable variant |
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: designer (always) + code-explorer (on-demand)
 **Hook**: phase-transition, context-monitor

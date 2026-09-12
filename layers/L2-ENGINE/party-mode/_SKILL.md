@@ -6,7 +6,7 @@ layer: L2-ENGINE
 gate: internal
 requires: []
 provides: [consensus-report, escalated-decisions]
-description: Multi-agent roundtable consensus protocol for complex decisions requiring diverse perspectives and structured debate. Use when "technical debate", "multi-agent consensus", "architectural decision". (ForgeOS)
+description: Multi-agent roundtable consensus protocol for complex decisions requiring diverse perspectives and structured debate. Use when "technical debate", "multi-agent consensus", "architectural decision". (DevFlow)
 source: 交互层 PartyMode + Cavecrew sub-agent delegation
 dependencies: []
 triggers:
@@ -99,7 +99,7 @@ AskUserQuestion: "What type of decision needs consensus?"
 
 **Select agent roster**:
 
-Load configuration from `.forgeos/config/party-agents.yaml` if exists. Otherwise use default pool:
+Load configuration from `.devflow/config/party-agents.yaml` if exists. Otherwise use default pool:
 
 | Role | Specialty | Weight |
 |------|-----------|--------|
@@ -317,7 +317,7 @@ Cost of wrong decision estimated at $50K (refactor + downtime).
 
 **Record decision in memory system**:
 
-Update `.forgeos/memory/DECISIONS.md`:
+Update `.devflow/memory/DECISIONS.md`:
 ```markdown
 ## [YYYY-MM-DD] Microservices Adoption Strategy
 
@@ -354,7 +354,7 @@ Revisit in 3 months or when user base reaches 20K
 
 If discussion revealed new insights:
 ```yaml
-# Add to .forgeos/memory/LESSONS.md
+# Add to .devflow/memory/LESSONS.md
 - lesson: "Service mesh evaluation requires 2-week POC minimum"
   category: "Infrastructure"
   severity: "medium"
@@ -372,11 +372,11 @@ If discussion revealed new insights:
 
 Check frequency of similar decisions:
 ```bash
-grep -c "microservices\|service mesh" .forgeos/memory/DECISIONS.md
+grep -c "microservices\|service mesh" .devflow/memory/DECISIONS.md
 # If count >= 3, promote to domain skill
 ```
 
-If threshold met, create `.forgeos/skills/microservices-adoption.md`:
+If threshold met, create `.devflow/skills/microservices-adoption.md`:
 ```markdown
 # Domain Skill: Microservices Adoption
 
@@ -528,7 +528,7 @@ Decision is now final. Proceed to Step 6: Memory Update & Domain Skill Extractio
 
 **Finalize decision in memory system** (executed after Gate PASS):
 
-Update `.forgeos/memory/DECISIONS.md`:
+Update `.devflow/memory/DECISIONS.md`:
 ```markdown
 ## [YYYY-MM-DD] {decision_topic} — Gate {PASS|FAIL-LVL-N}
 
@@ -763,7 +763,7 @@ If gate failed and fallback was used, append to `DECISIONS.md`:
 - [ ] {action_item_3} — Owner: {role}, Due: {date}
 
 ### Discussion History
-**Full transcript**: `.forgeos/memory/party-mode/{YYYY-MM-DD}-{topic-slug}.md`  
+**Full transcript**: `.devflow/memory/party-mode/{YYYY-MM-DD}-{topic-slug}.md`  
 **Auto-summaries**: Rounds 3, 6, 9... (if applicable)
 
 ### Review Criteria
@@ -820,7 +820,7 @@ If gate failed and fallback was used, append to `DECISIONS.md`:
 - {stakeholder_2}: {reason_to_consult}
 
 ### Attachments
-- Full discussion transcript: `.forgeos/memory/party-mode/{slug}.md`
+- Full discussion transcript: `.devflow/memory/party-mode/{slug}.md`
 - Relevant documentation: {links}
 - Previous related decisions: {links}
 ```
@@ -834,10 +834,10 @@ If gate failed and fallback was used, append to `DECISIONS.md`:
 **Configuration Management**:
 ```bash
 # Load agent roster
-cat .forgeos/config/party-agents.yaml
+cat .devflow/config/party-agents.yaml
 
 # Check if config exists, fallback to defaults
-test -f .forgeos/config/party-agents.yaml || echo "Using default agent pool"
+test -f .devflow/config/party-agents.yaml || echo "Using default agent pool"
 ```
 
 **Context Gathering**:
@@ -867,13 +867,13 @@ npm outdated --json
 **Memory System Updates**:
 ```bash
 # Append to DECISIONS.md
-echo "## [$(date +%Y-%m-%d)] {topic}" >> .forgeos/memory/DECISIONS.md
+echo "## [$(date +%Y-%m-%d)] {topic}" >> .devflow/memory/DECISIONS.md
 
 # Extract lessons for LESSONS.md
-grep -A5 "lesson:" .forgeos/memory/LESSONS.md
+grep -A5 "lesson:" .devflow/memory/LESSONS.md
 
 # Check domain skill frequency
-grep -c "{keyword}" .forgeos/memory/DECISIONS.md
+grep -c "{keyword}" .devflow/memory/DECISIONS.md
 ```
 
 ### Optional Tools
@@ -936,8 +936,8 @@ After consensus:
 - [ ] Weighted scores calculated correctly
 - [ ] Dissenting opinions documented verbatim
 - [ ] Action items assigned with owners and due dates
-- [ ] Decision recorded in `.forgeos/memory/DECISIONS.md`
-- [ ] Lessons extracted to `.forgeos/memory/LESSONS.md`
+- [ ] Decision recorded in `.devflow/memory/DECISIONS.md`
+- [ ] Lessons extracted to `.devflow/memory/LESSONS.md`
 - [ ] Domain skills updated if frequency threshold met (≥3)
 - [ ] Review date set (typically 3 months or milestone-based)
 

@@ -10,7 +10,7 @@ provides: [provider-assignments, fallback-chains]
 description: |
   Intelligent model routing engine that selects optimal AI providers based on task type,
   complexity, and cost constraints with fallback chains (exponential backoff).
-  Use when: "route to provider", "select model", "provider fallback", "cost-aware routing". (ForgeOS)
+  Use when: "route to provider", "select model", "provider fallback", "cost-aware routing". (DevFlow)
 source: 引擎层 Provider Gateway + Cost-Aware Model Router
 dependencies:
   - dag-router (input: task types from WAVE-PLAN.md)
@@ -49,7 +49,7 @@ Before starting provider routing, verify ALL of the following:
 
 - [ ] WAVE-PLAN.md exists with task type annotations (`type: coding|design|review|research`)
 - [ ] At least one provider is available (API keys configured or local model detected)
-- [ ] Provider performance logs accessible (`.forgeos/provider-metrics.json` or create empty)
+- [ ] Provider performance logs accessible (`.devflow/provider-metrics.json` or create empty)
 - [ ] Task complexity estimates available (from DAG Router)
 
 **Gate Result**: `[PASS / FAIL]` — If any item FAILS, fix identified issue before starting. This gate MUST pass for every wave execution cycle.
@@ -88,7 +88,7 @@ Before starting provider routing, verify ALL of the following:
 
 ```bash
 # Load wave plan with task type annotations
-cat .forgeos/wave-plan.yaml
+cat .devflow/wave-plan.yaml
 
 # Example structure:
 # waves:
@@ -657,7 +657,7 @@ optimization_schedule:
 | Tokens used | `tokens_used` | Monitor cost and budget adherence |
 | Fallback chain index | `fallback_level` (0=primary, 1=fallback1, 2=fallback2) | Calculate average fallback distance |
 
-**Metrics Update Command**: After each provider call, append to `.forgeos/provider-metrics.json`:
+**Metrics Update Command**: After each provider call, append to `.devflow/provider-metrics.json`:
 ```json
 {"provider_id": "claude-3-opus", "task_type": "coding", "timestamp": "2026-05-18T10:30:00Z", "status": "success", "latency_ms": 4500, "tokens_used": 12000, "fallback_level": 0}
 ```

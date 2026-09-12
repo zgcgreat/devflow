@@ -49,7 +49,7 @@ cp memory/LESSONS.md memory/LESSONS.md.backup.$(date +%Y%m%d)
 # 创建向量记忆数据库
 node -e "
   const Database = require('better-sqlite3');
-  const db = new Database('.forgeos/vector_memory.db');
+  const db = new Database('.devflow/vector_memory.db');
   // 执行 _SKILL.md 中的 SQL Schema
   // ... (参考 _SKILL.md §2.1)
   console.log('Database initialized');
@@ -165,17 +165,17 @@ try {
 # 回滚到纯 LESSONS.md 模式
 
 1. 禁用向量记忆:
-   设置环境变量 FORGEOS_VECTOR_MEMORY_MODE=bm25-only
+   设置环境变量 DEVFLOW_VECTOR_MEMORY_MODE=bm25-only
 
 2. 恢复备份 (如果 LESSONS.md 损坏):
    cp memory/LESSONS.md.backup.YYYYMMDD memory/LESSONS.md
 
 3. 完全禁用 (如果 SQLite 不可用):
-   设置环境变量 FORGEOS_VECTOR_MEMORY_MODE=disabled
+   设置环境变量 DEVFLOW_VECTOR_MEMORY_MODE=disabled
    → 所有检索回退到 LESSONS.md 全文搜索
 
 4. 重建索引 (如果数据库损坏):
-   删除 .forgeos/vector_memory.db
+   删除 .devflow/vector_memory.db
    重新执行迁移步骤
 ```
 

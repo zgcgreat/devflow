@@ -47,9 +47,9 @@ triggers:
 ```bash
 # WIP Checkpoint 保存
 git add -A
-git commit -m "wip(forgeos): phase-4 wave-${WAVE_NUM} checkpoint
+git commit -m "wip(devflow): phase-4 wave-${WAVE_NUM} checkpoint
 
-Checkpoint automatically created by ForgeOS WIP Checkpoint.
+Checkpoint automatically created by DevFlow WIP Checkpoint.
 
 Progress:
 - Wave: ${WAVE_NUM}/${TOTAL_WAVES}
@@ -78,11 +78,11 @@ Progress:
 ```
 会话重新启动:
   │
-  ├─→ 1. 读取 .forgeos/STATE.md
+  ├─→ 1. 读取 .devflow/STATE.md
   │   └─ 找到最后 checkpoint 记录
   │
   ├─→ 2. 读取 git log 最近 wip commit
-  │   └─ git log --oneline --grep="wip(forgeos)" -1
+  │   └─ git log --oneline --grep="wip(devflow)" -1
   │
   ├─→ 3. 确认恢复点
   │   ├─ 最后 checkpoint 的 Wave + Task
@@ -147,7 +147,7 @@ git commit -m "feat(phase-4): implement ${feature-name}"
     "token_threshold": 0.6,
     "phase_transition_save": true,
     "cleanup_on_phase_complete": true,
-    "commit_prefix": "wip(forgeos):"
+    "commit_prefix": "wip(devflow):"
   }
 }
 ```

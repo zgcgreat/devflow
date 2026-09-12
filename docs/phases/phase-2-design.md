@@ -37,7 +37,7 @@
 
 ## Phase 2a: 设计枪战 (v3新增)
 
-> **门控**: G3.5 (Variant Selection Gate) — 用户确认设计方案 → 通过
+> **门控**: G3.5 (Shotgun Gate) — 用户确认设计方案 → 通过
 > **触发条件**: 前端/UI项目、task涉及UI文件时必跑；其他项目AI推荐。
 
 ### ⚡ v3.2 交互流程
@@ -94,7 +94,7 @@ AI 推荐：方案 A — 极简风（开发快，适合 MVP）
 - 布局：左侧导航 + 顶部搜索 + 主内容区
 - 技术选型：Ant Design Pro Layout
 
-已更新：`.forgeos/<req-id>/02-design.md`
+已更新：`.devflow/<req-id>/02-design.md`
 
 请确认或输入 [E] 选择其他方案：
 ```

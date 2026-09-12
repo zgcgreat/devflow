@@ -1,6 +1,6 @@
 # GitHub Copilot 适配器
 
-> ForgeOS 对 GitHub Copilot 的适配说明
+> DevFlow 对 GitHub Copilot 的适配说明
 
 ## 安装
 
@@ -18,4 +18,4 @@ Copilot 适配器仅支持 Markdown 模式:
 
 - 在 VS Code 中安装 GitHub Copilot 扩展
 - 项目级 `.github/copilot-instructions.md` 自动生效
-- ForgeOS 的 CONSTITUTION 和 RULES 会被 Copilot 读取
+- DevFlow 的 CONSTITUTION 和 RULES 会被 Copilot 读取

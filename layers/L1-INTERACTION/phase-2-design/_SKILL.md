@@ -26,14 +26,14 @@ allowed-tools:
 
 # Phase 2: 方案设计
 
-> **前置产物**: `01-analysis.md` + `.forgeos/CONTEXT.md`
-> **后置产物**: `.forgeos/<req-id>/02-design.md`
+> **前置产物**: `01-analysis.md` + `.devflow/CONTEXT.md`
+> **后置产物**: `.devflow/<req-id>/02-design.md`
 > **门控**: G3 — Design Quality Gate
 
 ## 输入
 
 - `01-analysis.md` — 需求分析 + AC
-- `.forgeos/CONTEXT.md` — 项目上下文
+- `.devflow/CONTEXT.md` — 项目上下文
 - LESSONS.md — 过往架构决策经验
 
 ## 输出
@@ -61,7 +61,7 @@ allowed-tools:
 | ADR Minimum | ≥3 个关键设计决策 |
 | Design Phase Timeout | ≤15 min |
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: architect (always) + code-explorer (always) + database-reviewer/network-architect (on-demand)
 **Cavecrew**: Investigator — 探索代码库依赖，输出压缩 60%

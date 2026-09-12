@@ -1,6 +1,6 @@
 # 用户交互规范
 
-> **适用范围**：所有 ForgeOS stage 的用户确认环节
+> **适用范围**：所有 DevFlow stage 的用户确认环节
 > **参考来源**：`references/prompts/0-confirm.md`
 > **版本**: v3.2 — 选择题交互模式
 
@@ -108,7 +108,7 @@
 
 ```markdown
 ✅ <阶段名称> 完成
-📝 产物：.forgeos/<req-id>/<产物文件>
+📝 产物：.devflow/<req-id>/<产物文件>
 📊 STATE.md 阶段进度已更新：[x] <阶段> → <产物>
 
 请确认产物内容：

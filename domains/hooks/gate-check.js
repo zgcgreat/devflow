@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * ForgeOS gate-check — 门控自动化验证器
+ * DevFlow gate-check — 门控自动化验证器
  *
  * ⚠️ 门控定义完全派生自 lib/phase-engine.js 的权威 GATES + PHASES，
  * 不再维护独立副本，从根源消除双源漂移（历史 bug: G7.5/G8 产物名错误、
  * G1/G3/G5 auto/manual 类型冲突、缺 G2）。
  *
- * 用法: node gate-check.js --phase 2 --dir .forgeos
- *       node gate-check.js --gate G3.5 --dir .forgeos
+ * 用法: node gate-check.js --phase 2 --dir .devflow
+ *       node gate-check.js --gate G3.5 --dir .devflow
  *       node gate-check.js --all
  *
  * 返回: exit code 0=全部通过, 1=存在未通过 (打印失败原因)
@@ -58,15 +58,15 @@ function parseArgs() {
     else if (args[i] === '--dir') opts.dir = args[++i];
     else if (args[i] === '--all') opts.all = true;
   }
-  opts.dir = opts.dir || path.join(process.cwd(), '.forgeos');
+  opts.dir = opts.dir || path.join(process.cwd(), '.devflow');
   return opts;
 }
 
 /**
  * 递归定位产物文件（限深 3 层）。
- * GO.md 协议要求产物保存到 .forgeos/<req-id>/ 下；wave 类产物可达
- * .forgeos/<req-id>/waves/wave-{N}/ 三层，故需递归而非只扫一层。
- * .forgeos/ 根目录的历史布局同样视为有效。
+ * GO.md 协议要求产物保存到 .devflow/<req-id>/ 下；wave 类产物可达
+ * .devflow/<req-id>/waves/wave-{N}/ 三层，故需递归而非只扫一层。
+ * .devflow/ 根目录的历史布局同样视为有效。
  */
 function findArtifact(dir, name, depth = 0) {
   if (depth > 3) return null;
@@ -102,7 +102,7 @@ function main() {
   let allPass = true;
 
   if (opts.all) {
-    console.log('📋 ForgeOS 门控全量检查 (派生自 phase-engine.js 权威定义)\n');
+    console.log('📋 DevFlow 门控全量检查 (派生自 phase-engine.js 权威定义)\n');
     // 保持 GATES 声明顺序
     GATES.forEach(g => {
       if (!checkGate(GATE_MAP[g.id], opts.dir)) allPass = false;

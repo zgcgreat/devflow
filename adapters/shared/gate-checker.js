@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ForgeOS Gate Checker — 运行时无关的门禁检查器
+ * DevFlow Gate Checker — 运行时无关的门禁检查器
  *
  * 从 gate-check.js 和 gate-rules.md 提取公共逻辑。
  * 各运行时适配器通过 core-bridge.checkGate() 调用此模块。
@@ -10,7 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { findProjectDir, FORGEOS_DIR } = require('./core-bridge');
+const { findProjectDir, DEVFLOW_DIR } = require('./core-bridge');
 
 // ─── 门控定义 ───────────────────────────────────────────
 //
@@ -39,11 +39,11 @@ const GATES = buildGates();
 // ─── 检查逻辑 ───────────────────────────────────────────
 
 /**
- * 递归收集 .forgeos/ 下的候选路径。
- * GO.md 协议: 产物保存到 .forgeos/<req-id>/ 下；wave 类产物可达
- * .forgeos/<req-id>/waves/wave-{N}/ 三层，故需递归而非只扫一层。
+ * 递归收集 .devflow/ 下的候选路径。
+ * GO.md 协议: 产物保存到 .devflow/<req-id>/ 下；wave 类产物可达
+ * .devflow/<req-id>/waves/wave-{N}/ 三层，故需递归而非只扫一层。
  */
-function collectForgeosDirs(dir, depth = 0, out = []) {
+function collectDevflowDirs(dir, depth = 0, out = []) {
   if (depth > 3) return out;
   let entries;
   try {
@@ -53,17 +53,17 @@ function collectForgeosDirs(dir, depth = 0, out = []) {
     if (!entry.isDirectory()) continue;
     const full = path.join(dir, entry.name);
     out.push(full);
-    collectForgeosDirs(full, depth + 1, out);
+    collectDevflowDirs(full, depth + 1, out);
   }
   return out;
 }
 
 function resolveArtifactPath(projectDir, artifact) {
-  const forgeosDir = path.join(projectDir, FORGEOS_DIR);
+  const devflowDir = path.join(projectDir, DEVFLOW_DIR);
 
-  // 优先级: .forgeos/ 根 → <req-id>/ → 更深子目录 → 项目根
-  const candidates = [path.join(forgeosDir, artifact)];
-  for (const sub of collectForgeosDirs(forgeosDir)) {
+  // 优先级: .devflow/ 根 → <req-id>/ → 更深子目录 → 项目根
+  const candidates = [path.join(devflowDir, artifact)];
+  for (const sub of collectDevflowDirs(devflowDir)) {
     candidates.push(path.join(sub, artifact));
   }
   candidates.push(path.join(projectDir, artifact));
@@ -157,7 +157,7 @@ if (require.main === module) {
       break;
     }
     default:
-      console.log('ForgeOS Gate Checker');
+      console.log('DevFlow Gate Checker');
       console.log('Commands: check <GATE_ID> | all | next');
   }
 }

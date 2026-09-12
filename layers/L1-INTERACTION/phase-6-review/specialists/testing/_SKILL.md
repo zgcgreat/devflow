@@ -8,7 +8,7 @@ parent: phase-6-review
 gate: G7
 requires: [g6-gate-decision, test-results]
 provides: [test-coverage-analysis, edge-case-findings]
-description: Testing Specialist for Phase 6+ code review — coverage gaps, edge cases, isolation, negative paths. Use when "test review", "coverage analysis", "mutation testing". (ForgeOS)
+description: Testing Specialist for Phase 6+ code review — coverage gaps, edge cases, isolation, negative paths. Use when "test review", "coverage analysis", "mutation testing". (DevFlow)
 source: 架构层 / supercorp-ultimate fusion
 dependencies:
   - phase-6-review (orchestrator)
@@ -34,7 +34,7 @@ allowed-tools:
 
 ### Step 1: Input Analysis
 
-- Read Phase 5 test results (05-test-report.md) from `.forgeos/waves/`
+- Read Phase 5 test results (05-test-report.md) from `.devflow/waves/`
 - Read changed files from Phase 6 task metadata
 - Compute delta: lines of new/changed code vs lines covered by tests
 

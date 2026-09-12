@@ -1,6 +1,6 @@
-# Engineering Skills — ForgeOS 通用工程技能
+# Engineering Skills — DevFlow 通用工程技能
 
-从 ForgeOS agent-skills/ 复制的通用工程技能。
+从 DevFlow agent-skills/ 复制的通用工程技能。
 
 | 技能 | 说明 |
 |------|------|

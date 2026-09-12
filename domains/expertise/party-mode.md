@@ -1,5 +1,5 @@
 ---
-name: forge-os:expertise:party-mode
+name: devflow:expertise:party-mode
 version: 1.0.0
 description: |
   Party Mode 仲裁器 — BMAD 风格的多专家同室辩论 + 加权评分
@@ -8,7 +8,7 @@ description: |
   来源: BMAD-METHOD party-mode.md
 ---
 
-# ForgeOS · Party Mode 仲裁器
+# DevFlow · Party Mode 仲裁器
 
 > 一个房间里放 3-6 个专家，让他们吵出最佳方案。
 

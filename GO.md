@@ -1,13 +1,13 @@
-# GO — ForgeOS v3.2.2 统一路由器
+# GO — DevFlow v3.3.0 统一路由器
 
 > **AI指令**：
 > 1. 本文件是 v3 路由入口，读完后按第四步路由表匹配用户意图
 > 2. **第一条回复必须输出路由声明**（含选定的模式 Fast/Lean/Standard/Strict + 理由）
-> 3. **所有产物必须保存到 `.forgeos/<req-id>/` 下**
+> 3. **所有产物必须保存到 `.devflow/<req-id>/` 下**
 > 4. **⚠️ 所有产物必须严格按模板输出**（见 references/RULES-v3.md R19）
 > 5. **协议权威性**：本文件是**操作路由**层；行为合规协议以 `SKILL.md` 的 `[R0]-[R7]` + 每条回复的 `[COMPLIANCE]` 声明为**唯一权威**。本文件与 `references/RULES-v3.md` 中的 "R1-R20" 是**详细规则集**，其编号空间与 `SKILL.md` 的 R0-R7 互补、互不冲突，请勿混用。
 >
-> 用户使用方式：`Use forge-os` 或 `@forge-os/SKILL.md` + 一句话需求
+> 用户使用方式：`Use devflow` 或 `@devflow/SKILL.md` + 一句话需求
 
 ---
 
@@ -36,6 +36,7 @@
 | 技术选型 | 2-4个主流方案+自定义 | REST/GraphQL/gRPC/混合 |
 | UI布局 | 视觉对比表 | 极简/卡片/表格/混合 |
 | 优先级 | P0-P3分级 | P0-紧急/P1-重要/P2-一般/P3-优化 |
+| 多选 | 可选多个 | 输入多个字母如 AC |
 
 ---
 
@@ -43,7 +44,7 @@
 
 ```
 Step 0.5 · 模式预判定（入场检测之前）⭐v3.1
-Step 1   · 读取项目状态 (.forgeos/state.json)
+Step 1   · 读取项目状态 (.devflow/state.json)
 Step 1.5 · 模式确认（路由声明，等用户确认）⭐v3.1移前
 Step 2   · 入场检测（Fast/Lean简化，Standard/Strict完整）
 Step 3   · GitNexus可选检测 (detect → prompt → grep fallback)
@@ -89,14 +90,14 @@ Phase 详细流程详见 docs/phases/（phase-0-strategy.md ~ phase-7-canary-arc
 
 ## Step 1 · 读取项目状态
 
-1. 尝试读 `.forgeos/state.json`。不存在 → 运行 `forge-os init` 创建
+1. 尝试读 `.devflow/state.json`。不存在 → 运行 `devflow init` 创建
 2. 关注字段：`活跃req` / `当前阶段` / `中断任务`
 3. 如存在 `中断任务` 非空 → **优先级最高**，直接走恢复分支
 4. **初始化记忆系统**（首次使用必跑）:
-   - 检查 `.forgeos/memory/` 是否存在
+   - 检查 `.devflow/memory/` 是否存在
    - **如不存在** → 创建目录并初始化：
      ```
-     .forgeos/memory/
+     .devflow/memory/
      ├── PROJECT_CONTEXT.md    # 项目背景
      ├── DECISIONS.md          # 历史决策
      ├── KNOWN_FAILURES.md     # 已知失败
@@ -104,11 +105,11 @@ Phase 详细流程详见 docs/phases/（phase-0-strategy.md ~ phase-7-canary-arc
      └── domain-skills/        # 领域技能沉淀
      ```
    - **如存在** → 加载上述文件
-5. **多项目支持**: 每个项目独立 `.forgeos/` 目录，记忆系统按项目隔离
+5. **多项目支持**: 每个项目独立 `.devflow/` 目录，记忆系统按项目隔离
 
-> **记忆管理架构**：ForgeOS 不单独设 L3 `memory-manager` 模块。语义检索由 `layers/L3-ARCHITECTURE/vector-memory/`（SQLite + HNSW）承担，经验沉淀由 L1 Phase 8 归档到 `memory/LESSONS.md` / `memory/domain-skills/` 承担。详见 `layers/L3-ARCHITECTURE/_SKILL.md`。
+> **记忆管理架构**：DevFlow 不单独设 L3 `memory-manager` 模块。语义检索由 `layers/L3-ARCHITECTURE/vector-memory/`（SQLite + HNSW）承担，经验沉淀由 L1 Phase 8 归档到 `memory/LESSONS.md` / `memory/domain-skills/` 承担。详见 `layers/L3-ARCHITECTURE/_SKILL.md`。
 6. **加载项目宪法** ⭐v3.3:
-   - 检查 `.forgeos/PROJECT_CONSTITUTION.md` 是否存在
+   - 检查 `.devflow/PROJECT_CONSTITUTION.md` 是否存在
    - **如存在** → 读取并加载到当前上下文（冲突时项目宪法 > CONSTITUTION.md）
    - **如不存在** → 路由声明中标注 `项目宪法: ⚠️ 未设置`
 
@@ -132,19 +133,19 @@ Phase 详细流程详见 docs/phases/（phase-0-strategy.md ~ phase-7-canary-arc
 1. **优先程序化判定**，避免凭感觉估规模：
 
 ```bash
-forge-os detect --files 3 --lines 120 --brownfield
+devflow detect --files 3 --lines 120 --brownfield
 # → 🎯 建议模式: LEAN
 #    理由: 3 文件 / 120 行 / brownfield
 #    命中规则: files<=5 && lines<300 && brownfield
 
-forge-os detect --files 1 --lines 10 --arch-change   # → STRICT
-forge-os phase --mode lean                            # 应用判定结果
+devflow detect --files 1 --lines 10 --arch-change   # → STRICT
+devflow phase --mode lean                            # 应用判定结果
 ```
 
 未提供 `--files`/`--lines` 时按 `--risk` 降级：low → fast，其余 → standard。
 （详见 `references/mode-rules.md`）
 
-> **自动判定已落地**：`forge-os init` 在未显式传 `--mode` 时会自动扫描当前项目规模并调用 `detectMode()` 判定模式（可用 `--mode` 覆盖），结果写入 `.forgeos/state.json`。AI 直接进入 Step 1 读取 state.json 的 `mode` 字段即可，无需每次手动 `forge-os detect`。
+> **自动判定已落地**：`devflow init` 在未显式传 `--mode` 时会自动扫描当前项目规模并调用 `detectMode()` 判定模式（可用 `--mode` 覆盖），结果写入 `.devflow/state.json`。AI 直接进入 Step 1 读取 state.json 的 `mode` 字段即可，无需每次手动 `devflow detect`。
 
 2. **输出模式确认**（必须停等用户）：
 ```
@@ -286,7 +287,7 @@ Step 3.4: Grep降级声明
 | 有新想法想做件事 | Phase 0 (YC六问) | brainstorming, writing-plans |
 | 恢复中断任务 | 按R1.5重启 | - |
 | 不要进入workflow | 直接做，跳过 | - |
-| 健康检查 | `forge-os doctor` | 核心自检 |
+| 健康检查 | `devflow doctor` | 核心自检 |
 | 架构梳理 | 走 Phase 2 方案设计 | design-and-architecture |
 | 纯技术问题 | 直接回答 | - |
 | 上传文档/PRD | 文档解析 → Phase 2 | writing-plans |
@@ -299,11 +300,11 @@ Step 3.4: Grep降级声明
 |------|-------|------|
 | "换个方案" | Phase 2a | 触发新设计变体 |
 | "架构梳理" | 走 Phase 2 方案设计 | 架构梳理 |
-| "扫描代码" | `forge-os code --scan <目录>` | 入场扫描 |
+| "扫描代码" | `devflow code --scan <目录>` | 入场扫描 |
 | "我的需求变了" | Phase 0+1 | 归档旧Req，重新确认 |
 | "继续" | 下一阶段Phase | 按顺序执行 |
 | "caveman wenyan" | - | 通信压缩到最简 |
-| "压缩文本" | `forge-os caveman --compress [level]` | 手动触发压缩 (lite/full/ultra/wenyan) |
+| "压缩文本" | `devflow caveman --compress [level]` | 手动触发压缩 (lite/full/ultra/wenyan) |
 | "预算管理" | 参考 `references/token-budget.md` | Token 预算规则 (暂无独立 CLI) |
 
 ### C. 阶段门验证
@@ -330,8 +331,8 @@ Step 3.4: Grep降级声明
 Mode: <Fast/Lean/Standard/Strict>
 前置裁剪: <列出跳过的Step/Phase及理由>
 入口门禁: GitNexus=<状态> | 入场=<结果> | Phase0=<跳过/必跑> | Phase1=<跳过/必跑>
-上下文来源: <ForgeOS CONTEXT.md / .workbuddy memory / CLAUDE.md / 手动指定>
-项目宪法: ✅已加载 / ⚠️未设置(运行 forge-os init 生成)
+上下文来源: <DevFlow CONTEXT.md / .workbuddy memory / CLAUDE.md / 手动指定>
+项目宪法: ✅已加载 / ⚠️未设置(运行 devflow init 生成)
 自检清单: 待执行
 ```
 
@@ -347,11 +348,15 @@ Mode: <Fast/Lean/Standard/Strict>
 | spec-kit集成 (Phase 2输入) | 保留，PRD桥接 |
 | OpenSpec集成 (Phase 8归档) | 保留，proposal/design/tasks接口 |
 | `references/gate-rules.md` | 保留 + R4升级 |
-| `.forgeos/` 产物 | **零改动**，v3直接读取 |
+| `.devflow/` 产物 | **零改动**，v3直接读取 |
 
 ---
 
 ## 版本历史
+
+### v3.3.0 (2026-09-12) — 项目更名 DevFlow
+- **品牌统一** — ForgeOS 正式更名 DevFlow，全仓 1333+ 处替换（含 bin/devflow.js、.devflow/ 目录约定）
+- **功能零变更** — 纯更名版本，Phase 管线 / 门控 / 测试 21 项全部不变
 
 ### v3.2.2 (2026-05-20) — Scale & Revert Intelligence
 - **scale-domain-adaptive** ⭐ 动态规划深度引擎 — 基于项目规模自动映射四级 Phase 流程
@@ -362,7 +367,7 @@ Mode: <Fast/Lean/Standard/Strict>
 - **caveman-shrink** ⭐ MCP工具组压缩引擎 — 70-76% context节省
 - **codegraph-bridge** ⭐ CodeGraph本地知识图谱桥接 — 94%工具调用减少
 - **hooks-system** ⭐ 运行时钩子 (context-monitor/prompt-guard/phase-transition/tool-execution)
-- **surface-switch** ⭐ 运行时技能簇切换 — `/forgeos:surface [mode]`
+- **surface-switch** ⭐ 运行时技能簇切换 — `/devflow:surface [mode]`
 
 ### v3.2.0 (2026-05-20) — 交互模式重构 ⭐核心改动
 - Phase 0-8 全部采用选择题交互（批量展示 → 逐个提问 → 更新进度 → 总结门控）

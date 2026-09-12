@@ -2,7 +2,7 @@
 
 - **Req ID**: <id>
 - **template-version**: `v1.0.0`
-- **关联**: `@.forgeos/<req-id>/00-requirements.md`、`@.forgeos/CONTEXT.md`
+- **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/CONTEXT.md`
 
 ---
 

@@ -1,6 +1,6 @@
 # Phase 5: 测试验证
 
-> **门控**: G2 (Code Quality Gate) — 覆盖率达标且无严重 Bug → 通过
+> **门控**: G6 (Test Gate) — 覆盖率达标且无严重 Bug → 通过
 > **Layer**: Layer 3 (架构层 QA)
 > **适用模式**: Fast/Lean（窄验证）, Standard（完整）, Strict（完整）
 > **前置产物**: `05-test-report.md`
@@ -74,5 +74,5 @@ G2 质量门: 通过 → 进入 Phase 6
 ---
 
 **关联文件**:
-- `references/gate-rules.md` — G2 门控详情
+- `references/gate-rules.md` — G6 门控详情
 - `GO.md` — Step 10 入口（快速参考）

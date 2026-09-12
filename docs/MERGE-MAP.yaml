@@ -1,8 +1,8 @@
-# ForgeOS Merge Map
+# DevFlow Merge Map
 # 跟踪所有文件来源和转换状态
 
 schema: v1
-project: ForgeOS
+project: DevFlow
 based_on:
   devflow: v3.2.3
   ecc: v2.0.0-rc.1
@@ -11,7 +11,7 @@ created: 2026-05-28
 entries:
   # === M0: 项目脚手架 ===
 
-  # ForgeOS 基础文件（直接复制，无修改）
+  # DevFlow 基础文件（直接复制，无修改）
   - target: SKILL.md
     source: devflow/SKILL.md
     transform: copy_then_enhance
@@ -42,7 +42,7 @@ entries:
     status: created
     milestone: M0
 
-  # ForgeOS 核心目录（全量复制）
+  # DevFlow 核心目录（全量复制）
   - target: layers/
     source: devflow/layers/
     transform: full_copy
@@ -93,7 +93,7 @@ entries:
     status: copied
     milestone: M0
 
-  # ForgeOS 新增文件
+  # DevFlow 新增文件
   - target: rules/prompt-defense-baseline.md
     source: ECC/agents/*.md (extracted common baseline)
     transform: extract_from_agents_dedup
@@ -109,49 +109,49 @@ entries:
   # === M1: Persona-Phase 映射 (completed) ===
 
   - target: personas/core/planner.md
-    source: forgeos/agents/core/planner.md
+    source: devflow/agents/core/planner.md
     transform: rename_agents_to_personas_remove_tools_model_add_references
     status: created
     note: v2.0 format: mapped_phases=[P0,P1,P1b,P3], load_policy=always, references=prompt-defense-baseline
     milestone: M1
 
   - target: personas/core/architect.md
-    source: forgeos/agents/core/architect.md
+    source: devflow/agents/core/architect.md
     transform: rename_agents_to_personas_remove_tools_model_add_references
     status: created
     note: v2.0 format: mapped_phases=[P1,P1b,P2,P2a], load_policy=always
     milestone: M1
 
   - target: personas/core/code-reviewer.md
-    source: forgeos/agents/core/code-reviewer.md
+    source: devflow/agents/core/code-reviewer.md
     transform: rename_agents_to_personas_remove_tools_model_add_references
     status: created
     note: v2.0 format: mapped_phases=[P6], load_policy=always
     milestone: M1
 
   - target: personas/core/security-reviewer.md
-    source: forgeos/agents/core/security-reviewer.md
+    source: devflow/agents/core/security-reviewer.md
     transform: rename_agents_to_personas_remove_tools_model_add_references
     status: created
     note: v2.0 format: mapped_phases=[P5,P6], load_policy=always
     milestone: M1
 
   - target: personas/core/build-error-resolver.md
-    source: forgeos/agents/core/build-error-resolver.md
+    source: devflow/agents/core/build-error-resolver.md
     transform: rename_agents_to_personas_remove_tools_model_add_references
     status: created
     note: v2.0 format: mapped_phases=[P4], load_policy=always
     milestone: M1
 
   - target: personas/core/code-explorer.md
-    source: forgeos/agents/core/code-explorer.md
+    source: devflow/agents/core/code-explorer.md
     transform: rename_agents_to_personas_remove_tools_model_add_references
     status: created
     note: v2.0 format: mapped_phases=[P0,P2], load_policy=always
     milestone: M1
 
   - target: personas/core/refactor-cleaner.md
-    source: forgeos/agents/core/refactor-cleaner.md
+    source: devflow/agents/core/refactor-cleaner.md
     transform: rename_agents_to_personas_remove_tools_model_add_references
     status: created
     note: v2.0 format: mapped_phases=[P6], load_policy=always
@@ -165,7 +165,7 @@ entries:
     milestone: M1
 
   - target: personas/extended/
-    source: forgeos/agents/extended/
+    source: devflow/agents/extended/
     transform: rename_agents_to_personas_remove_tools_model_add_references
     status: created
     note: 12技术栈目录, 31个扩展Persona文件, load_policy=on-demand
@@ -201,9 +201,9 @@ entries:
 
   - target: layers/L1-INTERACTION/phase-*/_SKILL.md (9 files)
     source: existing
-    transform: append_forgeos_enhancement_paragraphs
+    transform: append_devflow_enhancement_paragraphs
     status: modified
-    note: 9个Phase追加ForgeOS增强段落含Persona列表+协作指令
+    note: 9个Phase追加DevFlow增强段落含Persona列表+协作指令
     milestone: M1
 
   # === M2: 统一 Hook 抽象层 (completed) ===
@@ -247,28 +247,28 @@ entries:
 
   - target: skills/specialized/security/security-review/SKILL.md
     source: ECC/skills/security-review/SKILL.md
-    transform: copy_then_transform_forgeos_format
+    transform: copy_then_transform_devflow_format
     status: created
     note: OWASP Top 10深度安全审查, mapped_phase=P6
     milestone: M3
 
   - target: skills/specialized/security/security-scan/SKILL.md
     source: ECC/skills/security-scan/SKILL.md
-    transform: copy_then_transform_forgeos_format
+    transform: copy_then_transform_devflow_format
     status: created
     note: 自动化安全扫描, mapped_phase=P5
     milestone: M3
 
   - target: skills/specialized/security/gateguard/SKILL.md
     source: ECC/skills/gateguard/SKILL.md
-    transform: copy_then_transform_forgeos_format
+    transform: copy_then_transform_devflow_format
     status: created
     note: Gate增强+Hook推荐+人工覆盖, mapped_phase=all
     milestone: M3
 
   - target: skills/specialized/security/safety-guard/SKILL.md
     source: ECC/skills/safety-guard/SKILL.md
-    transform: copy_then_transform_forgeos_format
+    transform: copy_then_transform_devflow_format
     status: created
     note: 安全防护+危险模式检测, mapped_phase=P4,P5,P6
     milestone: M3
@@ -303,14 +303,14 @@ entries:
     source: existing
     transform: append_safety_review_paragraph
     status: modified
-    note: 安全审查(ForgeOS增强)段落(OWASP/认证绕过/依赖扫描)
+    note: 安全审查(DevFlow增强)段落(OWASP/认证绕过/依赖扫描)
     milestone: M3
 
   - target: layers/L1-INTERACTION/phase-6-review/_SKILL.md
     source: existing
     transform: append_safety_review_paragraph
     status: modified
-    note: 安全审查(ForgeOS增强)段落(安全影响评估/边界检查/回归)
+    note: 安全审查(DevFlow增强)段落(安全影响评估/边界检查/回归)
     milestone: M3
 
   # === M4: 双维度自适应引擎 (completed) ===
@@ -326,7 +326,7 @@ entries:
     source: existing
     transform: append_dual_dimension_detection
     status: modified
-    note: ForgeOS增强段落含双维度检测(Scale+TechStack)和Gate0报告模板
+    note: DevFlow增强段落含双维度检测(Scale+TechStack)和Gate0报告模板
     milestone: M4
 
   # === M5: 渐进式运行时 (completed) ===
@@ -372,5 +372,5 @@ entries:
     source: existing
     transform: append_unified_evolution_engine
     status: modified
-    note: ForgeOS增强段落含统一进化引擎(LearningWorkflow+evaluate-session交叉验证)
+    note: DevFlow增强段落含统一进化引擎(LearningWorkflow+evaluate-session交叉验证)
     milestone: M6

@@ -4,14 +4,14 @@ model: o3
 sandbox: true
 
 instructions: |
-  This project uses forgeos v3.0 phased workflow.
+  This project uses devflow v3.0 phased workflow.
   
   ## Core Rules
-  - Read `.forgeos/STATE.md` for current phase
+  - Read `.devflow/STATE.md` for current phase
   - Respect gate checks — do not skip phases
-  - Load memory from `.forgeos/memory/`
-  - Record decisions in `.forgeos/memory/DECISIONS.md`
-  - Record lessons in `.forgeos/memory/LESSONS.md`
+  - Load memory from `.devflow/memory/`
+  - Record decisions in `.devflow/memory/DECISIONS.md`
+  - Record lessons in `.devflow/memory/LESSONS.md`
   
   ## Phase Gates
   - Phase 1: needs 00-requirements.md
@@ -25,5 +25,5 @@ instructions: |
 
 hooks:
   pre_prompt:
-    - command: "node $ForgeOS_HOME/adapters/shared/core-bridge.js read-state ."
-      description: "Load current forgeos phase state"
+    - command: "node $DevFlow_HOME/adapters/shared/core-bridge.js read-state ."
+      description: "Load current devflow phase state"

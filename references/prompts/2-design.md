@@ -10,20 +10,20 @@
 
 ## 输入
 
-- `@.forgeos/<req-id>/01-analysis.md`（或 `01-analysis-delta.md`）
-- `@.forgeos/<req-id>/00-requirements.md`（含项目类型与调性信息）
+- `@.devflow/<req-id>/01-analysis.md`（或 `01-analysis-delta.md`）
+- `@.devflow/<req-id>/00-requirements.md`（含项目类型与调性信息）
 - **项目上下文文档**（从 `STATE.md` 读 `ai_context_doc` 字段决定）：
   - 有 `ai_context_doc: <path>` → 读那个文档（如 `AGENTS.md` / `CLAUDE.md`）
-  - 没 `ai_context_doc` 或 `ai_context_doc: CONTEXT.md` → 读 `@.forgeos/CONTEXT.md`
+  - 没 `ai_context_doc` 或 `ai_context_doc: CONTEXT.md` → 读 `@.devflow/CONTEXT.md`
   - `ai_context_doc: none` → 跳过此输入（AI "盲飞"，必须在 02-design.md 顶部贴警告）
-- **项目级架构文档**（如存在 · brownfield 强烈推荐）：`@.forgeos/system-architecture.md`
+- **项目级架构文档**（如存在 · brownfield 强烈推荐）：`@.devflow/system-architecture.md`
   - 重点读 `§ 2 模块清单 + 依赖规则`（决定本需求 能不能引入新模块 / 跨模块依赖）
   - 重点读 `§ 3 ADR 列表`（看本需求 是否撞已有不可逆决策——撞了必须显式说"延续 ADR-NNN"或"申请 supersede ADR-NNN"）
   - 重点读 `§ 4 跨模块契约`（本需求 改 API / 事件 / Schema 时必查）
   - 不存在则跳过；如果用户从未跑过 `A-architect` 但项目复杂度已较高，提醒一句"建议先跑 `@A-architect.md` 建立项目级架构文档"
-- **design-baseline**（Delta 模式触发）：`@.forgeos/design-baseline.md`（如存在）
-- `@forge-os/references/tech-stacks.md`（技术栈卡片）
-- 已有项目（如有）：`@02-design.md`、`@.forgeos/adr/`、相关源码（按需）
+- **design-baseline**（Delta 模式触发）：`@.devflow/design-baseline.md`（如存在）
+- `@devflow/references/tech-stacks.md`（技术栈卡片）
+- 已有项目（如有）：`@02-design.md`、`@.devflow/adr/`、相关源码（按需）
 
 ## 你的职责
 
@@ -31,17 +31,17 @@
 
 | 模式 | 模板 | 说明 |
 |---|---|---|
-| 新需求 | `@forge-os/templates/02-design.md` | 完整格式，所有字段必填 |
-| Delta 模式 | `@forge-os/templates/02-design-delta.md` | Delta 格式，只写变更部分 |
+| 新需求 | `@devflow/templates/02-design.md` | 完整格式，所有字段必填 |
+| Delta 模式 | `@devflow/templates/02-design-delta.md` | Delta 格式，只写变更部分 |
 
 **Delta 模式触发条件**（必须同时满足）：
-- `.forgeos/design-baseline.md` 已存在（表示项目已有design-baseline）
+- `.devflow/design-baseline.md` 已存在（表示项目已有design-baseline）
 - 本次需求 是修改/扩展已有设计，而非全新设计
 - `01-analysis.md`（或 `01-analysis-delta.md`）中明确标注了「本次为增量需求」
 
-> **注意**：Delta 模式在需求分析和方案设计阶段应保持一致。如果 1-analysis 走了 Delta 模式，2-design 也应走 Delta 模式。如果 `.forgeos/design-baseline.md` 不存在但本次是存量项目修改，应先走完整模式，在归档时会自动创建基线。
+> **注意**：Delta 模式在需求分析和方案设计阶段应保持一致。如果 1-analysis 走了 Delta 模式，2-design 也应走 Delta 模式。如果 `.devflow/design-baseline.md` 不存在但本次是存量项目修改，应先走完整模式，在归档时会自动创建基线。
 
-**必须严格按模板完整结构输出，保存到 `.forgeos/<req-id>/02-design.md`**。**不得省略或改写任何段落**。
+**必须严格按模板完整结构输出，保存到 `.devflow/<req-id>/02-design.md`**。**不得省略或改写任何段落**。
 
 模板必须覆盖：
 
@@ -49,14 +49,14 @@
 
 **目的**：用户可能跳过 0-confirm 直接进 2-design（"设计 XXX"），那 0-confirm 步骤 0.4 的拦截就没跑。这里再做一次。
 
-**判定标准**：与 `@forge-os/references/prompts/0-confirm.md` 步骤 2.1 完全一致（5 条命中条件 + 反例）。
+**判定标准**：与 `@devflow/references/prompts/0-confirm.md` 步骤 2.1 完全一致（5 条命中条件 + 反例）。
 
 **已跑过 0-confirm 的不必重判**：如果 `<req-id>/00-requirements.md` 末尾有「## 架构层影响声明」段或「## 走 A-architect 后回来」标记，说明 0.4 已处理，**直接跳到步骤 0**。
 
 **首次到这步的判定**：
 
-- 命中 + `.forgeos/system-architecture.md` 存在 → 检查 ADR 是否冲突。冲突则提示一次："⚠️ 本次设计可能 supersede ADR-NNN，请在 § 1 决策清单显式声明 supersede 关系"。**不阻塞继续**（因为用户已到 design 阶段）
-- 命中 + `.forgeos/system-architecture.md` 不存在 → 反问用户：
+- 命中 + `.devflow/system-architecture.md` 存在 → 检查 ADR 是否冲突。冲突则提示一次："⚠️ 本次设计可能 supersede ADR-NNN，请在 § 1 决策清单显式声明 supersede 关系"。**不阻塞继续**（因为用户已到 design 阶段）
+- 命中 + `.devflow/system-architecture.md` 不存在 → 反问用户：
 
   ```
   🏛️ 本次设计涉及项目级架构变更（拆模块 / 换数据库 / 改鉴权方案 / ...），但项目无 system-architecture.md。
@@ -83,7 +83,7 @@
 
 #### 常规路径
 
-加载 `@forge-os/references/tech-stacks.md`，按其中的「适用矩阵」过滤出 **5~6 张最匹配项目类型**的卡片（不要 8 张全列），按「给 AI 在 2-design 阶段展示用的标准模板」**实际渲染**给用户：
+加载 `@devflow/references/tech-stacks.md`，按其中的「适用矩阵」过滤出 **5~6 张最匹配项目类型**的卡片（不要 8 张全列），按「给 AI 在 2-design 阶段展示用的标准模板」**实际渲染**给用户：
 
 - 5~6 张卡片（编号 + 名称 + 一句话栈描述）
 - **必给 1 首选 + 1 备选**，理由结合 01-analysis.md 的 AC + 非功能需求（QPS / 团队 / 部署环境 / 数据规模）
@@ -165,11 +165,11 @@
 ### 1.5 宪法检查（Constitution Gate）— 来自 spec-kit 融合
 
 > **来源**: 融合 spec-kit 的 Constitutional Foundation
-> **目的**: 确保所有技术决策符合项目宪法 `.forgeos/constitution.md`
+> **目的**: 确保所有技术决策符合项目宪法 `.devflow/constitution.md`
 
 **强制门禁**：在列出决策清单后、绘制架构图前，必须执行此检查。
 
-读取 `.forgeos/constitution.md`，逐条验证：
+读取 `.devflow/constitution.md`，逐条验证：
 
 | 宪法条款 | 检查项 | 通过? | 违规说明 |
 |---|---|---|---|
@@ -227,7 +227,7 @@
 ### 3. ADR（Architecture Decision Records）
 
 凡是「以后可能被推翻」的决策，单独写一份 ADR：
-保存到 `.forgeos/adr/<NNN>-<title>.md`，结构：Context / Decision / Consequences。
+保存到 `.devflow/adr/<NNN>-<title>.md`，结构：Context / Decision / Consequences。
 
 ### 4. 风险
 
@@ -240,7 +240,7 @@
 ### 9. 架构沉淀建议（软约束 · 为 `A-evolve` 准备素材）
 
 > 这一段是**给未来的礼物**。本需求 如果引入了"项目级有复用价值"的东西，记在 `02-design.md` § 9。
-> 以后用户跑 `@forge-os/references/prompts/A-evolve.md` 会扫这段批量同步到 `CONTEXT.md`。
+> 以后用户跑 `@devflow/references/prompts/A-evolve.md` 会扫这段批量同步到 `CONTEXT.md`。
 > **没有就写 `本需求 无架构层面沉淀建议`。不要凑**。
 
 #### 9.1 判定有没有“项目级复用价值”的阈值
@@ -255,7 +255,7 @@
 
 #### 9.2 填入哪几个子段
 
-按 `@forge-os/templates/02-design.md` § 9 的五个子段（抽象 / 决策 / 契约 / 依赖 / 禁动清单）填写。不适用的子段不写也可（留一句"N/A"）。
+按 `@devflow/templates/02-design.md` § 9 的五个子段（抽象 / 决策 / 契约 / 依赖 / 禁动清单）填写。不适用的子段不写也可（留一句"N/A"）。
 
 #### 9.3 严禁事项
 
@@ -265,11 +265,11 @@
 
 ## 输出
 
-- `.forgeos/<req-id>/02-design.md`（**必须严格按模板格式输出**）
+- `.devflow/<req-id>/02-design.md`（**必须严格按模板格式输出**）
   - 新需求：使用 `02-design.md` 模板
   - Delta 模式：使用 `02-design-delta.md` 模板
-- 0~N 个 `.forgeos/adr/<NNN>-*.md`
-- **更新 `.forgeos/STATE.md`**：
+- 0~N 个 `.devflow/adr/<NNN>-*.md`
+- **更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `design`
   - `阶段状态` 设为 `waiting_user_confirmation`
   - `上次完成阶段` 设为 `design`
@@ -298,7 +298,7 @@
 
 ```
 ✅ 方案设计 完成
-📝 产物：.forgeos/<req-id>/02-design.md
+📝 产物：.devflow/<req-id>/02-design.md
 📊 STATE.md 阶段进度已更新：[x] 方案设计 → 02-design.md
 
 请确认方案设计内容：
@@ -319,6 +319,6 @@
 
 ## 触发下一步
 
-- **前端项目**（含任何用户可见 UI）→ `@forge-os/references/prompts/2a-ui-design.md`（先决策视觉再拆任务）
-- **后端 / CLI / lib** → `@forge-os/references/prompts/3-task.md`
+- **前端项目**（含任何用户可见 UI）→ `@devflow/references/prompts/2a-ui-design.md`（先决策视觉再拆任务）
+- **后端 / CLI / lib** → `@devflow/references/prompts/3-task.md`
 

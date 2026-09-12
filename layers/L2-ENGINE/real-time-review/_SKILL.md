@@ -9,7 +9,7 @@ provides: [spec-compliance-check, quality-quick-scan, boundary-check, review-rep
 description: |
   Wave 实时审查 — Phase 4 每个 Wave 完成后自动执行轻量级审查。
   包括规格合规检查、代码质量快速扫描、变更边界检查。
-  审查结果写入 .forgeos/<req-id>/reviews/，FAIL 级别问题可暂停 Wave 执行。
+  审查结果写入 .devflow/<req-id>/reviews/，FAIL 级别问题可暂停 Wave 执行。
   参考: Superpowers Subagent-Driven Development 两阶段审查。
 source: CHANGELOG v1.2.0 — Superpowers two-stage review
 dependencies:
@@ -379,10 +379,10 @@ Task 声明范围: ["src/auth/login.ts", "src/auth/types.ts"]
 
 ### 6.1 审查结果积累
 
-每个 Wave 的实时审查结果累积到 `.forgeos/<req-id>/reviews/`:
+每个 Wave 的实时审查结果累积到 `.devflow/<req-id>/reviews/`:
 
 ```
-.forgeos/<req-id>/reviews/
+.devflow/<req-id>/reviews/
 ├── wave-1-compliance.md
 ├── wave-1-quality.md
 ├── wave-1-boundary.md

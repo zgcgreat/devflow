@@ -20,7 +20,7 @@ triggers:
   - Session 启动
   - Phase 转换
   - Token 使用率 > 70%
-  - /forgeos:surface 切换
+  - /devflow:surface 切换
 allowed-tools:
   - Read
   - Write
@@ -274,19 +274,19 @@ mcp-shrink (新增增强):
 ```
 surface-switch 模式切换时自动调整 MCP 工具:
 
-/forgeos:surface lite
+/devflow:surface lite
   → MCP Shrink: core 工具集 + ultra 压缩
   → Token 占用: ~1K
 
-/forgeos:surface standard
+/devflow:surface standard
   → MCP Shrink: standard 工具集 + shrink 压缩
   → Token 占用: ~5K
 
-/forgeos:surface strict
+/devflow:surface strict
   → MCP Shrink: all 工具集 + full 压缩
   → Token 占用: ~12K
 
-/forgeos:surface extreme
+/devflow:surface extreme
   → MCP Shrink: core 工具集 + extreme 压缩
   → Token 占用: ~0.5K
 ```

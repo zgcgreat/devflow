@@ -12,13 +12,13 @@ cp adapters/codex/codex.yaml codex.yaml
 ### 2. 设置环境变量
 
 ```bash
-export ForgeOS_HOME="$(pwd)/path/to/forgeos"
+export DevFlow_HOME="$(pwd)/path/to/devflow"
 ```
 
 ### 3. 验证安装
 
 ```bash
-codex --config codex.yaml "check forgeos status"
+codex --config codex.yaml "check devflow status"
 ```
 
 ## 限制

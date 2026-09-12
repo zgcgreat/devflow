@@ -40,7 +40,7 @@ const DEFAULT_CONFIG = {
   },
   statusline: {
     enabled: true,                // 是否在 statusline 显示 Token 消耗
-    format: 'ForgeOS Token: {bar} {percent}% | Mode: {mode} | Saved: {saved}',
+    format: 'DevFlow Token: {bar} {percent}% | Mode: {mode} | Saved: {saved}',
   },
 };
 
@@ -152,11 +152,11 @@ function generateStatusline(result, context) {
 async function run(context) {
   // 从上下文或环境变量获取 Token 信息
   const tokenContext = {
-    tokens_used: parseInt(process.env.FORGEOS_TOKENS_USED || '0', 10),
+    tokens_used: parseInt(process.env.DEVFLOW_TOKENS_USED || '0', 10),
     tokens_budget: parseInt(
-      process.env.FORGEOS_TOKENS_BUDGET || String(DEFAULT_CONFIG.total_budget), 10
+      process.env.DEVFLOW_TOKENS_BUDGET || String(DEFAULT_CONFIG.total_budget), 10
     ),
-    tokens_saved: parseInt(process.env.FORGEOS_TOKENS_SAVED || '0', 10),
+    tokens_saved: parseInt(process.env.DEVFLOW_TOKENS_SAVED || '0', 10),
   };
 
   // 如果上下文中提供了 Token 信息，优先使用

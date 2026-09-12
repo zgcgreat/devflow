@@ -1,7 +1,7 @@
 # Supervisor 模式 — 双向协调通信
 
 > **适用场景**: 主 Agent 需要协调多个子 Agent 的并行执行
-> **来源**: Ruflo Supervisor Pattern + ForgeOS 多 Agent 协调
+> **来源**: Ruflo Supervisor Pattern + DevFlow 多 Agent 协调
 
 ---
 

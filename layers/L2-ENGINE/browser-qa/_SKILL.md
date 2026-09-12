@@ -60,7 +60,7 @@ Phase 5 测试验证
       ├─ 2.3 Bug 报告
       │   ├─ 自动生成 Bug 报告（含截图）
       │   ├─ 分级: P0(崩溃)/P1(功能异常)/P2(UI瑕疵)
-      │   └─ 输出: .forgeos/<req-id>/browser-qa-report.md
+      │   └─ 输出: .devflow/<req-id>/browser-qa-report.md
       │
       └─ 2.4 G6.5 Gate (浏览器 QA 门控)
           ├─ P0 Bug → Gate FAIL
@@ -103,7 +103,7 @@ browser_qa_enabled:
 ### 2.2 测试用例模板
 
 ```typescript
-// e2e/<feature>.spec.ts — 由 ForgeOS Browser QA 自动生成
+// e2e/<feature>.spec.ts — 由 DevFlow Browser QA 自动生成
 import { test, expect } from '@playwright/test';
 
 test.describe('<Feature Name>', () => {

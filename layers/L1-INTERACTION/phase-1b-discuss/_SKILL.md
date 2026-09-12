@@ -25,8 +25,8 @@ token_budget: "~200K per execution agent"
 # Phase 1b: 决策捕获（Discuss）
 
 > **前置产物**: `01-analysis.md` (Phase 1 通过 G2)
-> **后置产物**: `.forgeos/<req-id>/CONTEXT.md`
-> **门控**: G2.5 — Decision Clarity Gate
+> **后置产物**: `.devflow/<req-id>/CONTEXT.md`
+> **门控**: G2.5 — Discussion Gate
 
 ## 核心定位
 
@@ -36,7 +36,7 @@ token_budget: "~200K per execution agent"
 
 ## 产物
 
-- `.forgeos/<req-id>/CONTEXT.md` — 实现决策上下文 (API/Data/Error/UI/Auth/Security)
+- `.devflow/<req-id>/CONTEXT.md` — 实现决策上下文 (API/Data/Error/UI/Auth/Security)
 - 决策捕获报告 — 已确认/未决项表格
 
 ## 执行流程
@@ -90,7 +90,7 @@ token_budget: "~200K per execution agent"
 ## Decision Rationale
 ```
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: planner (always) + architect (always)
 **Hook**: phase-transition (L0), context-monitor (L0+L1)

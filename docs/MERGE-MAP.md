@@ -1,13 +1,13 @@
-# ForgeOS 融合映射表
+# DevFlow 融合映射表
 
 > 版本: 1.0.0 | 日期: 2026-05-27
-> 本表记录 ForgeOS 中每个文件/目录的来源（DevFlow / ECC / 新增）
+> 本表记录 DevFlow 中每个文件/目录的来源（DevFlow / ECC / 新增）
 
 ---
 
 ## 一、根级文件
 
-| ForgeOS 路径 | 来源 | 原始路径 | 备注 |
+| DevFlow 路径 | 来源 | 原始路径 | 备注 |
 |---------------|------|---------|------|
 | `SKILL.md` | 融合新增 | DevFlow `SKILL.md` 基础 + ECC Agent增强 | 主入口 |
 | `GO.md` | DevFlow | `devflow/GO.md` | 统一路由器 |
@@ -20,7 +20,7 @@
 
 ## 二、layers/ (三层架构)
 
-| ForgeOS 路径 | 来源 | 原始路径 | 备注 |
+| DevFlow 路径 | 来源 | 原始路径 | 备注 |
 |---------------|------|---------|------|
 | `layers/L1-INTERACTION/` | DevFlow | `devflow/layers/L1-INTERACTION/` | 完整复制，Phase增强在M1完成 |
 | `layers/L2-ENGINE/` | DevFlow | `devflow/layers/L2-ENGINE/` | 完整复制，✅ Hook桥接M2完成(gate-hook-bridge) |
@@ -30,7 +30,7 @@
 
 ## 三、agents/ (ECC 精选 Agent)
 
-| ForgeOS 路径 | 来源 | 原始路径 | 加载策略 | 映射Phase |
+| DevFlow 路径 | 来源 | 原始路径 | 加载策略 | 映射Phase |
 |---------------|------|---------|---------|----------|
 | `agents/core/planner.md` | ECC | `ECC/agents/planner.md` | always | P0,P1,P1b,P3 | ✅ M1完成 |
 | `agents/core/architect.md` | ECC | `ECC/agents/architect.md` | always | P1,P1b,P2,P2a | ✅ M1完成 |
@@ -58,7 +58,7 @@
 
 ## 四、skills/ (技能库)
 
-| ForgeOS 路径 | 来源 | 原始路径 | 备注 |
+| DevFlow 路径 | 来源 | 原始路径 | 备注 |
 |---------------|------|---------|------|
 | `skills/workflow/` | DevFlow | `devflow/skills/` | 完整复制 |
 | `skills/engineering/` | DevFlow | `devflow/agent-skills/skills/` | 完整复制 |
@@ -68,7 +68,7 @@
 
 ## 五、hooks/ (Hook 适配)
 
-| ForgeOS 路径 | 来源 | 原始路径 | 备注 |
+| DevFlow 路径 | 来源 | 原始路径 | 备注 |
 |---------------|------|---------|------|
 | `hooks/hooks.json` | ECC改编 | `ECC/hooks/hooks.json` 精选 | 仅6个Hook，✅ M2完成 |
 | `hooks/scripts/format-typecheck.js` | ECC | `ECC/scripts/hooks/stop-format-typecheck.js` | M2复制 |
@@ -88,7 +88,7 @@
 
 ## 六、rules/ (语言规则)
 
-| ForgeOS 路径 | 来源 | 原始路径 | 备注 |
+| DevFlow 路径 | 来源 | 原始路径 | 备注 |
 |---------------|------|---------|------|
 | `rules/common/` | ECC | `ECC/rules/common/` | ✅ M3完成 — 10个通用规则文件 |
 | `rules/python/` | ECC | `ECC/rules/python/` | ✅ M3完成 — 6个Python规则文件(含fastapi) |
@@ -98,7 +98,7 @@
 
 ## 七、adapters/ (跨环境适配)
 
-| ForgeOS 路径 | 来源 | 备注 |
+| DevFlow 路径 | 来源 | 备注 |
 |---------------|------|------|
 | `adapters/claude-code/` | ECC改编 | M5/M7完成，hooks.json+规则 |
 | `adapters/cursor/` | ECC改编 | M7完成，规则映射 |
@@ -109,7 +109,7 @@
 
 ## 八、references/ (参考规范)
 
-| ForgeOS 路径 | 来源 | 原始路径 |
+| DevFlow 路径 | 来源 | 原始路径 |
 |---------------|------|---------|
 | `references/` | DevFlow | `devflow/references/` 完整复制 |
 
@@ -117,7 +117,7 @@
 
 ## 九、memory/ (记忆系统)
 
-| ForgeOS 路径 | 来源 | 原始路径 |
+| DevFlow 路径 | 来源 | 原始路径 |
 |---------------|------|---------|
 | `memory/` | DevFlow | `devflow/memory/` 完整复制 |
 
@@ -125,7 +125,7 @@
 
 ## 十、docs/ (融合文档)
 
-| ForgeOS 路径 | 来源 | 备注 |
+| DevFlow 路径 | 来源 | 备注 |
 |---------------|------|------|
 | `docs/MERGE-MAP.md` | 新增 | 本文件 |
 | `docs/AGENT-PHASE-MAP.md` | 新增 | ✅ M1完成 — 完整映射表+Token预算+技术栈检测 |

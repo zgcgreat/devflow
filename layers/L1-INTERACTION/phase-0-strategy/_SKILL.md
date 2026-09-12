@@ -63,7 +63,7 @@ external-inputs: [project-context]
 | 无 project-context 且用户沉默 >3 轮 | 中止并请求项目背景 |
 | 已有 strategy-seeds 且无变更 | 直接 PASS G0 |
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: planner (always) + 技术栈Persona (项目识别)
 **Hook**: prompt-guard (L0), phase-transition (L0)

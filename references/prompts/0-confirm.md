@@ -11,7 +11,7 @@
 ```
 □ 入场检测已输出检测结果框？
 □ 入场检测结果不是"待用户确认"？
-□ 已读取 .forgeos/STATE.md（如存在）？
+□ 已读取 .devflow/STATE.md（如存在）？
 □ 已加载 idea-refine/SKILL.md？
 □ 已加载 source-driven-development/SKILL.md？
 ```
@@ -27,7 +27,7 @@
 ## 输入
 
 - 用户一句话（可能很模糊，例如"加个深色模式"）
-- 已有项目（如有）：`@README.md`、`@.forgeos/`
+- 已有项目（如有）：`@README.md`、`@.devflow/`
 
 ## 你的职责
 
@@ -35,16 +35,16 @@
 
    > **来源**: 融合 spec-kit SDD 体系 — 项目宪法是所有设计和实现的最高约束
 
-   检查 `.forgeos/constitution.md` 是否存在：
+   检查 `.devflow/constitution.md` 是否存在：
 
-   - **不存在** → 使用 `@forge-os/templates/spec-constitution-template.md` 创建：
+   - **不存在** → 使用 `@devflow/templates/spec-constitution-template.md` 创建：
      1. 读取模板
      2. 根据项目类型填充「项目特定约束」段（技术栈要求、安全要求、性能标准）
      3. 其他段落保留模板原样（9 条核心原则不可修改）
-     4. 保存到 `.forgeos/constitution.md`
+     4. 保存到 `.devflow/constitution.md`
      5. 告知用户：
         ```
-        📜 已创建项目宪法 .forgeos/constitution.md
+        📜 已创建项目宪法 .devflow/constitution.md
            - 包含 9 条核心原则（库优先 / CLI 接口 / 测试先行 / 集成测试 / 可观测性 / 版本管理 / 简单性 / 反抽象 / 宪法优先级）
            - 所有后续设计和实现受此宪法约束
            - 如需修改原则，走修订流程（文档化理由 → 审核 → 兼容性评估）
@@ -62,7 +62,7 @@
 1. **自动生成 req-id**（用户**不需要**提供）：
    - 从用户描述提取核心关键词，转成 kebab-case（小写、短横线分隔、英文）
    - 长度 2~4 个词。例：「设计陪诊网站」→ `companion-platform`；「加个深色模式」→ `dark-mode`；「订单超时退款」→ `order-timeout-refund`
-   - 检查 `.forgeos/<id>/` 不存在，若冲突自动加序号 `<id>-2`、`<id>-3`
+   - 检查 `.devflow/<id>/` 不存在，若冲突自动加序号 `<id>-2`、`<id>-3`
    - 在反问的第一条消息里向用户**显式声明**：
      ```
      ✅ 自动生成 req-id：`<id>`（不满意请告诉我新的，否则继续。）
@@ -107,13 +107,13 @@
 
    **各选项后续动作**：
 
-   - **选 1**：暂停本工作流，引导用户跑 `@forge-os/references/prompts/A-architect.md`。完成后用户回来重新跑 `@forge-os/references/GO.md` + 同样意图，那时 system-architecture.md 已就绪，本步会通过。**已生成的 req-id 暂留**，A-architect 完成后复用
+   - **选 1**：暂停本工作流，引导用户跑 `@devflow/references/prompts/A-architect.md`。完成后用户回来重新跑 `@devflow/references/GO.md` + 同样意图，那时 system-architecture.md 已就绪，本步会通过。**已生成的 req-id 暂留**，A-architect 完成后复用
    - **选 2**：继续步骤 3。但**强制**：在 00-requirements.md 末尾加一段「## 架构层影响声明」列出本次需求 会冲击哪些 ADR / 模块边界（这段会在 2-design § 0.5 被读到）
    - **选 3**：用户给出"这其实只是 X"的解释，AI 重新判断。如果合理则继续；如果用户解释牵强，AI **可以坚持**（"我仍判定为架构级，理由：…，请你选 1 或 2"）
 
    #### 2.3 system-architecture.md 不存在的特殊处理
 
-   如果检测到架构级变更但 `.forgeos/system-architecture.md` 不存在（项目从未跑过 A-architect）：
+   如果检测到架构级变更但 `.devflow/system-architecture.md` 不存在（项目从未跑过 A-architect）：
 
    - 选项 1 改为："✅ 先跑 `@A-architect` 建立项目级架构文档（**这是首次建立 · 一次性投资**）"
    - 选项 2 不变
@@ -147,7 +147,7 @@
       ```
       从 67 styles 里选出 **9 个最匹配项目类型**的，按下面的标准卡片格式呈现。
       优势：后期 2a-ui-design 能联动调调色板（161 palettes）/ 字体（57 pairings）/ 图表（25 charts）。
-   2. **没装 uipro** → 回退到 flow-kit 内置基线：加载 `@forge-os/references/ui-aesthetics.md` 的「调性」一节，按其末尾的「给 AI 在 0-confirm 阶段展示用的标准模板」呈现 9 张调性卡片。
+   2. **没装 uipro** → 回退到 flow-kit 内置基线：加载 `@devflow/references/ui-aesthetics.md` 的「调性」一节，按其末尾的「给 AI 在 0-confirm 阶段展示用的标准模板」呈现 9 张调性卡片。
 
    ### 呈现要求（两条路径都适用）
 
@@ -179,7 +179,7 @@
 
 7. **范围排除**：明确写出**这次不做什么**。
 
-8. **生成 00-requirements.md**：**⚠️ 强制要求**：必须严格按照 `@forge-os/templates/00-requirements.md` 模板的完整结构输出，填好后保存到 `.forgeos/<req-id>/00-requirements.md`（id 来自步骤 1）。**不得省略或改写任何段落**。
+8. **生成 00-requirements.md**：**⚠️ 强制要求**：必须严格按照 `@devflow/templates/00-requirements.md` 模板的完整结构输出，填好后保存到 `.devflow/<req-id>/00-requirements.md`（id 来自步骤 1）。**不得省略或改写任何段落**。
 
 9. **路径建议**：模式已在路由声明中由用户确认。此处基于影响面判定，在已确认的模式下建议具体走哪些阶段：
 
@@ -207,9 +207,9 @@
 
 ## 输出
 
-- `.forgeos/<req-id>/00-requirements.md`（**必须严格按模板格式输出**）
+- `.devflow/<req-id>/00-requirements.md`（**必须严格按模板格式输出**）
 - 一段路径建议（在已确认模式下建议具体阶段），并询问用户确认
-- **更新 `.forgeos/STATE.md`**：
+- **更新 `.devflow/STATE.md`**：
   - `活跃 Req` 改为 `<req-id>`
   - `当前阶段` 设为 `confirm`
   - `阶段状态` 设为 `waiting_user_confirmation`
@@ -260,7 +260,7 @@
 
 ```
 ✅ 需求确认 完成
-📝 产物：.forgeos/<req-id>/00-requirements.md
+📝 产物：.devflow/<req-id>/00-requirements.md
 📊 STATE.md 阶段进度已更新：[x] 需求确认 → 00-requirements.md
 
 请确认需求确认书内容：
@@ -277,6 +277,6 @@
 ## 触发下一步
 
 00-requirements.md 经用户确认后，根据路径建议进入：
-- `@forge-os/references/prompts/1-analysis.md`（影响需求时）
-- `@forge-os/references/prompts/3-task.md`（直接拆任务时）
+- `@devflow/references/prompts/1-analysis.md`（影响需求时）
+- `@devflow/references/prompts/3-task.md`（直接拆任务时）
 

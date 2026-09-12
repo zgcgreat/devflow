@@ -7,7 +7,7 @@ requires: []
 provides: [l3-module-registry, cross-layer-contracts]
 description: |
   L3 Architecture layer index and protocol document for 架构层.
-  Layer 3 负责全局协调、路由、和 Agent 上下文管理。 (ForgeOS v3.2.2)
+  Layer 3 负责全局协调、路由、和 Agent 上下文管理。 (DevFlow v3.2.2)
 runtime-inputs: [l2-engine-output]
 ---
 

@@ -7,7 +7,7 @@ implementation: spec-only
 requires: [domain-complexity-mapping]
 provides: [model-assignment, fallback-chain]
 description: Intelligent model selection strategy mapping task types to optimal AI models with fallback chains
-source: ForgeOS Provider-Gateway + superpowers model routing
+source: DevFlow Provider-Gateway + superpowers model routing
 dependencies:
   - provider-gateway
 triggers:
@@ -39,7 +39,7 @@ runtime-inputs: [task-type]
 ## Provider Gateway 集成
 
 ```yaml
-# .forgeos/providers.yaml
+# .devflow/providers.yaml
 providers:
   anthropic:
     models:

@@ -1,20 +1,20 @@
 ---
-name: forge-os
+name: devflow
 version: 3.2.2
 description: |
-  ForgeOS — AI 开发操作系统
-  融合: ForgeOS Phase 管线 + Gate 门控 + 3级运行时
+  DevFlow — AI 开发操作系统
+  融合: DevFlow Phase 管线 + Gate 门控 + 3级运行时
   自建: lib/ (记忆/仲裁/规划) + domains/ (代码/压缩/钩子)
 ---
 
-# ForgeOS v3.2.2 — AI 开发操作系统
+# DevFlow v3.2.2 — AI 开发操作系统
 
-> ForgeOS Phase 管线 + Gate 门控 + 3 级运行时，零外部依赖自包含架构。
-> 所有文件在 forge-os 目录内，无外部引用。
+> DevFlow Phase 管线 + Gate 门控 + 3 级运行时，零外部依赖自包含架构。
+> 所有文件在 devflow 目录内，无外部引用。
 
 ## AI 执行协议（必须遵守，违反即违规）
 
-任何 AI 使用 ForgeOS 时，**必须**按以下顺序执行。省略任何一步均视为履约违规。
+任何 AI 使用 DevFlow 时，**必须**按以下顺序执行。省略任何一步均视为履约违规。
 
 ```
 [R0] 加载 SKILL.md → 读取域路由 + 模式判定规则
@@ -45,7 +45,7 @@ description: |
 | 记忆存储? | `domains/memory/_SKILL.md` |
 | 钩子检查? | `domains/hooks/_SKILL.md` |
 
-## ⚡ 模式判定 (来自 ForgeOS)
+## ⚡ 模式判定 (来自 DevFlow)
 
 | 模式 | 触发条件 | 流程 |
 |------|---------|------|
@@ -59,13 +59,13 @@ description: |
 ## CLI
 
 ```bash
-npm install -g forge-os
-forge-os init --mode standard   # 初始化管线
-forge-os status                 # 状态检查
+npm install -g devflow
+devflow init --mode standard   # 初始化管线
+devflow status                 # 状态检查
 # 所有命令参考: docs/cli-reference.md
 ```
 
-## 三级运行时 (来自 ForgeOS)
+## 三级运行时 (来自 DevFlow)
 
 | 级别 | 检测条件 | 能力 |
 |------|---------|------|
@@ -75,7 +75,7 @@ forge-os status                 # 状态检查
 
 > 降级规则：不报错、不阻塞。L0 环境用 Markdown 指令，L1/L2 自动启用 JS 内核。
 
-## 强制行为约束 (R1-R7, 来自 ForgeOS)
+## 强制行为约束 (R1-R7, 来自 DevFlow)
 
 | # | 规则 | 说明 | 违反后果 |
 |---|------|------|---------|
@@ -148,7 +148,7 @@ forge-os status                 # 状态检查
 
 ## ✅ 合规声明模板（每条回复必须包含）
 
-AI 在每条回复末尾输出以下合规声明，证明本次操作遵循了 ForgeOS 协议：
+AI 在每条回复末尾输出以下合规声明，证明本次操作遵循了 DevFlow 协议：
 
 ```
 [COMPLIANCE]

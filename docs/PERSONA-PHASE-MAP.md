@@ -1,9 +1,9 @@
-# ForgeOS Persona-Phase 映射表
+# DevFlow Persona-Phase 映射表
 
 > v2.0 核心概念: Persona ≠ Execution Agent
 > Persona (ECC语义) = 专业角色指令（嵌入Execution Agent）
-> Execution Agent (ForgeOS语义) = 执行隔离单元，~200K独立tokens
-> Cavecrew (ForgeOS语义) = 轻量级子代理，输出压缩60%注入主上下文
+> Execution Agent (DevFlow语义) = 执行隔离单元，~200K独立tokens
+> Cavecrew (DevFlow语义) = 轻量级子代理，输出压缩60%注入主上下文
 
 ---
 
@@ -90,4 +90,4 @@
 | Strict | 核心+按需+安全 | +14K+按需+安全 |
 | Audit | 全量 | 全量 |
 
-硬性约束: ForgeOS Standard 基线增幅 <= ForgeOS 原版的 30%
+硬性约束: DevFlow Standard 基线增幅 <= DevFlow 原版的 30%

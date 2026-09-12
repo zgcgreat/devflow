@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ForgeOS code-explorer — 代码解析引擎
+ * DevFlow code-explorer — 代码解析引擎
  *
  * 零依赖的静态代码分析器。扫描文件提取符号、调用关系、影响范围。
  * 设计目标: 替代 90% 的 read_file + grep 调用。
@@ -230,7 +230,7 @@ function main() {
   }
 
   // Default: show help
-  console.log(`🔬 ForgeOS Code Explorer
+  console.log(`🔬 DevFlow Code Explorer
 
 Usage:
   --symbol <name>       Search for symbol across all source files
@@ -297,5 +297,5 @@ function formatScan(result) {
 }
 
 // 仅在作为 CLI 直接执行时运行；被 require 加载时不得产生副作用输出
-// (历史 bug: 无条件 main() 导致 forge-os doctor 加载检查时打印横幅污染输出)
+// (历史 bug: 无条件 main() 导致 devflow doctor 加载检查时打印横幅污染输出)
 if (require.main === module) main();

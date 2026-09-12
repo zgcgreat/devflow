@@ -1,13 +1,13 @@
-# ForgeOS 双通道自进化规范
+# DevFlow 双通道自进化规范
 
-> 融合 ForgeOS LESSONS 通道（流程沉淀）与 ECC Agent-Eval 通道（模式提取），形成完整的知识进化闭环。
+> 融合 DevFlow LESSONS 通道（流程沉淀）与 ECC Agent-Eval 通道（模式提取），形成完整的知识进化闭环。
 
 ---
 
 ## 1. 双通道架构
 
 ```
-通道A: 流程沉淀 (ForgeOS LESSONS)
+通道A: 流程沉淀 (DevFlow LESSONS)
   Phase 0→8 执行 → Wave SUMMARY → Phase 8 归档 → LESSONS.md → Domain Skills晋升
 
 通道B: 模式提取 (ECC Agent-Eval)
@@ -106,7 +106,7 @@
 ## 5. 存储结构
 
 ```
-forgeos/
+devflow/
   memory/
     LESSONS.md              ← 通道A沉淀（流程经验）
     domain-skills/           ← 晋升产物（两个通道共享）

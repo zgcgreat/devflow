@@ -1,6 +1,6 @@
 # Agent-Phase 映射表
 
-> ForgeOS v1.0.0 — 核心Agent与扩展Agent的Phase映射、Token预算与加载策略
+> DevFlow v1.0.0 — 核心Agent与扩展Agent的Phase映射、Token预算与加载策略
 
 ## 1. 核心Agent映射矩阵
 
@@ -108,13 +108,13 @@
 1. **核心Agent**: 每个 token_budget=2000，always 加载，不可跳过
 2. **扩展Agent**: 每个 token_budget≤1000，on-demand 加载，仅在技术栈匹配时激活
 3. **单Phase上限**: 核心Token + 扩展Token ≤ 总预算上限
-4. **全流程累计**: 核心Token ≤ 18000，扩展Token ≤ 6000，总计 ≤ 24000（增幅<30% 相对纯ForgeOS基线~80000）
+4. **全流程累计**: 核心Token ≤ 18000，扩展Token ≤ 6000，总计 ≤ 24000（增幅<30% 相对纯DevFlow基线~80000）
 5. **超预算处理**: 若某Phase扩展Agent总Token超限，按优先级裁剪：reviewer > build-resolver > 其他
 6. **Phase 7/8**: 无Agent参与，纯流程控制，Token消耗为零
 
 ### 4.3 Token增幅验证
 
-| 指标 | 纯ForgeOS | ForgeOS(含Agent) | 增幅 |
+| 指标 | 纯DevFlow | DevFlow(含Agent) | 增幅 |
 |------|----------|-------------------|------|
 | 单Phase最大增幅 | — | P6: +8000 | +10% |
 | 全流程Agent累计 | 0 | 24000(上限) | <30% ✅ |

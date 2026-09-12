@@ -7,7 +7,7 @@ version: 3.0.0
 gate: internal
 requires: []
 provides: [ast-results, call-chains, impact-analysis, dependency-graph]
-description: GitNexus 深度代码分析引擎桥接层，为 ForgeOS 提供知识图谱驱动的代码智能能力
+description: GitNexus 深度代码分析引擎桥接层，为 DevFlow 提供知识图谱驱动的代码智能能力
 dependencies:
   - gitnexus (>=1.6.0)
 triggers:
@@ -21,7 +21,7 @@ external-inputs: [code-analysis-request]
 
 ## 概述
 
-将 ForgeOS 的代码智能需求桥接到 GitNexus，替代旧的 regex 分析器，获得以下升级：
+将 DevFlow 的代码智能需求桥接到 GitNexus，替代旧的 regex 分析器，获得以下升级：
 
 | 能力 | 旧 (regex) | 新 (GitNexus) |
 |------|-----------|---------------|
@@ -34,15 +34,15 @@ external-inputs: [code-analysis-request]
 
 ## MCP 工具映射
 
-| ForgeOS 工具 | GitNexus 命令 | 说明 |
+| DevFlow 工具 | GitNexus 命令 | 说明 |
 |---|---|---|
-| `ForgeOS_analyze` | `gitnexus context` | 解析文件结构 |
-| `ForgeOS_trace_chain` | `gitnexus context --direction` | 调用链追踪 |
-| `ForgeOS_blast_radius` | `gitnexus impact` | 影响分析 + 置信度 |
-| `ForgeOS_dep_graph` | `gitnexus query dependencies` | 依赖图 |
-| `ForgeOS_find_references` | `gitnexus context --refs` | 引用查找 |
-| `ForgeOS_detect_changes` | `gitnexus detect-changes` | **新增** git-diff → 受影响符号 |
-| `ForgeOS_route_map` | `gitnexus query routes` | **新增** API 路由映射 |
+| `DevFlow_analyze` | `gitnexus context` | 解析文件结构 |
+| `DevFlow_trace_chain` | `gitnexus context --direction` | 调用链追踪 |
+| `DevFlow_blast_radius` | `gitnexus impact` | 影响分析 + 置信度 |
+| `DevFlow_dep_graph` | `gitnexus query dependencies` | 依赖图 |
+| `DevFlow_find_references` | `gitnexus context --refs` | 引用查找 |
+| `DevFlow_detect_changes` | `gitnexus detect-changes` | **新增** git-diff → 受影响符号 |
+| `DevFlow_route_map` | `gitnexus query routes` | **新增** API 路由映射 |
 
 ## 降级策略
 
@@ -55,10 +55,10 @@ external-inputs: [code-analysis-request]
 
 | Phase | 使用方式 |
 |-------|---------|
-| Phase 3 Task Plan | `ForgeOS_dep_graph` 拆分任务依赖 |
-| Phase 4 Build | `ForgeOS_blast_radius` 评估修改安全性 |
-| Phase 5 Test | `ForgeOS_detect_changes` 确定测试范围 |
-| Phase 6 Review | `ForgeOS_trace_chain` + `ForgeOS_route_map` 跨文件审查 |
+| Phase 3 Task Plan | `DevFlow_dep_graph` 拆分任务依赖 |
+| Phase 4 Build | `DevFlow_blast_radius` 评估修改安全性 |
+| Phase 5 Test | `DevFlow_detect_changes` 确定测试范围 |
+| Phase 6 Review | `DevFlow_trace_chain` + `DevFlow_route_map` 跨文件审查 |
 
 ## 索引管理
 

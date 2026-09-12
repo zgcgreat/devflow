@@ -5,7 +5,7 @@
 - **版本**: `<v1.0>`
 - **template-version**: `v1.0.0`
 - **状态**: `待确认 / 已确认 / 已关闭`
-- **关联**: `@.forgeos/<req-id>/00-requirements.md`、`@.forgeos/<req-id>/01-analysis.md`、`@.forgeos/<req-id>/02-design.md`
+- **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/<req-id>/01-analysis.md`、`@.devflow/<req-id>/02-design.md`
 - **作者**: AI（Planner 角色）+ 人工 review
 
 ---

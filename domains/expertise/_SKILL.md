@@ -1,5 +1,5 @@
 ---
-name: forge-os:expertise
+name: devflow:expertise
 version: 1.0.0
 ---
 
@@ -12,6 +12,6 @@ version: 1.0.0
 
 | 能力 | 位置 |
 |------|------|
-| 多专家评分仲裁 | `lib/party-arbiter.js` (`forge-os party`) |
+| 多专家评分仲裁 | `lib/party-arbiter.js` (`devflow party`) |
 | Party 辩论协议 | `layers/L2-ENGINE/party-mode/_SKILL.md` |
 | 专家角色定义 | `domains/expertise/party-mode.md` (6 角色) |

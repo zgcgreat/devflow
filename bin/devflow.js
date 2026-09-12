@@ -1,60 +1,60 @@
 #!/usr/bin/env node
 /**
- * forge-os — CLI 入口
+ * devflow — CLI 入口
  *
- * 核心 Phase → layers/L1-INTERACTION/ + references/ (来自 ForgeOS)
- * 扩展 → lib/ + domains/ (forge-os 自建)
+ * 核心 Phase → layers/L1-INTERACTION/ + references/ (来自 DevFlow)
+ * 扩展 → lib/ + domains/ (devflow 自建)
  *
- * 用法: forge-os init [--mode standard]
- *       forge-os task --describe "登录功能"
- *       forge-os mem --save "决策内容"
- *       forge-os party --scenario "方案名"
- *       forge-os code --symbol "login"
- *       forge-os caveman --file README.md
- *       forge-os status
+ * 用法: devflow init [--mode standard]
+ *       devflow task --describe "登录功能"
+ *       devflow mem --save "决策内容"
+ *       devflow party --scenario "方案名"
+ *       devflow code --symbol "login"
+ *       devflow caveman --file README.md
+ *       devflow status
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const FORGE_OS_HOME = path.resolve(__dirname, '..');
-const FORGEOS_SKILL = path.join(FORGE_OS_HOME, 'SKILL.md');
-const FORGEOS_GO = path.join(FORGE_OS_HOME, 'GO.md');
-const FORGEOS_LAYERS = path.join(FORGE_OS_HOME, 'layers');
-const FORGEOS_REFS = path.join(FORGE_OS_HOME, 'references');
+const DEVFLOW_HOME = path.resolve(__dirname, '..');
+const DEVFLOW_SKILL = path.join(DEVFLOW_HOME, 'SKILL.md');
+const DEVFLOW_GO = path.join(DEVFLOW_HOME, 'GO.md');
+const DEVFLOW_LAYERS = path.join(DEVFLOW_HOME, 'layers');
+const DEVFLOW_REFS = path.join(DEVFLOW_HOME, 'references');
 
-const HELP = `ForgeOS v3.2.2 — AI 开发操作系统
+const HELP = `DevFlow v3.2.2 — AI 开发操作系统
 
 核心: layers/ (Phase 管线) + references/ (Gate 规则)
 扩展: lib/ (记忆/仲裁/规划) + domains/ (代码/压缩/钩子)
 
 用法:
-  forge-os init [--mode fast|lean|standard|strict]   初始化 Phase 管线 (未指定 --mode 时按项目规模自动判定)
-  forge-os status                                     当前 Phase 状态
-  forge-os phase --status                             Phase 详情 (进度/门控/产出)
-  forge-os phase --list                               Phase 管线总览
-  forge-os phase --mode <fast|lean|standard|strict>   设置模式 (重置起始 Phase)
-  forge-os phase --set <N> [--force]                  切换到指定 Phase (0/1/1.5/2/2.5/3-8)
-  forge-os phase --next [--force]                     推进到下一阶段 (受门控护卫)
-  forge-os phase --gate <G3>                          标记门控通过
-  forge-os phase --output <文件>                      记录产物并通过门控
-  forge-os detect [--files N] [--lines N] [--modules N] 按规模/风险自动判定模式
+  devflow init [--mode fast|lean|standard|strict]   初始化 Phase 管线 (未指定 --mode 时按项目规模自动判定)
+  devflow status                                     当前 Phase 状态
+  devflow phase --status                             Phase 详情 (进度/门控/产出)
+  devflow phase --list                               Phase 管线总览
+  devflow phase --mode <fast|lean|standard|strict>   设置模式 (重置起始 Phase)
+  devflow phase --set <N> [--force]                  切换到指定 Phase (0/1/1.5/2/2.5/3-8)
+  devflow phase --next [--force]                     推进到下一阶段 (受门控护卫)
+  devflow phase --gate <G3>                          标记门控通过
+  devflow phase --output <文件>                      记录产物并通过门控
+  devflow detect [--files N] [--lines N] [--modules N] 按规模/风险自动判定模式
                   [--risk low|medium|high] [--brownfield]
                   [--arch-change] [--data-change]
-  forge-os task --describe <描述> [--visualize]       任务分解 (DAG)
-  forge-os mem --save <内容> [--tags a,b]             保存记忆
-  forge-os mem --search <关键词>                       搜索记忆
-  forge-os mem --stats                                 记忆统计
-  forge-os party --scenario <场景>                     Party 评分仲裁
-  forge-os party --role <角色> <方案> [--role ...]    手动评分
-  forge-os code --symbol <名称>                        代码符号查询
-  forge-os code --scan <目录>                          代码扫描
-  forge-os caveman --file <路径> [--level lite|full|ultra|wenyan]  压缩
-  forge-os caveman --compress <文本>                   压缩文本
-  forge-os gates --phase <N>                           门控检查
-  forge-os install [--target workbuddy|cursor|claude]  安装
-  forge-os doctor                                       健康检查
-  forge-os help                                        帮助`;
+  devflow task --describe <描述> [--visualize]       任务分解 (DAG)
+  devflow mem --save <内容> [--tags a,b]             保存记忆
+  devflow mem --search <关键词>                       搜索记忆
+  devflow mem --stats                                 记忆统计
+  devflow party --scenario <场景>                     Party 评分仲裁
+  devflow party --role <角色> <方案> [--role ...]    手动评分
+  devflow code --symbol <名称>                        代码符号查询
+  devflow code --scan <目录>                          代码扫描
+  devflow caveman --file <路径> [--level lite|full|ultra|wenyan]  压缩
+  devflow caveman --compress <文本>                   压缩文本
+  devflow gates --phase <N>                           门控检查
+  devflow install [--target workbuddy|cursor|claude]  安装
+  devflow doctor                                       健康检查
+  devflow help                                        帮助`;
 
 const CMDS = {
   init: (args) => {
@@ -72,45 +72,45 @@ const CMDS = {
       console.log(`🔍 自动判定模式: ${mode.toUpperCase()} — ${d.reason}`);
     }
 
-    const forgeosDir = path.resolve('.forgeos');
-    fs.mkdirSync(path.resolve(forgeosDir, 'memory'), { recursive: true });
-    fs.mkdirSync(path.resolve(forgeosDir, 'outputs'), { recursive: true });
+    const devflowDir = path.resolve('.devflow');
+    fs.mkdirSync(path.resolve(devflowDir, 'memory'), { recursive: true });
+    fs.mkdirSync(path.resolve(devflowDir, 'outputs'), { recursive: true });
     const e = new engine.PhaseEngine();
     const r = e.setMode(mode);
 
-    console.log(`ForgeOS 已初始化
+    console.log(`DevFlow 已初始化
   模式: ${mode.toUpperCase()}
   起始 Phase: ${r.startPhase}
-  目录: ${forgeosDir}
+  目录: ${devflowDir}
   核心: GO.md (Step 1-12) + layers/L1-INTERACTION/ (Phase 0-8)`);
 
     // 创建 GO.md Step 1 期望的记忆骨架 + 项目宪法 (单轨一致, 幂等)
-    const memDir = path.join(forgeosDir, 'memory');
+    const memDir = path.join(devflowDir, 'memory');
     fs.mkdirSync(memDir, { recursive: true });
     const memSkeleton = {
-      'PROJECT_CONTEXT.md': '# 项目背景\n\n> 由 forge-os init 生成\n',
-      'DECISIONS.md': '# 历史决策\n\n> 由 forge-os init 生成\n',
-      'KNOWN_FAILURES.md': '# 已知失败\n\n> 由 forge-os init 生成\n',
-      'LESSONS.md': '# 经验教训库\n\n> 由 forge-os init 生成\n',
+      'PROJECT_CONTEXT.md': '# 项目背景\n\n> 由 devflow init 生成\n',
+      'DECISIONS.md': '# 历史决策\n\n> 由 devflow init 生成\n',
+      'KNOWN_FAILURES.md': '# 已知失败\n\n> 由 devflow init 生成\n',
+      'LESSONS.md': '# 经验教训库\n\n> 由 devflow init 生成\n',
     };
     for (const [f, c] of Object.entries(memSkeleton)) {
       const fp = path.join(memDir, f);
       if (!fs.existsSync(fp)) fs.writeFileSync(fp, c);
     }
-    const constitutionPath = path.join(forgeosDir, 'PROJECT_CONSTITUTION.md');
+    const constitutionPath = path.join(devflowDir, 'PROJECT_CONSTITUTION.md');
     if (!fs.existsSync(constitutionPath)) {
       fs.writeFileSync(constitutionPath, '# 项目宪法\n\n> 冲突时优先级: 项目宪法 > CONSTITUTION.md\n');
     }
   },
 
   status: () => {
-    if (fs.existsSync(FORGEOS_GO)) {
-      const statePath = path.resolve('.forgeos', 'state.json');
+    if (fs.existsSync(DEVFLOW_GO)) {
+      const statePath = path.resolve('.devflow', 'state.json');
       let state = { mode: 'unknown', currentPhase: 0, gates: {}, outputs: {} };
       try { state = JSON.parse(fs.readFileSync(statePath, 'utf-8')); } catch {}
 
       const gateStats = state.gates ? Object.keys(state.gates).length : 0;
-      console.log(`ForgeOS 状态
+      console.log(`DevFlow 状态
   模式: ${(state.mode || 'unknown').toUpperCase()}
   当前: Phase ${state.currentPhase || 0}
   核心: GO.md (Step 1-12 详细流程)
@@ -121,14 +121,14 @@ const CMDS = {
       const engine = require('../lib/phase-engine');
       const e = new engine.PhaseEngine();
       const s = e.status();
-      console.log(`ForgeOS 状态 (回退模式)
+      console.log(`DevFlow 状态 (回退模式)
   模式: ${s.mode}
   当前: Phase ${s.currentPhase}`);
     }
 
     // 永远显示扩展信息
-    const memStats = fs.existsSync(path.resolve('.forgeos', 'memory'))
-      ? fs.readdirSync(path.resolve('.forgeos', 'memory')).length : 0;
+    const memStats = fs.existsSync(path.resolve('.devflow', 'memory'))
+      ? fs.readdirSync(path.resolve('.devflow', 'memory')).length : 0;
     console.log(`  记忆条目: ${memStats}`);
   },
 
@@ -173,7 +173,7 @@ const CMDS = {
     }
     if (args.includes('--status')) {
       const s = e.status();
-      console.log(`ForgeOS Phase 状态
+      console.log(`DevFlow Phase 状态
   模式: ${s.mode}
   当前: Phase ${s.currentPhase} — ${s.currentName}
   进度: ${s.progress}
@@ -185,7 +185,7 @@ const CMDS = {
     if (args.includes('--list')) {
       const displayMode = e.state.mode || 'standard';
       const phases = e.listPhases(displayMode);
-      console.log(`ForgeOS Phase 管线 (模式: ${displayMode})`);
+      console.log(`DevFlow Phase 管线 (模式: ${displayMode})`);
       phases.forEach(p => {
         const status = p.active ? '' : ' [跳过]';
         console.log(`  Phase ${p.id} ${p.name.padEnd(20)} ${p.gate.padEnd(6)} ${p.output.padEnd(20)}${status}`);
@@ -222,7 +222,7 @@ const CMDS = {
     console.log(`🎯 建议模式: ${d.mode.toUpperCase()}`);
     console.log(`   理由: ${d.reason}`);
     console.log(`   命中规则: ${d.matched}`);
-    console.log(`\n   应用该模式: forge-os phase --mode ${d.mode}`);
+    console.log(`\n   应用该模式: devflow phase --mode ${d.mode}`);
   },
 
   task: (args) => {
@@ -241,7 +241,7 @@ const CMDS = {
 
   mem: (args) => {
     const mem = require('../lib/memory');
-    const m = new mem.ForgeMemory();
+    const m = new mem.DevFlowMemory();
     if (args.includes('--save')) {
       const content = args[args.indexOf('--save') + 1];
       const tags = args.includes('--tags') ? args[args.indexOf('--tags') + 1].split(',') : [];
@@ -289,21 +289,21 @@ const CMDS = {
     // 直接调用 code-explorer
     // execFileSync + 参数数组（不经 shell），避免多词参数/含空格路径被拆词截断
     const child = require('child_process');
-    const explorer = path.join(FORGE_OS_HOME, 'domains', 'code-intel', 'code-explorer.js');
+    const explorer = path.join(DEVFLOW_HOME, 'domains', 'code-intel', 'code-explorer.js');
     const passArgs = process.argv.slice(process.argv.indexOf('code') + 1);
     child.execFileSync(process.execPath, [explorer, ...passArgs], { stdio: 'inherit' });
   },
 
   caveman: (args) => {
     const child = require('child_process');
-    const caveman = path.join(FORGE_OS_HOME, 'domains', 'memory', 'caveman.js');
+    const caveman = path.join(DEVFLOW_HOME, 'domains', 'memory', 'caveman.js');
     const passArgs = process.argv.slice(process.argv.indexOf('caveman') + 1);
     child.execFileSync(process.execPath, [caveman, ...passArgs], { stdio: 'inherit' });
   },
 
   gates: (args) => {
     const child = require('child_process');
-    const gateCheck = path.join(FORGE_OS_HOME, 'domains', 'hooks', 'gate-check.js');
+    const gateCheck = path.join(DEVFLOW_HOME, 'domains', 'hooks', 'gate-check.js');
     const passArgs = process.argv.slice(process.argv.indexOf('gates') + 1);
     try {
       child.execFileSync(process.execPath, [gateCheck, ...passArgs], { stdio: 'inherit' });
@@ -315,28 +315,28 @@ const CMDS = {
 
   install: (args) => {
     const child = require('child_process');
-    const installer = path.join(FORGE_OS_HOME, 'harnesses', 'install.js');
+    const installer = path.join(DEVFLOW_HOME, 'harnesses', 'install.js');
     child.execSync(`node "${installer}" ${args.join(' ')}`, { stdio: 'inherit' });
   },
 
   doctor: () => {
-    console.log('ForgeOS 健康检查\n');
+    console.log('DevFlow 健康检查\n');
     // JS 模块必须「可被加载」，仅 existsSync 无法发现语法错误/缺失依赖
     const loadable = (rel) => {
-      const p = path.join(FORGE_OS_HOME, rel);
+      const p = path.join(DEVFLOW_HOME, rel);
       if (!fs.existsSync(p)) return { ok: false, note: '文件不存在' };
       try { require(p); return { ok: true, note: '可加载' }; }
       catch (e) { return { ok: false, note: `不可加载: ${e.message.split('\n')[0]}` }; }
     };
     const present = (p) => {
-      const abs = path.isAbsolute(p) ? p : path.join(FORGE_OS_HOME, p);
+      const abs = path.isAbsolute(p) ? p : path.join(DEVFLOW_HOME, p);
       return fs.existsSync(abs) ? { ok: true, note: '' } : { ok: false, note: '文件不存在' };
     };
 
     const checks = [
-      { name: 'GO.md (执行流程)', run: () => present(FORGEOS_GO) },
-      { name: 'layers/ (Phase 管线)', run: () => present(FORGEOS_LAYERS) },
-      { name: 'references/ (门控规则)', run: () => present(FORGEOS_REFS) },
+      { name: 'GO.md (执行流程)', run: () => present(DEVFLOW_GO) },
+      { name: 'layers/ (Phase 管线)', run: () => present(DEVFLOW_LAYERS) },
+      { name: 'references/ (门控规则)', run: () => present(DEVFLOW_REFS) },
       { name: '记忆系统', run: () => loadable('lib/memory.js') },
       { name: '任务规划', run: () => loadable('lib/task-planner.js') },
       { name: 'Party 仲裁', run: () => loadable('lib/party-arbiter.js') },
@@ -344,7 +344,7 @@ const CMDS = {
       { name: '压缩引擎', run: () => loadable('domains/memory/caveman.js') },
       { name: '门控检查', run: () => loadable('domains/hooks/gate-check.js') },
       { name: 'Phase 引擎', run: () => loadable('lib/phase-engine.js') },
-      { name: '.forgeos 目录', run: () => present(path.resolve('.forgeos')) },
+      { name: '.devflow 目录', run: () => present(path.resolve('.devflow')) },
     ];
 
     let failed = 0;
@@ -362,7 +362,7 @@ const CMDS = {
 
     console.log(`\n  ${checks.length - failed}/${checks.length} 项通过`);
     if (failed > 0) {
-      console.log(`  ⚠️ 有 ${failed} 项未通过，ForgeOS 可能无法正常执行`);
+      console.log(`  ⚠️ 有 ${failed} 项未通过，DevFlow 可能无法正常执行`);
       process.exitCode = 1;
     }
   },
@@ -372,7 +372,7 @@ const CMDS = {
 
 function scanProjectScale(root) {
   // 估算当前项目的规模信号（文件数 / 行数），供 init 自动判定模式使用
-  const SKIP = new Set(['node_modules', '.git', '.forgeos', 'sources', 'dist', 'build', 'vendor', '.next', 'coverage', 'out', 'target']);
+  const SKIP = new Set(['node_modules', '.git', '.devflow', 'sources', 'dist', 'build', 'vendor', '.next', 'coverage', 'out', 'target']);
   const EXTS = new Set(['.js', '.ts', '.tsx', '.jsx', '.py', '.go', '.java', '.rs', '.c', '.cpp', '.h', '.hpp', '.cs', '.rb', '.php', '.vue', '.md', '.json', '.yaml', '.yml', '.sql', '.sh', '.swift', '.kt', '.m', '.mm', '.r', '.scala', '.dart']);
   const MAX_DEPTH = 6;
   let files = 0, lines = 0;
@@ -381,7 +381,7 @@ function scanProjectScale(root) {
     let entries;
     try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
     for (const e of entries) {
-      if (e.name.startsWith('.')) continue; // 跳过所有隐藏文件/目录（含 .git/.forgeos）
+      if (e.name.startsWith('.')) continue; // 跳过所有隐藏文件/目录（含 .git/.devflow）
       const full = path.join(dir, e.name);
       if (e.isDirectory()) {
         if (SKIP.has(e.name)) continue;
@@ -402,9 +402,9 @@ function scanProjectScale(root) {
 }
 
 function stateGuard() {
-  const statePath = path.resolve('.forgeos', 'state.json');
+  const statePath = path.resolve('.devflow', 'state.json');
   if (!fs.existsSync(statePath)) {
-    console.warn('⚠️ .forgeos/state.json 不存在。请先运行 forge-os init');
+    console.warn('⚠️ .devflow/state.json 不存在。请先运行 devflow init');
     return null;
   }
   try {
@@ -413,17 +413,17 @@ function stateGuard() {
     const required = ['mode', 'currentPhase'];
     const missing = required.filter(k => state[k] === undefined || state[k] === null);
     if (missing.length > 0) {
-      console.warn(`⚠️ .forgeos/state.json 缺少字段: ${missing.join(', ')}。建议重新初始化。`);
+      console.warn(`⚠️ .devflow/state.json 缺少字段: ${missing.join(', ')}。建议重新初始化。`);
       return null;
     }
     // 验证模式值
     if (!['fast', 'lean', 'standard', 'strict', null].includes(state.mode)) {
-      console.warn(`⚠️ .forgeos/state.json 模式值无效: "${state.mode}"。建议重新初始化。`);
+      console.warn(`⚠️ .devflow/state.json 模式值无效: "${state.mode}"。建议重新初始化。`);
       return null;
     }
     return state;
   } catch (e) {
-    console.warn(`⚠️ .forgeos/state.json 解析错误: ${e.message}`);
+    console.warn(`⚠️ .devflow/state.json 解析错误: ${e.message}`);
     return null;
   }
 }
@@ -443,7 +443,7 @@ function main() {
     const state = stateGuard();
     if (!state) {
       // 非阻塞：仅警告，让用户自己决定是否继续
-      console.warn('  执行继续，但建议先运行 forge-os init 初始化。');
+      console.warn('  执行继续，但建议先运行 devflow init 初始化。');
     }
   }
 

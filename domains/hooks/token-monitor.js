@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ForgeOS token-monitor — Token 使用率监控 + 自动压缩建议
+ * DevFlow token-monitor — Token 使用率监控 + 自动压缩建议
  *
  * 用法: node token-monitor.js --check
  *       node token-monitor.js --compress-level full

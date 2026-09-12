@@ -1,6 +1,6 @@
 # Phase 6: 三层对抗审查
 
-> **门控**: G6 (Review Gate) — 无严重 Bug 且中等问题已修复 → 通过
+> **门控**: G7 (Review Gate) — 无严重 Bug 且中等问题已修复 → 通过
 > **Layer**: Layer 1 (交互层)
 > **适用模式**: Standard（完整）, Strict（完整）
 > **前置产物**: `06-review.md`
@@ -96,5 +96,5 @@
 ---
 
 **关联文件**:
-- `references/gate-rules.md` — G6 门控详情
+- `references/gate-rules.md` — G7 门控详情
 - `GO.md` — Step 11 入口（快速参考）

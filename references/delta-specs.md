@@ -2,7 +2,7 @@
 
 > **Layer**: L1-INTERACTION (Phase 2-3) + L3-ARCHITECTURE (Merge Engine)  
 > **目的**: Brownfield 开发时多人并行修改同一 spec 不冲突，只描述变更而非重写完整文档  
-> **来源**: OpenSpec Delta Specs → ForgeOS v3.0 adaptation
+> **来源**: OpenSpec Delta Specs → DevFlow v3.0 adaptation
 
 ---
 
@@ -34,7 +34,7 @@
 - **AND** 等待新 token 拿到后重试原请求
 
 ### Requirement: Domain Skill — auth-interceptor
-首次出现在 req-abc123，累计复用 ≥ 3 次后持久化到 `.forgeos/memory/domain-skills/auth-interceptor.md`。
+首次出现在 req-abc123，累计复用 ≥ 3 次后持久化到 `.devflow/memory/domain-skills/auth-interceptor.md`。
 ```
 
 ### `[MODIFIED]` — 修改现有条目

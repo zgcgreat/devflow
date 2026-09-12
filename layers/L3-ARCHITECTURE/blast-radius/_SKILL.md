@@ -117,10 +117,10 @@ Phase 0 入场检测:
   1. 调用 GitNexus 分析代码库结构
   2. 识别功能区域 (auth, payment, search, ...)
   3. 为每个区域生成专属技能描述
-  4. 写入 .forgeos/memory/domain-skills/
+  4. 写入 .devflow/memory/domain-skills/
 
 格式:
-  .forgeos/memory/domain-skills/
+  .devflow/memory/domain-skills/
   ├── auth.md         # 认证区域技能
   │   ├── trigger: "auth-*", "login", "token"
   │   ├── key-files: ["src/auth/", "tests/auth/"]

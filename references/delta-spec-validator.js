@@ -3,7 +3,7 @@
 /**
  * Delta Spec Validator
  * Validates Delta Spec files for correct format, markers, and merge conflicts.
- * Part of ForgeOS v1.3.0 (Phase 4 - Delta Specs Enhancement)
+ * Part of DevFlow v1.3.0 (Phase 4 - Delta Specs Enhancement)
  */
 
 const fs = require('fs');

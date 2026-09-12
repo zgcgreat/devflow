@@ -37,7 +37,7 @@ triggers:
 ## Statusline 集成
 
 ```
-ForgeOS Token: ████████░░ 78% | Mode: lite | Saved: 12.3K
+DevFlow Token: ████████░░ 78% | Mode: lite | Saved: 12.3K
 ```
 
 ## 与 R6 的映射
@@ -80,7 +80,7 @@ ForgeOS Token: ████████░░ 78% | Mode: lite | Saved: 12.3K
 ```markdown
 📊 Token 使用率 78%，已超过 70% 阈值。自动切换到 lite 压缩模式。
 
-自动执行: /forgeos:surface lite
+自动执行: /devflow:surface lite
 - 减少加载的 reference 文件
 - 压缩 LESSONS 到 <5K tokens
 - 仅保留当前 Phase 必需内容

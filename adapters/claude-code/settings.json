@@ -1,10 +1,10 @@
 {
-  "forgeos": {
+  "devflow": {
     "enabled": true,
     "autoInject": true,
     "bridgePath": "../shared/core-bridge.js",
-    "memoryPath": ".forgeos/memory",
-    "statePath": ".forgeos/state.json",
+    "memoryPath": ".devflow/memory",
+    "statePath": ".devflow/state.json",
     "compressionLevel": "full",
     "gateChecking": true,
     "statusline": {

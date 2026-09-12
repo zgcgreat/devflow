@@ -1,6 +1,6 @@
 # Phase 1: 5 Whys需求追问
 
-> **门控**: G1 (Plan Quality Gate) — 所有需求项有明确验收标准 → 通过
+> **门控**: G1 (Analysis Gate) — 所有需求项有明确验收标准 → 通过
 > **Layer**: Layer 1
 > **适用模式**: Standard（条件跳过）, Strict（必跑）
 > **前置产物**: `01-analysis.md`
@@ -81,7 +81,7 @@
 2. 支付方式：A + B + C → 微信 + 支付宝 + 银行卡
 3. 用户体验：B → 操作流程 < 3步
 
-已生成：`.forgeos/<req-id>/01-analysis.md`
+已生成：`.devflow/<req-id>/01-analysis.md`
 
 请确认或输入 /skip 跳过 Phase 1（仅 Standard 模式可条件跳过）：
 ```
@@ -105,7 +105,7 @@
 
 ## Phase 1b: 决策捕获 (Discuss)
 
-> **门控**: G2.5 (Decision Clarity Gate) — 决策覆盖率 ≥70% → 通过
+> **门控**: G2.5 (Discussion Gate) — 决策覆盖率 ≥70% → 通过
 > **Layer**: Layer 1 → Layer 2
 > **触发条件**: AC包含≥3个技术选型歧义 / 用户要求"/discuss"模式
 
@@ -156,7 +156,7 @@
 3. 状态管理：B → Context API + useReducer
 4. 错误处理：A → 立即提示 + 重试3次
 
-已生成：`.forgeos/<req-id>/CONTEXT.md`
+已生成：`.devflow/<req-id>/CONTEXT.md`
 
 请确认或输入 /skip 跳过 Phase 1b：
 ```
@@ -185,9 +185,9 @@
 如果用户需求复杂或涉及架构变更，可启用SDD模式：
 
 ```bash
-/forgeos spec define "需求描述"    # 生成 specs/XXX/spec.md
-/forgeos spec plan "技术描述"      # 生成 specs/XXX/plan.md
-/forgeos spec tasks                # 生成 specs/XXX/tasks.md
+/devflow spec define "需求描述"    # 生成 specs/XXX/spec.md
+/devflow spec plan "技术描述"      # 生成 specs/XXX/plan.md
+/devflow spec tasks                # 生成 specs/XXX/tasks.md
 ```
 
 SDD完成后自动生成CONTEXT.md，然后进入Phase 2。

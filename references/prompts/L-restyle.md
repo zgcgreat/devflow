@@ -8,7 +8,7 @@
 
 
 > **L 前缀表示这是 lateral / lifecycle 命令**，不在主流程编号里。
-> 用法：`@forge-os/references/prompts/L-restyle.md` + 一句话目标
+> 用法：`@devflow/references/prompts/L-restyle.md` + 一句话目标
 > 例："换成有机调性"、"想要 Headspace 那种感觉"、"做个奢华版"
 
 ---
@@ -36,8 +36,8 @@ UI Director + Refactor Specialist。**保留功能不变**，只换视觉。
 - 用户的目标（一句话）
 - 现有项目代码（组件、CSS / theme 文件、字体加载）
 - 项目里已有的 `02a-ui-design.md`（如有，作为 v1 调性来源）
-- `@forge-os/references/ui-aesthetics.md`（调性卡片）
-- `@forge-os/references/ui-anti-patterns.md`
+- `@devflow/references/ui-aesthetics.md`（调性卡片）
+- `@devflow/references/ui-anti-patterns.md`
 - 项目主 `01-analysis.md`（确认要保留的 AC 不变）
 
 ---
@@ -52,7 +52,7 @@ UI Director + Refactor Specialist。**保留功能不变**，只换视觉。
 
 ### 2. 识别现有调性（v1）
 
-**优先**：读 `.forgeos/archive/.../02a-ui-design.md` 或仓库里现存的 02a-ui-design.md，提取调性字段
+**优先**：读 `.devflow/archive/.../02a-ui-design.md` 或仓库里现存的 02a-ui-design.md，提取调性字段
 **降级**（无 UI-设计）：从代码反向提取
 - 扫 CSS variables / theme.ts 看主色饱和度、字体家族、圆角值
 - 按以下信号推断：
@@ -103,8 +103,8 @@ UI Director + Refactor Specialist。**保留功能不变**，只换视觉。
 
 ### 5. 写新 02a-ui-design.md（标 v2）
 
-**⚠️ 强制要求**：必须严格按照 `@forge-os/templates/02a-ui-design.md` 模板的完整结构输出。**不得省略或改写任何段落**。
-- 路径：`.forgeos/<req-id>/02a-ui-design.md`
+**⚠️ 强制要求**：必须严格按照 `@devflow/templates/02a-ui-design.md` 模板的完整结构输出。**不得省略或改写任何段落**。
+- 路径：`.devflow/<req-id>/02a-ui-design.md`
 - 在 frontmatter 加：
   ```yaml
   version: 2
@@ -194,8 +194,8 @@ npx impeccable detect <component-file> # 反 AI-slop（可选，如装了）
 
 ## 触发下一步
 
-- 用户确认 → `@forge-os/references/prompts/3-task.md`（按上述批次落实任务）
-- → `@forge-os/references/prompts/4-dev.md`（每任务 fresh context，UI 任务自动扫 anti-patterns）
-- → `@forge-os/references/prompts/6-review.md`（**第三轮 UI 视觉审查必跑**，含 v1 vs v2 对比段）
-- → `@forge-os/references/prompts/7-integration.md`（UAT 重点：老用户能否完成关键流程；视觉是否传达声明的调性）
+- 用户确认 → `@devflow/references/prompts/3-task.md`（按上述批次落实任务）
+- → `@devflow/references/prompts/4-dev.md`（每任务 fresh context，UI 任务自动扫 anti-patterns）
+- → `@devflow/references/prompts/6-review.md`（**第三轮 UI 视觉审查必跑**，含 v1 vs v2 对比段）
+- → `@devflow/references/prompts/7-integration.md`（UAT 重点：老用户能否完成关键流程；视觉是否传达声明的调性）
 

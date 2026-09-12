@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ForgeOS 完整性验证测试
+ * DevFlow 完整性验证测试
  *
  * 验证所有 domain 模块正确加载、引用完整、架构一致。
  * 用法: node test/all.js
@@ -20,7 +20,7 @@ const REQUIRED_FILES = [
   'domains/expertise/_SKILL.md',
   'domains/expertise/party-mode.md',
   'domains/code-intel/_SKILL.md',
-  'bin/forge-os.js',
+  'bin/devflow.js',
   'lib/phase-engine.js',
   'lib/memory.js',
   'lib/task-planner.js',
@@ -47,12 +47,12 @@ const REQUIRED_FRONTMATTER_KEYS = ['name', 'version'];
 /**
  * 创建隔离工作区。
  * 历史 bug: 测试直接 new PhaseEngine() 会以 process.cwd() 为工作区，
- * 跑一次测试就覆写用户真实的 .forgeos/state.json。
+ * 跑一次测试就覆写用户真实的 .devflow/state.json。
  */
 const os = require('os');
 const _tmpDirs = [];
 function mkWorkspace() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'forgeos-test-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'devflow-test-'));
   _tmpDirs.push(dir);
   return dir;
 }
@@ -184,28 +184,28 @@ TESTS.push({
 
 // Test 5c: CLI 集成 — 真实 spawn 子进程执行（历史 bug: 名为"可执行"却只做源码文本 grep）
 TESTS.push({
-  name: 'CLI 集成 — bin/forge-os.js 真实执行 + help 覆盖全部命令',
+  name: 'CLI 集成 — bin/devflow.js 真实执行 + help 覆盖全部命令',
   run: () => {
     const { spawnSync } = require('child_process');
-    const cli = path.join(ROOT, 'bin', 'forge-os.js');
+    const cli = path.join(ROOT, 'bin', 'devflow.js');
     const errors = [];
 
     const run = (args) => spawnSync(process.execPath, [cli, ...args], { encoding: 'utf8', cwd: ROOT });
 
     const help = run(['help']);
     if (help.status !== 0) {
-      errors.push(`forge-os help 退出码 ${help.status}: ${(help.stderr || '').trim().split('\n')[0]}`);
+      errors.push(`devflow help 退出码 ${help.status}: ${(help.stderr || '').trim().split('\n')[0]}`);
     }
     const doctor = run(['doctor']);
-    if (!doctor.stdout || !doctor.stdout.includes('ForgeOS 健康检查')) {
-      errors.push(`forge-os doctor 无有效输出 (status=${doctor.status})`);
+    if (!doctor.stdout || !doctor.stdout.includes('DevFlow 健康检查')) {
+      errors.push(`devflow doctor 无有效输出 (status=${doctor.status})`);
     }
 
     // help 必须列出 CMDS 中实现的每一个命令，防止"实现了却不告知"
     const helpText = help.stdout || '';
     const CMDS = ['init', 'status', 'phase', 'detect', 'task', 'mem', 'party', 'code', 'caveman', 'gates', 'install', 'doctor'];
     for (const cmd of CMDS) {
-      if (!new RegExp(`forge-os ${cmd}\\b`).test(helpText)) errors.push(`help 未列出命令: ${cmd}`);
+      if (!new RegExp(`devflow ${cmd}\\b`).test(helpText)) errors.push(`help 未列出命令: ${cmd}`);
     }
 
     return errors.length === 0
@@ -421,7 +421,7 @@ TESTS.push({
   name: 'Phase引擎 — 门控护卫阻止非法推进',
   run: () => {
     const { PhaseEngine, PHASES } = require(path.join(ROOT, 'lib/phase-engine'));
-    const e = new PhaseEngine(mkWorkspace());   // 隔离工作区，避免污染真实 .forgeos/
+    const e = new PhaseEngine(mkWorkspace());   // 隔离工作区，避免污染真实 .devflow/
     e.setMode('fast');
     const result = e.nextPhase();
     const blocked = result && result.blocked === true;
@@ -437,7 +437,7 @@ TESTS.push({
   run: () => {
     const { checkGate } = require(path.join(ROOT, 'adapters', 'shared', 'core-bridge.js'));
     const dir = mkWorkspace();
-    fs.mkdirSync(path.join(dir, '.forgeos'), { recursive: true });
+    fs.mkdirSync(path.join(dir, '.devflow'), { recursive: true });
     const errors = [];
 
     // 全相位映射: phaseAfter 反查结果必须与权威定义一致
@@ -454,7 +454,7 @@ TESTS.push({
     }
 
     // 补产物后应通过（含 <req-id>/ 子目录与三层深度）
-    const req = path.join(dir, '.forgeos', 'req-001');
+    const req = path.join(dir, '.devflow', 'req-001');
     fs.mkdirSync(path.join(req, 'waves', 'wave-1'), { recursive: true });
     fs.writeFileSync(path.join(req, '01b-context.md'), 'x');
     if (!checkGate(dir, 1.5).passed) errors.push('Phase 1.5 补产物后仍未通过');
@@ -467,9 +467,9 @@ TESTS.push({
   },
 });
 
-// Test 14: 产物目录约定 — 全项目统一 .forgeos/，杜绝 .specs/ 分裂
+// Test 14: 产物目录约定 — 全项目统一 .devflow/，杜绝 .specs/ 分裂
 TESTS.push({
-  name: '产物目录约定 — 统一为 .forgeos/ (无 .specs/ 残留)',
+  name: '产物目录约定 — 统一为 .devflow/ (无 .specs/ 残留)',
   run: () => {
     const { execFileSync } = require('child_process');
     let out = '';
@@ -533,7 +533,7 @@ TESTS.push({
 
 // 运行
 console.log('='.repeat(50));
-console.log('🔬 ForgeOS v3.2.2 完整性验证\n');
+console.log('🔬 DevFlow v3.3.0 完整性验证\n');
 
 let passCount = 0, failCount = 0;
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ForgeOS caveman — Token 输出压缩引擎
+ * DevFlow caveman — Token 输出压缩引擎
  *
  * 4 级压缩: lite(~35%) / full(~50%) / ultra(~65%) / wenyan(~70%)
  * 用法:
@@ -124,7 +124,7 @@ function parseArgs() {
     if (args[i] === '--compress') opts.compress = args[++i];
     else if (args[i] === '--file') opts.file = args[++i];
     else if (args[i] === '--compress-memory') opts.compressMemory = args[++i];
-    // --level 是 bin/forge-os.js HELP 与 README 文档化的参数名；--compress-level 为兼容别名
+    // --level 是 bin/devflow.js HELP 与 README 文档化的参数名；--compress-level 为兼容别名
     else if (args[i] === '--level' || args[i] === '--compress-level') opts.level = args[++i];
     else if (args[i] === '--stats') opts.stats = true;
     else if (args[i] === '--json') opts.json = true;
@@ -176,7 +176,7 @@ ${Object.entries(RULES).map(([k, v]) => {
     return;
   }
 
-  console.log(`🗜️ ForgeOS Caveman Compression Engine
+  console.log(`🗜️ DevFlow Caveman Compression Engine
 
 Usage:
   --compress <text>           Compress inline text

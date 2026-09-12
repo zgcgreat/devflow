@@ -2,7 +2,7 @@
 
 - **Req ID**: <id>
 - **template-version**: `v1.0.0`
-- **关联**: `@.forgeos/<id>/01-analysis.md`、`@.forgeos/CONTEXT.md`、`@.forgeos/references/tech-stacks.md`
+- **关联**: `@.devflow/<id>/01-analysis.md`、`@.devflow/CONTEXT.md`、`@.devflow/references/tech-stacks.md`
 - **作者**: AI（Architect 角色）+ 人工 review
 - **基线版本**: <如有design-baseline.md，填写版本号；首次创建写"初始"">
 
@@ -54,7 +54,7 @@
 
 ---
 
-> **Delta 格式说明**：本文档只记录**本次变更**的技术设计。归档时会自动合并到 `.forgeos/design-baseline.md`。
+> **Delta 格式说明**：本文档只记录**本次变更**的技术设计。归档时会自动合并到 `.devflow/design-baseline.md`。
 
 ---
 
@@ -176,7 +176,7 @@ _（如无新增，写"无"）_
 
 > 本次**新增**的架构决策记录。
 
-- `@.forgeos/adr/<NNN>-<title>.md`
+- `@.devflow/adr/<NNN>-<title>.md`
 
 _（如无新增，写"无"）_
 
@@ -281,4 +281,4 @@ _（如无变化，写"无"）_
 
 ---
 
-> **归档提示**：本 Delta 产物归档时，会自动合并到 `.forgeos/design-baseline.md`，形成完整的设计视图。
+> **归档提示**：本 Delta 产物归档时，会自动合并到 `.devflow/design-baseline.md`，形成完整的设计视图。

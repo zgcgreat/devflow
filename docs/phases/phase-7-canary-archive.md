@@ -2,10 +2,10 @@
 
 ## Phase 7: Canary灰度发布
 
-> **门控**: G7 (Release Gate) — 健康检查通过 → 通过
+> **门控**: G7.5 (Canary Gate) — 健康检查通过 → 通过
 > **Layer**: Layer 1 (交互层)
 > **适用模式**: Standard（可选）, Strict（必跑）
-> **前置产物**: `07-release-report.md`
+> **前置产物**: `07-canary.md`
 
 ---
 
@@ -63,7 +63,7 @@
 > **门控**: G8 (Archive Gate) — LESSONS.md 和 domain-skills 已更新 → 通过
 > **Layer**: Layer 2+3
 > **适用模式**: Fast（归档到LESSONS）, Lean（归档到LESSONS）, Standard（完整）, Strict（完整）
-> **前置产物**: `.forgeos/memory/LESSONS.md`、`.forgeos/memory/domain-skills/`
+> **前置产物**: `.devflow/memory/LESSONS.md`、`.devflow/memory/domain-skills/`
 
 ---
 
@@ -115,10 +115,10 @@
 🎉 项目全流程完成！
 
 已更新:
-- .forgeos/<req-id>/ — 所有产物
-- .forgeos/STATE.md — 项目状态
-- .forgeos/memory/LESSONS.md — 经验教训
-- .forgeos/memory/domain-skills/ — 领域技能
+- .devflow/<req-id>/ — 所有产物
+- .devflow/STATE.md — 项目状态
+- .devflow/memory/LESSONS.md — 经验教训
+- .devflow/memory/domain-skills/ — 领域技能
 
 请确认或输入 /commit 提交最终变更：
 ```
@@ -128,5 +128,5 @@
 ---
 
 **关联文件**:
-- `references/gate-rules.md` — G7/G8 门控详情
+- `references/gate-rules.md` — G7.5/G8 门控详情
 - `GO.md` — Step 12 入口（快速参考）

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * ForgeOS Memory Loader — 运行时无关的记忆系统加载器
+ * DevFlow Memory Loader — 运行时无关的记忆系统加载器
  *
- * 加载 .forgeos/memory/ 下的所有模板文件和项目状态。
+ * 加载 .devflow/memory/ 下的所有模板文件和项目状态。
  * 支持增量加载（按 Phase 需要加载特定记忆）。
  */
 
 const fs = require('fs');
 const path = require('path');
-const { findProjectDir, FORGEOS_DIR } = require('./core-bridge');
+const { findProjectDir, DEVFLOW_DIR } = require('./core-bridge');
 
 const MEMORY_DIR = 'memory';
 const LESSONS_FILE = 'LESSONS.md';
@@ -26,19 +26,19 @@ function loadAll(projectDir) {
   };
 
   // state.json
-  const statePath = path.join(projectDir, FORGEOS_DIR, STATE_FILE);
+  const statePath = path.join(projectDir, DEVFLOW_DIR, STATE_FILE);
   if (fs.existsSync(statePath)) {
     result.state = fs.readFileSync(statePath, 'utf8');
   }
 
   // CONTEXT.md
-  const contextPath = path.join(projectDir, FORGEOS_DIR, CONTEXT_FILE);
+  const contextPath = path.join(projectDir, DEVFLOW_DIR, CONTEXT_FILE);
   if (fs.existsSync(contextPath)) {
     result.context = fs.readFileSync(contextPath, 'utf8');
   }
 
   // LESSONS.md
-  const memoryDir = path.join(projectDir, FORGEOS_DIR, MEMORY_DIR);
+  const memoryDir = path.join(projectDir, DEVFLOW_DIR, MEMORY_DIR);
   const lessonsPath = path.join(memoryDir, LESSONS_FILE);
   if (fs.existsSync(lessonsPath)) {
     result.lessons = fs.readFileSync(lessonsPath, 'utf8');
@@ -86,7 +86,7 @@ function loadForPhase(projectDir, phase) {
 }
 
 function loadLessonsOnly(projectDir) {
-  const memoryDir = path.join(projectDir, FORGEOS_DIR, MEMORY_DIR);
+  const memoryDir = path.join(projectDir, DEVFLOW_DIR, MEMORY_DIR);
   const lessonsPath = path.join(memoryDir, LESSONS_FILE);
 
   if (!fs.existsSync(lessonsPath)) return null;
@@ -162,7 +162,7 @@ if (require.main === module) {
       break;
     }
     default:
-      console.log('ForgeOS Memory Loader');
+      console.log('DevFlow Memory Loader');
       console.log('Commands: load [phase] | budget | lessons');
   }
 }

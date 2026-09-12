@@ -1,13 +1,13 @@
-# ForgeOS Workflow — Gemini CLI Extension
+# DevFlow Workflow — Gemini CLI Extension
 
 ## Core Rules
 
-This project uses ForgeOS v3.0 phased workflow. Follow these instructions:
+This project uses DevFlow v3.0 phased workflow. Follow these instructions:
 
 ### Phase Awareness
-- Read `.forgeos/STATE.md` to determine current phase
+- Read `.devflow/STATE.md` to determine current phase
 - Respect gate checks — do not skip phases
-- Load memory from `.forgeos/memory/` for project context
+- Load memory from `.devflow/memory/` for project context
 
 ### Phase Gate Requirements
 
@@ -23,13 +23,13 @@ This project uses ForgeOS v3.0 phased workflow. Follow these instructions:
 | Phase 8 | 07-release-checklist.md |
 
 ### Memory Management
-- Decisions: `.forgeos/memory/DECISIONS.md`
-- Lessons: `.forgeos/memory/LESSONS.md`
-- Known Failures: `.forgeos/memory/KNOWN_FAILURES.md`
-- Patterns: `.forgeos/memory/PATTERNS.md`
+- Decisions: `.devflow/memory/DECISIONS.md`
+- Lessons: `.devflow/memory/LESSONS.md`
+- Known Failures: `.devflow/memory/KNOWN_FAILURES.md`
+- Patterns: `.devflow/memory/PATTERNS.md`
 
 ### Token Compression
-Apply compression based on `.forgeos/config.yaml` caveman.level setting:
+Apply compression based on `.devflow/config.yaml` caveman.level setting:
 - lite: 500 chars/file
 - ultra: 200 chars/file
 - extreme: 100 chars/file

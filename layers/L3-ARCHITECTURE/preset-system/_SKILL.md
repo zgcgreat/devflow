@@ -14,10 +14,10 @@ description: |
 source: CHANGELOG v1.3.0 — Spec-Kit Extension/Preset
 dependencies:
   - skil-md (Phase 流程主文件)
-  - cli (ForgeOS setup 集成)
+  - cli (DevFlow setup 集成)
 triggers:
   - Session 启动时加载
-  - /forgeos:setup 配置
+  - /devflow:setup 配置
   - PROJECT_CONSTITUTION.md 中的 preset 字段
 ---
 
@@ -31,7 +31,7 @@ triggers:
 ## 1. Preset 文件格式
 
 ```yaml
-# .forgeos/presets/my-team.yaml
+# .devflow/presets/my-team.yaml
 name: my-team-preset
 description: 我团队的定制预设
 version: 1.0.0
@@ -207,7 +207,7 @@ rules:
 Session 启动:
   │
   ├─→ 1. 加载默认 standard 预设
-  ├─→ 2. 检查 .forgeos/presets/ 目录
+  ├─→ 2. 检查 .devflow/presets/ 目录
   │   ├─ 存在 → 加载用户自定义预设
   │   └─ 不存在 → 使用默认
   ├─→ 3. 检查 PROJECT_CONSTITUTION.md 中的 preset 字段
@@ -248,16 +248,16 @@ merge_rules:
 
 ```bash
 # 初始化时选择预设
-npx forgeos init --preset minimal
+npx devflow init --preset minimal
 
 # 切换预设
-npx forgeos setup --preset enterprise
+npx devflow setup --preset enterprise
 
 # 列出可用预设
-npx forgeos help --presets
+npx devflow help --presets
 
 # 自定义预设
-# 将 .yaml 文件放到 .forgeos/presets/ 目录
+# 将 .yaml 文件放到 .devflow/presets/ 目录
 ```
 
 ---
@@ -267,7 +267,7 @@ npx forgeos help --presets
 ```
 优先级（高→低）:
   1. PROJECT_CONSTITUTION.md (用户项目约束)
-  2. Custom Preset (.forgeos/presets/*.yaml)
+  2. Custom Preset (.devflow/presets/*.yaml)
   3. Default Preset (minimal/standard/enterprise)
   4. CONSTITUTION.md (流程宪法)
 

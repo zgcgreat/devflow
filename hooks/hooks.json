@@ -1,7 +1,7 @@
 {
-  "$schema": "https://forgeos.dev/hooks/v1",
+  "$schema": "https://devflow.dev/hooks/v1",
   "version": "2.0.0",
-  "description": "ForgeOS 精选 Hook 注册表 — Gate-Hook 协同模型",
+  "description": "DevFlow 精选 Hook 注册表 — Gate-Hook 协同模型",
   "runtime": {
     "required": "node >= 18",
     "fallback": "hooks/checklist-fallback.md"

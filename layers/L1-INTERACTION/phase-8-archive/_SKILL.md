@@ -43,10 +43,10 @@ allowed-tools:
 
 ## 输入
 
-- 所有 Phase 产物 (`.forge-os/<req-id>/`)
-- Wave SUMMARY.md 文件 — `.forgeos/waves/wave-{N}/SUMMARY.md`
+- 所有 Phase 产物 (`.devflow/<req-id>/`)
+- Wave SUMMARY.md 文件 — `.devflow/waves/wave-{N}/SUMMARY.md`
 - Phase 6/7 审查及 Canary 报告
-- `.forgeos/memory/STATE.md`
+- `.devflow/memory/STATE.md`
 
 ## 输出
 
@@ -78,7 +78,7 @@ allowed-tools:
 | Domain skill graduation | ≥3 occurrences across waves/requirements |
 | TEMPORARY pruning | Entries >7 days → archive to `.bak.md` |
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **统一进化引擎**: Phase 8 归档时执行 LearningWorkflow 提取 LESSONS + evaluate-session 评估交叉验证，输出统一进化报告。
 

@@ -1,7 +1,7 @@
-# ForgeOS 宪法
+# DevFlow 宪法
 
 > 跨域强制规则。所有 domain 模块和 Phase 必须遵守。这是 OS 的"硬约束层"。
-> 来源: ForgeOS 统一进化引擎 v3.2.2
+> 来源: DevFlow 统一进化引擎 v3.2.2
 
 ## 1. 门控不可跳过
 

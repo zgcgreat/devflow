@@ -29,7 +29,7 @@ token_budget: "~200K per execution agent"
 # Phase 1: 5 Whys Deep Dive — Requirements Clarification
 
 > **前置产物**: Phase 0 通过 G0
-> **后置产物**: `.forgeos/<req-id>/01-analysis.md`
+> **后置产物**: `.devflow/<req-id>/01-analysis.md`
 > **门控**: G1 — Requirements Quality Gate
 
 ## 核心定位
@@ -40,7 +40,7 @@ token_budget: "~200K per execution agent"
 
 ## 产物
 
-- `.forgeos/<req-id>/01-analysis.md` — 5 Whys 链 + 用户故事 + AC + 术语表 + 范围边界 + G2 Gate
+- `.devflow/<req-id>/01-analysis.md` — 5 Whys 链 + 用户故事 + AC + 术语表 + 范围边界 + G2 Gate
 - **User Stories**: `US-{NNN}: [Role] can [Action] so that [Benefit]` (P0/P1/P2)
 - **Acceptance Criteria**: `AC-{NNN}` with Given/When/Then
 - **Glossary**: ≥3 术语定义
@@ -84,7 +84,7 @@ token_budget: "~200K per execution agent"
 ## G2 Gate: AC Testability / Scope Clarity / Glossary / Risk Balance / Phase 0 Consistency
 ```
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: planner (always) + architect (on-demand)
 **Hook**: phase-transition (L0), context-monitor (L0+L1)

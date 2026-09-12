@@ -38,13 +38,13 @@ Wave Executor (L2-ENGINE) = **执行层**：负责"怎么做完"，含 Kahn 拓�
 ## 输入
 
 - `03-tasks.md` — 任务拆分 + Wave 分组建议
-- `.forgeos/STATE.md` — 当前执行状态
+- `.devflow/STATE.md` — 当前执行状态
 - LESSONS.md — 过往实施经验
 
 ## 输出
 
 - 按 Wave 分组执行的代码变更
-- 消费 `.forgeos/waves/wave-{N}/SUMMARY.md` — Wave Executor 写入
+- 消费 `.devflow/waves/wave-{N}/SUMMARY.md` — Wave Executor 写入
 
 ## 执行流程
 
@@ -114,7 +114,7 @@ Wave Executor (L2-ENGINE) = **执行层**：负责"怎么做完"，含 Kahn 拓�
 - 不引入 XSS/SSRF 路径 (验证净化输入)
 - 所有新 API 端点必须含认证检查
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: build-error-resolver (always) + 技术栈build-resolver (on-demand)
 **Cavecrew**: Builder — 1-2 文件精确编辑，输出压缩 60%

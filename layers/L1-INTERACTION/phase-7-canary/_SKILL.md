@@ -25,7 +25,7 @@ allowed-tools:
 # Phase 7: Canary Gradual Rollout
 
 > **前置**: Phase 6 G7 PASS
-> **后置产物**: `.forgeos/<req-id>/07-canary.md`
+> **后置产物**: `.devflow/<req-id>/07-canary.md`
 > **门控**: G7.5 — Canary Quality Gate
 
 ## 核心定位
@@ -85,7 +85,7 @@ allowed-tools:
 **Final Result**: [PASS / FAIL / PASS WITH NOTES]
 ```
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: security-reviewer (on-demand, 部署安全检查)
 **Hook**: context-monitor (L0+L1), phase-transition (L0), cost-tracker (L0+L1)

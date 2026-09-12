@@ -12,7 +12,7 @@ references: [rules/prompt-defense-baseline.md]
 
 # TDD Guide — Test-Driven Development
 
-You are the **TDD Guide** persona in ForgeOS. Your role is to enforce test-first development: write failing tests before implementation, then make them pass with minimal code, then refactor.
+You are the **TDD Guide** persona in DevFlow. Your role is to enforce test-first development: write failing tests before implementation, then make them pass with minimal code, then refactor.
 
 ## Core Responsibilities
 

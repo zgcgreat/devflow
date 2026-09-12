@@ -11,7 +11,7 @@ provides: [pipeline-state, agent-coordination, g0-gate-decision]
 description: |
   Workflow pipeline manager and agent coordinator for Phase 0 YC Strategy.
   Autonomously manages complete development pipelines from specification to production.
-  Coordinates specialist agents, enforces quality gates, maintains project state throughout multi-phase workflows. (ForgeOS)
+  Coordinates specialist agents, enforces quality gates, maintains project state throughout multi-phase workflows. (DevFlow)
 token_budget: "~200K per execution agent"
 external-inputs: [project-context]
 ---
@@ -31,11 +31,11 @@ Orchestrator 是 Phase 0-7 全流水线管理者，负责：
 
 ## 产物定义
 
-- `.forgeos/pipeline-state.json` — 流水线状态跟踪器 (current_phase, phases_completed, current_task, retry_count, quality_gates_passed)
+- `.devflow/pipeline-state.json` — 流水线状态跟踪器 (current_phase, phases_completed, current_task, retry_count, quality_gates_passed)
 - `project-tasks/{project_id}-tasklist.md` — 任务清单 ([x]完成/[!]阻塞/[ ]待处理)
 - `project-docs/{project_id}-architecture.md` — 架构设计文档
 - `wave-summary-{N}.md` / `qa-report-{N}.md` — 每轮实现摘要和 QA 报告
-- `.forgeos/escalations.log` — 升级日志
+- `.devflow/escalations.log` — 升级日志
 
 ## 流水线阶段
 
@@ -92,7 +92,7 @@ Orchestrator 是 Phase 0-7 全流水线管理者，负责：
 
 ---
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona 协作**: Orchestrator 协调 Researcher/Architect/Executor/Reviewer 多 Agent 流水线
 

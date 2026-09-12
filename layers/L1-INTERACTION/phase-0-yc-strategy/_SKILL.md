@@ -33,7 +33,7 @@ external-inputs: [project-context]
 > 执行顺序：`phase-0-strategy`（创意捕获 / 种子 / 范围）→ 本技能（YC 六问可行性验证）。
 >
 > **前置**: `phase-0-strategy` 的种子与范围界定输出
-> **后置产物**: `.forgeos/<req-id>/00-strategy.md`
+> **后置产物**: `.devflow/<req-id>/00-strategy.md`
 > **门控**: G0 — YC Assessment Gate（两个子步骤均完成后判定）
 
 ## 核心定位
@@ -44,7 +44,7 @@ external-inputs: [project-context]
 
 ## 产物
 
-- `.forgeos/<req-id>/00-strategy.md` — YC 六问评估结果 (含评分、Gate 决策、弱点区域)
+- `.devflow/<req-id>/00-strategy.md` — YC 六问评估结果 (含评分、Gate 决策、弱点区域)
 - `follow-up-queue` — Phase 1 跟进项
 
 ## 执行流程
@@ -87,7 +87,7 @@ external-inputs: [project-context]
 **Weak Areas**: Q{N} → Phase 1 follow-up
 ```
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: planner (always) + market-researcher (on-demand for Q2/Q4)
 **Hook**: phase-transition (L0), strategy-validation (L0+L1)

@@ -40,7 +40,7 @@
    1. 完整（推荐 500+ 行 / 团队项目）
    2. 极简（100~500 行 · 非 UI 项目可跳 2a）
    3. 单点（只跑某一阶段）
-   4. 不走 ForgeOS（< 50 行代码）
+   4. 不走 DevFlow（< 50 行代码）
 ```
 
 ---
@@ -115,7 +115,7 @@
 
 | 类型 | 路径 | 加载方式 |
 |---|------|---|
-| SPEC（项目产物）| `.forgeos/<id>/*.md` | 整读OK，但优先读取关键段落 |
+| SPEC（项目产物）| `.devflow/<id>/*.md` | 整读OK，但优先读取关键段落 |
 | REFERENCE（查阅型）| `references/*.md` | **禁止整读**，只读需要的节 |
 | TEMPLATE / PROMPT | `templates|references/prompts/*.md` | 整读OK（必须确保格式正确） |
 | STAGE SKILL | `skills/stage-skills/stage-*/*_SKILL.md` | 整读OK（执行逻辑所在） |

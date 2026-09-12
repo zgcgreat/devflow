@@ -6,7 +6,7 @@ gate: internal
 requires: []
 provides: [deduplicated-memory, archival-report]
 description: Automatic memory file maintenance — deduplication, archival, freshness checks, and size management
-source: ForgeOS LESSONS + caveman + context-rot-prevention
+source: DevFlow LESSONS + caveman + context-rot-prevention
 dependencies:
   - memory-compression
   - context-rot-prevention

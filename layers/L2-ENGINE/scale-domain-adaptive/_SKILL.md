@@ -22,7 +22,7 @@ external-inputs: [project-context]
 
 ## 设计理念
 
-ForgeOS v3.2 之前是**固定粒度**的 Phase 流程,无论项目是 5 个文件的脚本还是 500 模块的微服务架构。
+DevFlow v3.2 之前是**固定粒度**的 Phase 流程,无论项目是 5 个文件的脚本还是 500 模块的微服务架构。
 Scale-Domain-Adaptive 引入三级粒度映射:
 
 | 项目规模 | Phase 粒度 | Phase 数量 | 适用场景 |
@@ -85,7 +85,7 @@ Phase 0 (启动) 自动执行:
 3. 根据领域复杂度升/降级:
    - 检测到 high_compliance 信号 → +1 级粒度
    - 检测到 high_concurrency 信号 → +1 级粒度
-   - 用户手动指定 /forgeos:scale [lite|standard|enhanced|advanced] → 覆盖自动检测
+   - 用户手动指定 /devflow:scale [lite|standard|enhanced|advanced] → 覆盖自动检测
 
 4. 输出 Scale 报告:
    "项目规模: Standard (12 模块)
@@ -249,25 +249,25 @@ hooks_defaults_by_scale:
 
 ```bash
 # 手动指定 Scale (覆盖自动检测)
-/forgeos:scale lite|standard|enhanced|advanced
+/devflow:scale lite|standard|enhanced|advanced
 
 # 查看当前 Scale 状态
-/forgeos:scale status
+/devflow:scale status
 
 # 运行时动态调整 Scale (触发 surface-switch 联动)
-/forgeos:scale enhanced  # → 自动扩展 Phase 序列 + 调整 Hooks 配置
+/devflow:scale enhanced  # → 自动扩展 Phase 序列 + 调整 Hooks 配置
 ```
 
 ## 与 BMAD-METHOD 对比
 
-| 特性 | BMAD-METHOD | ForgeOS |
+| 特性 | BMAD-METHOD | DevFlow |
 |------|-----------|-----------|
 | **复杂度评估** | domain-complexity.csv 静态表 | 动态扫描 + 信号检测 |
 | **流程选择** | 硬编码 standard/enhanced/advanced | 自动映射到 Phase 粒度 |
 | **信号来源** | 人工维护 .domain-signals | 自动扫描目录结构 + package.json + Dockerfile |
 | **Phase 映射** | bmad-sprint-planning 手动选择 | 自动映射到 G0-G8 门控链 |
 | **Hooks 联动** | 无 | Context-Monitor/Phase-Transition 自动适配 |
-| **运行时调整** | 不支持 | `/forgeos:scale` 动态切换 |
+| **运行时调整** | 不支持 | `/devflow:scale` 动态切换 |
 
 ## Phase 集成
 

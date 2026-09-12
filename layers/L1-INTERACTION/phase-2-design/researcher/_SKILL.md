@@ -11,7 +11,7 @@ provides: [research-findings, dependency-verification, risk-assessment]
 description: |
   Technical investigation specialist for Phase 2 Design.
   Conducts systematic research for architecture decisions, dependency validation, and risk assessment.
-  Output feeds directly into Phase 2 Design spec and Phase 1b Discuss context. (ForgeOS)
+  Output feeds directly into Phase 2 Design spec and Phase 1b Discuss context. (DevFlow)
 ---
 
 # Researcher — Technical Investigation & Dependency Verification
@@ -49,7 +49,7 @@ Conduct systematic technical research for architecture decisions, dependency val
 | Deep research time | ~2 hours |
 | Minimum downloads threshold | 1K/week for [VERIFIED] |
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: architect (always) + code-explorer (always) + database-reviewer/network-architect (on-demand)
 **Hook**: phase-transition, context-monitor, prompt-guard

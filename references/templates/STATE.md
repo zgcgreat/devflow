@@ -2,7 +2,7 @@
 
 - **template-version**: `v1.0.0`
 
-> `.forgeos/STATE.md` — ForgeOS 的跨会话状态文件。Standard / Strict 流程必须维护；Fast 模式可按需创建。
+> `.devflow/STATE.md` — DevFlow 的跨会话状态文件。Standard / Strict 流程必须维护；Fast 模式可按需创建。
 
 ---
 

@@ -1,12 +1,12 @@
-# ForgeOS 统一进化模型
+# DevFlow 统一进化模型
 
-> 版本: 1.0.0 | 融合: ForgeOS 知识驱动 + ECC 数据驱动 + v2.0 交叉验证
+> 版本: 1.0.0 | 融合: DevFlow 知识驱动 + ECC 数据驱动 + v2.0 交叉验证
 
 ---
 
 ## 统一进化数据模型
 
-### 知识层 (ForgeOS 继承)
+### 知识层 (DevFlow 继承)
 
 - **LESSONS.md** → L-XXX编号体系、Jaccard聚类、Domain Skills毕业
 - **domain-skills/** → 频率>=3自动毕业、成熟度分级

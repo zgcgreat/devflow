@@ -27,7 +27,7 @@ allowed-tools:
 # Phase 6: 双阶段审查 (Two-Stage Adversarial Review)
 
 > **前置**: Phase 5 测试通过, Phase 4 Wave 执行完成
-> **后置产物**: `.forgeos/<req-id>/06-review.md`
+> **后置产物**: `.devflow/<req-id>/06-review.md`
 > **门控**: G7 — Review Quality Gate
 
 ## 核心定位
@@ -124,14 +124,14 @@ Phase 6: 双阶段审查
 | Specialist timeout | ≤20 min per specialist (parallel) |
 | Skip Phase 6 when | 单文件修<50行 / Hotfix <2h SLA / AC 已由自动化覆盖 |
 
-## 安全审查 (ForgeOS增强)
+## 安全审查 (DevFlow增强)
 
 - 代码变更安全影响评估
 - 新增代码路径安全边界检查
 - 密钥/凭证泄露扫描
 - OWASP Top 10 覆盖
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: code-reviewer (always) + refactor-cleaner (always) + security-reviewer (always) + performance-optimizer (on-demand)
 **Cavecrew**: Reviewer — Diff 审查, one-line severity findings

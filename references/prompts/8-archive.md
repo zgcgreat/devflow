@@ -12,17 +12,17 @@
 
 ## 输入
 
-- `@.forgeos/<req-id>/00-requirements.md`
-- `@.forgeos/<req-id>/01-analysis.md`
-- `@.forgeos/<req-id>/02-design.md`
-- `@.forgeos/<req-id>/03-tasks.md`
-- `@.forgeos/<req-id>/04-dev-log.md`
-- `@.forgeos/<req-id>/05-test-report.md`
-- `@.forgeos/<req-id>/06-code-review.md`
-- `@.forgeos/<req-id>/UAT.md`
-- `@.forgeos/lessons-learned.md`
-- `@.forgeos/DECISIONS.md`
-- `@.forgeos/KNOWN_FAILURES.md`
+- `@.devflow/<req-id>/00-requirements.md`
+- `@.devflow/<req-id>/01-analysis.md`
+- `@.devflow/<req-id>/02-design.md`
+- `@.devflow/<req-id>/03-tasks.md`
+- `@.devflow/<req-id>/04-dev-log.md`
+- `@.devflow/<req-id>/05-test-report.md`
+- `@.devflow/<req-id>/06-code-review.md`
+- `@.devflow/<req-id>/UAT.md`
+- `@.devflow/lessons-learned.md`
+- `@.devflow/DECISIONS.md`
+- `@.devflow/KNOWN_FAILURES.md`
 
 ---
 
@@ -155,15 +155,15 @@
 
 | 产物 | 位置 | 状态 |
 |------|------|------|
-| 需求文档 | `.forgeos/<req-id>/00-requirements.md` | ✅/❌ |
-| 分析文档 | `.forgeos/<req-id>/01-analysis.md` | ✅/❌ |
-| 设计文档 | `.forgeos/<req-id>/02-design.md` | ✅/❌ |
-| 任务列表 | `.forgeos/<req-id>/03-tasks.md` | ✅/❌ |
-| 开发日志 | `.forgeos/<req-id>/04-dev-log.md` | ✅/❌ |
-| 测试报告 | `.forgeos/<req-id>/05-test-report.md` | ✅/❌ |
-| 审查报告 | `.forgeos/<req-id>/06-code-review.md` | ✅/❌ |
-| UAT 结果 | `.forgeos/<req-id>/UAT.md` | ✅/❌ |
-| 发布清单 | `.forgeos/<req-id>/07-release-checklist.md` | ✅/❌ |
+| 需求文档 | `.devflow/<req-id>/00-requirements.md` | ✅/❌ |
+| 分析文档 | `.devflow/<req-id>/01-analysis.md` | ✅/❌ |
+| 设计文档 | `.devflow/<req-id>/02-design.md` | ✅/❌ |
+| 任务列表 | `.devflow/<req-id>/03-tasks.md` | ✅/❌ |
+| 开发日志 | `.devflow/<req-id>/04-dev-log.md` | ✅/❌ |
+| 测试报告 | `.devflow/<req-id>/05-test-report.md` | ✅/❌ |
+| 审查报告 | `.devflow/<req-id>/06-code-review.md` | ✅/❌ |
+| UAT 结果 | `.devflow/<req-id>/UAT.md` | ✅/❌ |
+| 发布清单 | `.devflow/<req-id>/07-release-checklist.md` | ✅/❌ |
 
 ---
 
@@ -208,10 +208,10 @@
 - Domain Skills: N 条
 
 ### 归档位置
-- `.forgeos/lessons-learned.md`
-- `.forgeos/DECISIONS.md`
-- `.forgeos/KNOWN_FAILURES.md`
-- `.forgeos/memory/domain-skills/`
+- `.devflow/lessons-learned.md`
+- `.devflow/DECISIONS.md`
+- `.devflow/KNOWN_FAILURES.md`
+- `.devflow/memory/domain-skills/`
 
 ### 项目状态
 - Phase 8: ✅ 完成

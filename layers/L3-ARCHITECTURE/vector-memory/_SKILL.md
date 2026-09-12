@@ -80,9 +80,9 @@ external-inputs: [lessons-data, execution-observations]
 
 参考 agentmemory 的 4 层记忆整合，升级 LearningWorkflow：
 
-| 层级 | 名称 | 类比 | 存储内容 | 生命周期 | ForgeOS 对应 |
+| 层级 | 名称 | 类比 | 存储内容 | 生命周期 | DevFlow 对应 |
 |------|------|------|---------|---------|---------------|
-| **L1** | Working | 短期记忆 | Phase 4 Wave 执行中的原始工具调用观察 | 5min 去重窗口，会话结束前 | `.forgeos/<req-id>/observations/` |
+| **L1** | Working | 短期记忆 | Phase 4 Wave 执行中的原始工具调用观察 | 5min 去重窗口，会话结束前 | `.devflow/<req-id>/observations/` |
 | **L2** | Episodic | "发生了什么" | Wave 完成后的压缩摘要 | 跨会话保留，Ebbinghaus 衰减 | LESSONS.md `[EPISODIC]` 段 |
 | **L3** | Semantic | "我知道什么" | 跨会话提取的事实和模式 | 长期保留，高频率强化 | LESSONS.md `[SEMANTIC]` 段 + vector_memory.db |
 | **L4** | Procedural | "怎么做" | 工作流和决策模式（Crystallize 晶体） | 长期保留，可被未来会话复用 | `domain-skills/` + `crystals/` |
@@ -684,10 +684,10 @@ LearningWorkflow 现有流程 (不变):
 环境变量覆盖:
 
 ```
-FORGEOS_VECTOR_MEMORY_MODE=local|api|bm25-only
-FORGEOS_VECTOR_MEMORY_DB=path/to/vector_memory.db
-FORGEOS_EMBEDDING_API_KEY=sk-...
-FORGEOS_EMBEDDING_API_PROVIDER=openai|voyage|gemini
+DEVFLOW_VECTOR_MEMORY_MODE=local|api|bm25-only
+DEVFLOW_VECTOR_MEMORY_DB=path/to/vector_memory.db
+DEVFLOW_EMBEDDING_API_KEY=sk-...
+DEVFLOW_EMBEDDING_API_PROVIDER=openai|voyage|gemini
 ```
 
 ---

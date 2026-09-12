@@ -2,10 +2,10 @@
 name: manage-memory
 version: 3.0.0
 standalone: true
-description: 管理 ForgeOS 的记忆系统。用于初始化、更新、验证和清理 .superpowers-memory/ 目录中的记忆文件。
+description: 管理 DevFlow 的记忆系统。用于初始化、更新、验证和清理 .superpowers-memory/ 目录中的记忆文件。
 ---
 
-# Manage ForgeOS Memory
+# Manage DevFlow Memory
 
 管理项目的跨会话记忆系统，确保AI能够持续学习和保持上下文。
 
@@ -422,7 +422,7 @@ PROJECT_CONTEXT.md 已自动填充:
 
 ### 记忆 vs 产物
 
-| 维度 | 记忆 (.superpowers-memory/) | 产物 (.forgeos/<req-id>/) |
+| 维度 | 记忆 (.superpowers-memory/) | 产物 (.devflow/<req-id>/) |
 |---|---------------------------|---|
 | **作用域** | 整个项目生命周期 | 单个需求/功能 |
 | **持久性** | 长期保留,跨会话有效 | 需求完成后归档 |
@@ -466,11 +466,11 @@ PROJECT_CONTEXT.md 已自动填充:
 
 ## 与其他Skill的关系
 
-- **install-forgeos**: 安装ForgeOS时可选择启用记忆系统
+- **install-devflow**: 安装DevFlow时可选择启用记忆系统
 - **stage-7-integration**: 集成阶段会触发记忆更新
 - **brainstorming**: 设计澄清时会参考 PROJECT_CONTEXT.md
 - **systematic-debugging**: 调试时会查询 KNOWN_FAILURES.md
 
 ---
 
-**记忆系统是ForgeOS的核心价值之一，它让AI真正"记住"你的项目！** 🧠✨
+**记忆系统是DevFlow的核心价值之一，它让AI真正"记住"你的项目！** 🧠✨

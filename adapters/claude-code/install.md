@@ -20,18 +20,18 @@ cp adapters/claude-code/settings.json .claude/settings.json
 在 `.env` 或 shell profile 中添加：
 
 ```bash
-export ForgeOS_HOME="$(pwd)/path/to/forgeos"
+export DevFlow_HOME="$(pwd)/path/to/devflow"
 ```
 
 ### 3. 验证安装
 
 ```bash
 # 测试 bridge 是否可用
-node $ForgeOS_HOME/adapters/shared/core-bridge.js detect-runtime
+node $DevFlow_HOME/adapters/shared/core-bridge.js detect-runtime
 # 应输出: claude-code
 
 # 测试状态读取
-node $ForgeOS_HOME/adapters/shared/core-bridge.js read-state .
+node $DevFlow_HOME/adapters/shared/core-bridge.js read-state .
 ```
 
 ### 4. CLAUDE.md 注入
@@ -39,9 +39,9 @@ node $ForgeOS_HOME/adapters/shared/core-bridge.js read-state .
 在项目根目录的 `CLAUDE.md` 中添加：
 
 ```markdown
-## ForgeOS Integration
+## DevFlow Integration
 
-This project uses forgeos v3.0 workflow. Current phase is tracked in `.forgeos/state.json`.
+This project uses devflow v3.0 workflow. Current phase is tracked in `.devflow/state.json`.
 
 - Use `/df:status` to check current phase
 - Use `/df:next` to advance to next phase
@@ -52,5 +52,5 @@ This project uses forgeos v3.0 workflow. Current phase is tracked in `.forgeos/s
 
 ```bash
 rm .claude/hooks.json .claude/settings.json
-# 从 CLAUDE.md 中移除 ForgeOS Integration 段落
+# 从 CLAUDE.md 中移除 DevFlow Integration 段落
 ```

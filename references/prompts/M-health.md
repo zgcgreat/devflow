@@ -8,7 +8,7 @@
 > - [vulture](https://github.com/jendrikseipp/vulture) — Python 死代码
 > - [staticcheck](https://staticcheck.io/) — Go 死代码/未用
 
-> **触发方式**：`@forge-os/references/GO.md` + `健康检查 / health / 体检 / 技术债扫描 / 巡检`
+> **触发方式**：`@devflow/references/GO.md` + `健康检查 / health / 体检 / 技术债扫描 / 巡检`
 > 不属于任何 req，不写 00-requirements.md / 01-analysis.md。直接产出健康报告。
 
 ## 角色
@@ -25,8 +25,8 @@ Maintenance Engineer。**只产健康报告 + 改造建议清单，不直接改�
 ## 输入
 
 - 仓库根（不限单一 req）
-- `@.forgeos/CONTEXT.md`（含技术栈 + 团队偏好）
-- `@.forgeos/lessons-learned.md`（已记录的失败教训）
+- `@.devflow/CONTEXT.md`（含技术栈 + 团队偏好）
+- `@.devflow/lessons-learned.md`（已记录的失败教训）
 - 最近 N 次的 `archive/<date>-<name>/` 归档（看历史趋势）
 - 当前 git log 最近 30 天
 
@@ -64,7 +64,7 @@ Maintenance Engineer。**只产健康报告 + 改造建议清单，不直接改�
 - **架构 Mermaid 图** — 红/黄/绿色码 + 循环依赖
 - **技术债优先级矩阵** — Pain × Spread
 
-把工具输出**原样**贴入 `.forgeos/health/<YYYY-MM-DD>-HEALTH.md`。
+把工具输出**原样**贴入 `.devflow/health/<YYYY-MM-DD>-HEALTH.md`。
 
 ### 步骤 2.5 · 冗余巡检（brooks-lint 没覆盖的维度 · 装/未装都要跑）
 
@@ -72,7 +72,7 @@ Maintenance Engineer。**只产健康报告 + 改造建议清单，不直接改�
 
 #### 2.5.1 语言检测
 
-读 `.forgeos/CONTEXT.md`「技术栈」段 + 扫清单文件定主语言：
+读 `.devflow/CONTEXT.md`「技术栈」段 + 扫清单文件定主语言：
 
 | 清单文件 | 语言 |
 |---|---|
@@ -97,7 +97,7 @@ Maintenance Engineer。**只产健康报告 + 改造建议清单，不直接改�
 
 **执行策略**：
 
-1. **优先 `jscpd`**（全语言 · 5 分钟出结果）：`npx jscpd src/ --min-lines 5 --min-tokens 50 --reporters json --output .forgeos/health/tmp/`
+1. **优先 `jscpd`**（全语言 · 5 分钟出结果）：`npx jscpd src/ --min-lines 5 --min-tokens 50 --reporters json --output .devflow/health/tmp/`
 2. **再跑语言原生工具**（按上表任选 1-2 个）
 3. 工具未装 → 提示用户：`ℹ️ 需要跑《<cmd>》，是否授权自动 npx / pip install？`（2 次拒绝 → 进 2.5.3）
 
@@ -133,11 +133,11 @@ AI 自己按 6+6 维度过一遍主仓库的 `src/` / `lib/` / `app/` 目录（�
 
 #### 3.1 生产代码 6 维抽样
 
-随机抽 5 个最近改动频繁的模块（用 `git log --pretty=format: --name-only | sort | uniq -c | sort -rn | head -5`），每个按 6 维（R1~R6，见 `@forge-os/references/prompts/6-review.md` 第 2.1 节）打分。
+随机抽 5 个最近改动频繁的模块（用 `git log --pretty=format: --name-only | sort | uniq -c | sort -rn | head -5`），每个按 6 维（R1~R6，见 `@devflow/references/prompts/6-review.md` 第 2.1 节）打分。
 
 #### 3.2 测试 6 维抽样
 
-随机抽 5 个测试文件，按 T1~T6（见 `@forge-os/references/prompts/5-test.md` 第 1.4 节）打分。
+随机抽 5 个测试文件，按 T1~T6（见 `@devflow/references/prompts/5-test.md` 第 1.4 节）打分。
 
 #### 3.3 架构图
 
@@ -149,25 +149,25 @@ AI 用 grep + import 分析画一个简化 Mermaid 依赖图，标出循环依�
 
 ### 步骤 4 · 输出健康报告
 
-使用 `@forge-os/templates/health-check.md` 模板，**⚠️ 强制要求**：必须严格按模板完整结构输出，写入 `.forgeos/health/<YYYY-MM-DD>-HEALTH.md`。**不得省略或改写任何段落**。
+使用 `@devflow/templates/health-check.md` 模板，**⚠️ 强制要求**：必须严格按模板完整结构输出，写入 `.devflow/health/<YYYY-MM-DD>-HEALTH.md`。**不得省略或改写任何段落**。
 
 必须填齐：综合分、6 维生产代码风险、6 维测试代码风险、架构图、冗余巡检、技术债优先级、行动建议、与上次对比、反哺记录。工具输出可原样贴入对应段；未装工具时必须标明“内置回退”。
 
 ### 步骤 5 · 反哺到 flow-kit 工件
 
 - 🔴 Critical → 自动开新需求（编号如 `health-fix-2026-q1`），AI 进入 `0-confirm` 流程产 00-requirements.md
-- 🟡 Scheduled → 追加到 `.forgeos/CONTEXT.md` 的「技术债」段
-- 🟢 Monitored → 追加到 `.forgeos/lessons-learned.md`（用 `观察` 类型 entry）
-- 综合分趋势 → 长期保留在 `.forgeos/health/` 目录，可画图
+- 🟡 Scheduled → 追加到 `.devflow/CONTEXT.md` 的「技术债」段
+- 🟢 Monitored → 追加到 `.devflow/lessons-learned.md`（用 `观察` 类型 entry）
+- 综合分趋势 → 长期保留在 `.devflow/health/` 目录，可画图
 - **冗余巡检特殊处理**：
   - 🔴 未用导出 / 死分支 → 合并到 health-fix req（不单开）
-  - 🟡 重复块 → 记 `.forgeos/CONTEXT.md`「技术债」段，标"待抽公共函数"
+  - 🟡 重复块 → 记 `.devflow/CONTEXT.md`「技术债」段，标"待抽公共函数"
   - 🟡 未用依赖 → **写到 CONTEXT.md「禁动清单」段**（标"下次清理窗口移除"），避免 AI 再次为已被移除的库写代码
   - 🟢 关联 `A-evolve` 下次同步时**主动提醒**：有 M 条没用的导出在 CONTEXT.md「既有抽象索引」里还列着，建议清理
 
 ## 输出
 
-- `.forgeos/health/<YYYY-MM-DD>-HEALTH.md`（必产，**必须严格按 `@forge-os/templates/health-check.md` 模板完整结构输出**）
+- `.devflow/health/<YYYY-MM-DD>-HEALTH.md`（必产，**必须严格按 `@devflow/templates/health-check.md` 模板完整结构输出**）
 - 0~N 个新需求 提案（仅 Critical 项）
 - CONTEXT.md / lessons-learned.md 的追加（自动）
 
@@ -185,10 +185,10 @@ AI 用 grep + import 分析画一个简化 Mermaid 依赖图，标出循环依�
 - ⏳ 综合分有「与上次对比」段
 - ⏳ Critical 项已生成 health-fix req 提案
 - ⏳ 未用依赖已写进 CONTEXT.md「禁动清单」（避免 AI 再次使用）
-- ⏳ 报告归入 `.forgeos/health/` 目录
+- ⏳ 报告归入 `.devflow/health/` 目录
 
 ## 触发下一步
 
-- 有 🔴 Critical → 用户选「现在修」 → `@forge-os/references/prompts/0-confirm.md` 开 health-fix req
+- 有 🔴 Critical → 用户选「现在修」 → `@devflow/references/prompts/0-confirm.md` 开 health-fix req
 - 全部 🟡/🟢 → 报告归档，提示用户「下次巡检建议日期：1 个月后」
 

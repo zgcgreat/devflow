@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ForgeOS Core Bridge — 运行时无关的核心桥接逻辑
+ * DevFlow Core Bridge — 运行时无关的核心桥接逻辑
  *
  * 统一入口：阶段路由、状态读取、记忆加载、门禁检查、Token 压缩
  * 所有运行时适配器 (Claude Code / Cursor / Copilot / Codex / Gemini CLI) 调用此模块。
@@ -13,7 +13,7 @@ const path = require('path');
 
 // ─── 常量 ──────────────────────────────────────────────
 
-const FORGEOS_DIR = '.forgeos';
+const DEVFLOW_DIR = '.devflow';
 const STATE_FILE = 'state.json';
 const MEMORY_DIR = 'memory';
 const LESSONS_FILE = 'LESSONS.md';
@@ -40,7 +40,7 @@ function detectRuntime() {
 function findProjectDir(startDir = process.cwd()) {
   let dir = startDir;
   for (let i = 0; i < 10; i++) {
-    if (fs.existsSync(path.join(dir, FORGEOS_DIR))) return dir;
+    if (fs.existsSync(path.join(dir, DEVFLOW_DIR))) return dir;
     const parent = path.dirname(dir);
     if (parent === dir) break;
     dir = parent;
@@ -49,7 +49,7 @@ function findProjectDir(startDir = process.cwd()) {
 }
 
 function readState(projectDir) {
-  const statePath = path.join(projectDir, FORGEOS_DIR, STATE_FILE);
+  const statePath = path.join(projectDir, DEVFLOW_DIR, STATE_FILE);
   if (!fs.existsSync(statePath)) return { phase: 0, mode: 'standard', progress: 0, gates: {}, outputs: {} };
 
   try {
@@ -110,8 +110,8 @@ function checkGate(projectDir, targetPhase) {
   };
 }
 
-/** 递归收集 .forgeos/ 下所有子目录（限深 3 层，配合 <req-id>/waves/wave-{N}/ 布局） */
-function collectForgeosDirs(dir, depth = 0, out = []) {
+/** 递归收集 .devflow/ 下所有子目录（限深 3 层，配合 <req-id>/waves/wave-{N}/ 布局） */
+function collectDevflowDirs(dir, depth = 0, out = []) {
   if (depth > 3) return out;
   let entries;
   try {
@@ -121,18 +121,18 @@ function collectForgeosDirs(dir, depth = 0, out = []) {
     if (!entry.isDirectory()) continue;
     const full = path.join(dir, entry.name);
     out.push(full);
-    collectForgeosDirs(full, depth + 1, out);
+    collectDevflowDirs(full, depth + 1, out);
   }
   return out;
 }
 
-/** 定位产物：项目根 → .forgeos/ 根 → 各级 <req-id>/ 子目录 */
+/** 定位产物：项目根 → .devflow/ 根 → 各级 <req-id>/ 子目录 */
 function findArtifact(projectDir, name) {
-  const forgeosRoot = path.join(projectDir, FORGEOS_DIR);
+  const devflowRoot = path.join(projectDir, DEVFLOW_DIR);
   const candidates = [
     path.join(projectDir, name),
-    path.join(forgeosRoot, name),
-    ...collectForgeosDirs(forgeosRoot).map(d => path.join(d, name)),
+    path.join(devflowRoot, name),
+    ...collectDevflowDirs(devflowRoot).map(d => path.join(d, name)),
   ];
   return candidates.find(p => fs.existsSync(p)) || null;
 }
@@ -184,7 +184,7 @@ function loadGateRules(projectDir) {
 // ─── 记忆加载 ───────────────────────────────────────────
 
 function loadMemory(projectDir) {
-  const memoryDir = path.join(projectDir, FORGEOS_DIR, MEMORY_DIR);
+  const memoryDir = path.join(projectDir, DEVFLOW_DIR, MEMORY_DIR);
   const result = { projectContext: '', decisions: [], knownFailures: [], lessons: '' };
 
   if (!fs.existsSync(memoryDir)) return result;
@@ -196,7 +196,7 @@ function loadMemory(projectDir) {
   }
 
   // 加载 state.json 作为项目上下文
-  const statePath = path.join(projectDir, FORGEOS_DIR, STATE_FILE);
+  const statePath = path.join(projectDir, DEVFLOW_DIR, STATE_FILE);
   if (fs.existsSync(statePath)) {
     result.projectContext = fs.readFileSync(statePath, 'utf8');
   }
@@ -207,7 +207,7 @@ function loadMemory(projectDir) {
 // ─── Token 压缩级别 ────────────────────────────────────
 
 function getCompressionLevel(projectDir) {
-  const configPath = path.join(projectDir, FORGEOS_DIR, 'config.yaml');
+  const configPath = path.join(projectDir, DEVFLOW_DIR, 'config.yaml');
   if (fs.existsSync(configPath)) {
     const content = fs.readFileSync(configPath, 'utf8');
     const match = content.match(/caveman:\s*\n\s*level:\s*(lite|full|ultra|extreme)/);
@@ -226,7 +226,7 @@ module.exports = {
   loadGateRules,
   loadMemory,
   getCompressionLevel,
-  FORGEOS_DIR,
+  DEVFLOW_DIR,
   STATE_FILE,
   RUNTIMES,
 };

@@ -228,6 +228,6 @@ blast_radius.risk = low      → Fast 模式
 
 ## 与 GitNexus 的关系
 
-- Code Intelligence 是 GitNexus 核心能力的 ForgeOS 集成版本
+- Code Intelligence 是 GitNexus 核心能力的 DevFlow 集成版本
 - GitNexus 作为可选的增强后端（当检测到 GitNexus 已安装时优先使用）
 - 无 GitNexus 时使用内置 Tree-sitter 解析器

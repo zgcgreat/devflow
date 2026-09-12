@@ -6,13 +6,13 @@ gate: internal
 requires: [session-active]
 provides: [runtime-mode-switch, skill-cluster-toggle]
 description: Runtime skill cluster switching — dynamically swap tool sets and compression levels mid-session, inspired by GSD /gsd:surface
-source: GSD /gsd:surface + ForgeOS /caveman mode
+source: GSD /gsd:surface + DevFlow /caveman mode
 dependencies:
   - caveman-shrink
   - token-compression-v2
   - hooks-system
 triggers:
-  - /forgeos:surface command
+  - /devflow:surface command
   - context threshold auto-switch
 ---
 
@@ -24,7 +24,7 @@ triggers:
 
 ## 设计理念
 
-ForgeOS 目前通过 `mode-rules.md` 在 Session 启动时**一次性**判定模式（Fast/Lean/Standard/Strict）。但实际开发中，需求复杂度会动态变化：
+DevFlow 目前通过 `mode-rules.md` 在 Session 启动时**一次性**判定模式（Fast/Lean/Standard/Strict）。但实际开发中，需求复杂度会动态变化：
 
 - 实施阶段很顺利 → 从 Strict 降级到 Standard
 - 遇到复杂 bug → 从 Standard 升级到 Strict
@@ -35,10 +35,10 @@ Surface Switch 允许运行时动态切换，**平滑过渡**，不丢失上下�
 
 ## 切换命令
 
-### `/forgeos:surface` — 运行时模式切换
+### `/devflow:surface` — 运行时模式切换
 
 ```
-/forgeos:surface [mode]
+/devflow:surface [mode]
 
 可用模式:
   lite      — 极速模式，最小工具集，ultra 压缩
@@ -47,8 +47,8 @@ Surface Switch 允许运行时动态切换，**平滑过渡**，不丢失上下�
   audit     — 审计模式，全工具集 + caveman-review + 三层对抗
   extreme   — 极简模式，core 工具集，extreme 压缩
 
-/forgeos:surface --show  — 显示当前模式与配置
-/forgeos:surface --reset  — 恢复到 Session 启动时的初始模式
+/devflow:surface --show  — 显示当前模式与配置
+/devflow:surface --reset  — 恢复到 Session 启动时的初始模式
 ```
 
 ### 模式对比
@@ -66,7 +66,7 @@ Surface Switch 允许运行时动态切换，**平滑过渡**，不丢失上下�
 ### 手动切换
 
 ```
-用户: /forgeos:surface strict
+用户: /devflow:surface strict
 
 AI:
 🔄 模式切换: standard → strict
@@ -90,7 +90,7 @@ AI:
 
 ⚠️ 提示: Context 预算 200K，当前使用 72K，切换后预计 ~87K
 
-请确认或输入 /forgeos:surface --show 查看详细配置：
+请确认或输入 /devflow:surface --show 查看详细配置：
 ```
 
 ### 自动切换（Context 驱动）
@@ -124,9 +124,9 @@ Context-Monitor Hook 检测到 > 95%:
 
 ## 与 GSD /gsd:surface 对比
 
-| 特性 | GSD | ForgeOS |
+| 特性 | GSD | DevFlow |
 |------|-----|-------------|
-| **运行时切换** | `/gsd:surface` | `/forgeos:surface` ✅ |
+| **运行时切换** | `/gsd:surface` | `/devflow:surface` ✅ |
 | **模式数量** | MVP / Full / Audit | lite / standard / strict / audit / extreme ✅ |
 | **工具集切换** | ✅ | ✅ |
 | **压缩级别切换** | ✅ | ✅ |
@@ -136,39 +136,39 @@ Context-Monitor Hook 检测到 > 95%:
 
 ## 命令参考
 
-### `/forgeos:surface` — 切换模式
+### `/devflow:surface` — 切换模式
 
 ```
-/forgeos:surface lite      → 极速模式
-/forgeos:surface standard  → 标准模式
-/forgeos:surface strict    → 严格模式
-/forgeos:surface audit     → 审计模式
-/forgeos:surface extreme   → 极简模式
-/forgeos:surface --show    → 显示当前模式
-/forgeos:surface --reset   → 恢复初始模式
+/devflow:surface lite      → 极速模式
+/devflow:surface standard  → 标准模式
+/devflow:surface strict    → 严格模式
+/devflow:surface audit     → 审计模式
+/devflow:surface extreme   → 极简模式
+/devflow:surface --show    → 显示当前模式
+/devflow:surface --reset   → 恢复初始模式
 ```
 
-### `/forgeos:compress` — 手动压缩
+### `/devflow:compress` — 手动压缩
 
 ```
-/forgeos:compress lite     → lite 压缩
-/forgeos:compress full     → full 压缩
-/forgeos:compress ultra    → ultra 压缩
-/forgeos:compress extreme  → extreme 压缩
-/forgeos:compress wenyan-lite  → 文言文 lite
-/forgeos:compress wenyan-ultra → 文言文 extreme
-/forgeos:compress --status → 查看当前压缩级别
+/devflow:compress lite     → lite 压缩
+/devflow:compress full     → full 压缩
+/devflow:compress ultra    → ultra 压缩
+/devflow:compress extreme  → extreme 压缩
+/devflow:compress wenyan-lite  → 文言文 lite
+/devflow:compress wenyan-ultra → 文言文 extreme
+/devflow:compress --status → 查看当前压缩级别
 ```
 
-### `/forgeos:budget` — 预算管理
+### `/devflow:budget` — 预算管理
 
 ```
-/forgeos:budget set 300K   → 设定 300K 预算
-/forgeos:budget preset small → 使用预设
-/forgeos:budget preset medium → 使用预设
-/forgeos:budget preset large → 使用预设
-/forgeos:budget preset enterprise → 使用预设
-/forgeos:budget status     → 查看当前预算使用情况
+/devflow:budget set 300K   → 设定 300K 预算
+/devflow:budget preset small → 使用预设
+/devflow:budget preset medium → 使用预设
+/devflow:budget preset large → 使用预设
+/devflow:budget preset enterprise → 使用预设
+/devflow:budget status     → 查看当前预算使用情况
 ```
 
 ## 与 hooks-system 的协同
@@ -184,7 +184,7 @@ Context > 95%
   → caveman-shrink: 核心工具集
   → output-compression: extreme 压缩
 
-用户: /forgeos:surface strict
+用户: /devflow:surface strict
   → surface-switch: 切换到 strict
   → caveman-shrink: 加载全部工具集
   → hooks-system: 启用 review hook
@@ -200,7 +200,7 @@ layers/L2-ENGINE/surface-switch/
 ```
 
 **AI 执行方式**：
-1. 接收 `/forgeos:surface [mode]` 命令
+1. 接收 `/devflow:surface [mode]` 命令
 2. 读取当前模式，计算切换影响（Context 预算）
 3. 展示变更预览，等用户确认
 4. 执行切换：卸载旧工具集 → 加载新工具集 → 调整压缩 → 重载 Hooks

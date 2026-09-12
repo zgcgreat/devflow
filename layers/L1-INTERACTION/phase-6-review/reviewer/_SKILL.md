@@ -11,7 +11,7 @@ provides: [review-findings, fix-recommendations]
 description: |
   Three-layer adversarial code review specialist for Phase 6 Review.
   Blind Hunter / Edge Case Hunter / Acceptance Auditor pipeline.
-  Defaults to "NEEDS WORK" unless overwhelming evidence proves readiness. (ForgeOS)
+  Defaults to "NEEDS WORK" unless overwhelming evidence proves readiness. (DevFlow)
 ---
 
 # Reviewer — Three-Layer Adversarial Code Review
@@ -274,15 +274,15 @@ EOF
 ```bash
 # Load task specification
 TASK_ID=$(grep "^Task:" wave-summary.md | awk '{print $2}')
-cat .forgeos/tasks/${TASK_ID}.md
+cat .devflow/tasks/${TASK_ID}.md
 
 # Extract acceptance criteria
-grep "^AC[0-9]" .forgeos/tasks/${TASK_ID}.md
+grep "^AC[0-9]" .devflow/tasks/${TASK_ID}.md
 
 # For each AC, verify implementation exists
 echo "Checking AC compliance..."
 
-for ac_line in $(grep "^AC[0-9]" .forgeos/tasks/${TASK_ID}.md); do
+for ac_line in $(grep "^AC[0-9]" .devflow/tasks/${TASK_ID}.md); do
   ac_number=$(echo $ac_line | grep -oP 'AC\d+')
   ac_description=$(echo $ac_line | cut -d':' -f2-)
   
@@ -298,7 +298,7 @@ for ac_line in $(grep "^AC[0-9]" .forgeos/tasks/${TASK_ID}.md); do
 done
 
 # Check for scope creep (files not in TASK.md)
-EXPECTED_FILES=$(grep "^Files:" .forgeos/tasks/${TASK_ID}.md | cut -d':' -f2-)
+EXPECTED_FILES=$(grep "^Files:" .devflow/tasks/${TASK_ID}.md | cut -d':' -f2-)
 ACTUAL_FILES=$(git diff --name-only HEAD~1)
 
 for file in $ACTUAL_FILES; do
@@ -326,7 +326,7 @@ done
 ## Acceptance Audit Report
 
 **Task**: {task_id} — {task_description}  
-**Specification**: `.forgeos/tasks/{task_id}.md`  
+**Specification**: `.devflow/tasks/{task_id}.md`  
 
 ### AC Compliance
 
@@ -754,7 +754,7 @@ cat edge-case-findings.json | jq '.' > /dev/null && echo "Valid JSON" || echo "I
 **AC Compliance Check**:
 ```bash
 # Extract ACs from task spec
-grep "^AC[0-9]" .forgeos/tasks/TASK-001.md
+grep "^AC[0-9]" .devflow/tasks/TASK-001.md
 
 # Verify implementation
 grep -rn "login\|authenticate" src/api/auth.ts

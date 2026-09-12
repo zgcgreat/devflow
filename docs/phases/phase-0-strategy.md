@@ -1,6 +1,6 @@
 # Phase 0: YC六问战略评估
 
-> **门控**: G1 (Plan Quality Gate) — 至少4个问题有满意回答 → 通过
+> **门控**: G0 (Strategy Gate) — 至少4个问题有满意回答 → 通过
 > **Layer**: Layer 1 → Layer 3
 > **适用模式**: Standard（条件跳过）, Strict（必跑）
 > **前置产物**: `00-strategy.md`
@@ -81,7 +81,7 @@
   或输入自定义内容（直接打字，发送后进入下一题）：
 ```
 
-### 第4步：6题全部回答完毕后触发 G1 门控
+### 第4步：6题全部回答完毕后触发 G0 门控
 
 ```
 ✅ Phase 0 完成 — YC六问全部回答完毕
@@ -94,7 +94,7 @@
 5. 赚钱：...
 6. 2倍速：...
 
-G1 门控：6/6 已回答 ✅ 通过 → 进入 Phase 1
+G0 门控：6/6 已回答 ✅ 通过 → 进入 Phase 1
 
 请确认或输入 /skip 跳过 Phase 0（仅 Standard 模式可条件跳过）：
 ```
@@ -122,8 +122,8 @@ G1 门控：6/6 已回答 ✅ 通过 → 进入 Phase 1
 Phase 0结束后，可设定Token预算上限：
 
 ```bash
-/forgeos budget set 300K              # 设定300K预算
-/forgeos budget preset medium         # 使用预设（small/medium/large/enterprise）
+/devflow budget set 300K              # 设定300K预算
+/devflow budget preset medium         # 使用预设（small/medium/large/enterprise）
 ```
 
 详见: `TOKEN-BUDGET.md`
@@ -133,4 +133,4 @@ Phase 0结束后，可设定Token预算上限：
 **关联文件**:
 - `references/mode-rules.md` — 模式判定规则
 - `GO.md` — Step 1.5 入口（快速参考）
-- `references/gate-rules.md` — G1 门控详情
+- `references/gate-rules.md` — G0 门控详情

@@ -23,7 +23,7 @@ external-inputs: [project-context]
 
 ## 设计理念
 
-传统 git revert 只认 commit hash,但 Conductor/ForgeOS 的工作单元是:
+传统 git revert 只认 commit hash,但 Conductor/DevFlow 的工作单元是:
 - **Track** (功能/缺陷追踪)
 - **Phase** (Phase 级别的工作单元)
 - **Task** (具体任务)
@@ -42,7 +42,7 @@ Phase 4: 执行与验证 → git revert + plan.md 同步
 ### Phase 1: 交互式目标选择
 
 ```
-1. 检查目标是否随命令提供 (/forgeos:revert task <id>)
+1. 检查目标是否随命令提供 (/devflow:revert task <id>)
    ├── 是 → 直接进入 Path A (直接确认)
    └── 否 → Path B (引导菜单)
 
@@ -158,7 +158,7 @@ Phase 4: 执行与验证 → git revert + plan.md 同步
 | **codegraph-bridge** | revert 后自动检测影响链 |
 
 ```yaml
-# .forgeos/revert.yaml (可选配置)
+# .devflow/revert.yaml (可选配置)
 revert:
   auto_sync_plan: true       # 回滚后自动同步 plan.md
   auto_update_codegraph: true  # revert 后自动更新 CodeGraph 索引
@@ -175,26 +175,26 @@ revert:
 
 ```bash
 # 交互式回滚 (引导菜单)
-/forgeos:revert
+/devflow:revert
 
 # 直接回滚指定 Track/Phase/Task
-/forgeos:revert track <id>
-/forgeos:revert phase <phase_number>
-/forgeos:revert task <task_id>
+/devflow:revert track <id>
+/devflow:revert phase <phase_number>
+/devflow:revert task <task_id>
 
 # 回滚前预览 (Phase 1+2 但不执行)
-/forgeos:revert --dry-run <target>
+/devflow:revert --dry-run <target>
 
 # 查看最近的回滚历史
-/forgeos:revert --history
+/devflow:revert --history
 
 # 撤销回滚 (反向操作)
-/forgeos:revert --undo <revert_sha>
+/devflow:revert --undo <revert_sha>
 ```
 
 ## 与 Conductor Revert 对比
 
-| 特性 | Conductor | ForgeOS |
+| 特性 | Conductor | DevFlow |
 |------|---------|-----------|
 | **协议阶段** | 4 阶段 (Selection → Reconciliation → Plan → Execution) | 4 阶段 (完全对齐) |
 | **目标类型** | Track/Phase/Task | Track/Phase/Task (完全对齐) |
@@ -202,8 +202,8 @@ revert:
 | **plan.md 同步** | 回滚后手动修正 | 自动同步 + checkpoint SHA 清理 |
 | **CodeGraph 联动** | 无 | revert 后自动影响分析 |
 | **冲突处理** | halt + 提示用户 | 3 种策略 + 可配置 |
-| **dry-run** | 无 | `/forgeos:revert --dry-run` |
-| **undo revert** | 无 | `/forgeos:revert --undo` |
+| **dry-run** | 无 | `/devflow:revert --dry-run` |
+| **undo revert** | 无 | `/devflow:revert --undo` |
 | **零脚本** | Gemini CLI extension (JS/TOML) | 纯指令式,零脚本 |
 
 ## Phase 集成
@@ -214,7 +214,7 @@ revert:
 - 回滚时可直接恢复到最近 checkpoint
 
 ### Phase 6 (审查) — 回滚触发点
-- Phase 6 审查发现严重问题 → `/forgeos:revert phase <N>`
+- Phase 6 审查发现严重问题 → `/devflow:revert phase <N>`
 - Phase 6→7 之间回滚 → 自动重新触发 Phase 6
 
 ### Phase 8 (归档) — 回滚保护

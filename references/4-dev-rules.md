@@ -1,6 +1,6 @@
 # 4-dev 规则参考 — 开发前检查清单
 
-> 被 `@forge-os/references/prompts/4-dev.md` 引用。按任务类型加载相关节，不要整读。
+> 被 `@devflow/references/prompts/4-dev.md` 引用。按任务类型加载相关节，不要整读。
 
 ---
 
@@ -40,12 +40,12 @@
 
 进入实现**之前**：
 
-1. 用当前任务的 `files` 路径关键词、`action` 中的关键名词，grep `.forgeos/lessons-learned.md`
+1. 用当前任务的 `files` 路径关键词、`action` 中的关键名词，grep `.devflow/lessons-learned.md`
 2. 对每条命中且 `状态: active` 的 `L-NNN`，在本次执行计划里写一行：
    - 「已查阅 L-NNN，本次方案与之差异是 X」 或
    - 「已查阅 L-NNN，本次确认仍适用，所以不会重试该方案」
 3. 若计划做的事与某条 active 条目完全相同 → 停下来按 R1.6 回答"本次与上次的差异是什么"，不允许盲目重试
-4. 若 `.forgeos/lessons-learned.md` 不存在 → 用 `@forge-os/templates/lessons-learned.md` 创建空骨架
+4. 若 `.devflow/lessons-learned.md` 不存在 → 用 `@devflow/templates/lessons-learned.md` 创建空骨架
 
 ---
 
@@ -55,9 +55,9 @@
 
 命中时，进入实现**之前**还必须：
 
-1. 加载 `@.forgeos/<id>/02a-ui-design.md`（必须存在；不存在 → 停下来要求先跑 `@forge-os/references/prompts/2a-ui-design.md`）
-2. 加载 `@forge-os/references/ui-anti-patterns.md`，按当前任务的关键词 grep 相关章节
-3. 加载 `@forge-os/references/frontend-engineer-rules.md`（**第 1 + 第 2 + 第 10 节必读**），其他节按输出类型按需读：
+1. 加载 `@.devflow/<id>/02a-ui-design.md`（必须存在；不存在 → 停下来要求先跑 `@devflow/references/prompts/2a-ui-design.md`）
+2. 加载 `@devflow/references/ui-anti-patterns.md`，按当前任务的关键词 grep 相关章节
+3. 加载 `@devflow/references/frontend-engineer-rules.md`（**第 1 + 第 2 + 第 10 节必读**），其他节按输出类型按需读：
    - 任务是做交互原型 → 补读第 6.1
    - 任务是做幻灯片 / 演示 → 补读第 6.2
    - 任务是做仪表盘 / 数据可视化 → 补读第 6.3

@@ -6,7 +6,7 @@
 
 
 > **核心思想**：测试从 AC 和风险派生，不从实现派生。功能覆盖必做；性能、安全、兼容、可观测按风险触发，跳过必须有理由。
-> 本 prompt 先确定风险驱动测试矩阵；具体工具和标准按需查 `@forge-os/references/test-pyramid.md`。
+> 本 prompt 先确定风险驱动测试矩阵；具体工具和标准按需查 `@devflow/references/test-pyramid.md`。
 
 ## 角色
 
@@ -14,12 +14,12 @@ Test Engineer。
 
 ## 输入
 
-- `@.forgeos/<req-id>/01-analysis.md`（AC + 非功能性需求）
-- `@.forgeos/<req-id>/02-design.md`（**必读 `## 0. 技术栈选定`**——5 轮各项的工具选择必须匹配栈：JS 用 Vitest / Playwright / k6，Python 用 pytest / locust，Go 用 testing / vegeta）
-- `@.forgeos/<req-id>/03-tasks.md`
+- `@.devflow/<req-id>/01-analysis.md`（AC + 非功能性需求）
+- `@.devflow/<req-id>/02-design.md`（**必读 `## 0. 技术栈选定`**——5 轮各项的工具选择必须匹配栈：JS 用 Vitest / Playwright / k6，Python 用 pytest / locust，Go 用 testing / vegeta）
+- `@.devflow/<req-id>/03-tasks.md`
 - 各任务的 `*-dev-log.md`
 - 已存在的测试代码
-- `@forge-os/references/test-pyramid.md`（5 轮的工具 / 标准 / 清单）
+- `@devflow/references/test-pyramid.md`（5 轮的工具 / 标准 / 清单）
 
 ## 你的职责
 
@@ -256,9 +256,9 @@ Semgrep / CodeQL / Bandit 选一。无 high；medium 有处理记录。
 
 ## 输出
 
-- `.forgeos/<req-id>/05-test-report.md`（**⚠️ 强制要求**：必须严格按 `@forge-os/templates/05-test-report.md` 模板的完整结构输出，含风险驱动测试矩阵、真实命令输出、UAT 脚本和测试质量自检。**不得省略或改写任何段落**。）
+- `.devflow/<req-id>/05-test-report.md`（**⚠️ 强制要求**：必须严格按 `@devflow/templates/05-test-report.md` 模板的完整结构输出，含风险驱动测试矩阵、真实命令输出、UAT 脚本和测试质量自检。**不得省略或改写任何段落**。）
 - 性能 / 安全扫描的原始输出贴入或链接到附件
-- **更新 `.forgeos/STATE.md`**：
+- **更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `test`
   - `阶段状态` 设为 `completed` 或 `blocked`
   - `上次完成阶段` 设为 `test`
@@ -268,7 +268,7 @@ Semgrep / CodeQL / Bandit 选一。无 high；medium 有处理记录。
 ## 约束（强制）
 
 - **R5.1**：测试用例从 AC 派生，不从实现派生
-- **R5.2**：bug 修复必伴随回归测试，加入 `.forgeos/lessons-learned.md`
+- **R5.2**：bug 修复必伴随回归测试，加入 `.devflow/lessons-learned.md`
 - **R5.3**：禁止通过删除 / 弱化测试来"修复"失败
 - **R5.4**：不允许跳过风险触发的测试轮次而没有显式理由（在范围声明里写明）
 - **R5.5**：性能 / 安全 / 兼容轮次的"通过 / 失败"必须基于**可量化指标**或工具输出，不允许"看起来没问题"
@@ -290,7 +290,7 @@ Semgrep / CodeQL / Bandit 选一。无 high；medium 有处理记录。
 
 ```
 ✅ 测试 完成
-📝 产物：.forgeos/<req-id>/05-test-report.md
+📝 产物：.devflow/<req-id>/05-test-report.md
 📊 STATE.md 阶段进度已更新：[x] 测试 → 05-test-report.md
 
 测试统计：
@@ -305,6 +305,6 @@ Semgrep / CodeQL / Bandit 选一。无 high；medium 有处理记录。
 
 ## 触发下一步
 
-- 任何轮次发现 🔴 问题 → 回到 `@forge-os/references/prompts/4-dev.md` 修复（产 fix 任务）
-- 全部通过 → `@forge-os/references/prompts/6-review.md`（review 阶段会检查风险触发的测试是否都有证据）
+- 任何轮次发现 🔴 问题 → 回到 `@devflow/references/prompts/4-dev.md` 修复（产 fix 任务）
+- 全部通过 → `@devflow/references/prompts/6-review.md`（review 阶段会检查风险触发的测试是否都有证据）
 

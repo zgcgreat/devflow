@@ -1,6 +1,6 @@
 # OWASP Top 10 安全检查清单
 
-> ForgeOS Phase 6 安全审查专用检查清单。
+> DevFlow Phase 6 安全审查专用检查清单。
 > 基于 OWASP Top 10 (2021) 标准，逐项检查。
 > 来源: gstack /cso + CHANGELOG v1.2.0。
 

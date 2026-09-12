@@ -1,6 +1,6 @@
 # Phase 4: 实施 (Wave并行执行)
 
-> **门控**: G5 (Implementation Gate) — Wave全部完成且测试通过 → 通过
+> **门控**: G5 (Build Gate) — Wave全部完成且测试通过 → 通过
 > **Layer**: Layer 2 (引擎层)
 > **适用模式**: Fast/Lean（直接开始）, Standard（完整）, Strict（完整）
 > **前置产物**: `04-wave-logs.md`

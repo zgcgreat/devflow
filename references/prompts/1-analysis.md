@@ -13,8 +13,8 @@
 ### 模式 A：从需求确认书进入（标准流程）
 
 **输入**：
-- `@.forgeos/<req-id>/00-requirements.md`
-- 已有项目（如有）：`@.forgeos/CONTEXT.md`
+- `@.devflow/<req-id>/00-requirements.md`
+- 已有项目（如有）：`@.devflow/CONTEXT.md`
 
 **执行**：直接进入「你的职责」部分。
 
@@ -27,7 +27,7 @@
 
 **输入**：
 - 解析结果（来自 GO.md D.1 的 Step 4 输出）
-- 已有项目（如有）：`@.forgeos/CONTEXT.md`
+- 已有项目（如有）：`@.devflow/CONTEXT.md`
 
 **执行**：
 1. 从解析结果提取：
@@ -51,16 +51,16 @@
 ### 模式 C：Delta 模式（存量项目修改）
 
 **触发条件**（必须同时满足）：
-- `.forgeos/requirements-baseline.md` 已存在（表示项目已有requirements-baseline）
+- `.devflow/requirements-baseline.md` 已存在（表示项目已有requirements-baseline）
 - 本次需求 是修改/扩展已有功能，而非全新需求
 - `00-requirements.md` 中明确标注了「本次为增量需求」
 
-> **注意**：如果 `.forgeos/requirements-baseline.md` 不存在但本次是存量项目修改，应先走完整模式（模式 A），在归档时会自动创建基线。
+> **注意**：如果 `.devflow/requirements-baseline.md` 不存在但本次是存量项目修改，应先走完整模式（模式 A），在归档时会自动创建基线。
 
 **输入**：
-- `@.forgeos/<req-id>/00-requirements.md`
-- `@.forgeos/requirements-baseline.md`（已有requirements-baseline）
-- `@.forgeos/CONTEXT.md`
+- `@.devflow/<req-id>/00-requirements.md`
+- `@.devflow/requirements-baseline.md`（已有requirements-baseline）
+- `@.devflow/CONTEXT.md`
 
 **执行**：
 1. 读取requirements-baseline，理解已有用户故事和 AC
@@ -84,8 +84,8 @@
 
 | 模式 | 模板 | 说明 |
 |---|---|---|
-| 模式 A/B（新需求）| `@forge-os/templates/01-analysis.md` | 完整格式，所有字段必填 |
-| 模式 C（Delta）| `@forge-os/templates/01-analysis-delta.md` | Delta 格式，只写变更部分 |
+| 模式 A/B（新需求）| `@devflow/templates/01-analysis.md` | 完整格式，所有字段必填 |
+| 模式 C（Delta）| `@devflow/templates/01-analysis-delta.md` | Delta 格式，只写变更部分 |
 
 **必须严格按模板完整结构输出，不得省略或改写任何段落**。
 
@@ -139,7 +139,7 @@
 
 ### 2. 提取域语言（关键步骤）
 
-在 `@.forgeos/CONTEXT.md` 里**追加**或更新：
+在 `@.devflow/CONTEXT.md` 里**追加**或更新：
 
 - **术语表**：本次引入的新名词，每个一句话定义
 - **已锁决策**：本次确定的偏好（例如"使用系统 prefers-color-scheme 而非应用内开关"）
@@ -155,11 +155,11 @@
 
 ## 输出
 
-- `.forgeos/<req-id>/01-analysis.md`（**必须严格按模板格式输出**）
+- `.devflow/<req-id>/01-analysis.md`（**必须严格按模板格式输出**）
   - 新需求：使用 `01-analysis.md` 模板
   - Delta 模式：使用 `01-analysis-delta.md` 模板
-- 更新或创建 `.forgeos/CONTEXT.md`
-- **更新 `.forgeos/STATE.md`**：
+- 更新或创建 `.devflow/CONTEXT.md`
+- **更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `analysis`
   - `阶段状态` 设为 `waiting_user_confirmation`
   - `上次完成阶段` 设为 `analysis`
@@ -185,7 +185,7 @@
 
 ```
 ✅ 需求分析 完成
-📝 产物：.forgeos/<req-id>/01-analysis.md
+📝 产物：.devflow/<req-id>/01-analysis.md
 📊 STATE.md 阶段进度已更新：[x] 需求分析 → 01-analysis.md
 
 请确认需求分析内容：
@@ -208,6 +208,6 @@
 ## 触发下一步
 
 需用户确认 01-analysis.md 后，进入：
-- `@forge-os/references/prompts/2-design.md`（涉及架构决策时）
-- `@forge-os/references/prompts/3-task.md`（无新架构时直接拆任务）
+- `@devflow/references/prompts/2-design.md`（涉及架构决策时）
+- `@devflow/references/prompts/3-task.md`（无新架构时直接拆任务）
 

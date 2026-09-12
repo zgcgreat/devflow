@@ -25,15 +25,15 @@ allowed-tools:
 
 # Phase 3: 任务拆分 (DAG + 拓扑排序)
 
-> **前置产物**: `02-design.md` + `.forgeos/CONTEXT.md`
-> **后置产物**: `.forgeos/<req-id>/03-tasks.md`
-> **门控**: G4 — Task Plan Quality Gate
+> **前置产物**: `02-design.md` + `.devflow/CONTEXT.md`
+> **后置产物**: `.devflow/<req-id>/03-tasks.md`
+> **门控**: G4 — Task Plan Gate
 
 ## 输入
 
 - `02-design.md` — 技术方案设计文档
 - `02a-ui-design.md` — UI 设计方案（如有）
-- `.forgeos/CONTEXT.md` — 项目上下文
+- `.devflow/CONTEXT.md` — 项目上下文
 - LESSONS.md — 过往任务拆分经验
 
 ## 输出
@@ -62,7 +62,7 @@ allowed-tools:
 | Wave Parallelism Ratio | Independent tasks ≥60% (warn if <60%) |
 | Task Plan Timeout | ≤10 min |
 
-## ForgeOS 增强
+## DevFlow 增强
 
 **Persona**: planner (always) + 技术栈Persona (on-demand)
 **Hook**: phase-transition, context-monitor

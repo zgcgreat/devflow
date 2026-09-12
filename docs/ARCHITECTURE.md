@@ -1,4 +1,4 @@
-# ForgeOS 架构文档
+# DevFlow 架构文档
 
 > 版本: 3.2.2 | 日期: 2026-06-20 (更新于全面质量修复)
 
@@ -6,7 +6,7 @@
 
 ## 1. 三层架构
 
-ForgeOS 继承 ForgeOS 的三层架构，在 L2 引擎层增加了 Gate-Hook 桥接。
+DevFlow 继承 DevFlow 的三层架构，在 L2 引擎层增加了 Gate-Hook 桥接。
 
 ```
 ┌─────────────────────────────────────────┐
@@ -46,19 +46,19 @@ ForgeOS 继承 ForgeOS 的三层架构，在 L2 引擎层增加了 Gate-Hook 桥
 
 | 模块 | 来源 | 职责 |
 |------|------|------|
-| Wave Executor | ForgeOS | 多 Wave 构建执行 |
-| Learning Workflow | ForgeOS | LESSONS 沉淀 + Domain Skills 晋升 |
+| Wave Executor | DevFlow | 多 Wave 构建执行 |
+| Learning Workflow | DevFlow | LESSONS 沉淀 + Domain Skills 晋升 |
 | Gate-Hook Bridge | **新增** | Gate↔Hook 协同桥接 |
 
 ### L3-ARCHITECTURE (架构层)
 
 | 模块 | 来源 | 职责 |
 |------|------|------|
-| DAG Router | ForgeOS | Kahn 拓扑排序 + 4 级并行度 |
-| Provider Gateway | ForgeOS | 6 任务类型选择矩阵 |
-| Agent Isolation | ForgeOS | ~200K/Agent 预算 + Wave 轮转 |
-| Parallel Engine | ForgeOS | 并行任务调度 |
-| GitNexus Bridge | ForgeOS | 代码智能 (tree-sitter + graphDB) |
+| DAG Router | DevFlow | Kahn 拓扑排序 + 4 级并行度 |
+| Provider Gateway | DevFlow | 6 任务类型选择矩阵 |
+| Agent Isolation | DevFlow | ~200K/Agent 预算 + Wave 轮转 |
+| Parallel Engine | DevFlow | 并行任务调度 |
+| GitNexus Bridge | DevFlow | 代码智能 (tree-sitter + graphDB) |
 
 ---
 

@@ -1,7 +1,7 @@
 # Pipeline 模式 — 串行依赖链通信
 
 > **适用场景**: 任务间存在严格的串行依赖关系，A 的输出是 B 的输入
-> **来源**: Ruflo Pipeline Pattern + ForgeOS Wave 串行执行
+> **来源**: Ruflo Pipeline Pattern + DevFlow Wave 串行执行
 
 ---
 

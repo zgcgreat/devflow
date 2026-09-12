@@ -1,6 +1,6 @@
-# Workflow Skills — ForgeOS 流程操作技能
+# Workflow Skills — DevFlow 流程操作技能
 
-从 ForgeOS skills/ 复制的核心流程操作技能。
+从 DevFlow skills/ 复制的核心流程操作技能。
 
 | 技能 | 说明 |
 |------|------|
@@ -21,4 +21,4 @@
 | writing-plans | 计划写作 |
 | writing-skills | 技能写作 |
 
-> 根级 `forge-os/skills/` 保留同名目录以保证向后兼容。
+> 根级 `devflow/skills/` 保留同名目录以保证向后兼容。

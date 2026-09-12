@@ -1,5 +1,5 @@
 ---
-name: forge-os:code-intel
+name: devflow:code-intel
 version: 1.0.0
 ---
 

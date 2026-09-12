@@ -16,12 +16,12 @@ UI Director。**只产视觉/交互方向，不产实现代码**（角色红线 
 
 ## 输入
 
-- `@.forgeos/<id>/00-requirements.md`（**必读**，含 0-confirm 阶段已选的「视觉调性」）
-- `@.forgeos/<id>/01-analysis.md`
-- `@.forgeos/<id>/02-design.md`（**必读 `## 0. 技术栈选定` 段**——字体 / UI 库 / 组件库 / 图标库的选择必须基于这个栈）
-- `@.forgeos/CONTEXT.md`
-- `@forge-os/references/ui-aesthetics.md`（决策框架）
-- `@forge-os/references/ui-anti-patterns.md`（反 AI-slop 清单）
+- `@.devflow/<id>/00-requirements.md`（**必读**，含 0-confirm 阶段已选的「视觉调性」）
+- `@.devflow/<id>/01-analysis.md`
+- `@.devflow/<id>/02-design.md`（**必读 `## 0. 技术栈选定` 段**——字体 / UI 库 / 组件库 / 图标库的选择必须基于这个栈）
+- `@.devflow/CONTEXT.md`
+- `@devflow/references/ui-aesthetics.md`（决策框架）
+- `@devflow/references/ui-anti-patterns.md`（反 AI-slop 清单）
 - 已存在的品牌资产（logo / 色板 / 字体）如有
 
 ## 你的职责
@@ -163,7 +163,7 @@ v0 = 占位符 + 关键布局 + 步骤 2 决定的 token + 假设清单。
 
 #### 3.3 用户回复三种情况
 
-- **说"可以 go"** → 进步骤 4，写完整 02a-ui-design.md（保存到 `.forgeos/<id>/02a-ui-design.md`）
+- **说"可以 go"** → 进步骤 4，写完整 02a-ui-design.md（保存到 `.devflow/<id>/02a-ui-design.md`）
 - **说"某维度偏了"** → 仅改该维，重贴 v0（别改其他维）
 - **说"全推了重来"** → 回步骤 1–步骤 2，不是再翻新花样
 
@@ -222,10 +222,10 @@ v0 = 占位符 + 关键布局 + 步骤 2 决定的 token + 假设清单。
 
 ## 输出
 
-- `.forgeos/<id>/02a-ui-design.md`（**⚠️ 强制要求**：必须严格按 `@forge-os/templates/02a-ui-design.md` 模板的完整结构输出。**不得省略或改写任何段落**。）
+- `.devflow/<id>/02a-ui-design.md`（**⚠️ 强制要求**：必须严格按 `@devflow/templates/02a-ui-design.md` 模板的完整结构输出。**不得省略或改写任何段落**。）
   - 包含 frontmatter 形式的 design tokens（颜色 / 字体 / 间距 / 圆角 / 动效）
   - 包含调性声明、5 维决策、组件规约、Do's and Don'ts
-- **更新 `.forgeos/STATE.md`**：
+- **更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `ui-design`
   - `阶段状态` 设为 `waiting_user_confirmation`
   - `上次完成阶段` 设为 `ui-design`
@@ -291,7 +291,7 @@ uipro 负责"**广**"（穷举候选）→ impeccable 负责"**深**"（细抠�
 
 ```
 ✅ 2a UI设计 完成
-📝 产物：.forgeos/<req-id>/02a-ui-design.md
+📝 产物：.devflow/<req-id>/02a-ui-design.md
 📊 STATE.md 阶段进度已更新：[x] 2a UI设计 → 02a-ui-design.md
 
 请确认 UI 设计内容：
@@ -313,5 +313,5 @@ uipro 负责"**广**"（穷举候选）→ impeccable 负责"**深**"（细抠�
 
 ## 触发下一步
 
-`@forge-os/references/prompts/3-task.md` —— 拆任务时把 design tokens 物化到代码（CSS variables / theme 文件）作为第一批任务
+`@devflow/references/prompts/3-task.md` —— 拆任务时把 design tokens 物化到代码（CSS variables / theme 文件）作为第一批任务
 

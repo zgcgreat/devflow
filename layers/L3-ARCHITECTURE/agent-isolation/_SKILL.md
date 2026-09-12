@@ -254,7 +254,7 @@ def enforce_budget(agent_context):
 # Validates agent context budget enforcement at runtime
 
 WAVE_PLAN=$1
-AGENT_LOGS_DIR=${2:-.forgeos/waves/wave-*/agent-logs/}
+AGENT_LOGS_DIR=${2:-.devflow/waves/wave-*/agent-logs/}
 
 echo "=== Context Budget Validation Test Harness ==="
 echo "Wave Plan: $WAVE_PLAN"
@@ -323,7 +323,7 @@ done
 # AGENT-05: Wave boundary rotation
 echo ""
 echo "Checking wave boundary context rotation..."
-for wave_dir in .forgeos/waves/wave-*/; do
+for wave_dir in .devflow/waves/wave-*/; do
   [ -d "$wave_dir" ] || continue
   wave_num=$(basename $wave_dir | grep -oP '\d+')
   
@@ -375,7 +375,7 @@ fi
 **Usage**:
 ```bash
 # Run before proceeding to next wave
-./context-budget-validation.sh .forgeos/wave-plan.yaml .forgeos/waves/
+./context-budget-validation.sh .devflow/wave-plan.yaml .devflow/waves/
 
 # Integrate into G4 gate validation
 if ./context-budget-validation.sh "$WAVE_PLAN" "$AGENT_LOGS"; then

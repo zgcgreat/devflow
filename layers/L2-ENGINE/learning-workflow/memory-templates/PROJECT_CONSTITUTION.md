@@ -1,15 +1,15 @@
 # 项目宪法 (Project Constitution)
 
 > **本文件定义项目级技术约束和原则，所有 Phase 执行必须遵守。**
-> 由项目团队编写和维护，ForgeOS 在每个 Phase 开始时自动加载。
-> 位置：`.forgeos/PROJECT_CONSTITUTION.md`
+> 由项目团队编写和维护，DevFlow 在每个 Phase 开始时自动加载。
+> 位置：`.devflow/PROJECT_CONSTITUTION.md`
 > 与流程宪法 (`CONSTITUTION.md`, 仓库根) 分离，互不干扰。
 
 ---
 
 ## 📋 快速填写指南
 
-> **首次使用**: 运行 `npx forgeos setup` 可交互式生成此文件。
+> **首次使用**: 运行 `npx devflow setup` 可交互式生成此文件。
 > **手动填写**: 删除不需要的段落，保留与项目相关的约束即可。
 > **优先级**: 当项目宪法与流程宪法冲突时，以项目宪法为准（用户约束 > 流程规则）。
 

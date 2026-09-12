@@ -1,12 +1,12 @@
 ---
-name: forge-os:hooks
+name: devflow:hooks
 version: 1.0.0
 ---
 
 # 钩子域
 
 **核心**: `domains/hooks/` (门控/上下文/Token 监控 JS 脚本)
-**扩展**: `hooks/` (ForgeOS 运行时钩子) + `hooks/markdown-hooks.yaml`
+**扩展**: `hooks/` (DevFlow 运行时钩子) + `hooks/markdown-hooks.yaml`
 
 ## 加载顺序
 

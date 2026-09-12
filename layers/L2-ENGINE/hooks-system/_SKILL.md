@@ -24,11 +24,11 @@ triggers:
 
 ## 核心能力
 
-借鉴 GSD（Get Shit Done）的运行时钩子系统，在 ForgeOS 的关键生命周期节点自动执行监控、检查、清理动作。
+借鉴 GSD（Get Shit Done）的运行时钩子系统，在 DevFlow 的关键生命周期节点自动执行监控、检查、清理动作。
 
 ## 设计理念
 
-ForgeOS 目前是一个**响应式系统**——AI 在 Phase 转换时主动触发压缩、归档、检查。但有些动作需要在**运行时自动触发**：
+DevFlow 目前是一个**响应式系统**——AI 在 Phase 转换时主动触发压缩、归档、检查。但有些动作需要在**运行时自动触发**：
 
 - Token 消耗超过阈值 → 自动触发压缩（不等 Phase 转换）
 - 用户 Prompt 包含敏感信息 → 自动脱敏
@@ -94,7 +94,7 @@ Prompt-Guard Hook:
 
 | Phase 转换 | 执行动作 |
 |-----------|---------|
-| **Phase N → N+1** | 保存当前 Phase 的 SUMMARY → `ForgeOS/<req-id>/SUMMARY_N.md` |
+| **Phase N → N+1** | 保存当前 Phase 的 SUMMARY → `DevFlow/<req-id>/SUMMARY_N.md` |
 | **Phase 3 → 4** | 冻结任务 DAG，创建不可变快照 |
 | **Phase 4 → 5** | 释放 CodeGraph 索引缓存，保存构建产物清单 |
 | **Phase 6 → 7** | 冻结审查报告，创建回滚点 |
@@ -172,13 +172,13 @@ Tool-Execution Hook:
 3. 终止规则:
    - hook A 执行失败 → hook B 仍可执行 (并行链)
    - hook A 返回 fatal → 中断后续链 (串行链)
-   - 用户手动 /forgeos:hooks pause → 暂停所有链
+   - 用户手动 /devflow:hooks pause → 暂停所有链
 ```
 
 ### 链式触发配置
 
 ```yaml
-# .forgeos/hooks.yaml - chain 配置
+# .devflow/hooks.yaml - chain 配置
 hooks:
   chain:
     enabled: true
@@ -212,7 +212,7 @@ hooks:
 
 ## 配置校验 (Config Validation)
 
-`.forgeos/hooks.yaml` 启动时自动校验,确保阈值和配置一致。
+`.devflow/hooks.yaml` 启动时自动校验,确保阈值和配置一致。
 
 ### 校验规则
 
@@ -261,7 +261,7 @@ validation_rules:
 ```
 Phase 0 (启动) 配置加载:
 
-1. 尝试加载 .forgeos/hooks.yaml
+1. 尝试加载 .devflow/hooks.yaml
    ├── 存在 → 校验规则
    │   ├── 校验通过 → 使用配置
    │   └── 校验失败 → 警告 + 使用默认值 + 记录 dev-log
@@ -274,7 +274,7 @@ Phase 0 (启动) 配置加载:
    └── Advanced → hooks_defaults_by_scale.advanced
 
 3. 用户手动配置优先级:
-   .forgeos/hooks.yaml > scale 默认值 > 硬编码默认值
+   .devflow/hooks.yaml > scale 默认值 > 硬编码默认值
 ```
 
 ## Scale 自适应默认值
@@ -295,7 +295,7 @@ Phase 0 (启动) 配置加载:
 ### 运行时动态调整
 
 ```
-/forgeos:scale enhanced 执行时:
+/devflow:scale enhanced 执行时:
 
 1. scale-domain-adaptive 切换 Scale 等级
 2. hooks-system 自动重新加载 hooks_defaults_by_scale.enhanced
@@ -310,7 +310,7 @@ Phase 0 (启动) 配置加载:
 ## 钩子配置模板
 
 ```yaml
-# .forgeos/hooks.yaml (可选配置)
+# .devflow/hooks.yaml (可选配置)
 hooks:
   context-monitor:
     enabled: true
@@ -343,7 +343,7 @@ hooks:
 
 ## 与 GSD Hooks 对比
 
-| 特性 | GSD | ForgeOS |
+| 特性 | GSD | DevFlow |
 |------|-----|-------------|
 | **context-monitor** | ✅ JS 文件，自动检测 | ✅ Hook 定义，AI 执行 |
 | **prompt-guard** | ✅ JS 文件，脱敏扫描 | ✅ Hook 定义，AI 执行 |
@@ -359,7 +359,7 @@ hooks:
 ## Phase 集成
 
 ### Phase 0（启动）
-- 加载钩子配置 `.forgeos/hooks.yaml`
+- 加载钩子配置 `.devflow/hooks.yaml`
 - 启用 context-monitor + prompt-guard
 
 ### Phase 4-5（实施→测试）

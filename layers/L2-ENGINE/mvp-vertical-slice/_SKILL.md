@@ -6,7 +6,7 @@ gate: internal
 requires: [architecture-design]
 provides: [sliced-features, delivery-order]
 description: Vertical slicing strategy for MVP delivery — cut through all layers to deliver working end-to-end features incrementally
-source: superpowers MVP strategy + GSD milestones + ForgeOS Phase flow
+source: superpowers MVP strategy + GSD milestones + DevFlow Phase flow
 dependencies:
   - executor
   - change-manager
@@ -51,14 +51,14 @@ external-inputs: [feature-list]
   - 独立可回滚: 是
 ```
 
-## 与 ForgeOS Phase 集成
+## 与 DevFlow Phase 集成
 
 ### Phase 0: 切片规划
 
 在策略阶段确定切片顺序：
 
 ```yaml
-# .forgeos/slicing-plan.yaml
+# .devflow/slicing-plan.yaml
 project: my-app
 dimension: user-flow
 slices:

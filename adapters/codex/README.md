@@ -1,6 +1,6 @@
 # Codex Adapter
 
-ForgeOS adapter for [OpenAI Codex](https://github.com/openai/codex) CLI. Enables ForgeOS's phase-gated workflow and rule system within the Codex harness.
+DevFlow adapter for [OpenAI Codex](https://github.com/openai/codex) CLI. Enables DevFlow's phase-gated workflow and rule system within the Codex harness.
 
 ## Installation
 
@@ -13,9 +13,9 @@ See `install.md` for a step-by-step walkthrough.
 
 ### Level 1 (Codex hook system)
 
-Codex provides its own hook system that ForgeOS leverages:
+Codex provides its own hook system that DevFlow leverages:
 
-- **Hooks via Codex's hook system** -- ForgeOS hooks are registered as Codex-compatible hook entries in `codex.yaml`
+- **Hooks via Codex's hook system** -- DevFlow hooks are registered as Codex-compatible hook entries in `codex.yaml`
 - **Phase transitions** -- mapped to Codex's lifecycle events
 - **Gate checks** -- implemented as pre-condition hooks that block phase advancement on failure
 - **Context monitoring** -- adapted to Codex's token budget tracking
@@ -26,5 +26,5 @@ Codex does not expose a Node.js runtime for hook scripts, so all hooks execute a
 
 | File | Purpose |
 |------|---------|
-| `codex.yaml` | Codex-format configuration with ForgeOS hooks and rules |
+| `codex.yaml` | Codex-format configuration with DevFlow hooks and rules |
 | `install.md` | Installation instructions and verification steps |

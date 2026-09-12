@@ -8,17 +8,17 @@
 
 ## 输入
 
-- `@.forgeos/<req-id>/01-analysis.md`
-- `@.forgeos/<req-id>/02-design.md`（**必读 `## 0. 技术栈选定`**——任务的 verify 命令、依赖管理、目录结构必须按选定的栈写）
-- `@.forgeos/CONTEXT.md`
+- `@.devflow/<req-id>/01-analysis.md`
+- `@.devflow/<req-id>/02-design.md`（**必读 `## 0. 技术栈选定`**——任务的 verify 命令、依赖管理、目录结构必须按选定的栈写）
+- `@.devflow/CONTEXT.md`
 
 ## 入口门禁（Artifact Preflight）
 
 开始拆任务前先检查上游产物，缺任何一项都不要继续：
 
-- 缺 `01-analysis.md`：停止，回到 `@forge-os/references/prompts/1-analysis.md`。
-- 缺 `02-design.md`：停止，回到 `@forge-os/references/prompts/2-design.md`；即使是精简路径，也必须有能锁定技术栈、触碰模块、禁动清单和写入边界的设计说明。
-- 前端 / UI 项目缺 `02a-ui-design.md`：停止，回到 `@forge-os/references/prompts/2a-ui-design.md`。纯后端 / CLI / lib 项目才可跳过。
+- 缺 `01-analysis.md`：停止，回到 `@devflow/references/prompts/1-analysis.md`。
+- 缺 `02-design.md`：停止，回到 `@devflow/references/prompts/2-design.md`；即使是精简路径，也必须有能锁定技术栈、触碰模块、禁动清单和写入边界的设计说明。
+- 前端 / UI 项目缺 `02a-ui-design.md`：停止，回到 `@devflow/references/prompts/2a-ui-design.md`。纯后端 / CLI / lib 项目才可跳过。
 - 禁止 Planner 自己脑补技术栈、触碰模块、禁动清单或 `write_files` 边界。
 
 触发时输出：
@@ -29,7 +29,7 @@
 
 ## 你的职责
 
-**⚠️ 强制要求**：必须严格按照 `@forge-os/templates/03-tasks.md` 模板的完整结构产出**原子任务列表**，**不得省略或改写任何段落**。
+**⚠️ 强制要求**：必须严格按照 `@devflow/templates/03-tasks.md` 模板的完整结构产出**原子任务列表**，**不得省略或改写任何段落**。
 
 ### 拆解原则
 
@@ -115,8 +115,8 @@
 
 ## 输出
 
-- `.forgeos/<req-id>/03-tasks.md`（**必须严格按模板格式输出**，包含所有任务的 XML 块 + 执行顺序）
-- **更新 `.forgeos/STATE.md`**：
+- `.devflow/<req-id>/03-tasks.md`（**必须严格按模板格式输出**，包含所有任务的 XML 块 + 执行顺序）
+- **更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `task`
   - `阶段状态` 设为 `completed` 或 `blocked`
   - `上次完成阶段` 设为 `task`
@@ -144,7 +144,7 @@
 
 ```
 ✅ 任务拆分 完成
-📝 产物：.forgeos/<req-id>/03-tasks.md
+📝 产物：.devflow/<req-id>/03-tasks.md
 📊 STATE.md 阶段进度已更新：[x] 任务拆分 → 03-tasks.md
 
 任务统计：
@@ -172,14 +172,14 @@
 ## 触发下一步
 
 ### Fast 模式
-`@forge-os/references/prompts/4-dev.md`（按执行顺序逐个执行）
+`@devflow/references/prompts/4-dev.md`（按执行顺序逐个执行）
 
 ### Standard/Strict 模式（可选详细设计）
 1. 询问用户：“是否生成详细实施计划（03a-implementation-plan.md）？”
 2. 如用户确认：
-   - 读取 `@forge-os/templates/03a-implementation-plan.md` 模板
+   - 读取 `@devflow/templates/03a-implementation-plan.md` 模板
    - 为每个任务生成详细的实施计划
-   - 保存到 `.forgeos/<req-id>/03a-implementation-plan.md`
+   - 保存到 `.devflow/<req-id>/03a-implementation-plan.md`
    - 用户 review 确认后进入开发
-3. 如用户跳过：直接进入 `@forge-os/references/prompts/4-dev.md`
+3. 如用户跳过：直接进入 `@devflow/references/prompts/4-dev.md`
 

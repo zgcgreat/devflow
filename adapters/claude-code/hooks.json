@@ -1,18 +1,18 @@
 {
-  "$schema": "https://forgeos.dev/adapters/claude-code/hooks/v1",
+  "$schema": "https://devflow.dev/adapters/claude-code/hooks/v1",
   "version": "1.0.0",
-  "description": "ForgeOS Claude Code Adapter — Hook 映射注册表",
+  "description": "DevFlow Claude Code Adapter — Hook 映射注册表",
   "runtime": {
     "required": "node >= 18",
-    "adapter_home": "${FORGEOS_HOME}/adapters/claude-code",
-    "scripts_root": "${FORGEOS_HOME}/hooks/scripts"
+    "adapter_home": "${DEVFLOW_HOME}/adapters/claude-code",
+    "scripts_root": "${DEVFLOW_HOME}/hooks/scripts"
   },
   "hooks": {
     "session-startup": {
       "event": "SessionStart",
       "script": "scripts/context-monitor.js",
       "args": ["--mode", "startup"],
-      "description": "Load ForgeOS project state, memory, and token budget on session start",
+      "description": "Load DevFlow project state, memory, and token budget on session start",
       "gates": [],
       "timeout_ms": 10000,
       "fail_action": "advisory"

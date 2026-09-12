@@ -63,7 +63,7 @@ triggers:
 ## 消息板文件结构
 
 ```
-.forgeos/<req-id>/comms/
+.devflow/<req-id>/comms/
 ├── message-board.md          # 主消息板（所有 Agent 读写）
 ├── wave-<N>/                 # 按 Wave 分组
 │   ├── notifications.md      # 通知消息（单向，不需要回复）
@@ -82,7 +82,7 @@ Wave N 开始时，Orchestrator 执行：
 ```markdown
 ## Wave N 消息板初始化
 
-1. 创建目录: .forgeos/<req-id>/comms/wave-<N>/
+1. 创建目录: .devflow/<req-id>/comms/wave-<N>/
 2. 创建文件:
    - notifications.md (含 Wave 头信息)
    - requests.md (含 Wave 头信息)
@@ -254,7 +254,7 @@ exceptions at runtime.
 ### Agent 启动时
 
 ```markdown
-1. 读取 .forgeos/<req-id>/comms/wave-<N>/notifications.md
+1. 读取 .devflow/<req-id>/comms/wave-<N>/notifications.md
 2. 读取前置 Wave 的 notifications.md（仅 high/critical 优先级）
 3. 读取 agent-state/ 目录中与自身相关的状态
 4. 写入自身 agent-state/<name>-state.md (状态: STARTED)

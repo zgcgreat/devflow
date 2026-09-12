@@ -33,8 +33,8 @@
 ```
 
 **说明**：
-- SDD 命令可与 forgeos 并行使用，不互斥
-- 两者可以互补：forgeos 提供结构化流程，SDD 命令提供模板自动化
+- SDD 命令可与 devflow 并行使用，不互斥
+- 两者可以互补：devflow 提供结构化流程，SDD 命令提供模板自动化
 - 选择 SDD 命令时跳过本 prompt 的步骤 1-7，直接执行命令
 
 ---
@@ -45,14 +45,14 @@
 
 ## 输入
 
-- `@.forgeos/<req-id>/00-requirements.md`
-- `@.forgeos/<req-id>/01-analysis.md`
-- `@.forgeos/<req-id>/02-design.md`
-- `@.forgeos/<req-id>/03-tasks.md`
-- `@.forgeos/<req-id>/04-dev-log.md`
-- `@.forgeos/<req-id>/05-test-report.md`（含 UAT 脚本）
-- `@.forgeos/<req-id>/06-code-review.md`
-- `@.forgeos/lessons-learned.md`
+- `@.devflow/<req-id>/00-requirements.md`
+- `@.devflow/<req-id>/01-analysis.md`
+- `@.devflow/<req-id>/02-design.md`
+- `@.devflow/<req-id>/03-tasks.md`
+- `@.devflow/<req-id>/04-dev-log.md`
+- `@.devflow/<req-id>/05-test-report.md`（含 UAT 脚本）
+- `@.devflow/<req-id>/06-code-review.md`
+- `@.devflow/lessons-learned.md`
 - 当前已合并/待合并的代码
 
 ## 你的职责
@@ -73,11 +73,11 @@
 > UAT-1：深色模式手动切换。请按以下步骤操作：……
 > 通过 / 失败 / 描述问题：
 
-记录每条 UAT 的结果到 `.forgeos/<req-id>/UAT.md`。
+记录每条 UAT 的结果到 `.devflow/<req-id>/UAT.md`。
 
 ### 3. 编制发布清单
 
-**⚠️ 强制要求**：必须严格按照 `@forge-os/templates/07-release-checklist.md` 模板的完整结构输出，**保存到 `.forgeos/<req-id>/07-release-checklist.md`**。**不得省略或改写任何段落**。
+**⚠️ 强制要求**：必须严格按照 `@devflow/templates/07-release-checklist.md` 模板的完整结构输出，**保存到 `.devflow/<req-id>/07-release-checklist.md`**。**不得省略或改写任何段落**。
 
 逐项与用户确认：
 
@@ -100,7 +100,7 @@
 
 1. 切到「Diagnose 子角色」，定位 root cause（不是症状）
 2. 产出 fix-plan：追加到 `03-tasks.md`，编号 `T-FIX-XX`，含完整 verify
-3. 回到 `@forge-os/references/prompts/4-dev.md` 执行修复
+3. 回到 `@devflow/references/prompts/4-dev.md` 执行修复
 4. 修完回到本步重跑
 
 **R2.6**：自动重试 ≤ 3 轮。第 3 轮仍失败必须停下来要求人工决策。
@@ -108,14 +108,14 @@
 ### 5. 提名 LESSONS（在 ARCHIVE 之前必跑，对应 R1.8）
 
 扫本次需求 的所有 `*-dev-log.md`「决策与偏离」段，以及任何遗留的 `*-dev-snapshot.md`「已排除方案」段。
-按 `@forge-os/templates/lessons-learned.md` 末尾的「提名条件」筛选：
+按 `@devflow/templates/lessons-learned.md` 末尾的「提名条件」筛选：
 
 - 调试 / 试错耗时 > 30 分钟 → 提名
 - 错因不局限于本任务、其它任务也会撞 → 提名
 - 6 个月内有合理概率被再次尝试 → 提名
 - 否则不入库（避免污染）
 
-把入选的失败按 lessons-learned.md 的条目格式追加到 `.forgeos/lessons-learned.md`，编号续上 `L-NNN`，必须填齐：标签 / 关键词 / 适用栈 / 状态。
+把入选的失败按 lessons-learned.md 的条目格式追加到 `.devflow/lessons-learned.md`，编号续上 `L-NNN`，必须填齐：标签 / 关键词 / 适用栈 / 状态。
 **复核**：扫一眼现有 active 条目，看是否有本次需求 让它们 `superseded` 或 `deprecated`，标注上。
 
 ### 6. 归档（ARCHIVE）
@@ -125,8 +125,8 @@
 #### 6.1 Delta 合并（如适用）
 
 **触发条件**（必须同时满足）：
-1. `.forgeos/<req-id>/01-analysis-delta.md` 或 `02-design-delta.md` 存在
-2. 对应的基线文件（`.forgeos/requirements-baseline.md` 或 `.forgeos/design-baseline.md`）存在
+1. `.devflow/<req-id>/01-analysis-delta.md` 或 `02-design-delta.md` 存在
+2. 对应的基线文件（`.devflow/requirements-baseline.md` 或 `.devflow/design-baseline.md`）存在
 
 **如果 Delta 文件存在但基线不存在**：
 - 跳过 Delta 合并，输出警告：
@@ -140,8 +140,8 @@
 **执行步骤**：
 
 1. **需求 Delta 合并**：
-   - 读取 `.forgeos/requirements-baseline.md`（如不存在，创建空基线）
-   - 读取 `.forgeos/<req-id>/01-analysis-delta.md`
+   - 读取 `.devflow/requirements-baseline.md`（如不存在，创建空基线）
+   - 读取 `.devflow/<req-id>/01-analysis-delta.md`
    - 按 Delta 操作合并：
      - **ADDED** → 追加到基线，分配新编号
      - **MODIFIED** → 更新基线中对应条目，记录修改历史
@@ -149,8 +149,8 @@
    - 更新基线的「合并历史」段
 
 2. **设计 Delta 合并**：
-   - 读取 `.forgeos/design-baseline.md`（如不存在，创建空基线）
-   - 读取 `.forgeos/<req-id>/02-design-delta.md`
+   - 读取 `.devflow/design-baseline.md`（如不存在，创建空基线）
+   - 读取 `.devflow/<req-id>/02-design-delta.md`
    - 按 Delta 操作合并：
      - **ADDED** → 追加到基线
      - **MODIFIED** → 更新基线中对应条目
@@ -167,11 +167,11 @@
 
 #### 6.2 归档文件
 
-- 把 `.forgeos/<req-id>/` 移动到 `.forgeos/archive/<YYYY-MM-DD>-<req-id>/`
-- 在 `.forgeos/需求LOG.md` 里追加一行（日期 / req-id / 一句话摘要 / PR 链接 / 新增 LESSONS 条目编号）
-- 更新 `.forgeos/STATE.md`
-- **不要归档 `.forgeos/lessons-learned.md`**——它是项目级常驻文件，跨 req 累积
-- **不要归档 `.forgeos/requirements-baseline.md` 和 `.forgeos/design-baseline.md`**——它们是项目级常驻文件
+- 把 `.devflow/<req-id>/` 移动到 `.devflow/archive/<YYYY-MM-DD>-<req-id>/`
+- 在 `.devflow/需求LOG.md` 里追加一行（日期 / req-id / 一句话摘要 / PR 链接 / 新增 LESSONS 条目编号）
+- 更新 `.devflow/STATE.md`
+- **不要归档 `.devflow/lessons-learned.md`**——它是项目级常驻文件，跨 req 累积
+- **不要归档 `.devflow/requirements-baseline.md` 和 `.devflow/design-baseline.md`**——它们是项目级常驻文件
 
 #### 6.3 项目级架构文档同步（不在本步做 · 走 A-evolve）
 
@@ -183,32 +183,32 @@
 - 在归档完成提示里告诉用户：
 
   ```
-  ✅ 已归档到 .forgeos/archive/<YYYY-MM-DD>-<req-id>/
+  ✅ 已归档到 .devflow/archive/<YYYY-MM-DD>-<req-id>/
      本需求 的 02-design.md § 9 架构沉淀建议有 N 条候选项，已留待批量同步。
      建议在积累 ≥ 5 个 req 或满 60 天后跑：
-     @forge-os/references/GO.md 同步架构
+     @devflow/references/GO.md 同步架构
      （走 A-evolve 工作流逐项 review 后 patch CONTEXT.md）
   ```
 
   N = `grep -c '^### 9\\.' 02-design.md`，如果整段是"无架构层面沉淀建议"则 N=0，不必提示
-- **禁止**在本步直接修改 `.forgeos/CONTEXT.md`——它的更新统一走 `A-evolve` 或 `I-intel-scan`
+- **禁止**在本步直接修改 `.devflow/CONTEXT.md`——它的更新统一走 `A-evolve` 或 `I-intel-scan`
 
 ### 7. 出 PR（可选）
 
 如果用户用 git 流水线：
 - 检查 PR 标题/正文已自动从 00-requirements.md + 04-dev-log.md 拼装
 - 列出涉及的文件、AC 覆盖、UAT 结论
-- 把 `.forgeos/` 内的文件归类到 PR 描述（不污染代码 diff）
+- 把 `.devflow/` 内的文件归类到 PR 描述（不污染代码 diff）
 
 ## 输出
 
-- `.forgeos/<req-id>/07-release-checklist.md`（**必须严格按模板格式输出** — 发布检查清单 + 回滚方案）
-- `.forgeos/<req-id>/UAT.md`
-- 归档后的 `.forgeos/archive/<...>/`
-- 更新的 `.forgeos/需求LOG.md` 与 `.forgeos/STATE.md`
-- **Delta 合并后的 `.forgeos/requirements-baseline.md` 和 `.forgeos/design-baseline.md`**（如适用）
+- `.devflow/<req-id>/07-release-checklist.md`（**必须严格按模板格式输出** — 发布检查清单 + 回滚方案）
+- `.devflow/<req-id>/UAT.md`
+- 归档后的 `.devflow/archive/<...>/`
+- 更新的 `.devflow/需求LOG.md` 与 `.devflow/STATE.md`
+- **Delta 合并后的 `.devflow/requirements-baseline.md` 和 `.devflow/design-baseline.md`**（如适用）
 - 0~N 个 fix-plan（如有失败）
-- **更新 `.forgeos/STATE.md`**：
+- **更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `integration`
   - `阶段状态` 设为 `completed` 或 `blocked`
   - `上次完成阶段` 设为 `integration`
@@ -239,7 +239,7 @@
 
 ```
 ✅ 集成 完成
-📝 产物：.forgeos/<req-id>/07-release-checklist.md
+📝 产物：.devflow/<req-id>/07-release-checklist.md
 📊 STATE.md 阶段进度已更新：[x] 集成 → 07-release-checklist.md
 
 集成统计：
@@ -254,6 +254,6 @@
 
 ## 触发下一步
 
-- 此 req 完成 → 等下一个 req，回到 `@forge-os/references/prompts/0-confirm.md`
+- 此 req 完成 → 等下一个 req，回到 `@devflow/references/prompts/0-confirm.md`
 - 有未解决的 fix-plan → 暂停，告知用户决策
 

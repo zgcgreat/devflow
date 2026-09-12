@@ -1,19 +1,19 @@
-# ForgeOS Token 预算策略
+# DevFlow Token 预算策略
 
-> 版本: 1.0.0 | 基于: ForgeOS v3.2.3 Standard 模式实测 + v2.0 增量估算
+> 版本: 1.0.0 | 基于: DevFlow v3.2.3 Standard 模式实测 + v2.0 增量估算
 
 ---
 
 ## 基线测量方法
 
-- 在 ForgeOS 原版中运行 Standard 模式完整流程，记录各 Phase Token 消耗
-- ForgeOS 增量 = Persona + Hook桥接 + 安全增强
+- 在 DevFlow 原版中运行 Standard 模式完整流程，记录各 Phase Token 消耗
+- DevFlow 增量 = Persona + Hook桥接 + 安全增强
 
 ---
 
 ## 各 Phase Token 消耗估算
 
-| Phase | ForgeOS基线 | Persona增量 | Hook增量 | 安全增量 | ForgeOS Standard总计 |
+| Phase | DevFlow基线 | Persona增量 | Hook增量 | 安全增量 | DevFlow Standard总计 |
 |-------|-----------|------------|---------|---------|----------------------|
 | P0 | ~5K | +2K(planner) | +1K(Markdown) | 0 | ~8K |
 | P1 | ~8K | +2K(planner) | +1K | 0 | ~11K |
@@ -26,8 +26,8 @@
 | P7 | ~3K | 0 | +1K | 0 | ~4K |
 | P8 | ~5K | 0 | +1K | 0 | ~6K |
 
-**ForgeOS Standard基线总计**: ~84K
-**ForgeOS Standard总计**: ~132K
+**DevFlow Standard基线总计**: ~84K
+**DevFlow Standard总计**: ~132K
 **增幅**: ~48K / ~57% → 需实测验证后优化
 
 ---
@@ -49,13 +49,13 @@ Token增幅 = 基线 + Scale增幅% + TechStack增幅%
 
 | 模式 | Persona加载 | Hook级别 | Token预算 |
 |------|-----------|---------|----------|
-| Fast | 无 | markdown-only | ~84K (与ForgeOS基线持平) |
+| Fast | 无 | markdown-only | ~84K (与DevFlow基线持平) |
 | Lean | 核心7 | markdown-only | ~98K (+14K) |
 | Standard | 核心7+按需 | markdown+js可选 | ~132K (+48K) |
 | Strict | 核心7+按需+安全 | markdown+js全量 | ~160K (+76K) |
 | Audit | 全量 | markdown+js全量+安全Hook | ~200K (+116K) |
 
-**硬性约束**: ForgeOS Standard 基线增幅 <= ForgeOS 原版的 30%
+**硬性约束**: DevFlow Standard 基线增幅 <= DevFlow 原版的 30%
 **当前估算**: ~57% → 需通过 caveman-shrink 和 surface-switch 优化至 <=30%
 
 ---

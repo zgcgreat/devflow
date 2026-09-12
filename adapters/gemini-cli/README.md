@@ -1,6 +1,6 @@
 # Gemini CLI 适配器
 
-> ForgeOS 对 Gemini CLI 的适配说明
+> DevFlow 对 Gemini CLI 的适配说明
 
 ## 安装
 
@@ -10,7 +10,7 @@
 ## 零运行时模式 (Level 0)
 
 Gemini CLI 适配器仅支持 Markdown 模式:
-- GEMINI.md 包含 ForgeOS 宪法和规则摘要
+- GEMINI.md 包含 DevFlow 宪法和规则摘要
 - Phase 流程由 AI 按 GEMINI.md 指令执行
 - 无 JS Hook 运行时支撑
 
@@ -18,4 +18,4 @@ Gemini CLI 适配器仅支持 Markdown 模式:
 
 - 安装 Gemini CLI
 - 在项目根目录放置 GEMINI.md
-- 使用 `/forgeos` 命令触发流程
+- 使用 `/devflow` 命令触发流程
