@@ -23,7 +23,7 @@ const DEVFLOW_GO = path.join(DEVFLOW_HOME, 'GO.md');
 const DEVFLOW_LAYERS = path.join(DEVFLOW_HOME, 'layers');
 const DEVFLOW_REFS = path.join(DEVFLOW_HOME, 'references');
 
-const HELP = `DevFlow v3.2.2 — AI 开发操作系统
+const HELP = `DevFlow v${JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'package.json'), 'utf8')).version} — AI 开发操作系统
 
 核心: layers/ (Phase 管线) + references/ (Gate 规则)
 扩展: lib/ (记忆/仲裁/规划) + domains/ (代码/压缩/钩子)
