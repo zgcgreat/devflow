@@ -1,9 +1,6 @@
 # DevFlow — AI 开发操作系统
 
-![Version](https://img.shields.io/badge/version-3.3.0-blue)
-![Tests](https://img.shields.io/badge/tests-21%2F21-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Runtime](https://img.shields.io/badge/runtime-Node.js%20%E2%89%A518-informational)
+![Version](https://img.shields.io/badge/version-3.3.0-blue) ![Tests](https://img.shields.io/badge/tests-21%2F21-brightgreen) ![License](https://img.shields.io/badge/license-MIT-green) ![Runtime](https://img.shields.io/badge/runtime-Node.js%20%E2%89%A518-informational)
 
 **DevFlow 为 AI 编码代理提供带门控强制的 Phase 管线**：每个阶段必须产出指定工件、通过指定门控才能推进，由 JavaScript 内核在代码级拦截违规，而不是靠提示词"自觉遵守"。
 
