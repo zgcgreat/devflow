@@ -1,6 +1,6 @@
 ---
 name: devflow-cli-reference
-version: 3.2.2
+version: 3.3.0
 description: DevFlow CLI 命令完整参考手册
 ---
 

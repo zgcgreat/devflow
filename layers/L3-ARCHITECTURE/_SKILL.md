@@ -1,6 +1,6 @@
 ---
 name: l3-architecture-index
-version: 3.2.2
+version: 3.3.0
 layer: L3-ARCHITECTURE
 gate: internal
 requires: []

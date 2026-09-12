@@ -1,13 +1,13 @@
 ---
 name: devflow
-version: 3.2.2
+version: 3.3.0
 description: |
   DevFlow — AI 开发操作系统
   融合: DevFlow Phase 管线 + Gate 门控 + 3级运行时
   自建: lib/ (记忆/仲裁/规划) + domains/ (代码/压缩/钩子)
 ---
 
-# DevFlow v3.2.2 — AI 开发操作系统
+# DevFlow v3.3.0 — AI 开发操作系统
 
 > DevFlow Phase 管线 + Gate 门控 + 3 级运行时，零外部依赖自包含架构。
 > 所有文件在 devflow 目录内，无外部引用。
