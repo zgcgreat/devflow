@@ -57,7 +57,9 @@ devflow caveman --compress <文本>                   # 文本压缩
 
 ```bash
 devflow gates --phase <N>                           # 门控检查
-devflow install [--target workbuddy|cursor|claude]  # 安装适配
+devflow install [--target <name>] [--dry-run]       # 安装到运行时 (--list 查看目标)
+devflow install --list                              # 列出安装目标与状态
+devflow install --uninstall [--target <name>]       # 卸载
 devflow doctor                                      # 健康检查
 devflow help                                        # 帮助信息
 ```

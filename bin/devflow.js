@@ -52,7 +52,9 @@ const HELP = `DevFlow v${JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'pac
   devflow caveman --file <路径> [--level lite|full|ultra|wenyan]  压缩
   devflow caveman --compress <文本>                   压缩文本
   devflow gates --phase <N>                           门控检查
-  devflow install [--target workbuddy|cursor|claude]  安装
+  devflow install [--target <name>] [--dry-run]       安装到运行时 (--list 查看目标)
+  devflow install --list                              列出安装目标与状态
+  devflow install --uninstall [--target <name>]       卸载
   devflow doctor                                       健康检查
   devflow help                                        帮助`;
 
@@ -314,9 +316,16 @@ const CMDS = {
   },
 
   install: (args) => {
+    // execFileSync + 参数数组（不经 shell）：避免含空格/引号的参数被拆词
+    // 历史 bug: 曾用 execSync 拼接字符串，且把 --target 静默丢弃
     const child = require('child_process');
     const installer = path.join(DEVFLOW_HOME, 'harnesses', 'install.js');
-    child.execSync(`node "${installer}" ${args.join(' ')}`, { stdio: 'inherit' });
+    try {
+      child.execFileSync(process.execPath, [installer, ...args], { stdio: 'inherit' });
+    } catch (err) {
+      // 安装器以非零退出码报告失败（未知目标/来源不明目录等），原样透传
+      process.exitCode = err.status || 1;
+    }
   },
 
   doctor: () => {

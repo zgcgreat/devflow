@@ -19,6 +19,10 @@ const MEMORY_DIR = 'memory';
 const LESSONS_FILE = 'LESSONS.md';
 
 const RUNTIMES = {
+  // DeepSeek Harness 排在最前：它由宿主注入进程级环境变量，是权威信号，
+  // 应当盖过 .cursorrules / codex.yaml 之类的"文件存在性"启发式判断。
+  // DSH 每个会话都设置 DSH_SESSION_ID（另有 DSH_HOME / DSH_SHELL / DSH_WEB_URL）。
+  'deepseek-harness': { detect: () => !!process.env.DSH_SESSION_ID },
   'claude-code': { detect: () => !!process.env.CLAUDE_CODE_SESSION_ID },
   'cursor': { detect: () => fs.existsSync('.cursorrules') || fs.existsSync('.cursor/rules') },
   'copilot': { detect: () => fs.existsSync('.github/copilot-instructions.md') },

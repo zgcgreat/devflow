@@ -3,7 +3,6 @@
   "version": "3.3.0",
   "description": "DevFlow v3.3.0 — AI 开发操作系统 (融合 DevFlow) — 19 个顶级 AI 开发项目的统一内核",
   "bin": {
-    "devflow": "bin/devflow.js",
     "devflow": "bin/devflow.js"
   },
   "files": [

@@ -86,9 +86,14 @@ adapters/
 ├── copilot/       # copilot-instructions.md
 ├── gemini-cli/    # GEMINI.md
 ├── codex/         # codex.yaml
+├── deepseek-harness/  # cordis.patch.yml（Cordis 门控插件挂载行）
 ├── universal/     # 通用 Markdown 方案（无宿主依赖）
 └── shared/        # 公共 JS 逻辑（gate-checker/memory-loader/core-bridge）
 ```
+
+> DeepSeek Harness（DSH）是唯一提供**代码级门控拦截**的宿主：其 Cordis 插件可用
+> `ctx.tools.guard()` 同步拒绝越权工具调用，其余宿主只能靠提示词约束。见
+> `adapters/deepseek-harness/README.md`。
 
 ### 6. Persona 与 Hook 体系
 
@@ -99,11 +104,21 @@ adapters/
 
 ### 方式一：作为 AI Skill 安装（推荐）
 
-把整个仓库放入你的 AI 工具技能目录（WorkBuddy 为 `~/.workbuddy/skills/devflow`，Claude Code 为 `.claude/skills/`），AI 将从 `SKILL.md` 入口按需加载 Phase 技能与规则。也可用安装器：
+把整个仓库放入你的 AI 工具技能目录，AI 将从 `SKILL.md` 入口按需加载 Phase 技能与规则：
+
+| 宿主 | 技能目录 | 安装方式 |
+|---|---|---|
+| WorkBuddy | `~/.workbuddy/skills/devflow` | `node bin/devflow.js install` |
+| DeepSeek Harness | `~/.agents/skills/devflow` | junction + 见 `adapters/deepseek-harness/install.md` |
+| Claude Code / Cursor / Copilot / Codex / Gemini CLI | 各自目录 | 手动拷贝，见 `adapters/<宿主>/install.md` |
 
 ```bash
-node bin/devflow.js install --target workbuddy   # 或 cursor / claude
+# 目前只有 WorkBuddy 目标由脚本实现；其余宿主请按 adapters/<宿主>/install.md 手动拷贝
+node bin/devflow.js install
 ```
+
+> ⚠️ 本仓库**未发布到 npm**。registry 上的 `devflow` 由他人持有（latest `0.0.1`），
+> 执行 `npm install -g devflow` 会装到无关的包。请用本仓库内的 `node bin/devflow.js`。
 
 ### 方式二：CLI 直接使用
 

@@ -1,0 +1,27 @@
+# DevFlow gate plugin — DSH loader patch row.
+#
+# MERGE this row into your profile patch layer, do NOT overwrite it:
+#   $DSH_HOME/profiles/web/cordis.patch.yml
+#
+# The composed `cordis.yml` beside it is an empty entry list by design
+# ("Edit cordis.patch.yml, not this file"). A profile patch file is a
+# top-level YAML array of loader patch entries, applied after every bundle
+# layer. The `web` profile ships with `patchReload: "live"`, so editing it
+# hot-reloads without restarting DSH.
+#
+# `name` resolution: a bare package name resolves from the DSH installation or
+# from $DSH_HOME/profiles/node_modules (pnpm-managed). A name beginning with
+# `./` or `../` is reinterpreted as a file:// URL relative to THIS file's
+# directory, which is how a local, unpublished checkout gets mounted.
+
+- insert:
+    - id: devflow-gate
+      name: 'dsh-devflow'
+      config:
+        # Refuse mutations that leave the current gate unsatisfied.
+        enforceGuard: true
+        # Gate id whose completion requires a human decision before build-time
+        # mutations (schema, dependency manifests, migrations, deletions).
+        protectedGate: G5
+        # Extra workspace-relative glob prefixes the guard treats as protected.
+        protectedPaths: []

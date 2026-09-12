@@ -27,8 +27,13 @@ triggers:
 | Copilot | `.github/copilot-instructions.md` | 无 hook | instructions 文件 | 无 |
 | Codex | `codex.yaml` / `AGENTS.md` | config.toml hooks | agents/ 规则 | 无 |
 | Gemini CLI | `.gemini/GEMINI.md` | 扩展 hooks | extensions/ | 无 |
+| DeepSeek Harness | `$DSH_HOME/profiles/web/cordis.patch.yml` | Cordis 插件 (`ctx.tools.guard`) + Skill 目录 | `.agents/skills/` | 无（用 session projection） |
 | Windsurf | `.windsurf/rules/` | `.mdc` 规则文件 | project rules | 无 |
 | Kilo | `kilo.yaml` | hooks 配置 | skills/ | 无 |
+
+> **DeepSeek Harness 是唯一提供代码级门控拦截的宿主**：它的 Cordis 插件可以用
+> `ctx.tools.guard()` 同步拒绝工具调用，而其余宿主只能靠提示词约束模型。
+> 详见 `deepseek-harness/README.md`。
 
 ## 适配器文件结构
 
@@ -52,10 +57,17 @@ adapters/
 ├── codex/                 # OpenAI Codex 适配
 │   ├── codex.yaml         # Codex 配置模板
 │   └── install.md
-└── gemini-cli/            # Gemini CLI 适配
+├── gemini-cli/            # Gemini CLI 适配
 │   ├── GEMINI.md          # Gemini 扩展模板
 │   └── install.md
+└── deepseek-harness/      # DeepSeek Harness 适配
+    ├── cordis.patch.yml   # Cordis 插件挂载行（并入 profile patch 层）
+    ├── install.md         # 安装指南（Skill junction + 插件挂载）
+    └── README.md          # 两套扩展机制说明
 ```
+
+> `deepseek-harness/` 与其余适配器同构：只有配置模板与安装文档，**不含运行时代码**。
+> 真正的门控插件在独立包 `dsh-devflow` 中，独立版本线，避免与多宿主技能绑定发布。
 
 ## 核心桥接逻辑 (shared/)
 
