@@ -4,6 +4,7 @@ preamble-tier: 1
 version: 1.0.0
 layer: L3-ARCHITECTURE
 gate: internal
+implementation: spec-only
 requires: [vector-memory, dag-router]
 provides: [impact-analysis, change-propagation, test-scope-recommendation]
 description: |
@@ -11,7 +12,7 @@ description: |
   基于 CodeGraph/AST 分析，预测代码变更的传播范围和影响等级。
   用于 Phase 5 测试范围确定和 Phase 6 审查影响分析。
   参考: GitNexus Blast Radius Analysis。
-source: INTEGRATION-PLAN 6.1 — GitNexus knowledge graph + Blast Radius
+source: CHANGELOG v1.4.0 — GitNexus knowledge graph + Blast Radius
 dependencies:
   - vector-memory (历史变更影响模式)
   - dag-router (DAG 依赖图)

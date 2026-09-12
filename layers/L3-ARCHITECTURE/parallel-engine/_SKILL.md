@@ -4,6 +4,7 @@ preamble-tier: 2
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
+implementation: spec-only
 requires: [wave-plan]
 provides: [parallel-execution-plan, dispatch-coordination]
 description: |

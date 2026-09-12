@@ -11,7 +11,7 @@ description: |
   包括规格合规检查、代码质量快速扫描、变更边界检查。
   审查结果写入 .forgeos/<req-id>/reviews/，FAIL 级别问题可暂停 Wave 执行。
   参考: Superpowers Subagent-Driven Development 两阶段审查。
-source: INTEGRATION-PLAN P1-1 — Superpowers two-stage review
+source: CHANGELOG v1.2.0 — Superpowers two-stage review
 dependencies:
   - agent-comms (审查结果通过消息板传播)
   - wave-executor (Wave 完成后触发)

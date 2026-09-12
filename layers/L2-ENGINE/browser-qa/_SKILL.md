@@ -10,7 +10,7 @@ description: |
   浏览器 QA — Phase 5 浏览器测试子阶段。基于 Playwright 自动生成和执行 E2E 测试，
   截图对比，自动生成 Bug 报告（含截图+分级）。仅前端/UI 项目启用。
   参考: gstack /qa 真实浏览器测试 + Playwright。
-source: INTEGRATION-PLAN P1-2 — gstack /qa + Playwright
+source: CHANGELOG v1.2.0 — gstack /qa + Playwright
 dependencies:
   - wave-executor (Phase 5 触发)
   - real-time-review (审查结果参考)

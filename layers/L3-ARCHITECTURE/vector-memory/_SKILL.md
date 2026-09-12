@@ -4,6 +4,7 @@ preamble-tier: 1
 version: 1.0.0
 layer: L3-ARCHITECTURE
 gate: internal
+implementation: code
 requires: [learning-workflow]
 provides: [semantic-search, hybrid-retrieval, lesson-embedding, memory-lifecycle]
 description: |
@@ -11,7 +12,7 @@ description: |
   替代 LESSONS.md 纯文本全文匹配，提供混合检索（BM25 + Vector + RRF 融合），
   准确率提升 3x+，延迟 < 100ms。支持 4 层记忆架构（Working → Episodic → Semantic → Procedural）。
   参考: Ruflo AgentDB HNSW + agentmemory 三流混合检索。
-source: INTEGRATION-PLAN P0-2 — Ruflo AgentDB + agentmemory vector retrieval
+source: CHANGELOG v1.2.0 — Ruflo AgentDB + agentmemory vector retrieval
 dependencies:
   - learning-workflow (LESSONS 数据源)
   - provider-gateway (嵌入 API 调用)

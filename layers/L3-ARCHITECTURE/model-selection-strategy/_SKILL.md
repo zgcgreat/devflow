@@ -3,6 +3,7 @@ name: model-selection-strategy
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
+implementation: spec-only
 requires: [domain-complexity-mapping]
 provides: [model-assignment, fallback-chain]
 description: Intelligent model selection strategy mapping task types to optimal AI models with fallback chains

@@ -4,13 +4,14 @@ preamble-tier: 1
 version: 1.0.0
 layer: L3-ARCHITECTURE
 gate: internal
+implementation: spec-only
 requires: [skil-md]
 provides: [preset-loading, phase-override, rule-addition, agent-addition]
 description: |
   Preset 扩展系统 — 用户定制 Phase 模板的预设机制。
   提供 minimal/standard/enterprise 三种默认预设，支持自定义 YAML 覆盖。
   参考: Spec-Kit Extension/Preset 系统。
-source: INTEGRATION-PLAN P2-5 — Spec-Kit Extension/Preset
+source: CHANGELOG v1.3.0 — Spec-Kit Extension/Preset
 dependencies:
   - skil-md (Phase 流程主文件)
   - cli (ForgeOS setup 集成)

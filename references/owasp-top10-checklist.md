@@ -2,7 +2,7 @@
 
 > ForgeOS Phase 6 安全审查专用检查清单。
 > 基于 OWASP Top 10 (2021) 标准，逐项检查。
-> 来源: gstack /cso + INTEGRATION-PLAN P1-3。
+> 来源: gstack /cso + CHANGELOG v1.2.0。
 
 ---
 

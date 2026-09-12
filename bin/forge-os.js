@@ -29,7 +29,7 @@ const HELP = `ForgeOS v3.2.2 — AI 开发操作系统
 扩展: lib/ (记忆/仲裁/规划) + domains/ (代码/压缩/钩子)
 
 用法:
-  forge-os init [--mode fast|lean|standard|strict]   初始化 Phase 管线
+  forge-os init [--mode fast|lean|standard|strict]   初始化 Phase 管线 (未指定 --mode 时按项目规模自动判定)
   forge-os status                                     当前 Phase 状态
   forge-os phase --status                             Phase 详情 (进度/门控/产出)
   forge-os phase --list                               Phase 管线总览
@@ -58,13 +58,23 @@ const HELP = `ForgeOS v3.2.2 — AI 开发操作系统
 
 const CMDS = {
   init: (args) => {
-    const mode = args.includes('--mode') ? args[args.indexOf('--mode') + 1] : 'standard';
-    const forgeosDir = path.resolve('.forgeos');
-
     // 用 Phase 引擎初始化，确保 currentPhase 与模式匹配 (fast=4 / lean=2 / standard|strict=0)
+    const engine = require('../lib/phase-engine');
+
+    // 模式判定：显式 --mode 优先；否则按当前项目规模/风险自动判定 (GO.md Step 0.5)
+    let mode;
+    if (args.includes('--mode')) {
+      mode = args[args.indexOf('--mode') + 1];
+    } else {
+      const scale = scanProjectScale(process.cwd());
+      const d = engine.detectMode({ files: scale.files, lines: scale.lines, brownfield: scale.files > 0 });
+      mode = d.mode;
+      console.log(`🔍 自动判定模式: ${mode.toUpperCase()} — ${d.reason}`);
+    }
+
+    const forgeosDir = path.resolve('.forgeos');
     fs.mkdirSync(path.resolve(forgeosDir, 'memory'), { recursive: true });
     fs.mkdirSync(path.resolve(forgeosDir, 'outputs'), { recursive: true });
-    const engine = require('../lib/phase-engine');
     const e = new engine.PhaseEngine();
     const r = e.setMode(mode);
 
@@ -359,6 +369,37 @@ const CMDS = {
 
   help: () => console.log(HELP),
 };
+
+function scanProjectScale(root) {
+  // 估算当前项目的规模信号（文件数 / 行数），供 init 自动判定模式使用
+  const SKIP = new Set(['node_modules', '.git', '.forgeos', 'sources', 'dist', 'build', 'vendor', '.next', 'coverage', 'out', 'target']);
+  const EXTS = new Set(['.js', '.ts', '.tsx', '.jsx', '.py', '.go', '.java', '.rs', '.c', '.cpp', '.h', '.hpp', '.cs', '.rb', '.php', '.vue', '.md', '.json', '.yaml', '.yml', '.sql', '.sh', '.swift', '.kt', '.m', '.mm', '.r', '.scala', '.dart']);
+  const MAX_DEPTH = 6;
+  let files = 0, lines = 0;
+  const walk = (dir, depth) => {
+    if (depth > MAX_DEPTH) return;
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (e.name.startsWith('.')) continue; // 跳过所有隐藏文件/目录（含 .git/.forgeos）
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) {
+        if (SKIP.has(e.name)) continue;
+        walk(full, depth + 1);
+      } else if (e.isFile()) {
+        if (!EXTS.has(path.extname(e.name).toLowerCase())) continue;
+        files++;
+        try {
+          const buf = fs.readFileSync(full, { encoding: 'utf8' });
+          const sample = buf.length > 200 * 1024 ? buf.slice(0, 200 * 1024) : buf; // 单文件至多估 200KB
+          lines += (sample.match(/\n/g) || []).length + (sample.length > 0 && !sample.endsWith('\n') ? 1 : 0);
+        } catch { /* 跳过不可读文件 */ }
+      }
+    }
+  };
+  walk(root, 0);
+  return { files, lines };
+}
 
 function stateGuard() {
   const statePath = path.resolve('.forgeos', 'state.json');

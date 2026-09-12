@@ -11,7 +11,7 @@ description: |
   触发条件: 每 3 个 Task 完成 / Token 使用率 > 60% / Phase 转换时。
   会话中断后可从断点恢复。
   参考: gstack Checkpoint 模式。
-source: INTEGRATION-PLAN P2-4 — gstack Checkpoint
+source: CHANGELOG v1.3.0 — gstack Checkpoint
 dependencies:
   - wave-executor (Task 完成通知)
   - token-monitor (Token 阈值触发)

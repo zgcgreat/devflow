@@ -11,7 +11,7 @@ description: |
   OWASP/STRIDE 安全审计专家 — Phase 6 安全审查增强。
   执行 OWASP Top 10 (2021) 逐项检查 + STRIDE 威胁建模。
   参考: gstack /cso 结构化安全审计。
-source: INTEGRATION-PLAN P1-3 — gstack /cso + OWASP + STRIDE
+source: CHANGELOG v1.2.0 — gstack /cso + OWASP + STRIDE
 ---
 
 # OWASP/STRIDE 安全审计专家

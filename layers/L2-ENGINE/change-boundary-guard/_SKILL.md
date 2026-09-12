@@ -10,7 +10,7 @@ description: |
   变更边界检查 — Phase 4 Task 开始前声明变更范围，提交前比对实际修改文件。
   越界修改触发确认，防止意外影响其他模块。
   参考: Karpathy Skills Surgical Changes。
-source: INTEGRATION-PLAN P2-2 — Karpathy Skills surgical changes
+source: CHANGELOG v1.3.0 — Karpathy Skills surgical changes
 dependencies:
   - wave-executor (Task 执行上下文)
   - real-time-review (Step 3 复用)

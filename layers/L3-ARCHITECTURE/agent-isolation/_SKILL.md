@@ -3,6 +3,7 @@ name: agent-isolation
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
+implementation: spec-only
 requires: [wave-plan, provider-assignments]
 provides: [isolated-agent-contexts, agent-boundaries]
 description: L3 Agent 上下文隔离 — 每个Agent ~200K token独立上下文窗口

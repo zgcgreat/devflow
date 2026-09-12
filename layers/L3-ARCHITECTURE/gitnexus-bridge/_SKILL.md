@@ -2,6 +2,7 @@
 name: gitnexus-bridge
 layer: L3-ARCHITECTURE
 category: code-intelligence
+implementation: spec-only
 version: 3.0.0
 gate: internal
 requires: []

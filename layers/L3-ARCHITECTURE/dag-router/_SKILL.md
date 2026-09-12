@@ -1,5 +1,6 @@
 ---
 name: dag-router
+implementation: spec-only
 preamble-tier: 2
 version: 3.0.0
 layer: L3-ARCHITECTURE

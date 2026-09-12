@@ -9,8 +9,8 @@ provides: [token-budget-status, compression-trigger, pause-trigger]
 description: |
   Token 预算运行时监控 — 基于 post_tool_use Hook 实现。
   >50% ADVISORY 提醒，>70% 自动切换 lite 压缩模式，>90% 暂停等待用户确认。
-  来源: INTEGRATION-PLAN P1-4 — caveman caveman-stats + Ruflo context-monitor。
-source: INTEGRATION-PLAN P1-4
+  来源: CHANGELOG v1.1.0 — caveman caveman-stats + Ruflo context-monitor。
+source: CHANGELOG v1.1.0
 dependencies:
   - surface-switch (70% 阈值触发自动压缩)
   - hooks-system (Hook 注册和执行)

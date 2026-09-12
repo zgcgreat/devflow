@@ -152,7 +152,7 @@
 
 - **R18.1** 格式：`[checkpoint][wave:N][task:X]`
 - **R18.2** 每完成一个 task 输出 heartbeat，记录状态和产物路径
-- **R18.3** 连续 2 个 heartbeat 失败 → 触发 Investigator specialist（见 `sources/gsd-workflows/debug.md` specialist dispatch）
+- **R18.3** 连续 2 个 heartbeat 失败 → 触发 Investigator specialist（见 `skills/workflow/systematic-debugging/SKILL.md` 的 specialist dispatch）
 
 ## R19 · Domain Skills Promotion
 

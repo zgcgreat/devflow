@@ -8,7 +8,7 @@
  * - >70%: WARNING → 自动切换 lite 压缩模式 (surface-switch lite)
  * - >90%: CRITICAL → 暂停执行，等待用户确认
  *
- * 来源: INTEGRATION-PLAN P1-4 — caveman caveman-stats + Ruflo context-monitor
+ * 来源: CHANGELOG v1.1.0 — caveman caveman-stats + Ruflo context-monitor
  *
  * Hook 类型: post_tool_use
  * 超时: 3000ms

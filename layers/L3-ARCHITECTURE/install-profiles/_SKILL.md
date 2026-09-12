@@ -3,6 +3,7 @@ name: install-profiles
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
+implementation: spec-only
 requires: []
 provides: [configured-profile, enabled-modules]
 description: Pre-configured installation profiles for different project types and team sizes

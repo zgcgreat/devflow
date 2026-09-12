@@ -3,6 +3,7 @@ name: layer-interfaces
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
+implementation: spec-only
 requires: []
 provides: [interface-contract, coupling-report]
 description: Formal interface contracts between L1, L2, and L3 layers to reduce coupling and enable independent evolution

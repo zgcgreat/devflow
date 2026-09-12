@@ -8,6 +8,26 @@
 
 ---
 
+## [Unreleased] - 2026-09-12
+
+### 发布准备与质量清理
+
+#### 深度审计修复（2026-08-29）
+- 修复 5 个致命 bug：模式检测 `detectMode`、Phase 序列合法性、门控分离（G1/G2）、路径处理、状态守卫
+- 测试由 16 → 21 项真实通过（原 6 项假测试全部替换为真实断言）
+- 补建 WIP checkpoint 模块（`layers/L2-ENGINE/wip-checkpoint/`）
+- `doctor` 健康自检 10/10 通过，全部入库（commit 222a55d）
+
+#### 架构层索引与发布清理（2026-09-12）
+- 重写 L3 架构层索引：列出全部 13 个真实模块，标注弃用（`code-intelligence`）与幽灵条目（`memory-manager` 从未实现，职责由 `vector-memory` + Phase 8 承担）
+- `init` 自动判定模式：未显式 `--mode` 时扫描项目规模自动选择 fast / lean / standard / strict
+- `FUSION-PLAN.md` 悬空引用清理：3 处引用改为「已并入 SKILL.md / gate-rules.md」
+- `sources/` 标注 reference-only（第三方摘抄，非运行时依赖）
+- L3 全部 13 模块 frontmatter 加 `implementation: spec-only/code/deprecated` 标注
+- 删除 `sources/` 及历史审计/规划工作文件（`FULL-AUDIT-REPORT` / `AUDIT-REPORT` / `INTEGRATION-PLAN` / `DEEP-AUDIT` / `M7-VERIFICATION` / `ENHANCEMENT-BACKLOG` / `FUSION-PLAN`），本 CHANGELOG 作为唯一历史源
+
+---
+
 ## [3.2.2] - 2026-06-20
 
 ### 全面质量修复

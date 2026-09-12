@@ -11,7 +11,7 @@ description: |
   Core (7 工具, ~2K tokens) 始终加载，Standard (15 工具, ~5K tokens) 按 Phase 匹配加载，
   All (36+ 工具, ~12K tokens) 用户显式请求时加载。工具描述压缩率 ≥ 70%。
   参考: caveman-shrink MCP 中间件 + Task Master 三级工具加载。
-source: INTEGRATION-PLAN P1-5 — caveman-shrink + Task Master three-tier loading
+source: CHANGELOG v1.2.0 — caveman-shrink + Task Master three-tier loading
 dependencies:
   - caveman-shrink (基础三级加载)
   - surface-switch (运行时模式切换)

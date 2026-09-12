@@ -3,6 +3,7 @@ name: code-intelligence
 version: 3.0.0
 layer: L3-ARCHITECTURE
 deprecated: true
+implementation: deprecated
 replaced-by: gitnexus-bridge
 description: >-
   [DEPRECATED] 此模块已被 gitnexus-bridge 替代。gitnexus-bridge 提供相同的代码理解能力，

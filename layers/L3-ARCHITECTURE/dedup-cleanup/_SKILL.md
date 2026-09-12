@@ -3,6 +3,7 @@ name: dedup-cleanup
 version: 3.0.0
 layer: L3-ARCHITECTURE
 gate: internal
+implementation: spec-only
 requires: []
 provides: [cleanup-plan, deduplicated-structure]
 external-inputs: [duplication-report]

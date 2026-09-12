@@ -105,6 +105,8 @@ Phase 详细流程详见 docs/phases/（phase-0-strategy.md ~ phase-7-canary-arc
      ```
    - **如存在** → 加载上述文件
 5. **多项目支持**: 每个项目独立 `.forgeos/` 目录，记忆系统按项目隔离
+
+> **记忆管理架构**：ForgeOS 不单独设 L3 `memory-manager` 模块。语义检索由 `layers/L3-ARCHITECTURE/vector-memory/`（SQLite + HNSW）承担，经验沉淀由 L1 Phase 8 归档到 `memory/LESSONS.md` / `memory/domain-skills/` 承担。详见 `layers/L3-ARCHITECTURE/_SKILL.md`。
 6. **加载项目宪法** ⭐v3.3:
    - 检查 `.forgeos/PROJECT_CONSTITUTION.md` 是否存在
    - **如存在** → 读取并加载到当前上下文（冲突时项目宪法 > CONSTITUTION.md）
@@ -141,6 +143,8 @@ forge-os phase --mode lean                            # 应用判定结果
 
 未提供 `--files`/`--lines` 时按 `--risk` 降级：low → fast，其余 → standard。
 （详见 `references/mode-rules.md`）
+
+> **自动判定已落地**：`forge-os init` 在未显式传 `--mode` 时会自动扫描当前项目规模并调用 `detectMode()` 判定模式（可用 `--mode` 覆盖），结果写入 `.forgeos/state.json`。AI 直接进入 Step 1 读取 state.json 的 `mode` 字段即可，无需每次手动 `forge-os detect`。
 
 2. **输出模式确认**（必须停等用户）：
 ```
