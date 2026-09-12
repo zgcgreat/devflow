@@ -74,6 +74,7 @@ devflow status                 # 状态检查
 | **L2** | L1 + CodeGraph / SQLite | 知识图谱桥接 + 完整集成 |
 
 > 降级规则：不报错、不阻塞。L0 环境用 Markdown 指令，L1/L2 自动启用 JS 内核。
+> 前置条件：L1/L2 需要 **Node.js ≥ 18**（`devflow doctor` 自动校验运行时版本）；未安装或版本不足时降级 L0。
 
 ## 强制行为约束 (R1-R7, 来自 DevFlow)
 

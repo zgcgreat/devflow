@@ -332,8 +332,26 @@ const CMDS = {
       const abs = path.isAbsolute(p) ? p : path.join(DEVFLOW_HOME, p);
       return fs.existsSync(abs) ? { ok: true, note: '' } : { ok: false, note: '文件不存在' };
     };
+    // Node 运行时版本校验: 对照 package.json engines.node (支持 ">=X" / ">=X.Y")
+    const checkNode = () => {
+      const actual = process.versions.node; // doctor 本身由 Node 执行, 能跑到这里即说明 Node 存在
+      let required = null;
+      try {
+        required = (JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'package.json'), 'utf8')).engines || {}).node || null;
+      } catch { /* package.json 不可读时跳过比对 */ }
+      if (!required) return { ok: true, note: `v${actual} (未声明版本要求)` };
+      const m = String(required).match(/>=\s*(\d+)(?:\.(\d+))?/);
+      if (!m) return { ok: true, note: `v${actual} (要求表达式 "${required}" 无法解析, 跳过比对)` };
+      const [aM, aN] = actual.split('.').map(Number);
+      const rM = +m[1], rN = m[2] ? +m[2] : 0;
+      const ok = aM > rM || (aM === rM && aN >= rN);
+      return ok
+        ? { ok: true, note: `v${actual} (要求 ${required})` }
+        : { ok: false, note: `当前 v${actual} 低于要求 ${required} — 请升级 Node.js (https://nodejs.org)` };
+    };
 
     const checks = [
+      { name: 'Node 运行时', run: () => checkNode() },
       { name: 'GO.md (执行流程)', run: () => present(DEVFLOW_GO) },
       { name: 'layers/ (Phase 管线)', run: () => present(DEVFLOW_LAYERS) },
       { name: 'references/ (门控规则)', run: () => present(DEVFLOW_REFS) },
@@ -352,7 +370,7 @@ const CMDS = {
       let res;
       try { res = c.run(); } catch (e) { res = { ok: false, note: e.message }; }
       if (res.ok) {
-        console.log(`  ✅ ${c.name}`);
+        console.log(`  ✅ ${c.name}${res.note ? ' — ' + res.note : ''}`);
       } else {
         failed++;
         // 历史 bug: 失败渲染为两个空格，与 ✅ 等宽，失败项看起来像缩进空白

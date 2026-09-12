@@ -3,7 +3,7 @@
 ![Version](https://img.shields.io/badge/version-3.3.0-blue)
 ![Tests](https://img.shields.io/badge/tests-21%2F21-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Runtime](https://img.shields.io/badge/runtime-Node.js%20%E2%89%A516-informational)
+![Runtime](https://img.shields.io/badge/runtime-Node.js%20%E2%89%A518-informational)
 
 **DevFlow 为 AI 编码代理提供带门控强制的 Phase 管线**：每个阶段必须产出指定工件、通过指定门控才能推进，由 JavaScript 内核在代码级拦截违规，而不是靠提示词"自觉遵守"。
 
@@ -42,6 +42,8 @@ AI 编码代理在实际项目中反复出现三类失控：
 ### 2. 四档模式，自动判定
 
 不猜项目该多"重"——`detectMode` 扫描文件数、代码行数、模块数、风险等级（brownfield / 架构变更 / 数据变更），自动映射到合适的流程深度：
+
+> **前置条件**：Node.js ≥ 18（`devflow doctor` 自动校验运行时版本）；未安装 Node 时自动降级为 L0 纯 Markdown 模式，不报错、不阻塞。
 
 ```bash
 node bin/devflow.js detect --brownfield --arch-change   # → strict

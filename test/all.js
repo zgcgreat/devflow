@@ -200,6 +200,10 @@ TESTS.push({
     if (!doctor.stdout || !doctor.stdout.includes('DevFlow 健康检查')) {
       errors.push(`devflow doctor 无有效输出 (status=${doctor.status})`);
     }
+    // doctor 必须包含 Node 运行时环境检查项 (v3.3.1 环境检测增强)
+    if (!doctor.stdout || !doctor.stdout.includes('Node 运行时')) {
+      errors.push('doctor 缺少 Node 运行时检查项');
+    }
 
     // help 必须列出 CMDS 中实现的每一个命令，防止"实现了却不告知"
     const helpText = help.stdout || '';
