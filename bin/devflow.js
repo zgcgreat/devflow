@@ -623,6 +623,17 @@ const CMDS = {
             : { ok: true, note: '未注册（可选增强: devflow install --target claude 注册后获得真实拦截）' };
         },
       },
+      {
+        name: 'ZCode 写入守卫注册',
+        run: () => {
+          const { checkZcodeHooks } = require('../lib/zcode-hooks');
+          const r = checkZcodeHooks(require('os').homedir());
+          if (!r.scriptExists) return { ok: false, note: '守卫脚本缺失 hooks/scripts/phase-write-guard.js' };
+          return r.registered
+            ? { ok: true, note: `已注册到 ~/.zcode/cli/config.json（PreToolUse${r.runnerEnabled ? '，hooks 已启用' : '，⚠️ hooks.enabled 未开启'}）` }
+            : { ok: true, note: '未注册（可选增强: devflow install --target zcode）' };
+        },
+      },
       { name: '.devflow 目录', run: () => present(path.resolve('.devflow')) },
     ];
 

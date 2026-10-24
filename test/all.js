@@ -1122,9 +1122,58 @@ TESTS.push({
   },
 });
 
+// Test 25: ZCode 托管合并 — enabled 强制/幂等/用户配置保留/卸载（v3.6.1）
+TESTS.push({
+  name: 'ZCode 托管合并 — enabled 翻转 + 幂等 + 用户配置保留',
+  run: () => {
+    const { mergeZcodeHooks, removeZcodeHooks, applyZcodeHooks, checkZcodeHooks } = require(path.join(ROOT, 'lib', 'zcode-hooks'));
+    const os = require('os');
+    const errors = [];
+    const userConfig = {
+      mcp: { servers: { filesystem: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-filesystem'] } } },
+      plugins: { 'some-plugin': true },
+    };
+
+    // 合并：enabled 翻转为 true + 追加 PreToolUse + 保留用户键
+    const m1 = mergeZcodeHooks(userConfig, ROOT);
+    if (m1.config.hooks.enabled !== true) errors.push('enabled 未开启（配置文件 hook 必须显式启用）');
+    if (!m1.enabledFlipped) errors.push('enabled 翻转未标记');
+    if (!m1.config.mcp || !m1.config.mcp.servers.filesystem) errors.push('用户 mcp 配置丢失');
+    const pt = m1.config.hooks.events.PreToolUse;
+    if (!pt || pt[0].hooks[0].type !== 'process' || pt[0].hooks[0].command !== 'node') errors.push('process 形状不正确');
+    if (!pt[0].hooks[0].args.join(' ').includes('phase-write-guard.js')) errors.push('守卫脚本未入 args');
+
+    // 幂等：enabled 已 true + 条目一致 → changed false
+    const m2 = mergeZcodeHooks(m1.config, ROOT);
+    if (m2.changed) errors.push('重复合并非幂等');
+
+    // 卸载：删托管条目，保留 mcp/plugins 与 enabled
+    const rm = removeZcodeHooks(m1.config);
+    if (rm.changed === false) errors.push('卸载未检出变更');
+    if (rm.config.hooks.events && rm.config.hooks.events.PreToolUse) errors.push('卸载后 PreToolUse 仍存在');
+    if (!rm.config.mcp || !rm.config.mcp.servers.filesystem) errors.push('卸载丢失用户 mcp 配置');
+
+    // applyClaude 同款完整流程（隔离 home）：备份 + 写盘 + check
+    const home = fs.mkdtempSync(path.join(os.tmpdir(), 'df-zcode-'));
+    applyZcodeHooks({ homeDir: home, devflowRoot: ROOT });
+    const check = checkZcodeHooks(home);
+    if (!check.registered || !check.runnerEnabled) errors.push(`apply 后检查异常: ${JSON.stringify(check)}`);
+    const r2 = applyZcodeHooks({ homeDir: home, devflowRoot: ROOT });
+    if (r2.changed) errors.push('二次 apply 非幂等');
+    const r3 = applyZcodeHooks({ homeDir: home, devflowRoot: ROOT, remove: true });
+    const afterRemove = JSON.parse(fs.readFileSync(path.join(home, '.zcode', 'cli', 'config.json'), 'utf-8'));
+    if (!r3.changed || JSON.stringify(afterRemove).includes('phase-write-guard.js')) errors.push('卸载未生效');
+
+    try { fs.rmSync(home, { recursive: true, force: true }); } catch { /* 清理失败可忽略 */ }
+    return errors.length === 0
+      ? { pass: true, detail: 'enabled 强制 ✅ process 形状 ✅ 幂等 ✅ 用户配置保留 ✅ 备份写盘 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
 // 运行
 console.log('='.repeat(50));
-console.log('🔬 DevFlow v3.6.0 完整性验证\n');
+console.log('🔬 DevFlow v3.6.1 完整性验证\n');
 
 let passCount = 0, failCount = 0;
 

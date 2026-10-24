@@ -6,6 +6,22 @@
 
 ---
 
+## [3.6.1] - 2026-10-24
+
+### Added — ZCode 真实拦截接入
+
+- **`devflow install --target zcode`**（新增 hooks-only 安装目标）：按 ZCode 官方契约（zcode-configuration-guide 验证）把写入守卫注册进 `~/.zcode/cli/config.json` 的 `hooks.events.PreToolUse` —— `type: "process"`（无 shell，跨平台）、matcher 覆盖 `Write|Edit|MultiEdit|NotebookEdit|Bash`（含 ApplyPatch 别名）、**exit 2 = deny 与守卫同款契约**；自动开启 `hooks.enabled`（ZCode 配置文件 hook 默认禁用）；托管识别/幂等/写前备份/可卸载与 Claude 目标同标准
+- **ZCode 特化**：只注册 PreToolUse 拦截，不注册 Stop 提醒 —— ZCode 的 hook stdout 走严格 JSON schema，多余键（systemMessage）会被判失败
+- **WorkBuddy 接入状态明确化**（`docs/INTEGRATION.md`）：其 settings.json 无 hook 生命周期 —— 技能层经 junction 全量生效、提交侧 git 兜底可用；写入级真实拦截需在其源码的工具执行路径加契约一的进程内调用（约 10 行），安装输出已附指引
+- doctor 新增"ZCode 写入守卫注册"健康检查；`install --list` 显示 ZCode 注册状态
+- 修复 `checkClaudeHooks` 脚本存在性检查路径（v3.6.0 安装时发现）
+
+### Tests
+
+- 35 → 36 项：ZCode 托管合并（enabled 强制翻转 / process 形状 / 幂等 / 用户 mcp+plugins 配置保留 / 备份写盘 / 卸载）
+
+---
+
 ## [3.6.0] - 2026-10-24
 
 ### Added — 通用接入方案（一个内核 + 三种传输 + git 兜底）

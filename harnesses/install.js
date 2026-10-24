@@ -61,6 +61,7 @@ const TARGETS = {
     kind: 'bundle',
     dir: () => path.join(HOME, '.workbuddy', 'skills', 'devflow'),
     note: 'WorkBuddy 用户级技能目录',
+    followUp: '真实拦截需 WorkBuddy 实现 PreToolUse 生命周期（进程内直连，见 docs/INTEGRATION.md 契约一）；提交侧兜底可先启用: 在项目里运行 devflow git install-hook',
   },
   claude: {
     label: 'Claude Code',
@@ -76,6 +77,13 @@ const TARGETS = {
     dir: () => path.join(HOME, '.agents', 'skills', 'devflow'),
     note: 'DSH 技能根 (rank 500)；链接到本仓库，源码改动实时生效',
     followUp: '门控插件需另行挂载：见 adapters/deepseek-harness/install.md 步骤 2',
+  },
+  zcode: {
+    label: 'ZCode',
+    kind: 'hooks', // 只注册守卫，不复制技能 —— ZCode 已通过 ~/.agents/skills junction 读取本仓库，
+                   // 再装 bundle 到 ~/.zcode/skills 会以更高优先级遮蔽 junction（冻结副本）
+    dir: () => path.join(HOME, '.zcode'),
+    note: '注册写入守卫到 ~/.zcode/cli/config.json（PreToolUse exit 2 真实拦截）；技能经 ~/.agents/skills junction 实时生效',
   },
   cursor: { label: 'Cursor', kind: 'manual', adapter: 'cursor' },
   copilot: { label: 'GitHub Copilot', kind: 'manual', adapter: 'copilot' },
@@ -340,7 +348,11 @@ function cmdList() {
     const dir = t.dir();
     const state = t.kind === 'bundle' || t.kind === 'junction' ? readState(dir) : null;
     let status;
-    if (isLink(dir)) status = `已链接 -> ${readLinkSafe(dir)}`;
+    if (t.kind === 'hooks') {
+      const { checkZcodeHooks } = require(path.join(DEVFLOW_ROOT, 'lib', 'zcode-hooks'));
+      const z = checkZcodeHooks(HOME);
+      status = z.registered && z.runnerEnabled ? '守卫已注册 (PreToolUse)' : z.registered ? '已注册但 hooks 未启用' : '守卫未注册';
+    } else if (isLink(dir)) status = `已链接 -> ${readLinkSafe(dir)}`;
     else if (fs.existsSync(dir)) status = state ? `已安装 v${state.version}（${state.files?.length ?? '?'} 文件）` : '已存在（来源不明）';
     else status = '未安装';
     console.log(`  ${name.padEnd(12)} ${t.label.padEnd(18)} ${status}`);
@@ -393,6 +405,15 @@ function main() {
     let result;
     if (target.kind === 'manual') {
       refuseManual(name, target);
+    } else if (target.kind === 'hooks') {
+      // ZCode 等纯 hook 注册目标：不复制技能，只托管段合并宿主 hook 配置
+      const { applyZcodeHooks } = require(path.join(DEVFLOW_ROOT, 'lib', 'zcode-hooks'));
+      result = applyZcodeHooks({ homeDir: HOME, devflowRoot: DEVFLOW_ROOT, remove: !!opts.uninstall, dryRun: opts.dryRun });
+      console.log(`✅ ${result.summary}`);
+      console.log(`   ${result.configPath}`);
+      if (target.kind !== 'manual') console.log(`\n目标: ${target.dir()}`);
+      if (opts.dryRun) console.log(`\n（dry-run：未写入任何文件）`);
+      return;
     } else if (opts.uninstall) {
       result = uninstallBundle(target.dir(), opts.dryRun);
     } else if (target.kind === 'junction') {

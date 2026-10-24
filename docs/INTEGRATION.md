@@ -101,13 +101,40 @@ node "<devflow>/hooks/scripts/phase-write-guard.js" pretooluse
 **Stop**（提醒型，不阻断）：stdin `{ "stop_hook_active": true|false }`；有未关门控时 stdout 输出
 `{"systemMessage": "..."}`。处理器：`node "<devflow>/hooks/scripts/phase-write-guard.js" stop`。
 
-**注册方式**：Claude Code 一条命令（托管段合并，幂等/备份/可卸载）：
+**注册方式**：
+
+Claude Code（托管段合并，幂等/备份/可卸载）：
 
 ```bash
 devflow install --target claude
 ```
 
+ZCode（已按官方契约验证：`~/.zcode/cli/config.json` → `hooks.events.PreToolUse`，
+配置文件 hook 必须显式 `enabled: true`；`type: "process"` 无 shell 最跨平台；
+**exit 2 = deny** 与本守卫同款契约。注意 ZCode 的 Stop 输出走严格 JSON schema，
+多余键判失败——故 ZCode 只注册 PreToolUse 拦截、不注册 Stop 提醒）：
+
+```bash
+devflow install --target zcode
+```
+
+落盘形状（由 `devflow install --target zcode` 托管生成）：
+
+```json
+{ "hooks": { "enabled": true, "events": { "PreToolUse": [
+  { "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash",
+    "hooks": [ { "type": "process", "command": "node",
+                 "args": ["<devflow>/hooks/scripts/phase-write-guard.js", "pretooluse"],
+                 "timeoutMs": 10000 } ] } ] } }
+```
+
 其他宿主按各自的 hook 配置格式把上述命令挂到 PreToolUse/Stop 事件即可（参考 `adapters/claude-code/hooks.json`，该文件由 `scripts/gen-adapters.js` 生成）。
+
+**WorkBuddy 接入状态**：其 settings.json 目前无 hook 生命周期——技能层经
+`~/.workbuddy/skills/devflow` junction 全量生效，提交侧可用 git 兜底（见下节）。
+要在 WorkBuddy 内获得写入级真实拦截，需在其源码的工具执行路径加一处调用
+（契约一，约 10 行），或实现契約四的 PreToolUse 生命周期后即可复用
+`devflow install --target workbuddy` 注册。
 
 ## 兜底：git hooks（零工具配合，唯一无死角拦截点）
 

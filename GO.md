@@ -357,6 +357,12 @@ Mode: <Fast/Lean/Standard/Strict>
 
 ## 版本历史
 
+### v3.6.1 (2026-10-24) — ZCode 真实拦截接入
+- **devflow install --target zcode**（新增 hooks-only 目标）：按 ZCode 官方契约把写入守卫注册进 ~/.zcode/cli/config.json（hooks.events.PreToolUse，type:process 无 shell 跨平台，exit 2=deny 与守卫同款契约）；自动开启 hooks.enabled（配置文件 hook 默认禁用）；托管识别/幂等/备份/可卸载与 Claude 目标同标准
+- ZCode 只注册 PreToolUse 拦截（其 Stop 输出走严格 JSON schema，多余键判失败，故不注册 Stop 提醒）
+- WorkBuddy 接入状态明确化：技能层 junction 全量生效 + git 兜底可用；写入级拦截需其源码实现契约一（进程内 10 行调用）
+- doctor 新增 ZCode 守卫注册健康检查；测试 35 → 36 项
+
 ### v3.6.0 (2026-10-24) — 通用接入方案：一个内核 + 三种传输 + git 兜底
 - **devflow guard 统一入口**：argv 与 stdin JSON 双模式，exit 0=放行 / 2=拦截 —— 任何"能在动作前跑一条命令"的工具都可接入守卫；stdin 与宿主 hook 契约同形
 - **git hooks 兜底拦截** (devflow git install-hook)：pre-commit（状态健康 + devflow 分支链路检查）+ commit-msg（devflow/* 分支提交格式，Merge 豁免）—— 唯一不依赖宿主配合的无死角拦截层；外部 hook（husky 等）拒绝覆盖，卸载只删托管标记文件
