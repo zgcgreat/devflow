@@ -111,9 +111,10 @@
 
 ## R12 · GitNexus 可选检测
 
-- **R12.1** `gitnexus --version` → 成功则启用增强代码理解；失败则引导安装或走 grep fallback
-- **R12.2** Grep Fallback：文件搜索用 glob + grep，调用链分析用 grep -rn，依赖影响用静态分析
-- **R12.3** GitNexus 未安装时的降级能力矩阵见 docs/V3-ARCHITECTURE.md「Grep Fallback 能力矩阵」
+- **R12.1** `gitnexus --version` → 成功则启用增强代码理解；**失败则必须先引导安装**（展示能力价值 + `npm install -g gitnexus` 安装命令 + 停等用户选择）⭐v3.6.3。用户明确拒绝或安装失败且放弃后，才可走 grep fallback——**禁止静默降级**
+- **R12.2** Grep Fallback：文件搜索用 glob + grep，调用链分析用 grep -rn，依赖影响用静态分析；降级时在路由声明标注"已引导安装，用户选择跳过"
+- **R12.3** GitNexus 未安装时的降级能力矩阵见 docs/V3-ARCHITECTURE.md「Grep Fallback 能力矩阵」；`detect_changes` / `route_map` 无手动替代，需人工阅读 git diff
+- **R12.4** 「永久跳过」须用户显式声明，AI 不得代答；未标记永久跳过的项目，下次 Standard/Strict 会话重新检测（⭐v3.6.3）
 
 ## R13 · 双阶段审查（Phase 6）
 

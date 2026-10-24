@@ -47,9 +47,15 @@ external-inputs: [code-analysis-request]
 ## 降级策略
 
 当 GitNexus 不可用时，降级为 AI 手动分析（正则/文本搜索）：
+
+> ⭐v3.6.3 **降级前置条件**：必须先按 GO.md Step 3.2 向用户展示安装引导
+> （能力价值 + `npm install -g gitnexus` 命令），用户明确选择跳过或安装失败且放弃后，
+> 才允许降级。禁止静默降级——用户不知道 GitNexus 存在就无法选择增强路线。
+
 - 在审查报告中标注数据来源：`_source: gitnexus` 或 `_source: manual-analysis`
 - `detect_changes` 和 `route_map` 无手动替代，需人工阅读 git diff
 - 降级时 AI 应执行：`grep -rn` / `git diff --stat` / `git log --oneline` 替代
+- 路由声明标注：`GitNexus=降级（已引导安装，用户选择跳过）`
 
 ## Phase 集成
 

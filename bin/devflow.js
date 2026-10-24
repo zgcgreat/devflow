@@ -666,6 +666,16 @@ const CMDS = {
         },
       },
       { name: '.devflow 目录', run: () => present(path.resolve('.devflow')) },
+      {
+        // ⭐v3.6.3 可选增强可发现性：doctor 里露出 GitNexus 安装入口（不计失败）
+        name: 'GitNexus 代码理解（可选）',
+        run: () => {
+          const r = require('child_process').spawnSync('gitnexus --version', { shell: true, encoding: 'utf8' });
+          return r.status === 0
+            ? { ok: true, note: '已安装 — Standard/Strict 流程将启用知识图谱级代码理解（调用链/影响分析/语义搜索）' }
+            : { ok: true, note: '未安装 — npm install -g gitnexus 可启用调用链追踪/影响分析/语义搜索（要求 Node.js ≥ 22）' };
+        },
+      },
     ];
 
     let failed = 0;
