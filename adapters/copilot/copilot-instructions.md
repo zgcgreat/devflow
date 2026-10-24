@@ -19,8 +19,9 @@ This project uses devflow v3.0 phased workflow. As a GitHub Copilot assistant, f
 
 Artifacts live under `.devflow/<req-id>/`. Before advancing past a phase, its exit gate requires the corresponding artifact:
 
+<!-- devflow:generated:artifacts START -->
 | Phase | Exit Artifact (Gate) |
-|-------|----------------------|
+|-------|-----------------|
 | Phase 0 | 00-strategy.md (G0) |
 | Phase 1 | 01-analysis.md (G1; plus manual gate G2) |
 | Phase 1.5 | 01b-context.md (G2.5) |
@@ -32,6 +33,7 @@ Artifacts live under `.devflow/<req-id>/`. Before advancing past a phase, its ex
 | Phase 6 | 06-review.md (G7) |
 | Phase 7 | 07-canary.md (G7.5) |
 | Phase 8 | 08-archive.md (G8) |
+<!-- devflow:generated:artifacts END -->
 
 Mode trimming: `fast` starts at 04-wave-logs.md; `lean` starts at 02-design.md; no 03-tasks.md unless `strict`.
 

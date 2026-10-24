@@ -1,6 +1,6 @@
 ---
 name: devflow
-version: 3.4.1
+version: 3.5.0
 description: |
   DevFlow — 带门控强制的分阶段软件交付流程（Phase 0-8）。
   当用户要求按阶段推进开发、或在动手写代码前需要先做需求分析、方案设计、任务拆分时使用。
@@ -14,7 +14,7 @@ description: |
   不适用：单行修复、纯问答、纯文档润色等无需流程约束的任务。
 ---
 
-# DevFlow v3.4.1 — AI 开发操作系统
+# DevFlow v3.5.0 — AI 开发操作系统
 
 > DevFlow Phase 管线 + Gate 门控 + 3 级运行时，零外部依赖自包含架构。
 > 所有文件在 devflow 目录内，无外部引用。
@@ -28,7 +28,7 @@ description: |
 [R1] 加载 GO.md → 输出路由声明（第一条回复必须包含）
 [R2] 按模式匹配 Phase 路径（Fast/Lean/Standard/Strict）
 [R3] 在每个 Phase 转换前：调用 phase-engine.js 验证门控状态
-[R4] 产出后：调用 phase-engine.js outputWritten() 标记门控已通过
+[R4] 产出后：调用 phase-engine.js outputWritten() 标记门控通过（manual 主门控需 --note 用户确认凭证）
 [R5] 推进 Phase 前：调用 phase-engine.js nextPhase()
 [R6] 每个 Phase 完成时：运行测试/验证（test/all.js / doctor）
 [R7] 归档：Phase 8 必须产物到 LESSONS.md + Domain Skills

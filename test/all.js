@@ -295,9 +295,9 @@ TESTS.push({
   },
 });
 
-// Test 5g: outputWritten — 产物名硬校验（CONSTITUTION 产物先于声称）
+// Test 5g: outputWritten — 产物名硬校验 + manual 门审批凭证（v3.5.0 语义）
 TESTS.push({
-  name: 'outputWritten — 产物名校验 + 门控联动',
+  name: 'outputWritten — 产物名校验 + 审批凭证 + 门控联动',
   run: () => {
     const { PhaseEngine } = require(path.join(ROOT, 'lib', 'phase-engine'));
     const dir = mkWorkspace();
@@ -321,45 +321,64 @@ TESTS.push({
 
     if (engine.state.gates.G3) errors.push('校验失败时 G3 不应被标记通过');
 
-    // 合法产物 → 通过主门控 G3（人工门 G2 类不在 outputWritten 职责内）
+    // v3.5.0: manual 主门控（G3）无凭证 → 拒绝；有凭证 → 通过并入审批账本
     const artifact = path.join(dir, '.devflow', 'req-1', '02-design.md');
     fs.rmSync(dirDecoy, { recursive: true, force: true });
     fs.writeFileSync(artifact, '# design');
-    try { engine.outputWritten(2, artifact); } catch (e) { errors.push(`合法产物被拒: ${e.message}`); }
-    if (!engine.state.gates.G3) errors.push('合法产物未联动通过 G3');
+    expectThrow(() => engine.outputWritten(2, artifact), 'manual 主门控缺 --note');
+    if (engine.state.gates.G3) errors.push('无凭证时 G3 不应被标记通过');
+    try { engine.outputWritten(2, artifact, { note: '用户确认方案A' }); } catch (e) { errors.push(`带凭证合法产物被拒: ${e.message}`); }
+    if (!engine.state.gates.G3) errors.push('带凭证合法产物未联动通过 G3');
     if (!engine.state.outputs['02-design.md']) errors.push('产物未记录到 outputs');
+    const approval = engine.state.approvals && engine.state.approvals.G3;
+    if (!approval || !approval.noteHash || approval.noteHash.length !== 16) errors.push('审批凭证未入账或哈希异常');
+
+    // auto 主门控无需凭证（G6: 05-test-report.md）
+    const reqDir = path.join(dir, '.devflow', 'req-1');
+    fs.writeFileSync(path.join(reqDir, '05-test-report.md'), '# test');
+    try { engine.outputWritten(5, path.join(reqDir, '05-test-report.md')); } catch (e) { errors.push(`auto 门不应要求凭证: ${e.message}`); }
+    if (!engine.state.gates.G6) errors.push('auto 门未联动通过');
 
     return errors.length === 0
-      ? { pass: true, detail: '缺路径/不存在/名字不符/目录冒充/未知Phase 全拒绝；合法产物联动过门 ✅' }
+      ? { pass: true, detail: '校验全拒绝 ✅ manual 缺凭证拒 ✅ 凭证入账 ✅ auto 免凭证 ✅' }
       : { pass: false, detail: errors.join('; ') };
   },
 });
 
-// Test 5h: 状态文件 — 损坏备份重建（不静默清零）+ 原子写无残留 tmp
+// Test 5h: 状态可靠性 — 损坏备份 + 从事件日志重建（v3.5.0）
 TESTS.push({
-  name: 'Phase引擎 — state.json 损坏备份重建',
+  name: 'Phase引擎 — state.json 损坏 → 备份 + journal 重建',
   run: () => {
-    const { PhaseEngine } = require(path.join(ROOT, 'lib', 'phase-engine'));
+    const { PhaseEngine, rebuildStateFromJournal } = require(path.join(ROOT, 'lib', 'phase-engine'));
     const dir = mkWorkspace();
     const engine = new PhaseEngine(dir);
     engine.setMode('lean');
+    engine.setPhase(5, { force: true }); // 制造可重建的状态
     const stateFile = path.join(dir, '.devflow', 'state.json');
 
-    // 写入损坏内容 → 重建为初始状态且保留备份
+    // 写入损坏内容 → 新实例应从 journal 重建（mode=lean, phase=5），而非清零
     fs.writeFileSync(stateFile, '{ this is not json !!');
     const revived = new PhaseEngine(dir);
     const errors = [];
-    if (revived.state.currentPhase !== 0 || revived.state.mode !== null) errors.push('损坏后未重置为初始状态');
+    if (revived.state.mode !== 'lean') errors.push(`未从 journal 重建 mode (期望 lean，实际 ${revived.state.mode})`);
+    if (revived.state.currentPhase !== 5) errors.push(`未从 journal 重建 phase (期望 5，实际 ${revived.state.currentPhase})`);
     const backups = fs.readdirSync(path.join(dir, '.devflow')).filter(f => f.startsWith('state.json.corrupt-'));
     if (backups.length !== 1) errors.push(`损坏备份缺失 (期望 1 个，实际 ${backups.length})`);
+
+    // 重建结果已持久化：再开新实例不再触发损坏路径
+    const again = new PhaseEngine(dir);
+    if (again.state.mode !== 'lean' || again.state.currentPhase !== 5) errors.push('重建状态未持久化');
 
     // 正常保存后无 .tmp 残留（原子写）
     revived.setMode('fast');
     const tmpLeft = fs.readdirSync(path.join(dir, '.devflow')).filter(f => f.endsWith('.tmp'));
     if (tmpLeft.length > 0) errors.push(`原子写残留 tmp 文件: ${tmpLeft.join(', ')}`);
 
+    // rebuildStateFromJournal 纯函数：缺失日志返回 null
+    if (rebuildStateFromJournal(path.join(dir, 'nonexistent.jsonl')) !== null) errors.push('缺失日志应返回 null');
+
     return errors.length === 0
-      ? { pass: true, detail: '损坏 → 备份 + 显式重建；保存 → 无 tmp 残留 ✅' }
+      ? { pass: true, detail: '损坏 → 备份 + journal 重建（mode/phase 恢复）✅ 持久化 ✅ 原子写 ✅' }
       : { pass: false, detail: errors.join('; ') };
   },
 });
@@ -887,9 +906,111 @@ TESTS.push({
   },
 });
 
+// Test 20: 写入守卫 — 四条规则的判定矩阵（v3.5.0）
+TESTS.push({
+  name: '写入守卫 — R0/R1/R2/R3/R4 判定矩阵',
+  run: () => {
+    const { evaluatePreToolUse, isEngineOwnedState } = require(path.join(ROOT, 'lib', 'write-guard'));
+    const mk = (o) => Object.assign({
+      tool: 'Write', toolInput: { file_path: 'src/a.js' },
+      state: { currentPhase: 2, mode: 'standard' }, devflowInitialized: true, currentBranch: 'master',
+    }, o);
+    const errors = [];
+    const expect = (cond, label) => { if (!cond) errors.push(label); };
+
+    expect(evaluatePreToolUse(mk({ devflowInitialized: false })).action === 'allow', 'R0 未初始化应放行');
+    expect(evaluatePreToolUse(mk({ toolInput: { file_path: '.devflow/state.json' } })).action === 'block', 'R1 state.json 应拦截');
+    expect(evaluatePreToolUse(mk({ toolInput: { file_path: '.devflow/state-events.jsonl' } })).action === 'block', 'R1 journal 应拦截');
+    expect(evaluatePreToolUse(mk({ toolInput: { file_path: '.devflow/req-1/02-design.md' } })).action === 'allow', 'R2 产物应放行');
+    expect(evaluatePreToolUse(mk({})).action === 'block', 'R3 Phase2 源码应拦截');
+    expect(evaluatePreToolUse(mk({ state: { currentPhase: 5 } })).action === 'allow', 'R3 Phase5 源码应放行');
+    expect(evaluatePreToolUse(mk({ toolInput: { file_path: 'docs/notes.md' } })).action === 'allow', 'R3 md 文件应放行');
+    expect(evaluatePreToolUse(mk({ tool: 'Bash', toolInput: { command: 'git commit -m "x"' }, currentBranch: 'devflow/req-1' })).action === 'block', 'R4 无格式提交应拦截');
+    expect(evaluatePreToolUse(mk({ tool: 'Bash', toolInput: { command: 'git commit -m "devflow(req-1): x"' }, currentBranch: 'devflow/req-1' })).action === 'allow', 'R4 格式提交应放行');
+    expect(evaluatePreToolUse(mk({ tool: 'Bash', toolInput: { command: 'git commit -m "x"' }, currentBranch: 'master' })).action === 'allow', 'R4 非 devflow 分支应放行');
+    expect(evaluatePreToolUse(mk({ tool: 'Bash', toolInput: { command: 'npm test' } })).action === 'allow', '非 git 命令应放行');
+    expect(isEngineOwnedState('C:\\proj\\.devflow\\state.json') === true, 'isEngineOwnedState Windows 路径');
+    expect(isEngineOwnedState('C:\\proj\\state.json') === false, 'isEngineOwnedState 非 .devflow 路径');
+
+    return errors.length === 0
+      ? { pass: true, detail: '13 项判定全部正确（含 Windows 路径形态）' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 21: Claude 托管合并 — 幂等/保留用户配置/可卸载（v3.5.0）
+TESTS.push({
+  name: 'Claude 托管合并 — 幂等 + 用户配置保留 + 卸载',
+  run: () => {
+    const { mergeManagedHooks, removeManagedHooks, applyClaudeHooks } = require(path.join(ROOT, 'lib', 'claude-hooks'));
+    const os = require('os');
+    const errors = [];
+    const userSettings = {
+      model: 'claude-opus-4-6',
+      hooks: { PreToolUse: [{ matcher: 'Bash', hooks: [{ type: 'command', command: 'my-own-guard.js' }] }] },
+    };
+
+    // 合并：保留用户条目 + 追加 DevFlow 条目
+    const merged = mergeManagedHooks(userSettings, ROOT);
+    const pre = merged.settings.hooks.PreToolUse;
+    if (pre.length !== 2 || !JSON.stringify(pre).includes('my-own-guard.js')) errors.push('用户已有 hook 未保留');
+    if (!merged.settings.hooks.Stop || merged.settings.hooks.Stop.length !== 1) errors.push('Stop 守卫未注册');
+    if (merged.settings.model !== 'claude-opus-4-6') errors.push('非 hooks 字段被改动');
+
+    // 幂等：再合并一次无新条目
+    const again = mergeManagedHooks(merged.settings, ROOT);
+    if (again.changed) errors.push('重复合并非幂等');
+    if (again.settings.hooks.PreToolUse.length !== 2) errors.push('幂等合并后条目数变化');
+
+    // 旧版本托管条目被替换而非叠加
+    const stale = JSON.parse(JSON.stringify(merged.settings));
+    stale.hooks.PreToolUse[1].hooks[0].command = 'node "/old/path/phase-write-guard.js" pretooluse';
+    const upgraded = mergeManagedHooks(stale, ROOT);
+    const guardCount = upgraded.settings.hooks.PreToolUse.filter(e => JSON.stringify(e).includes('phase-write-guard.js')).length;
+    if (guardCount !== 1) errors.push(`旧托管条目未替换 (guard 条目 ${guardCount})`);
+
+    // 卸载：只删托管条目，用户配置完好
+    const removed = removeManagedHooks(merged.settings);
+    if (removed.settings.hooks.PreToolUse.length !== 1 || !JSON.stringify(removed.settings.hooks).includes('my-own-guard.js')) errors.push('卸载后用户 hook 丢失');
+
+    // applyClaudeHooks 在隔离 home 的完整流程（备份 + 写盘）
+    const home = fs.mkdtempSync(path.join(os.tmpdir(), 'df-claude-'));
+    const r1 = applyClaudeHooks({ homeDir: home, devflowRoot: ROOT });
+    if (!r1.changed) errors.push('首次 apply 应有变更');
+    const settingsOnDisk = JSON.parse(fs.readFileSync(path.join(home, '.claude', 'settings.json'), 'utf-8'));
+    if (!settingsOnDisk.hooks.PreToolUse.some(e => JSON.stringify(e).includes('phase-write-guard.js'))) errors.push('apply 后 settings 无守卫条目');
+    const r2 = applyClaudeHooks({ homeDir: home, devflowRoot: ROOT });
+    if (r2.changed) errors.push('二次 apply 非幂等');
+    const r3 = applyClaudeHooks({ homeDir: home, devflowRoot: ROOT, remove: true });
+    const afterRemove = JSON.parse(fs.readFileSync(path.join(home, '.claude', 'settings.json'), 'utf-8'));
+    if (r3.changed === false || JSON.stringify(afterRemove).includes('phase-write-guard.js')) errors.push('卸载未生效');
+
+    try { fs.rmSync(home, { recursive: true, force: true }); } catch { /* 清理失败可忽略 */ }
+    return errors.length === 0
+      ? { pass: true, detail: '保留用户配置 ✅ 幂等 ✅ 旧条目替换 ✅ 卸载 ✅ 备份写盘 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 22: 适配器生成器 — 权威定义与生成块零漂移（v3.5.0）
+TESTS.push({
+  name: '适配器生成器 — gen-adapters --check 零漂移',
+  run: () => {
+    const { execFileSync } = require('child_process');
+    try {
+      const out = execFileSync(process.execPath, [path.join(ROOT, 'scripts', 'gen-adapters.js'), '--check'], {
+        cwd: ROOT, encoding: 'utf8', timeout: 30000,
+      });
+      return { pass: true, detail: out.trim().split('\n').pop() };
+    } catch (e) {
+      return { pass: false, detail: `漂移检测失败: ${String(e.stdout || e.message).trim().split('\n').slice(-3).join(' ')}` };
+    }
+  },
+});
+
 // 运行
 console.log('='.repeat(50));
-console.log('🔬 DevFlow v3.4.1 完整性验证\n');
+console.log('🔬 DevFlow v3.5.0 完整性验证\n');
 
 let passCount = 0, failCount = 0;
 

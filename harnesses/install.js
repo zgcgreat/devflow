@@ -67,6 +67,7 @@ const TARGETS = {
     kind: 'bundle',
     dir: () => path.join(HOME, '.claude', 'skills', 'devflow'),
     note: 'Claude Code 用户级技能目录',
+    registerHooks: true, // 安装后把写入守卫注册进 ~/.claude/settings.json（lib/claude-hooks.js 托管段）
   },
   dsh: {
     label: 'DeepSeek Harness',
@@ -402,6 +403,25 @@ function main() {
 
     console.log(`✅ ${result.summary}${result.restoredFrom || ''}`);
     (result.details || []).forEach(d => console.log(d));
+
+    // claude 目标附加动作：注册/移除 ~/.claude/settings.json 的守卫 hook（托管段，不碰用户配置）
+    if (target.registerHooks) {
+      try {
+        const { applyClaudeHooks } = require(path.join(DEVFLOW_ROOT, 'lib', 'claude-hooks'));
+        const hookResult = applyClaudeHooks({
+          homeDir: HOME,
+          devflowRoot: DEVFLOW_ROOT,
+          remove: !!opts.uninstall,
+          dryRun: opts.dryRun,
+        });
+        console.log(`🔧 ${hookResult.summary}`);
+        console.log(`   ${hookResult.settingsPath}`);
+      } catch (e) {
+        // hook 注册失败不回滚技能安装（技能本身可用），但要让用户知道守卫未生效
+        console.error(`⚠️ 写入守卫注册失败（技能已安装，守卫未生效）: ${e.message}`);
+        if (!opts.uninstall) process.exitCode = 1;
+      }
+    }
 
     if (target.kind !== 'manual') console.log(`\n目标: ${target.dir()}`);
     if (!opts.uninstall && target.followUp) console.log(`后续: ${target.followUp}`);

@@ -7,6 +7,16 @@
     "fallback": "hooks/checklist-fallback.md"
   },
   "hooks": {
+    "phase-write-guard": {
+      "script": "scripts/phase-write-guard.js",
+      "type": "pre_tool_use",
+      "description": "阶段感知写入守卫（宿主 PreToolUse exit 2 真实拦截：Phase<4 拦源码写入；.devflow/state.json 引擎独占；devflow/* 分支提交格式守卫）",
+      "gates": [],
+      "timeout_ms": 10000,
+      "fail_action": "block",
+      "scope": "enforcement",
+      "note": "经 devflow install --target claude 注册到 ~/.claude/settings.json 托管段后生效；Stop 模式提供温和续跑提醒"
+    },
     "format-typecheck": {
       "script": "scripts/format-typecheck.js",
       "type": "stop",

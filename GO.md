@@ -357,6 +357,15 @@ Mode: <Fast/Lean/Standard/Strict>
 
 ## 版本历史
 
+### v3.5.0 (2026-10-24) — 真实拦截：写入守卫 + 审批凭证 + 事件日志（借鉴 AI-DLC）
+- **阶段感知写入守卫** (lib/write-guard.js + hooks/scripts/phase-write-guard.js)：注册进宿主 PreToolUse 生命周期后，违规写入在工具调用层被真实拒绝（exit 2），不再依赖 AI 自愿调用引擎 —— Phase<4 拦源码写入（fast 模式天然豁免）；.devflow/state.json 与 state-events.jsonl 引擎独占（防手改状态绕门控）；devflow/* 分支提交格式守卫；守卫异常 fail-open
+- **人工门审批凭证**：manual 门控必须 --note "<用户原话/确认摘要>"，凭证哈希入 state.approvals 账本，无凭证直接拒绝 —— 堵死 AI 自批门控；outputWritten 语义升级：产物是过门的必要条件而非充分条件（manual 主门控仍需凭证）
+- **追加式事件日志** state-events.jsonl：~10 类状态变更事件（MODE_SET/GATE_PASSED/GATE_APPROVED/SKIP_FORCED/OUTPUT_RECORDED/NEXT_BLOCKED…）原子追加，devflow phase --journal 查看时间线；state.json 损坏时自动从日志重建（比 corrupt 备份更强）
+- **Claude 托管注册** (lib/claude-hooks.js)：devflow install --target claude 通过托管段合并把守卫写入 ~/.claude/settings.json —— 幂等、保留用户配置、写前备份、可卸载
+- **适配器生成器** (scripts/gen-adapters.js)：四个 adapter 的产物清单块 + claude-code/hooks.json 从 phase-engine 权威定义生成，--check 漂移检测进测试 —— 此类漂移从此在机器层被拦住
+- **doctor 增强**：新增写入守卫可加载与 Claude 注册健康检查
+- 测试 30 → 33 项（守卫判定矩阵 13 例/托管合并幂等/生成器零漂移/凭证/重建）
+
 ### v3.4.1 (2026-10-24) — Phase 子技能契约与质量修复
 - **产物名契约统一**：phase-4(04-wave-logs)/phase-8(08-archive)/phase-2a(02a-variants)/phase-1b(01b-context) 四个子技能声明的产物名与引擎硬校验对齐（修复前按其执行门控必然 FAIL）；phase-5 产物目录改 .devflow/<req-id>/（修复 AC 覆盖率检查被目录布局绕过）
 - **门控编号卫生**：yc-strategy 4 处 G1→G0；1b 子门 G1-G5 改检查项 1-5；phase-4 Integration Gate→Build Gate（含 L1 README/docs）；G6.5 改为 G6 内部子检查

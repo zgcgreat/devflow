@@ -1,17 +1,29 @@
 {
   "$schema": "https://devflow.dev/adapters/claude-code/hooks/v1",
-  "version": "1.0.0",
-  "description": "DevFlow Claude Code Adapter — Hook 映射注册表",
+  "version": "1.1.0",
+  "description": "DevFlow Claude Code Adapter — Hook 映射注册表（由 scripts/gen-adapters.js 生成，勿手改）",
   "runtime": {
     "required": "node >= 18",
     "adapter_home": "$DEVFLOW_HOME/adapters/claude-code",
     "scripts_root": "$DEVFLOW_HOME/hooks/scripts"
   },
   "hooks": {
+    "phase-write-guard": {
+      "event": "PreToolUse",
+      "script": "scripts/phase-write-guard.js",
+      "description": "Phase-aware write guard: block source-code writes before Phase 4 and direct state.json edits",
+      "gates": [],
+      "timeout_ms": 10000,
+      "fail_action": "block",
+      "note": "Auto-registered into ~/.claude/settings.json by `devflow install --target claude` (managed block)"
+    },
     "session-startup": {
       "event": "SessionStart",
       "script": "scripts/context-monitor.js",
-      "args": ["--mode", "startup"],
+      "args": [
+        "--mode",
+        "startup"
+      ],
       "description": "Load DevFlow project state, memory, and token budget on session start",
       "gates": [],
       "timeout_ms": 10000,
@@ -20,7 +32,10 @@
     "phase-context-inject": {
       "event": "UserPromptSubmit",
       "script": "scripts/context-monitor.js",
-      "args": ["--mode", "phase-context"],
+      "args": [
+        "--mode",
+        "phase-context"
+      ],
       "description": "Inject current phase context and persona recommendations before prompt processing",
       "gates": [],
       "timeout_ms": 5000,
@@ -30,7 +45,10 @@
       "event": "Stop",
       "script": "scripts/format-typecheck.js",
       "description": "Batch formatting + TypeScript type check before commit",
-      "gates": ["G5", "G7"],
+      "gates": [
+        "G5",
+        "G7"
+      ],
       "timeout_ms": 270000,
       "fail_action": "gate_fail"
     },
@@ -38,7 +56,9 @@
       "event": "Stop",
       "script": "scripts/console-log-check.js",
       "description": "Detect residual console.log statements in production code",
-      "gates": ["G5"],
+      "gates": [
+        "G5"
+      ],
       "timeout_ms": 30000,
       "fail_action": "gate_fail"
     },
@@ -46,10 +66,13 @@
       "event": "Stop",
       "script": "scripts/security-scan.js",
       "description": "OWASP security scan (injection/SSRF/sensitive data exposure)",
-      "gates": ["G6", "G7"],
+      "gates": [
+        "G6",
+        "G7"
+      ],
       "timeout_ms": 60000,
-      "fail_action": "gate_fail",
-      "note": "Requires Python 3 for insaits-security-monitor.py"
+      "fail_action": "advisory",
+      "note": "Disabled by default; force requires ECC_ENABLE_INSAITS=1 + Python 3.9+ (pip install insa-its)"
     },
     "compact-suggest": {
       "event": "PreCompact",
@@ -70,9 +93,16 @@
     "gate-enforcement": {
       "event": "Stop",
       "script": "scripts/context-monitor.js",
-      "args": ["--mode", "gate-check"],
+      "args": [
+        "--mode",
+        "gate-check"
+      ],
       "description": "Run gate-mapped hooks and report pass/fail before phase transition",
-      "gates": ["G5", "G6", "G7"],
+      "gates": [
+        "G5",
+        "G6",
+        "G7"
+      ],
       "timeout_ms": 300000,
       "fail_action": "gate_fail"
     }
@@ -80,17 +110,25 @@
   "gate_mapping": {
     "G5": {
       "phase": "Phase 4 -> Phase 5",
-      "hooks": ["format-typecheck", "console-log-check"],
+      "hooks": [
+        "format-typecheck",
+        "console-log-check"
+      ],
       "description": "Build complete: check code format + type + debug residuals"
     },
     "G6": {
       "phase": "Phase 5 -> Phase 6",
-      "hooks": ["security-scan"],
+      "hooks": [
+        "security-scan"
+      ],
       "description": "Tests pass: check security compliance"
     },
     "G7": {
       "phase": "Phase 6 -> Phase 7",
-      "hooks": ["format-typecheck", "security-scan"],
+      "hooks": [
+        "format-typecheck",
+        "security-scan"
+      ],
       "description": "Review pass: final format + security check"
     }
   }

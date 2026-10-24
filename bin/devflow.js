@@ -36,8 +36,9 @@ const HELP = `DevFlow v${JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'pac
   devflow phase --mode <fast|lean|standard|strict>   设置模式 (重置起始 Phase)
   devflow phase --set <N> [--force]                  切换到指定 Phase (0/1/1.5/2/2.5/3-8)
   devflow phase --next [--force]                     推进到下一阶段 (受门控护卫)
-  devflow phase --gate <G3>                          标记门控通过
-  devflow phase --output <文件>                      记录产物并通过门控
+  devflow phase --gate <G3> [--note <用户确认>]      标记门控通过 (人工门必须携带确认凭证)
+  devflow phase --output <文件> [--note <确认>]      记录产物并通过门控 (manual 主门控需 --note)
+  devflow phase --journal                            事件日志 (状态变更审计时间线)
   devflow detect [--files N] [--lines N] [--modules N] 按规模/风险自动判定模式
                   [--risk low|medium|high] [--brownfield]
                   [--arch-change] [--data-change]
@@ -60,6 +61,7 @@ const HELP = `DevFlow v${JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'pac
   devflow git checkpoint "<说明>"                     提交流程产物检查点 (只 stage .devflow/)
   devflow git verify                                  链路健康检查
   devflow install [--target <name>] [--dry-run]       安装到运行时 (--list 查看目标)
+  devflow install --target claude                     安装并注册写入守卫到 ~/.claude/settings.json (PreToolUse 真实拦截)
   devflow install --list                              列出安装目标与状态
   devflow install --uninstall [--target <name>]       卸载
   devflow doctor                                       健康检查
@@ -168,10 +170,16 @@ const CMDS = {
       console.log(`下一阶段: Phase ${p.id} — ${p.name}`);
       return;
     }
+    const argVal = (flag) => (args.includes(flag) ? args[args.indexOf(flag) + 1] : undefined);
     if (args.includes('--output')) {
       const filePath = args[args.indexOf('--output') + 1];
       const phase = e.current();
-      e.outputWritten(phase.id, path.resolve(filePath));
+      try {
+        e.outputWritten(phase.id, path.resolve(filePath), { note: argVal('--note') });
+      } catch (err) {
+        console.error(`❌ ${err.message}`);
+        process.exit(1);
+      }
       const after = e._verifyCurrentGate();
       if (after.passed) {
         console.log(`Phase ${phase.id} 产物已记录: ${filePath}`);
@@ -184,8 +192,25 @@ const CMDS = {
     }
     if (args.includes('--gate')) {
       const gate = args[args.indexOf('--gate') + 1];
-      e.gatePassed(gate);
-      console.log(`门控 ${gate} 已通过`);
+      try {
+        e.gatePassed(gate, { note: argVal('--note') });
+      } catch (err) {
+        console.error(`❌ ${err.message}`);
+        process.exit(1);
+      }
+      const approved = e.state.approvals && e.state.approvals[gate];
+      console.log(`门控 ${gate} 已通过${approved ? `（凭证哈希 ${approved.noteHash}）` : ''}`);
+      return;
+    }
+    if (args.includes('--journal')) {
+      const journalFile = path.join(path.resolve('.devflow'), 'state-events.jsonl');
+      try {
+        const lines = fs.readFileSync(journalFile, 'utf-8').trim().split('\n').filter(Boolean);
+        console.log(`DevFlow 事件日志（共 ${lines.length} 条，最近 20 条）\n`);
+        for (const line of lines.slice(-20)) console.log(`  ${line}`);
+      } catch {
+        console.log('事件日志为空（尚无状态变更记录）');
+      }
       return;
     }
     if (args.includes('--status')) {
@@ -491,6 +516,19 @@ const CMDS = {
       { name: 'AC 覆盖检查器', run: () => loadable('lib/ac-coverage.js') },
       { name: '模板内容校验', run: () => loadable('lib/template-check.js') },
       { name: 'Git 链路桥接', run: () => loadable('lib/git-bridge.js') },
+      { name: '写入守卫', run: () => loadable('lib/write-guard.js') },
+      {
+        // 借鉴 AI-DLC doctor：验证 hook 在宿主侧真的注册了（未注册为可选提示，不算失败）
+        name: 'Claude 写入守卫注册',
+        run: () => {
+          const { checkClaudeHooks } = require('../lib/claude-hooks');
+          const r = checkClaudeHooks(require('os').homedir());
+          if (!r.scriptExists) return { ok: false, note: '守卫脚本缺失 hooks/scripts/phase-write-guard.js' };
+          return r.registered
+            ? { ok: true, note: '已注册到 ~/.claude/settings.json（PreToolUse/Stop）' }
+            : { ok: true, note: '未注册（可选增强: devflow install --target claude 注册后获得真实拦截）' };
+        },
+      },
       { name: '.devflow 目录', run: () => present(path.resolve('.devflow')) },
     ];
 

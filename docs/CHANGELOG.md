@@ -6,6 +6,24 @@
 
 ---
 
+## [3.5.0] - 2026-10-24
+
+### Added — 真实拦截层（借鉴 AI-DLC 架构思想，保持零依赖轻量定位）
+
+- **阶段感知写入守卫** `lib/write-guard.js` + `hooks/scripts/phase-write-guard.js`：流程纪律从"AI 自愿调用引擎校验"升级为"违规写入在工具调用层被真实拒绝"。注册进宿主 PreToolUse 生命周期后（exit 2 = 拒绝本次工具调用）：Phase < 4 拦截源代码写入（fast 模式起点即 Phase 4，天然豁免；拦截消息含正确路径与逃生阀指引）；`.devflow/state.json` 与 `state-events.jsonl` 引擎独占（防手改状态绕过门控）；`devflow/<req-id>` 分支上的 git commit 格式守卫（引导用 `devflow git checkpoint`）。守卫自身异常一律 fail-open
+- **人工门审批凭证**：manual 门控（G2/G2.5/G3/G3.5/G5/G7/G7.5）必须 `--note "<用户原话或确认摘要>"` 才能标记通过，凭证 sha256 哈希入 `state.approvals` 账本（`devflow phase --gate G3 --note "..."` / `--output ... --note "..."`），无凭证直接拒绝 —— 堵死"AI 自批门控"。outputWritten 语义升级：产物是过门的必要条件而非充分条件（manual 主门控的 Phase 仍需凭证；auto 门 G0/G1/G4/G6/G8 不变）
+- **追加式事件日志** `state-events.jsonl`：约 10 类状态变更事件（MODE_SET/GATE_PASSED/GATE_APPROVED/SKIP_FORCED/PHASE_ADVANCED/OUTPUT_RECORDED/NEXT_BLOCKED/STATE_CORRUPTED 等）原子追加；`devflow phase --journal` 查看审计时间线；**state.json 损坏时自动从日志重建**（先备份再回放，重建结果立即持久化）
+- **Claude 托管注册** `lib/claude-hooks.js`：`devflow install --target claude` 通过托管段合并把守卫写入 `~/.claude/settings.json` —— 识别标识为 command 含 phase-write-guard.js 的条目，幂等（重复安装不叠加）、保留用户已有 hooks、写前备份 settings.json.devflow-bak、卸载只删托管条目；配置不可解析时拒绝修改
+- **适配器生成器** `scripts/gen-adapters.js`：四个 adapter 文档的产物清单块与 `adapters/claude-code/hooks.json` 整文件均从 phase-engine 权威定义生成（标记块 `devflow:generated:artifacts`），`--check` 漂移检测进入测试 —— 此前两次人工审计修复的适配器漂移从此在机器层被拦住
+- **Stop 温和提醒**：守卫的 stop 模式在有未关门控时注入 systemMessage 续跑提醒（不阻断，与 aidlc 的强制 continue-workflow 区分定位）
+- **doctor 增强**：新增"写入守卫"可加载检查与"Claude 写入守卫注册"健康检查（未注册为可选提示）
+
+### Tests
+
+- 30 → 33 项：写入守卫 13 例判定矩阵（含 Windows 路径形态）、Claude 托管合并（幂等/用户配置保留/旧条目替换/卸载/备份）、生成器零漂移检测、审批凭证语义（manual 缺凭证拒/auto 免凭证）、损坏 → journal 重建
+
+---
+
 ## [3.4.1] - 2026-10-24
 
 ### Fixed — Phase 子技能契约与质量（14 文件全量审计修复）

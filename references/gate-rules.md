@@ -150,3 +150,17 @@ Lean 模式允许跳过 Phase 0 到 Phase 2a 之间的产物，但必须满足�
 > Fast/Lean 模式无 `01-analysis.md`（AC 来源不存在），AC 覆盖检查显式豁免（ℹ️ 提示），仅产物存在性受检。
 > 单独运行：`devflow gates --ac <目录>`（AC 覆盖率报告）、`devflow gates --template <文件>`（模板内容校验）。
 > 产物流转建议配合 `devflow git start <req-id>` / `devflow git checkpoint` 使用，流程产物按 req 分支留痕。
+
+## 审批凭证与真实拦截（v3.5.0 起）
+
+**人工门审批凭证**：manual 门控（G2/G2.5/G3/G3.5/G5/G7/G7.5）的通过必须携带用户确认凭证 —— `devflow phase --gate G3 --note "<用户原话或确认摘要>"`（或 `phase --output ... --note`）。凭证 sha256 哈希入 `state.approvals` 账本，无凭证直接拒绝：人工门的语义是"用户拍板"，AI 不能代签。自动门（G0/G1/G4/G6/G8）不要求凭证。
+
+**阶段感知写入守卫**（`devflow install --target claude` 注册到宿主后生效）：
+
+| 规则 | 触发 | 动作 |
+|------|------|------|
+| R1 状态独占 | 工具直接写 `.devflow/state.json` / `state-events.jsonl` | 拒绝（exit 2），状态只能经 devflow CLI 变更 |
+| R3 阶段守卫 | Phase < 4 时写入源代码（md 产物/`.devflow/` 内不受限） | 拒绝并给出正确路径；fast 模式起点即 Phase 4 天然豁免 |
+| R4 提交格式 | `devflow/<req-id>` 分支上 `git commit` 不符合 `devflow(<req-id>): <说明>` | 拒绝并引导 `devflow git checkpoint` |
+
+守卫异常一律 fail-open（放行 + stderr 警告）；Stop 事件在有未关门控时注入温和续跑提醒（不阻断）。**事件审计**：全部状态变更原子追加到 `.devflow/state-events.jsonl`（`devflow phase --journal` 查看），state.json 损坏时自动从日志重建。

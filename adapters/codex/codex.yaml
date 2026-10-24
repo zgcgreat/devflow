@@ -13,6 +13,7 @@ instructions: |
   - Record decisions in `.devflow/memory/DECISIONS.md`
   - Record lessons in `.devflow/memory/LESSONS.md`
   
+# devflow:generated:artifacts START
   ## Phase Gates (artifacts under `.devflow/<req-id>/`)
   - Phase 0: 00-strategy.md (G0)
   - Phase 1: 01-analysis.md (G1; plus manual gate G2)
@@ -27,6 +28,7 @@ instructions: |
   - Phase 8: 08-archive.md (G8)
   - Mode trimming: fast starts at 04-wave-logs.md; lean starts at 02-design.md;
     no 03-tasks.md unless strict
+# devflow:generated:artifacts END
 
 hooks:
   pre_prompt:

@@ -13,6 +13,7 @@ This project uses DevFlow v3.0 phased workflow. Follow these instructions:
 
 Artifacts live under `.devflow/<req-id>/`. Each phase's exit gate requires its artifact:
 
+<!-- devflow:generated:artifacts START -->
 | Phase | Artifact (Gate) |
 |-------|-----------------|
 | Phase 0 | 00-strategy.md (G0) |
@@ -28,6 +29,7 @@ Artifacts live under `.devflow/<req-id>/`. Each phase's exit gate requires its a
 | Phase 8 | 08-archive.md (G8) |
 
 Mode trimming: `fast` starts at 04-wave-logs.md; `lean` starts at 02-design.md; no 03-tasks.md unless `strict`.
+<!-- devflow:generated:artifacts END -->
 
 ### Memory Management
 - Decisions: `.devflow/memory/DECISIONS.md`
