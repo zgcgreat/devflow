@@ -6,6 +6,17 @@
 
 ---
 
+## [3.6.0] - 2026-10-24
+
+### Added — 通用接入方案（一个内核 + 三种传输 + git 兜底）
+
+- **`devflow guard` 统一守卫入口**：argv 模式（`--tool/--file-path/--command`）与 stdin JSON 模式（与宿主 hook 契约同形 `{tool_name, tool_input}`）双模式，exit 0 = 放行 / **exit 2 = 拦截**（理由在 stderr）——任何"能在动作前跑一条命令"的 AI 编码工具都可接入，无需各自的适配器代码
+- **git hooks 兜底拦截** `devflow git install-hook` / `uninstall-hook`：写入 `.git/hooks/pre-commit`（state.json 健康 + devflow 分支链路检查）与 `commit-msg`（`devflow/<req-id>` 分支提交必须 `devflow(<req-id>): <说明>`，Merge 豁免）——**唯一不依赖宿主工具配合的无死角拦截层**（所有工具提交必经 git）；已存在非 DevFlow 的同名 hook（husky 等）拒绝覆盖并给出手工共存指引；卸载只删带 `devflow-managed` 标记的文件
+- **`docs/INTEGRATION.md` 集成契约**：write-guard 纯函数签名与规则表、state.json schema、事件日志类型、CLI 退出码表、hook stdin/stdout 协议、四档接入清单（自研进程内 require / hook 系统 / guard CLI / git 兜底）——自研工具照契约实现一次即获得全套强制力
+- 测试 33 → 35 项：guard CLI 双模式退出码契约（argv 拦截/放行、stdin、R0）、git hooks 真实仓库端到端（安装/外部 hook 保护/三项检查/**真实 git commit 被拦截与放行**/卸载）
+
+---
+
 ## [3.5.0] - 2026-10-24
 
 ### Added — 真实拦截层（借鉴 AI-DLC 架构思想，保持零依赖轻量定位）

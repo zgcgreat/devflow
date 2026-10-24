@@ -56,10 +56,12 @@ const HELP = `DevFlow v${JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'pac
   devflow gates --phase <N>                           门控检查 (含内容级: 模板段落 + G6 AC 覆盖率)
   devflow gates --ac <目录>                           AC 覆盖率报告 (.devflow 或 .devflow/<req-id>)
   devflow gates --template <文件>                     模板内容校验 (必填段落 + 占位符)
+  devflow guard [--tool T --file-path P | --command C] 通用守卫判定 (exit 0=放行 2=拦截; stdin JSON 兼容 hook 契约)
   devflow git start <req-id> [--from <base>]          创建 devflow/<req-id> 分支并记录链路
   devflow git status                                  req-id ↔ 分支 ↔ 提交链路状态
   devflow git checkpoint "<说明>"                     提交流程产物检查点 (只 stage .devflow/)
   devflow git verify                                  链路健康检查
+  devflow git install-hook [--dry-run]                安装 git 兜底拦截 (pre-commit + commit-msg, 全工具生效)
   devflow install [--target <name>] [--dry-run]       安装到运行时 (--list 查看目标)
   devflow install --target claude                     安装并注册写入守卫到 ~/.claude/settings.json (PreToolUse 真实拦截)
   devflow install --list                              列出安装目标与状态
@@ -354,6 +356,71 @@ const CMDS = {
     }
   },
 
+  // guard: 通用守卫判定入口 —— 一个内核（lib/write-guard.js）的 CLI 传输层。
+  // 任何"能在动作前跑一条命令"的工具都可接入：exit 0=放行，exit 2=拦截（理由在 stderr）。
+  // stdin JSON 与宿主 hook 契约同形（{tool_name, tool_input}），可直接作 PreToolUse 处理器。
+  guard: (args) => {
+    const val = (flag) => (args.includes(flag) ? args[args.indexOf(flag) + 1] : undefined);
+    let payload = null;
+    if (args.includes('--tool') || args.includes('--command')) {
+      payload = {
+        tool_name: val('--tool') || 'Bash',
+        tool_input: {},
+      };
+      if (val('--file-path')) payload.tool_input.file_path = val('--file-path');
+      if (val('--notebook-path')) payload.tool_input.notebook_path = val('--notebook-path');
+      if (val('--command')) payload.tool_input.command = val('--command');
+    } else {
+      try {
+        const raw = fs.readFileSync(0, 'utf8').trim();
+        if (raw) payload = JSON.parse(raw);
+      } catch { payload = null; }
+    }
+    const tool = payload && (payload.tool_name || payload.tool);
+    if (!payload || !tool) {
+      console.log(`DevFlow Guard — 通用守卫判定（契约见 docs/INTEGRATION.md）
+
+用法:
+  devflow guard --tool Write --file-path src/a.js
+  devflow guard --tool Bash --command "git commit -m ..."
+  echo '{"tool_name":"Write","tool_input":{"file_path":"src/a.js"}}' | devflow guard
+
+退出码: 0 = 放行, 2 = 拦截（理由在 stderr）。加 --verbose 显示放行原因。`);
+      return;
+    }
+
+    const cwd = process.cwd();
+    const devflowDir = path.join(cwd, '.devflow');
+    let state = null;
+    try { state = JSON.parse(fs.readFileSync(path.join(devflowDir, 'state.json'), 'utf-8')); } catch { state = null; }
+
+    // 分支探测仅在实际需要时（Bash/git 命令）执行，省一次子进程
+    const cmdStr = String((payload.tool_input || {}).command || '');
+    let currentBranch = null;
+    if (tool === 'Bash' || /git\b/.test(cmdStr)) {
+      try {
+        currentBranch = require('child_process').execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], {
+          cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], timeout: 2000,
+        }).trim();
+      } catch { currentBranch = null; }
+    }
+
+    const { evaluatePreToolUse } = require('../lib/write-guard');
+    const verdict = evaluatePreToolUse({
+      tool,
+      toolInput: payload.tool_input || payload.toolInput || {},
+      state,
+      devflowInitialized: fs.existsSync(devflowDir),
+      currentBranch,
+    });
+
+    if (verdict.action === 'block') {
+      console.error(`[DevFlow Guard] ${verdict.reason}`);
+      process.exit(2);
+    }
+    if (args.includes('--verbose')) console.log(`[DevFlow Guard] 放行: ${verdict.reason}`);
+  },
+
   code: (args) => {
     // 直接调用 code-explorer
     // execFileSync + 参数数组（不经 shell），避免多词参数/含空格路径被拆词截断
@@ -450,7 +517,34 @@ const CMDS = {
         process.exitCode = r.pass ? 0 : 1;
         return;
       }
-      console.log(`用法: devflow git start <req-id> [--from <base>] | status | checkpoint "<说明>" | verify`);
+      if (sub === 'install-hook' || sub === 'uninstall-hook') {
+        const r = sub === 'install-hook'
+          ? bridge.installHook({ dryRun: rest.includes('--dry-run') })
+          : bridge.uninstallHook({ dryRun: rest.includes('--dry-run') });
+        console.log(`${rest.includes('--dry-run') ? '[dry-run] ' : ''}${r.summary}`);
+        return;
+      }
+      if (sub === 'pre-commit') {
+        const r = bridge.runPreCommit();
+        if (r.pass) {
+          if (rest.includes('--verbose')) console.log(`[DevFlow pre-commit] ${r.note || '通过'}`);
+        } else {
+          console.error(`[DevFlow pre-commit] ⛔ ${r.reason}`);
+          process.exit(1);
+        }
+        return;
+      }
+      if (sub === 'commit-msg') {
+        const r = bridge.runCommitMsg(rest[0]);
+        if (r.pass) {
+          if (rest.includes('--verbose')) console.log(`[DevFlow commit-msg] ${r.note || '通过'}`);
+        } else {
+          console.error(`[DevFlow commit-msg] ⛔ ${r.reason}`);
+          process.exit(1);
+        }
+        return;
+      }
+      console.log(`用法: devflow git start <req-id> [--from <base>] | status | checkpoint "<说明>" | verify | install-hook | uninstall-hook | pre-commit | commit-msg <文件>`);
     } catch (err) {
       console.error(`❌ ${err.message}`);
       process.exit(1);
@@ -633,9 +727,9 @@ function main() {
     return;
   }
 
-  // 状态守卫：除 init/help/doctor/git 外，所有命令先验证状态
-  // （git 链路只依赖 .devflow/<req-id>/git.json，不需要 state.json）
-  if (!['init', 'help', 'doctor', 'git'].includes(cmd)) {
+  // 状态守卫：除 init/help/doctor/git/guard 外，所有命令先验证状态
+  // （git 链路只依赖 .devflow/<req-id>/git.json；guard 是 R0 设计——未初始化项目不治安）
+  if (!['init', 'help', 'doctor', 'git', 'guard'].includes(cmd)) {
     const state = stateGuard();
     if (!state) {
       // 非阻塞：仅警告，让用户自己决定是否继续

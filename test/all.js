@@ -207,7 +207,7 @@ TESTS.push({
 
     // help 必须列出 CMDS 中实现的每一个命令，防止"实现了却不告知"
     const helpText = help.stdout || '';
-    const CMDS = ['init', 'status', 'phase', 'detect', 'task', 'mem', 'party', 'code', 'caveman', 'gates', 'git', 'install', 'doctor'];
+    const CMDS = ['init', 'status', 'phase', 'detect', 'task', 'mem', 'party', 'code', 'caveman', 'gates', 'git', 'guard', 'install', 'doctor'];
     for (const cmd of CMDS) {
       if (!new RegExp(`devflow ${cmd}\\b`).test(helpText)) errors.push(`help 未列出命令: ${cmd}`);
     }
@@ -1008,9 +1008,123 @@ TESTS.push({
   },
 });
 
+// Test 23: guard CLI — 通用传输层退出码契约（v3.6.0）
+TESTS.push({
+  name: 'guard CLI — argv/stdin 双模式 exit 0/2 契约',
+  run: () => {
+    const { spawnSync } = require('child_process');
+    const cli = path.join(ROOT, 'bin', 'devflow.js');
+    const dir = mkWorkspace();
+    const devflowDir = path.join(dir, '.devflow');
+    fs.mkdirSync(devflowDir, { recursive: true });
+    const writeState = (o) => fs.writeFileSync(path.join(devflowDir, 'state.json'), JSON.stringify(o));
+    const errors = [];
+
+    const run = (cliArgs, input) => spawnSync(process.execPath, [cli, 'guard', ...cliArgs],
+      { cwd: dir, encoding: 'utf8', input: input || '' });
+
+    // argv 模式: Phase 2 源码 → exit 2 + stderr 理由
+    writeState({ currentPhase: 2, mode: 'standard' });
+    let r = run(['--tool', 'Write', '--file-path', 'src/a.js']);
+    if (r.status !== 2) errors.push(`Phase2 源码应 exit 2，实际 ${r.status}`);
+    if (!String(r.stderr).includes('尚未进入实施')) errors.push('拦截理由缺失');
+
+    // Phase 5 → exit 0
+    writeState({ currentPhase: 5, mode: 'standard' });
+    r = run(['--tool', 'Write', '--file-path', 'src/a.js']);
+    if (r.status !== 0) errors.push(`Phase5 源码应 exit 0，实际 ${r.status}`);
+
+    // stdin hook 契约: state.json 写入 → exit 2
+    writeState({ currentPhase: 5, mode: 'standard' });
+    r = run([], JSON.stringify({ tool_name: 'Write', tool_input: { file_path: '.devflow/state.json' } }));
+    if (r.status !== 2) errors.push(`stdin state.json 应 exit 2，实际 ${r.status}`);
+
+    // 未初始化目录 → R0 放行
+    const emptyDir = mkWorkspace();
+    r = spawnSync(process.execPath, [cli, 'guard', '--tool', 'Write', '--file-path', 'src/a.js'], { cwd: emptyDir, encoding: 'utf8' });
+    if (r.status !== 0) errors.push(`未初始化应 R0 放行，实际 ${r.status}`);
+
+    return errors.length === 0
+      ? { pass: true, detail: 'argv 拦截/放行 ✅ stdin 契约 ✅ R0 放行 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 24: git hooks 兜底 — 真实仓库上拦截不符合约定的提交（v3.6.0）
+TESTS.push({
+  name: 'git hooks — install/pre-commit/commit-msg 真实提交拦截',
+  run: () => {
+    const { execFileSync } = require('child_process');
+    const { GitBridge, HOOK_MARKER } = require(path.join(ROOT, 'lib', 'git-bridge'));
+    const dir = mkWorkspace();
+    const errors = [];
+    const g = (args, opts = {}) => execFileSync('git', args, { cwd: dir, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], ...opts });
+
+    g(['init', '-q']);
+    g(['config', 'user.email', 'test@devflow']);
+    g(['config', 'user.name', 'devflow-test']);
+    fs.writeFileSync(path.join(dir, 'README.md'), 'init');
+    g(['add', '.']);
+    g(['commit', '-q', '-m', 'init']);
+
+    const bridge = new GitBridge(dir);
+    // devflow 初始化（install-hook 要求项目已 init）
+    fs.mkdirSync(path.join(dir, '.devflow'), { recursive: true });
+    fs.writeFileSync(path.join(dir, '.devflow', 'state.json'), JSON.stringify({ currentPhase: 0, mode: 'standard' }));
+
+    // install: 两个 hook 带标记
+    bridge.installHook();
+    for (const name of ['pre-commit', 'commit-msg']) {
+      const content = fs.readFileSync(path.join(dir, '.git', 'hooks', name), 'utf-8');
+      if (!content.includes(HOOK_MARKER) || !content.includes('bin/devflow.js')) errors.push(`${name} 未正确写入`);
+    }
+    // 外部 hook 保护: 已有用户 hook 拒绝覆盖（先卸载再造外部文件）
+    bridge.uninstallHook();
+    fs.writeFileSync(path.join(dir, '.git', 'hooks', 'pre-commit'), '#!/bin/sh\n# husky user hook\n');
+    let refused = false;
+    try { bridge.installHook(); } catch { refused = true; }
+    if (!refused) errors.push('外部 hook 未被拒绝覆盖');
+    fs.rmSync(path.join(dir, '.git', 'hooks', 'pre-commit'), { force: true });
+    bridge.installHook();
+
+    // devflow 分支 + 链路
+    bridge.start('req-1');
+
+    // pre-commit: 链路完整 → 通过
+    if (!bridge.runPreCommit().pass) errors.push('pre-commit 链路完整应通过');
+
+    // commit-msg: 坏消息拦截 / 好消息通过 / Merge 豁免
+    const msgFile = path.join(dir, '.git', 'COMMIT_EDITMSG');
+    fs.writeFileSync(msgFile, 'bad message\n');
+    if (bridge.runCommitMsg(msgFile).pass) errors.push('坏消息应被拦截');
+    fs.writeFileSync(msgFile, 'devflow(req-1): Phase 0 产物\n');
+    if (!bridge.runCommitMsg(msgFile).pass) errors.push('好消息应通过');
+    fs.writeFileSync(msgFile, "Merge branch 'x'\n");
+    if (!bridge.runCommitMsg(msgFile).pass) errors.push('Merge 提交应豁免');
+
+    // 真实端到端: git commit 被 commit-msg hook 真实拦截/放行
+    // (execFileSync 在非零退出时抛错，这里用 spawnSync 拿退出码)
+    const { spawnSync } = require('child_process');
+    fs.writeFileSync(path.join(dir, 'a.txt'), 'x');
+    g(['add', '.']);
+    const bad = spawnSync('git', ['commit', '-m', 'bad message'], { cwd: dir, encoding: 'utf8' });
+    if (bad.status === 0) errors.push('坏消息真实提交未被 hook 拦截');
+    const good = spawnSync('git', ['commit', '-m', 'devflow(req-1): ok'], { cwd: dir, encoding: 'utf8' });
+    if (good.status !== 0) errors.push(`好消息真实提交失败: ${String(good.stderr).slice(0, 120)}`);
+
+    // uninstall: 移除托管 hook
+    bridge.uninstallHook();
+    if (fs.existsSync(path.join(dir, '.git', 'hooks', 'commit-msg'))) errors.push('卸载后 commit-msg 仍存在');
+
+    return errors.length === 0
+      ? { pass: true, detail: '安装/外部保护/三项检查/真实提交拦截放行/卸载 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
 // 运行
 console.log('='.repeat(50));
-console.log('🔬 DevFlow v3.5.0 完整性验证\n');
+console.log('🔬 DevFlow v3.6.0 完整性验证\n');
 
 let passCount = 0, failCount = 0;
 

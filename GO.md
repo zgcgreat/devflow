@@ -357,6 +357,12 @@ Mode: <Fast/Lean/Standard/Strict>
 
 ## 版本历史
 
+### v3.6.0 (2026-10-24) — 通用接入方案：一个内核 + 三种传输 + git 兜底
+- **devflow guard 统一入口**：argv 与 stdin JSON 双模式，exit 0=放行 / 2=拦截 —— 任何"能在动作前跑一条命令"的工具都可接入守卫；stdin 与宿主 hook 契约同形
+- **git hooks 兜底拦截** (devflow git install-hook)：pre-commit（状态健康 + devflow 分支链路检查）+ commit-msg（devflow/* 分支提交格式，Merge 豁免）—— 唯一不依赖宿主配合的无死角拦截层；外部 hook（husky 等）拒绝覆盖，卸载只删托管标记文件
+- **docs/INTEGRATION.md** 契约文档：write-guard 纯函数签名 / state.json schema / 事件类型 / CLI 退出码 / hook stdin-stdout 协议 / 四档接入清单 —— 自研工具照契约实现一次即得全套强制力
+- 测试 33 → 35 项（guard CLI 双模式退出码 / git hooks 真实仓库提交拦截）
+
 ### v3.5.0 (2026-10-24) — 真实拦截：写入守卫 + 审批凭证 + 事件日志（借鉴 AI-DLC）
 - **阶段感知写入守卫** (lib/write-guard.js + hooks/scripts/phase-write-guard.js)：注册进宿主 PreToolUse 生命周期后，违规写入在工具调用层被真实拒绝（exit 2），不再依赖 AI 自愿调用引擎 —— Phase<4 拦源码写入（fast 模式天然豁免）；.devflow/state.json 与 state-events.jsonl 引擎独占（防手改状态绕门控）；devflow/* 分支提交格式守卫；守卫异常 fail-open
 - **人工门审批凭证**：manual 门控必须 --note "<用户原话/确认摘要>"，凭证哈希入 state.approvals 账本，无凭证直接拒绝 —— 堵死 AI 自批门控；outputWritten 语义升级：产物是过门的必要条件而非充分条件（manual 主门控仍需凭证）
