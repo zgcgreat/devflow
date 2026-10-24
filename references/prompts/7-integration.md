@@ -191,7 +191,7 @@
   ```
 
   N = `grep -c '^### 9\\.' 02-design.md`，如果整段是"无架构层面沉淀建议"则 N=0，不必提示
-- **禁止**在本步直接修改 `.devflow/CONTEXT.md`——它的更新统一走 `A-evolve` 或 `I-intel-scan`
+- **禁止**在本步直接修改 `.devflow/memory/CONTEXT.md`——它的更新统一走 `A-evolve` 或 `I-intel-scan`
 
 ### 7. 出 PR（可选）
 

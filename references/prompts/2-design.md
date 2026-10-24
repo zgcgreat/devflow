@@ -12,10 +12,10 @@
 
 - `@.devflow/<req-id>/01-analysis.md`（或 `01-analysis-delta.md`）
 - `@.devflow/<req-id>/00-requirements.md`（含项目类型与调性信息）
-- **项目上下文文档**（从 `STATE.md` 读 `ai_context_doc` 字段决定）：
-  - 有 `ai_context_doc: <path>` → 读那个文档（如 `AGENTS.md` / `CLAUDE.md`）
-  - 没 `ai_context_doc` 或 `ai_context_doc: CONTEXT.md` → 读 `@.devflow/CONTEXT.md`
-  - `ai_context_doc: none` → 跳过此输入（AI "盲飞"，必须在 02-design.md 顶部贴警告）
+- **项目上下文文档**（⭐v3.6.2 从 `.devflow/state.json` 的 `aiContextDoc` 字段决定，或直接跑 `devflow entry-check --json`）：
+  - `aiContextDoc: <path>` → 读那个文档（如 `AGENTS.md` / `CLAUDE.md`）
+  - 空（未指定）→ 读 `@.devflow/memory/CONTEXT.md`（canonical，不存在则提示用户跑 I-intel-scan）
+  - `none` → 跳过此输入（AI "盲飞"，必须在 02-design.md 顶部贴警告）
 - **项目级架构文档**（如存在 · brownfield 强烈推荐）：`@.devflow/system-architecture.md`
   - 重点读 `§ 2 模块清单 + 依赖规则`（决定本需求 能不能引入新模块 / 跨模块依赖）
   - 重点读 `§ 3 ADR 列表`（看本需求 是否撞已有不可逆决策——撞了必须显式说"延续 ADR-NNN"或"申请 supersede ADR-NNN"）

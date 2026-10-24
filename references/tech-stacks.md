@@ -525,4 +525,4 @@
 | `ui-ux-pro-max` | 后续 2a 阶段用 `--stack <stack>` 拿栈级 UI 模式（67 styles + 161 palettes 中适配该栈的部分）|
 | `impeccable` | 后续 2a 阶段做 design system 时按栈裁剪 |
 
-本步**不依赖任何外部扩展**——flow-kit 内置 10 张完整工程模板够用。
+本步**不依赖任何外部扩展**——DevFlow 内置 10 张完整工程模板够用。

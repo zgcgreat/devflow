@@ -17,14 +17,19 @@
 
 ## 决策树（按顺序判定，命中即停止）
 
+> ⭐v3.6.2 判定依据已对齐运行时状态：state.json 的 `aiContextDoc` / `lastIntelScan` 字段
+> （历史版本引用的 `.devflow/memory/STATE.md` 及 `last_intel_scan` 字段无写入方，已废弃）。
+> 上下文文件：canonical 为 `.devflow/memory/CONTEXT.md`（intel-scan 产物），
+> init 记忆骨架的 `PROJECT_CONTEXT.md` 为等价候选。
+
 ```
-1. STATE.md 有 ai_context_doc 字段？
+1. .devflow/state.json 的 aiContextDoc 字段非空？
    └─ 是 → 情况 A（直接用指定文档）
    └─ 否 → 继续
 
-2. .devflow/memory/CONTEXT.md 存在？
-   ├─ 存在且 last_intel_scan < 90天 → 情况 B（直接用）
-   ├─ 存在且 last_intel_scan > 90天 → 情况 C（提醒可重扫）
+2. .devflow/memory/CONTEXT.md（或等价 PROJECT_CONTEXT.md）存在？
+   ├─ 存在且 lastIntelScan < 90天 → 情况 B（询问是否重扫）
+   ├─ 存在且 lastIntelScan > 90天 → 情况 C（强烈建议重扫）
    └─ 不存在 → 继续
 
 3. 检测到其他 AI 上下文文档？
@@ -35,18 +40,34 @@
    └─ 是 → 情况 G（复用外部上下文）
    └─ 否 → 继续
 
-5. 项目是 greenfield？
+5. 项目是 greenfield（无 package.json 等清单文件）？
    └─ 是 → 情况 F（跳过）
    └─ 否 → 情况 E（停等用户确认）
 ```
+
+## 机器判定（⭐v3.6.2，确定性归引擎）
+
+查表级判定由引擎执行（绝不在本步做项目扫描——intel-scan 是用户显式选择后的
+独立重操作）：
+
+```bash
+devflow entry-check                      # 输出规格同款检测结果框（D/E 附反问块）
+devflow entry-check --json               # 机器可读: {situation, action, projectType, contextDocs, ...}
+devflow entry-check --mode lean          # 覆盖模式（默认读 state.json 的 mode）
+devflow entry-check --set-doc "<路径>"   # 情况 A/G 落库（下次直接命中 A）
+devflow entry-check --record-scan        # intel-scan 完成后记录（开启 90 天新鲜度窗）
+```
+
+action 语义：`use`=复用直接继续 | `ask`=停等用户（AI 负责呈现反问块）| `skip`=跳过 | `proceed`=Lean 无上下文直行。
+判定状态经事件日志审计（CONTEXT_DOC_SET / INTEL_SCAN_RECORDED）。
 
 ---
 
 ## 情况详解
 
-### 情况 A · STATE.md 已设 ai_context_doc
+### 情况 A · state.json 已设 aiContextDoc
 
-**判定条件**：`.devflow/memory/STATE.md` 文件存在 **且** 其中有 `ai_context_doc: <路径>` 字段（非空、非 none）。
+**判定条件**：`.devflow/state.json` 的 `aiContextDoc` 字段非空（⭐v3.6.2 由 `devflow entry-check --set-doc` 写入）。
 
 **动作**：直接读用户指定的文档，不再询问。
 
@@ -62,7 +83,7 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**更新STATE.md**：
+**落库**（`devflow entry-check --set-doc "<路径>"`，写入 state.json 并进事件日志）：
 - `项目类型`: brownfield
 - `入场扫描状态`: 已完成
 - `上下文文档`: <用户指定的文档路径>
@@ -72,7 +93,7 @@
 
 ### 情况 B · 已存在 CONTEXT.md 且在 90 天内
 
-**判定条件**：`.devflow/memory/CONTEXT.md` 文件存在 **且** STATE.md 的 `last_intel_scan` 字段在 90 天内（或字段为空但CONTEXT.md 存在）。
+**判定条件**：`.devflow/memory/CONTEXT.md` 文件存在 **且** state.json 的 `lastIntelScan` 字段在 90 天内（或字段为空但CONTEXT.md 存在）。
 
 **动作**：**询问用户是否重新扫描**，不自动继续。
 
@@ -104,7 +125,7 @@
 
 ### 情况 C · 已存在 CONTEXT.md 但超过 90 天
 
-**判定条件**：`.devflow/memory/CONTEXT.md` 文件存在 **且** STATE.md 的 `last_intel_scan` 字段超过 90 天。
+**判定条件**：`.devflow/memory/CONTEXT.md` 文件存在 **且** state.json 的 `lastIntelScan` 字段超过 90 天。
 
 **动作**：**询问用户是否重新扫描**，强烈建议重扫。
 
@@ -138,7 +159,7 @@
 
 ### 情况 D · 检测到其他 AI 上下文文档
 
-**判定条件**：`.devflow/memory/CONTEXT.md` 不存在 **且** STATE.md 无 `ai_context_doc` 字段 **且** 检测到以下任一文件：
+**判定条件**：`.devflow/memory/CONTEXT.md` 不存在 **且** state.json 无 `aiContextDoc` 字段 **且** 检测到以下任一文件：
 - `AGENTS.md`（仓库根）
 - `CLAUDE.md`（仓库根 / `.claude/`）
 - `.cursor/rules/*.md`
@@ -177,7 +198,7 @@ DevFlow 默认用 CONTEXT.md 作为单一源。请选择：
 
 ### 情况 E · 未发现任何 AI 上下文文档
 
-**判定条件**：`.devflow/memory/CONTEXT.md` 不存在 **且** STATE.md 无 `ai_context_doc` 字段 **且** 未检测到任何 AI 上下文文档。
+**判定条件**：`.devflow/memory/CONTEXT.md` 不存在 **且** state.json 无 `aiContextDoc` 字段 **且** 未检测到任何 AI 上下文文档。
 
 **动作**：**必须停下来等用户确认**。
 
@@ -236,14 +257,14 @@ DevFlow 后续阶段需要项目上下文。请选择：
 
 ### 情况 G · 检测到外部上下文（已有 .workbuddy/memory/ 等）⭐v3.1新增
 
-**判定条件**：`.devflow/memory/CONTEXT.md` 不存在 **且** STATE.md 无 `ai_context_doc` 字段 **且** 未检测到标准 AI 上下文文档 **且** 检测到以下任一外部上下文：
+**判定条件**：`.devflow/memory/CONTEXT.md` 不存在 **且** state.json 无 `aiContextDoc` 字段 **且** 未检测到标准 AI 上下文文档 **且** 检测到以下任一外部上下文：
 - `.workbuddy/memory/MEMORY.md`（WorkBuddy 工作记忆）
 - `.workbuddy/memory/YYYY-MM-DD.md`（WorkBuddy 日志）
 - `CLAUDE.md`（Claude Code 项目上下文）
 - `.cursor/rules/`（Cursor 规则）
-- 项目根 `README.md` 含项目技术栈描述
+- 项目根 `README.md` 含项目技术栈描述（⭐v3.6.2 备注：引擎 `lib/entry-check.js` 不检测 README，此项仅 L0 环境 AI 按本规格判定时参考）
 
-**动作**：**复用外部上下文，不跑 intel-scan**。将外部上下文路径记录到 STATE.md，后续阶段直接读取。
+**动作**：**复用外部上下文，不跑 intel-scan**。将外部上下文路径记录到 state.json（`devflow entry-check --set-doc "<路径>" --external`），后续阶段直接读取。
 
 **检测结果框**：
 ```
@@ -257,7 +278,7 @@ DevFlow 后续阶段需要项目上下文。请选择：
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**更新STATE.md**：
+**落库**（`devflow entry-check --set-doc "<路径>"`，写入 state.json 并进事件日志）：
 - `项目类型`: brownfield
 - `入场扫描状态`: 已跳过
 - `上下文文档`: <外部上下文路径列表>

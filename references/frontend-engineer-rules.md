@@ -1,7 +1,7 @@
 ﻿# Frontend Engineer Rules — 前端任务实现硬规则
 
 > 4-dev 阶段处理任何涉及 HTML / CSS / JavaScript / React 的任务时**必读**此文件。
-> 提炼自 garden-skills `web-design-engineer`（基于 Anthropic Claude Design 系统提示词），针对 flow-kit 上下文做了简化。
+> 提炼自 garden-skills `web-design-engineer`（基于 Anthropic Claude Design 系统提示词），针对 DevFlow 上下文做了简化。
 >
 > 阅读优先级：**硬规则（必看）> 交付清单（提交前过一遍）> 具体模式（按需查）**。
 
@@ -50,7 +50,7 @@ Object.assign(window, { Terminal, Line });
 
 ### 1.3 禁用 `scrollIntoView`
 
-**问题**：iframe 嵌入的预览环境（flow-kit 的大部分调试场景 + 在线预览工具都算）里，`scrollIntoView` 会触发外层 frame 的滚动，造成视觉错乱甚至把用户卷出预览区。
+**问题**：iframe 嵌入的预览环境（DevFlow 的大部分调试场景 + 在线预览工具都算）里，`scrollIntoView` 会触发外层 frame 的滚动，造成视觉错乱甚至把用户卷出预览区。
 
 **正确**：用 `element.scrollTop = ...` 或 `window.scrollTo({ top: ..., behavior: 'smooth' })`。
 

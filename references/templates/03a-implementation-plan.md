@@ -2,7 +2,7 @@
 
 - **Req ID**: <id>
 - **template-version**: `v1.0.0`
-- **关联**: `@.devflow/<id>/03-tasks.md`、`@.devflow/<id>/02-design.md`、`@.devflow/CONTEXT.md`
+- **关联**: `@.devflow/<id>/03-tasks.md`、`@.devflow/<id>/02-design.md`、`@.devflow/memory/CONTEXT.md`
 - **作者**: AI（Tech Lead 角色）+ 人工 review
 - **用途**: 在任务拆分后、开发前，提供完整的技术实施方案
 - **触发条件**: Standard/Strict 模式，或用户明确要求"详细设计"

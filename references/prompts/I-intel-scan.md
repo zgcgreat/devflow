@@ -1,16 +1,20 @@
 # I-intel-scan · 入场扫描（横向命令）
 > ⚠️ **进入本阶段前，必须先加载**：`skills/engineering/planning-and-task-breakdown/SKILL.md`
+>
+> ⭐v3.6.2 状态字段对齐：判定与落库均以 `.devflow/state.json` 为准（`lastIntelScan` / `aiContextDoc`），
+> 由 `devflow entry-check --record-scan` / `--set-doc` 写入；历史版本的 `.devflow/STATE.md` 及
+> `last_intel_scan` / `ai_context_doc` 字段已废弃。产物 canonical 路径为 `.devflow/memory/CONTEXT.md`。
 
 
-> 在已存在的项目（brownfield）里第一次用 flow-kit 时，**先跑这个**。
+> 在已存在的项目（brownfield）里第一次用 DevFlow 时，**先跑这个**。
 > 自动扫描代码库 → 自动填 `CONTEXT.md` → 后续所有 req 都受益。
 > 不是周期命令，跑过一次就行；项目结构有大变化（重构 / 框架升级 / 新增模块）时再跑。
 
 ## 触发方式
 
 - 用户说「**扫描代码 / scan / intel / 入场扫描 / 给项目体检**」
-- 进入 0-confirm 前由 GO.md 第二步（老项目入场检测）自动触发：检测 `CONTEXT.md` 不存在或字段缺失
-- `STATE.md` 没有 `last_intel_scan` 字段或距上次 > 90 天
+- 进入 0-confirm 前由 GO.md Step 2（入场检测，`references/entry-check.md`）判定为情况 D/E，用户显式选择"跑扫描"后触发
+- `.devflow/state.json` 的 `lastIntelScan` 字段为空或距上次 > 90 天（入场检测情况 B/C，用户选择重扫后触发）
 
 ## 输入
 
@@ -18,8 +22,8 @@
 
 ## 输出
 
-- **⚠️ 强制要求**：必须严格按照 `@devflow/templates/CONTEXT.md` 模板的完整结构输出，填入第 1 步的发现，**保存到 `.devflow/CONTEXT.md`**。**不得省略或改写任何段落**。每个字段都要有具体证据（文件路径 + 行号）。
-- `STATE.md` 的 `last_intel_scan: <YYYY-MM-DD>` 字段更新
+- **⚠️ 强制要求**：必须严格按照 `references/templates/CONTEXT.md` 模板的完整结构输出，填入第 1 步的发现，**保存到 `.devflow/memory/CONTEXT.md`**（canonical 路径；入场检测决策树与 `--set-doc` 均以此为准）。**不得省略或改写任何段落**。每个字段都要有具体证据（文件路径 + 行号）。
+- 扫描完成后执行 `devflow entry-check --record-scan`，把 `<YYYY-MM-DD>` 写入 `.devflow/state.json` 的 `lastIntelScan` 字段（开启 90 天新鲜度窗，状态变更进事件日志）
 
 ## 步骤
 
@@ -33,7 +37,7 @@
 
 | 文档 | 路径 | 来自哪个生态 |
 |---|---|---|
-| `CONTEXT.md` | `.devflow/` | flow-kit 自己 |
+| `CONTEXT.md` | `.devflow/memory/`（等价候选：`PROJECT_CONTEXT.md`） | DevFlow 自己 |
 | `AGENTS.md` | 仓库根 | OpenAI Codex / 标准 agents 协议 |
 | `CLAUDE.md` | 仓库根 / `.claude/` | Anthropic Claude Code |
 | `.cursor/rules/*.md` | `.cursor/` | Cursor IDE |
@@ -56,7 +60,7 @@
   - CLAUDE.md（仓库根，<size>）
   - .cursor/rules/architecture.md（<size>）
 
-flow-kit 用 CONTEXT.md 作为单一源。请选择：
+DevFlow 用 CONTEXT.md 作为单一源。请选择：
   1. 综合 + 扫描（推荐）：我读所有现有文档 + 跑入场扫描，合并生成 CONTEXT.md
   2. 以现有文档为准：选定其中一个作为基础（告诉我哪个）→ 我提取关键信息到 CONTEXT.md，保留双向链接
   3. 忽略现有文档，重新扫描生成
@@ -70,7 +74,7 @@ flow-kit 用 CONTEXT.md 作为单一源。请选择：
 - **选 1（综合）**：read 每份文档（带 R1.9 token 预算控制） → 跑步骤 1（项目元信息）→ 把现有文档的关键决策**整合**到 CONTEXT.md（在段落末尾标 `来自 AGENTS.md:42`）→ 在 CONTEXT.md 顶部加「源文档」段列出所有引用
 - **选 2（以现有为准）**：read 用户指定的文档 → 把它的关键内容映射到 CONTEXT.md 的对应段（`既有抽象索引` / `命名约定` / `禁动清单` 等），跑**精简扫描**（只补现有文档没说的部分）
 - **选 3（忽略重扫）**：直接跑步骤 1，不读现有文档（**警告用户**：可能与现有约定冲突）
-- **选 4（不生成 CONTEXT.md）**：在 STATE.md 写 `ai_context_doc: <用户指定路径>`，**所有后续阶段**（GO.md / 2-design / 4-dev）改读这个文档代替 CONTEXT.md。**跳过本 prompt 剩余步骤**
+- **选 4（不生成 CONTEXT.md）**：执行 `devflow entry-check --set-doc "<用户指定路径>"`（写入 `.devflow/state.json` 的 `aiContextDoc` 字段并进事件日志），**所有后续阶段**（GO.md / 2-design / 4-dev）改读这个文档代替 CONTEXT.md（下次入场检测直接命中情况 A）。**跳过本 prompt 剩余步骤**
 
 ##### 分支 B · 找到非标准但项目级文档（README / ARCHITECTURE / CONTRIBUTING）
 
@@ -99,7 +103,7 @@ flow-kit 用 CONTEXT.md 作为单一源。请选择：
 ```
  项目里未发现任何 AI 上下文文档（上下文/AGENTS/CLAUDE/Cursor/Windsurf/Copilot/Cline/README/ARCHITECTURE/CONTRIBUTING）。
 
-flow-kit 需要一份 CONTEXT.md 给 AI 用。请选择：
+DevFlow 需要一份 CONTEXT.md 给 AI 用。请选择：
   1. 现在跑入场扫描，纯从代码生成 CONTEXT.md（~15-30k tokens，仅首次）
   2. 我手动指定项目里某个文档作为开发遵守依据：<请回复路径>
   3. 跳过 intel-scan，直接进 0-confirm（不推荐 · AI 会"盲飞"，老项目护栏 B1-B5 全失效）
@@ -244,9 +248,9 @@ ls Dockerfile docker-compose.* k8s/ helm/  → 容器化
 grep -l "DATABASE_URL\|REDIS_URL" .env*    → 服务依赖
 ```
 
-### 2. 生成 `.devflow/CONTEXT.md`
+### 2. 生成 `.devflow/memory/CONTEXT.md`
 
-用 `@devflow/templates/CONTEXT.md` 模板，填入第 1 步的发现，**保存到 `.devflow/CONTEXT.md`**。每个字段都要有具体证据（文件路径 + 行号）。
+用 `references/templates/CONTEXT.md` 模板，填入第 1 步的发现，**保存到 `.devflow/memory/CONTEXT.md`**。每个字段都要有具体证据（文件路径 + 行号）。
 
 `CONTEXT.md` 必须同时包含：
 
@@ -258,9 +262,9 @@ grep -l "DATABASE_URL\|REDIS_URL" .env*    → 服务依赖
 **禁止**填空话："使用了一些工具" / "标准结构"——这些都要换成具体的「`src/utils/date.ts:12`」级证据。
 **禁止过度压缩**：不能因为CONTEXT.md 长度预算而删除项目结构树；如文件过长，优先压缩历史决策和旧技术债，不压缩项目结构。
 
-### 3. 写 `.devflow/STATE.md`
+### 3. 记录扫描状态（`.devflow/state.json`）
 
-用以下内容写入 `.devflow/STATE.md`（如果文件已存在，只更新或添加相关字段）：
+扫描完成后执行 `devflow entry-check --record-scan`，把 `lastIntelScan: <YYYY-MM-DD>` 写入 `.devflow/state.json` 并追加事件日志（INTEL_SCAN_RECORDED）——由此开启入场检测的 90 天新鲜度窗（情况 B/C 判定依据）。禁止手改 state.json：该文件由引擎独占写入。
 ### 4. 给用户一份扫描总结
 
 ```markdown
@@ -287,12 +291,12 @@ grep -l "DATABASE_URL\|REDIS_URL" .env*    → 服务依赖
 
 - ⏳ **步骤 0 既有文档探测做了**：找到的标准 AI 上下文文档已列出，用户已选定分支（A/B/C），决策已写入扫描总结
 - ⏳ **未经用户同意没自动开始扫描**（分支 C 必须等用户回复 1/2/3）
-- ⏳ 用户选 4「不生成 CONTEXT.md」时已写 `STATE.md` 的 `ai_context_doc` 字段并跳过剩余步骤
+- ⏳ 用户选 4「不生成 CONTEXT.md」时已执行 `devflow entry-check --set-doc`（state.json 的 `aiContextDoc` 已落库）并跳过剩余步骤
 - ⏳ 1.0~1.7 各段都有 grep / read 输出（不靠猜），多子项目时每个 frontend / backend / shared 都有记录
 - ⏳ CONTEXT.md 同时包含「项目地图表」和「项目结构树」，且前端 / 后端 / shared 关键目录未被省略
 - ⏳ CONTEXT.md 的每个字段都有文件路径 / 行号引用
 - ⏳ CONTEXT.md 顶部「源文档」段列出引用的 AGENTS / CLAUDE / 等（如适用）
-- ⏳ STATE.md 的 `last_intel_scan` 已更新
+- ⏳ `.devflow/state.json` 的 `lastIntelScan` 已通过 `devflow entry-check --record-scan` 记录
 - ⏳ 扫描总结贴出关键发现 + 对后续 需求的影响
 
 ## 触发下一步

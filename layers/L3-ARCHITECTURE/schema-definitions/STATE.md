@@ -1,6 +1,9 @@
 # STATE — 跨会话项目状态
 
-> 仓库根 `STATE.md`。AI 每次开始新会话先读这个，结束前更新。
+> `.devflow/STATE.md`。AI 每次开始新会话先读这个，结束前更新。
+>
+> ⭐v3.6.2 **双层定位**：机器状态单一来源是 `.devflow/state.json`（引擎独占 + 写入守卫保护，
+> AI 禁止手改）；本文件是 AI 维护的叙事层，与 state.json 字段不得互相复制。
 
 ---
 
@@ -38,10 +41,10 @@
 ## 横向命令状态（GO.md / 各 prompt 会读这里决定要不要主动提示）
 
 ```yaml
-# 老项目入场扫描 / AI 上下文文档替代
-ai_context_doc: .devflow/CONTEXT.md   # 或 AGENTS.md / CLAUDE.md / 用户指定路径 / none
-last_intel_scan: 2026-04-15          # 上次跑 I-intel-scan 的日期；为空表示从未跑
-                                     # GO.md 第三步会按 90 天阈值提醒重扫
+# ⭐v3.6.2 已迁移到 .devflow/state.json（引擎独占，AI 禁止在本文件复制）：
+#   ai_context_doc   → state.json 的 aiContextDoc（devflow entry-check --set-doc "<路径>"）
+#   last_intel_scan  → state.json 的 lastIntelScan（devflow entry-check --record-scan）
+#   入场检测的 90 天新鲜度窗由引擎按 state.json 判定，本文件不再记录。
 
 # 架构演进
 last_architect_at: 2026-03-01        # 上次跑 A-architect 的日期；首跑后填

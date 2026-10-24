@@ -1,6 +1,6 @@
 {
   "name": "devflow",
-  "version": "3.6.1",
+  "version": "3.6.2",
   "description": "DevFlow v3.6.1 — AI 开发操作系统 (融合 DevFlow) — 19 个顶级 AI 开发项目的统一内核",
   "bin": {
     "devflow": "bin/devflow.js"

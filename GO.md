@@ -357,6 +357,13 @@ Mode: <Fast/Lean/Standard/Strict>
 
 ## 版本历史
 
+### v3.6.2 (2026-10-24) — 入场检测/上下文路径全仓对齐 + entry-check CLI 接线修复
+- **CONTEXT.md 路径统一**：全仓 22 处 `.devflow/CONTEXT.md` → canonical `.devflow/memory/CONTEXT.md`（11 prompt + 7 模板 + 技能文件），修复路径分裂导致的入场检测恒判情况 E
+- **STATE.md 双层定位**：state.json = 引擎独占机器状态单一来源；STATE.md = AI 叙事层；废弃字段 `ai_context_doc`/`last_intel_scan` 从模板剔除，2-design/4-dev 读取改走 `state.json.aiContextDoc`
+- **entry-check CLI 接线修复**：CMDS 键驼峰/连字符不一致致"未知命令"，补别名 + 白名单
+- **I-intel-scan 文档对齐**（14 处）+ flow-kit 品牌清理
+- 测试 36 → 37 项
+
 ### v3.6.1 (2026-10-24) — ZCode 真实拦截接入
 - **devflow install --target zcode**（新增 hooks-only 目标）：按 ZCode 官方契约把写入守卫注册进 ~/.zcode/cli/config.json（hooks.events.PreToolUse，type:process 无 shell 跨平台，exit 2=deny 与守卫同款契约）；自动开启 hooks.enabled（配置文件 hook 默认禁用）；托管识别/幂等/备份/可卸载与 Claude 目标同标准
 - ZCode 只注册 PreToolUse 拦截（其 Stop 输出走严格 JSON schema，多余键判失败，故不注册 Stop 提醒）

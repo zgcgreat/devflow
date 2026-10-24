@@ -19,7 +19,7 @@ UI Director。**只产视觉/交互方向，不产实现代码**（角色红线 
 - `@.devflow/<id>/00-requirements.md`（**必读**，含 0-confirm 阶段已选的「视觉调性」）
 - `@.devflow/<id>/01-analysis.md`
 - `@.devflow/<id>/02-design.md`（**必读 `## 0. 技术栈选定` 段**——字体 / UI 库 / 组件库 / 图标库的选择必须基于这个栈）
-- `@.devflow/CONTEXT.md`
+- `@.devflow/memory/CONTEXT.md`
 - `@devflow/references/ui-aesthetics.md`（决策框架）
 - `@devflow/references/ui-anti-patterns.md`（反 AI-slop 清单）
 - 已存在的品牌资产（logo / 色板 / 字体）如有

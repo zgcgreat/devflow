@@ -2,7 +2,7 @@
 
 - **Req ID**: <id>
 - **template-version**: `v1.0.0`
-- **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/CONTEXT.md`
+- **关联**: `@.devflow/<req-id>/00-requirements.md`、`@.devflow/memory/CONTEXT.md`
 - **基线版本**: <如有requirements-baseline.md，填写版本号；首次创建写"初始"">
 
 ---

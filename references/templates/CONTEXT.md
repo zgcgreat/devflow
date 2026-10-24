@@ -86,7 +86,7 @@
 ├── <packages|shared/>           # 前后端共享类型、SDK、工具
 ├── <migrations|prisma|alembic/>  # 数据库 schema / migration
 ├── <scripts/>                   # 本地脚本 / 运维脚本
-└── <docs|.devflow/>               # 项目文档与 flow-kit 产物
+└── <docs|.devflow/>               # 项目文档与 DevFlow 产物
 ```
 
 ### 结构说明
@@ -258,7 +258,7 @@
 
 ## intel-scan 元数据
 
-- **last_intel_scan**: `<YYYY-MM-DD>`
+- **lastIntelScan**: `<YYYY-MM-DD>`（⭐v3.6.2 权威值由 `devflow entry-check --record-scan` 写入 `.devflow/state.json`，本行仅为文档内快照）
 - **scanner**: `references/prompts/I-intel-scan.md`
 - **下次重扫建议**: `<触发条件：架构重构 / 框架升级 / 主要新增模块 / > 90 天>`
 

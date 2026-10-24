@@ -31,12 +31,12 @@ Architect-Evolver。**只读 archived 需求的 02-design.md § 9，聚合分类
 - **里程碑后**：版本发布或大功能完成后，把这一阶段的沉淀凝固到项目层
 - **上下文 失准信号**：4-dev 阶段连续多次发现 AI 没沿用既有抽象（说明索引漏了）
 - **`STATE.md` `last_evolve_at` 字段为空 或 距今 > 60 天**：GO.md 在路由时会主动提示
-- **M-health 冗余巡检留的尾巴**：若 `.devflow/CONTEXT.md`「清理窗口专列」或「技术债」段有标记，A-evolve 扫描时**主动把对应的「既有抽象索引」条目拎出来让用户确认是否删**（闭环 M-health 步骤 5 的"下次同步主动提醒"）
+- **M-health 冗余巡检留的尾巴**：若 `.devflow/memory/CONTEXT.md`「清理窗口专列」或「技术债」段有标记，A-evolve 扫描时**主动把对应的「既有抽象索引」条目拎出来让用户确认是否删**（闭环 M-health 步骤 5 的"下次同步主动提醒"）
 
 ## 输入
 
 - `@.devflow/STATE.md`（读 `last_evolve_at` 字段，决定从哪个时间点之后的 req 开始扫）
-- `@.devflow/CONTEXT.md`（当前快照，patch 目标 · rules 层）
+- `@.devflow/memory/CONTEXT.md`（当前快照，patch 目标 · rules 层）
 - `@.devflow/system-architecture.md`（如存在，则同时是 patch 目标 · structure 层）
 - `@.devflow/archive/<YYYY-MM-DD>-<req-id>/02-design.md`（已归档 需求的设计文档 · 只读 § 9 段）
 - `@.devflow/<active-id>/02-design.md`（当前活跃 req 也算，但仅在 4-dev 完成 / 7-integration 之后才纳入 · 否则跳过）
@@ -260,7 +260,7 @@ Schema 变更：
 **安全要求**：
 
 - 写入前先备份（双选动则两份都备）：
-  - `cp .devflow/CONTEXT.md .devflow/CONTEXT.md.bak-<YYYY-MM-DD>`
+  - `cp .devflow/memory/CONTEXT.md .devflow/memory/CONTEXT.md.bak-<YYYY-MM-DD>`
   - `cp .devflow/system-architecture.md .devflow/system-architecture.md.bak-<YYYY-MM-DD>`（如存在）
 - 用 `edit` 工具按段 append / update（**不要整文件 rewrite**，避免破坏未涉及的内容）
 - 每段 append 在末尾加注释：`<!-- A-evolve YYYY-MM-DD: from <req-id> -->`
@@ -289,7 +289,7 @@ last_evolve_promoted:
 
 ## 输出
 
-- `.devflow/CONTEXT.md`（patch 后 · 用户选 1/3 时）
+- `.devflow/memory/CONTEXT.md`（patch 后 · 用户选 1/3 时）
 - `.devflow/system-architecture.md`（patch 后 · 用户选 1/4 时且文件存在）
 - 备份文件（二者之一或两者都有）
 - `.devflow/evolve/<YYYY-MM-DD>-EVOLVE.md`（报告 · 必产，**必须严格按 `@devflow/templates/architecture-evolution.md` 模板完整结构输出**）

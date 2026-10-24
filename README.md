@@ -190,7 +190,7 @@ devflow/
 
 ## 版本历史
 
-见 [docs/CHANGELOG.md](docs/CHANGELOG.md)。当前版本 **v3.3.0**（2026-09-12，ForgeOS 正式更名 DevFlow，纯更名版本功能零变更）。
+见 [docs/CHANGELOG.md](docs/CHANGELOG.md)。当前版本 **v3.6.2**（2026-10-24，入场检测/文档对齐 + entry-check CLI 接线修复）。
 
 ## License
 

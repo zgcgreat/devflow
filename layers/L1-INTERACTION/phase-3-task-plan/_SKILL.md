@@ -25,7 +25,7 @@ allowed-tools:
 
 # Phase 3: 任务拆分 (DAG + 拓扑排序)
 
-> **前置产物**: `02-design.md` + `.devflow/CONTEXT.md`
+> **前置产物**: `02-design.md` + `.devflow/memory/CONTEXT.md`
 > **后置产物**: `.devflow/<req-id>/03-tasks.md`
 > **门控**: G4 — Task Plan Gate
 
@@ -33,7 +33,7 @@ allowed-tools:
 
 - `02-design.md` — 技术方案设计文档
 - `02a-ui-design.md` — UI 设计方案（如有）
-- `.devflow/CONTEXT.md` — 项目上下文
+- `.devflow/memory/CONTEXT.md` — 项目上下文
 - LESSONS.md — 过往任务拆分经验
 
 ## 输出

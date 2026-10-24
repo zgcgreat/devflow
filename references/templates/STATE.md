@@ -3,6 +3,12 @@
 - **template-version**: `v1.0.0`
 
 > `.devflow/STATE.md` — DevFlow 的跨会话状态文件。Standard / Strict 流程必须维护；Fast 模式可按需创建。
+>
+> ⭐v3.6.2 **双层定位**：`.devflow/state.json` 是引擎独占的机器状态单一来源
+> （mode / currentPhase / gates / aiContextDoc / lastIntelScan，由 `devflow entry-check --set-doc` /
+> `--record-scan` 等 CLI 写入，写入守卫保护，AI 禁止手改）；本文件是 **AI 维护的叙事层**
+> （位置语义、恢复步骤、决策日志、横向命令提示），两者字段不得互相复制。
+> 机器状态一律读 state.json 或 `devflow entry-check --json`，本文件只做人类/AI 可读的快照与提示。
 
 ---
 
@@ -74,6 +80,10 @@
 | **跳过原因** | `用户选择跳过 / greenfield 无需扫描 / 已有上下文文档 / —` |
 
 进入 Standard / Strict 的新需求前必须确认本节。brownfield 项目未完成扫描时，必须让用户选择扫描、指定现有上下文文档或明确跳过。
+
+> ⭐v3.6.2 机器判定字段已迁移：上下文文档与扫描时间的权威值在 `.devflow/state.json`
+> （`aiContextDoc` / `lastIntelScan`，经 `devflow entry-check --set-doc` / `--record-scan` 写入）。
+> 本节为 AI 维护的叙事快照，两者不一致时以 state.json 为准。
 
 ---
 
@@ -163,10 +173,10 @@
 > GO.md / 各 prompt 会读这里决定要不要主动提示。
 
 ```yaml
-# 老项目入场扫描 / AI 上下文文档替代
-ai_context_doc: CONTEXT.md      # 或 AGENTS.md / CLAUDE.md / 用户指定路径 / none
-last_intel_scan: YYYY-MM-DD    # 上次跑 I-intel-scan 的日期；为空表示从未跑
-                               # GO.md 第二步会按 90 天阈值提醒重扫
+# ⭐v3.6.2 已迁移到 .devflow/state.json（引擎独占，AI 禁止在本文件复制）：
+#   ai_context_doc   → state.json 的 aiContextDoc（devflow entry-check --set-doc "<路径>"）
+#   last_intel_scan  → state.json 的 lastIntelScan（devflow entry-check --record-scan）
+#   入场检测的 90 天新鲜度窗由引擎按 state.json 判定，本文件不再记录。
 
 # 架构演进
 last_architect_at: YYYY-MM-DD  # 上次跑 A-architect 的日期；首跑后填

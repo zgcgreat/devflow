@@ -1,5 +1,10 @@
 # DevFlow runtime adapter（可选）
 
+> ⚠️ **历史设计文档**（flow-kit 时代，v3.3.0 更名前）：本文描述的"DevFlow 作为 flow-kit 的可选
+> runtime adapter"定位已被 v3 架构取代——DevFlow 现在是主品牌，路由入口为 `SKILL.md` + `GO.md`，
+> 运行时强制契约见 `docs/INTEGRATION.md`（write-guard / guard CLI / git hooks / 四档接入清单）。
+> 本文仅保留作设计沿革参考，路径与品牌表述均以现行文档为准。
+
 flow-kit 默认仍然是纯 markdown：不需要 CLI、不需要安装运行时，也不绑定任何外部工具。DevFlow 是一个可选 runtime adapter，适合那些希望在 Claude Code 里防止 AI 跳阶段、漏产物、漏测试或漏 review 的项目。
 
 ## 它解决什么

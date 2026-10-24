@@ -207,7 +207,7 @@ TESTS.push({
 
     // help 必须列出 CMDS 中实现的每一个命令，防止"实现了却不告知"
     const helpText = help.stdout || '';
-    const CMDS = ['init', 'status', 'phase', 'detect', 'task', 'mem', 'party', 'code', 'caveman', 'gates', 'git', 'guard', 'install', 'doctor'];
+    const CMDS = ['init', 'status', 'phase', 'detect', 'task', 'mem', 'party', 'code', 'caveman', 'gates', 'git', 'guard', 'entry-check', 'install', 'doctor'];
     for (const cmd of CMDS) {
       if (!new RegExp(`devflow ${cmd}\\b`).test(helpText)) errors.push(`help 未列出命令: ${cmd}`);
     }
@@ -1167,6 +1167,93 @@ TESTS.push({
     try { fs.rmSync(home, { recursive: true, force: true }); } catch { /* 清理失败可忽略 */ }
     return errors.length === 0
       ? { pass: true, detail: 'enabled 强制 ✅ process 形状 ✅ 幂等 ✅ 用户配置保留 ✅ 备份写盘 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 26: 入场检测 — 决策树 A-G 机器判定 + 落库（v3.6.2）
+TESTS.push({
+  name: '入场检测 — 决策树七情况 + 模式适配 + CLI 落库',
+  run: () => {
+    const { detectEntry } = require(path.join(ROOT, 'lib', 'entry-check'));
+    const { execFileSync } = require('child_process');
+    const cli = path.join(ROOT, 'bin', 'devflow.js');
+    const errors = [];
+    const mk = (setup) => {
+      const dir = mkWorkspace();
+      const devflowDir = path.join(dir, '.devflow');
+      fs.mkdirSync(devflowDir, { recursive: true });
+      fs.writeFileSync(path.join(devflowDir, 'state.json'), JSON.stringify({ currentPhase: 0, mode: 'standard' }));
+      setup(dir);
+      return dir;
+    };
+    const st = (dir) => JSON.parse(fs.readFileSync(path.join(dir, '.devflow', 'state.json'), 'utf-8'));
+    const detect = (dir, mode) => detectEntry({ workspaceDir: dir, state: st(dir), mode });
+    const expect = (got, want, label) => { if (got !== want) errors.push(`${label}: 期望 ${want} 实际 ${got}`); };
+
+    // A: state.aiContextDoc 已设
+    let dir = mk((d) => { const s = st(d); s.aiContextDoc = 'docs/guide.md'; fs.writeFileSync(path.join(d, '.devflow', 'state.json'), JSON.stringify(s)); });
+    let r = detect(dir);
+    expect(r.situation, 'A', '情况A'); expect(r.action, 'use', '情况A动作');
+
+    // B: CONTEXT.md + lastIntelScan 7 天前
+    dir = mk((d) => {
+      fs.mkdirSync(path.join(d, '.devflow', 'memory'), { recursive: true });
+      fs.writeFileSync(path.join(d, '.devflow', 'memory', 'CONTEXT.md'), '# ctx');
+      const s = st(d); s.lastIntelScan = new Date(Date.now() - 7 * 86400000).toISOString();
+      fs.writeFileSync(path.join(d, '.devflow', 'state.json'), JSON.stringify(s));
+    });
+    r = detect(dir);
+    expect(r.situation, 'B', '情况B(新鲜)'); expect(r.action, 'ask', '情况B停等');
+
+    // C: lastIntelScan 100 天前
+    dir = mk((d) => {
+      fs.mkdirSync(path.join(d, '.devflow', 'memory'), { recursive: true });
+      fs.writeFileSync(path.join(d, '.devflow', 'memory', 'CONTEXT.md'), '# ctx');
+      const s = st(d); s.lastIntelScan = new Date(Date.now() - 100 * 86400000).toISOString();
+      fs.writeFileSync(path.join(d, '.devflow', 'state.json'), JSON.stringify(s));
+    });
+    expect(detect(dir).situation, 'C', '情况C(过期)');
+
+    // D: AGENTS.md 存在（standard 停等）
+    dir = mk((d) => fs.writeFileSync(path.join(d, 'AGENTS.md'), '# agents'));
+    r = detect(dir);
+    expect(r.situation, 'D', '情况D'); expect(r.action, 'ask', '情况D停等');
+
+    // G: .workbuddy/memory/MEMORY.md 存在（standard 复用不停等）
+    dir = mk((d) => { fs.mkdirSync(path.join(d, '.workbuddy', 'memory'), { recursive: true }); fs.writeFileSync(path.join(d, '.workbuddy', 'memory', 'MEMORY.md'), '# m'); });
+    r = detect(dir);
+    expect(r.situation, 'G', '情况G'); expect(r.action, 'use', '情况G复用');
+
+    // F: 无任何清单文件 → greenfield 跳过
+    dir = mk(() => {});
+    r = detect(dir);
+    expect(r.situation, 'F', '情况F'); expect(r.projectType, 'greenfield', '情况F类型');
+
+    // E: package.json 存在但无上下文 → brownfield 停等
+    dir = mk((d) => fs.writeFileSync(path.join(d, 'package.json'), '{}'));
+    r = detect(dir);
+    expect(r.situation, 'E', '情况E'); expect(r.projectType, 'brownfield', '情况E类型');
+
+    // Lean: CLAUDE.md → 复用不停等（模式适配）
+    dir = mk((d) => fs.writeFileSync(path.join(d, 'CLAUDE.md'), '# c'));
+    r = detect(dir, 'lean');
+    expect(r.situation, 'G', 'Lean 复用'); expect(r.action, 'use', 'Lean 不停等');
+
+    // Fast: 跳过
+    r = detect(mk(() => {}), 'fast');
+    expect(r.situation, 'SKIP', 'Fast 跳过');
+
+    // CLI: --json 判定 + --set-doc 落库 + 二次判定命中 A
+    dir = mk((d) => fs.writeFileSync(path.join(d, 'package.json'), '{}'));
+    const run = (a) => JSON.parse(execFileSync(process.execPath, [cli, 'entry-check', ...a], { cwd: dir, encoding: 'utf8' }));
+    if (run(['--json']).situation !== 'E') errors.push('CLI --json 判定不符');
+    execFileSync(process.execPath, [cli, 'entry-check', '--set-doc', 'docs/architecture.md'], { cwd: dir, encoding: 'utf8' });
+    if (run(['--json']).situation !== 'A') errors.push('--set-doc 后未命中情况 A');
+    if (st(dir).aiContextDoc !== 'docs/architecture.md') errors.push('aiContextDoc 未持久化');
+
+    return errors.length === 0
+      ? { pass: true, detail: 'A/B/C/D/E/F/G 七情况 ✅ Lean 复用不停等 ✅ Fast 跳过 ✅ CLI 判定+落库 ✅' }
       : { pass: false, detail: errors.join('; ') };
   },
 });

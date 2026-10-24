@@ -31,7 +31,7 @@ Chief Architect。**只产架构文档，不动业务代码**。和用户协作�
 
 ## 输入
 
-- `@.devflow/CONTEXT.md`（必读 · 技术栈 + 既有抽象 + 禁动清单）
+- `@.devflow/memory/CONTEXT.md`（必读 · 技术栈 + 既有抽象 + 禁动清单）
 - `@.devflow/system-architecture.md`（如有，则是重构跑；如无，则是首跑）
 - `@.devflow/需求LOG.md`（看历史 req 演进轨迹）
 - `@.devflow/archive/*/02-design.md`（按需 · 重构跑时抽样几份）
@@ -230,7 +230,7 @@ grep -rn "router\\.(get|post|put|patch|delete)\\|@(Get|Post|Put|Patch|Delete)" s
 
 - `.devflow/system-architecture.md`（必产，**必须严格按 `@devflow/templates/system-architecture.md` 模板完整结构输出**）
 - `.devflow/system-architecture.md.bak-<date>`（重构跑必产）
-- 0~1 次对 `.devflow/CONTEXT.md` 的同步 patch（仅当步骤 7.3 用户选 1）
+- 0~1 次对 `.devflow/memory/CONTEXT.md` 的同步 patch（仅当步骤 7.3 用户选 1）
 - 在 `STATE.md` 写 `last_architect_at: <YYYY-MM-DD>`
 
 ## 约束

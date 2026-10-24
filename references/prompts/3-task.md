@@ -10,7 +10,7 @@
 
 - `@.devflow/<req-id>/01-analysis.md`
 - `@.devflow/<req-id>/02-design.md`（**必读 `## 0. 技术栈选定`**——任务的 verify 命令、依赖管理、目录结构必须按选定的栈写）
-- `@.devflow/CONTEXT.md`
+- `@.devflow/memory/CONTEXT.md`
 
 ## 入口门禁（Artifact Preflight）
 

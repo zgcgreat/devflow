@@ -1,7 +1,7 @@
 ﻿# UI 美学决策框架（精简版）
 
 > 融合自 Anthropic 原版 `frontend-design` skill + 社区 `impeccable` 项目精华。
-> **本文件是 flow-kit 内置的"够用"基线**。如果装了下面任一外部 skill，优先用它们的更精细数据。
+> **本文件是 DevFlow 内置的"够用"基线**。如果装了下面任一外部 skill，优先用它们的更精细数据。
 
 ## 外部扩展（按可用优先级使用）
 
@@ -246,4 +246,4 @@ UI 任务进入实现前，AI 必须能回答以下问题，否则**停下来反
 - `/impeccable polish <area>` — 出货前打磨
 - `/impeccable harden <area>` — 错误处理 / 边界 / i18n
 
-flow-kit 与 impeccable 互补：flow-kit 决定**什么时候做 UI 决策**，impeccable 决定**做得多深**。
+DevFlow 与 impeccable 互补：DevFlow 决定**什么时候做 UI 决策**，impeccable 决定**做得多深**。

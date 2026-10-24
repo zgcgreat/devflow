@@ -57,6 +57,7 @@ const HELP = `DevFlow v${JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'pac
   devflow gates --ac <目录>                           AC 覆盖率报告 (.devflow 或 .devflow/<req-id>)
   devflow gates --template <文件>                     模板内容校验 (必填段落 + 占位符)
   devflow guard [--tool T --file-path P | --command C] 通用守卫判定 (exit 0=放行 2=拦截; stdin JSON 兼容 hook 契约)
+  devflow entry-check [--mode X] [--json]             入场检测机器判定 (决策树 A-G; --set-doc/--record-scan 落库)
   devflow git start <req-id> [--from <base>]          创建 devflow/<req-id> 分支并记录链路
   devflow git status                                  req-id ↔ 分支 ↔ 提交链路状态
   devflow git checkpoint "<说明>"                     提交流程产物检查点 (只 stage .devflow/)
@@ -421,6 +422,36 @@ const CMDS = {
     if (args.includes('--verbose')) console.log(`[DevFlow Guard] 放行: ${verdict.reason}`);
   },
 
+  // entry-check: 入场检测机器判定（决策树 A-G，确定性归引擎；D/E 停等由 AI 呈现问询）
+  entryCheck: (args) => {
+    const val = (flag) => (args.includes(flag) ? args[args.indexOf(flag) + 1] : undefined);
+    const engine = require('../lib/phase-engine');
+    const e = new engine.PhaseEngine();
+    const { detectEntry, formatResult } = require('../lib/entry-check');
+
+    if (args.includes('--set-doc')) {
+      const doc = val('--set-doc');
+      if (!doc) { console.error('用法: devflow entry-check --set-doc <文档路径>'); process.exit(1); }
+      const r = e.setContextDoc(doc, { source: args.includes('--external') ? 'external' : 'user' });
+      console.log(`已记录上下文文档: ${Array.isArray(r) ? r.join('、') : r}`);
+      return;
+    }
+    if (args.includes('--record-scan')) {
+      console.log(`已记录 intel-scan 时间: ${e.recordIntelScan()}`);
+      return;
+    }
+
+    const r = detectEntry({ workspaceDir: process.cwd(), state: e.state, mode: val('--mode') });
+    if (args.includes('--json')) {
+      console.log(JSON.stringify(r, null, 2));
+      return;
+    }
+    console.log(formatResult(r));
+    if (r.situation === 'G' || r.situation === 'A') {
+      console.log('\n落库: devflow entry-check --set-doc "<文档路径>" （供下次直接命中情况 A）');
+    }
+  },
+
   code: (args) => {
     // 直接调用 code-explorer
     // execFileSync + 参数数组（不经 shell），避免多词参数/含空格路径被拆词截断
@@ -660,6 +691,9 @@ const CMDS = {
   help: () => console.log(HELP),
 };
 
+// CLI 命令名以连字符为准（help 文案即 entry-check）；CMDS 键是驼峰标识符，这里补别名映射
+CMDS['entry-check'] = CMDS.entryCheck;
+
 function scanProjectScale(root) {
   // 估算当前项目的规模信号（文件数 / 行数），供 init 自动判定模式使用
   const SKIP = new Set(['node_modules', '.git', '.devflow', 'sources', 'dist', 'build', 'vendor', '.next', 'coverage', 'out', 'target']);
@@ -738,9 +772,9 @@ function main() {
     return;
   }
 
-  // 状态守卫：除 init/help/doctor/git/guard 外，所有命令先验证状态
-  // （git 链路只依赖 .devflow/<req-id>/git.json；guard 是 R0 设计——未初始化项目不治安）
-  if (!['init', 'help', 'doctor', 'git', 'guard'].includes(cmd)) {
+  // 状态守卫：除 init/help/doctor/git/guard/entry-check 外，所有命令先验证状态
+  // （git 链路只依赖 .devflow/<req-id>/git.json；guard 与 entry-check 是 R0 设计——未初始化项目也要能判定）
+  if (!['init', 'help', 'doctor', 'git', 'guard', 'entry-check', 'entryCheck'].includes(cmd)) {
     const state = stateGuard();
     if (!state) {
       // 非阻塞：仅警告，让用户自己决定是否继续

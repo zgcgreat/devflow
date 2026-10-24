@@ -14,7 +14,7 @@
 
 **输入**：
 - `@.devflow/<req-id>/00-requirements.md`
-- 已有项目（如有）：`@.devflow/CONTEXT.md`
+- 已有项目（如有）：`@.devflow/memory/CONTEXT.md`
 
 **执行**：直接进入「你的职责」部分。
 
@@ -27,7 +27,7 @@
 
 **输入**：
 - 解析结果（来自 GO.md D.1 的 Step 4 输出）
-- 已有项目（如有）：`@.devflow/CONTEXT.md`
+- 已有项目（如有）：`@.devflow/memory/CONTEXT.md`
 
 **执行**：
 1. 从解析结果提取：
@@ -60,7 +60,7 @@
 **输入**：
 - `@.devflow/<req-id>/00-requirements.md`
 - `@.devflow/requirements-baseline.md`（已有requirements-baseline）
-- `@.devflow/CONTEXT.md`
+- `@.devflow/memory/CONTEXT.md`
 
 **执行**：
 1. 读取requirements-baseline，理解已有用户故事和 AC
@@ -139,7 +139,7 @@
 
 ### 2. 提取域语言（关键步骤）
 
-在 `@.devflow/CONTEXT.md` 里**追加**或更新：
+在 `@.devflow/memory/CONTEXT.md` 里**追加**或更新：
 
 - **术语表**：本次引入的新名词，每个一句话定义
 - **已锁决策**：本次确定的偏好（例如"使用系统 prefers-color-scheme 而非应用内开关"）
@@ -158,7 +158,7 @@
 - `.devflow/<req-id>/01-analysis.md`（**必须严格按模板格式输出**）
   - 新需求：使用 `01-analysis.md` 模板
   - Delta 模式：使用 `01-analysis-delta.md` 模板
-- 更新或创建 `.devflow/CONTEXT.md`
+- 更新或创建 `.devflow/memory/CONTEXT.md`
 - **更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `analysis`
   - `阶段状态` 设为 `waiting_user_confirmation`

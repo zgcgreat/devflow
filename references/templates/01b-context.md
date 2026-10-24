@@ -37,7 +37,7 @@
 □ Decision Rationale
 ```
 
-> 说明：本文件是 **Phase 1b 决策捕获产物**，作为 Phase 2 方案设计的约束条件；与项目级共享上下文 `.devflow/CONTEXT.md`（跨 req 累积的域语言与默认偏好）不是同一个文件。
+> 说明：本文件是 **Phase 1b 决策捕获产物**，作为 Phase 2 方案设计的约束条件；与项目级共享上下文 `.devflow/memory/CONTEXT.md`（跨 req 累积的域语言与默认偏好）不是同一个文件。
 
 ---
 

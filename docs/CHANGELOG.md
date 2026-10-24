@@ -6,6 +6,23 @@
 
 ---
 
+## [3.6.2] - 2026-10-24
+
+### Changed — 入场检测/上下文路径全仓对齐 + entry-check CLI 接线修复
+
+- **CONTEXT.md 路径统一**：全仓 22 处 `.devflow/CONTEXT.md` 统一为 canonical `.devflow/memory/CONTEXT.md`（与 `lib/entry-check.js` CONTEXT_CANDIDATES 及 init 骨架一致），覆盖 11 个 prompt（1-analysis / 2-design / 2a-ui-design / 3-task / 4-dev / 6-review / 7-integration / A-architect / A-evolve / M-health / I-intel-scan）+ 7 个模板 + phase-3-task-plan 等技能文件——修复"AI 按 prompt 写 `.devflow/` 根 → 引擎查不到 → 入场检测永远判情况 E"的路径分裂
+- **STATE.md 双层定位**（v3.6.2 判定依据对齐收尾）：`templates/STATE.md` 与 `schema-definitions/STATE.md` 声明"`.devflow/state.json` = 引擎独占机器状态单一来源，STATE.md = AI 叙事层"；剔除模板内废弃字段 `ai_context_doc` / `last_intel_scan`（改为指向 `devflow entry-check --set-doc` / `--record-scan`）；2-design / 4-dev 的上下文文档读取改走 `state.json` 的 `aiContextDoc`（或 `devflow entry-check --json`）
+- **I-intel-scan 文档对齐**：14 处旧机制引用（STATE.md / last_intel_scan / ai_context_doc / `@devflow/templates/` / flow-kit 品牌）对齐 v3.6.2 机制
+- **品牌清理**：0-confirm / frontend-engineer-rules / template-check 注释的 flow-kit 残留；`runtime-adapters-devflow.md` 标注为历史设计文档
+
+### Fixed
+
+- **entry-check CLI 接线**：CMDS 表键 `entryCheck`（驼峰）与用户输入 `entry-check`（连字符）不一致导致"未知命令"——补别名映射 + 状态守卫白名单加入 `entry-check`
+
+### Tests
+
+- 36 → 37 项（新增：入场检测七情况 + 模式适配 + CLI 落库）
+
 ## [3.6.1] - 2026-10-24
 
 ### Added — ZCode 真实拦截接入

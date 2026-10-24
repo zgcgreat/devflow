@@ -234,7 +234,7 @@
 /brooks-audit            # 架构审计，产 Mermaid 依赖图、标出循环依赖
 ```
 
-**输出必须包含**该工具要求的四要素（也是 flow-kit 下游认的格式）：
+**输出必须包含**该工具要求的四要素（也是 DevFlow 下游认的格式）：
 
 ```
 ### 🔴/🟡/🟢 R<x> · <风险名>：<一句话结论>
@@ -460,7 +460,7 @@ UI 审查触发判定：
 
 #### 4.1 技术债评估（适用于里程碑 / 季度大版本 / 重构项目）
 
-**触发条件**：本次需求 是里程碑 / 季度大版本 / 重构项目，或 `.devflow/CONTEXT.md` 「技术债」段多于 30 天未更新。
+**触发条件**：本次需求 是里程碑 / 季度大版本 / 重构项目，或 `.devflow/memory/CONTEXT.md` 「技术债」段多于 30 天未更新。
 
 ```
 /brooks-debt              # 装了 brooks-lint 才能调
@@ -472,7 +472,7 @@ UI 审查触发判定：
 
 拿到输出后：
 - 🔴 Critical · 本次必修 → 追加为 fix 任务
-- 🟡 Scheduled · 近 1~3 个迭代 → 追加为 backlog，记入 `.devflow/CONTEXT.md` 的「技术债」段
+- 🟡 Scheduled · 近 1~3 个迭代 → 追加为 backlog，记入 `.devflow/memory/CONTEXT.md` 的「技术债」段
 - 🟢 Monitored · 仅记录不处理 → lessons-learned.md
 
 未装 brooks-lint → 跳过本段（内置不提供回退，债评估需要书本包装才不会”凭感觉”）。

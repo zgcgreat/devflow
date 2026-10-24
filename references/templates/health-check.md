@@ -91,7 +91,7 @@ graph TD
 
 | 去向 | 内容 | 状态 |
 |---|---|---|
-| `.devflow/CONTEXT.md` | `<技术债 / 禁动清单追加>` | `<已写 / 待确认 / N/A>` |
+| `.devflow/memory/CONTEXT.md` | `<技术债 / 禁动清单追加>` | `<已写 / 待确认 / N/A>` |
 | `.devflow/lessons-learned.md` | `<观察条目>` | `<已写 / 待确认 / N/A>` |
 | `health-fix` req | `<Critical 汇总>` | `<已创建 / 待用户确认 / N/A>` |
 

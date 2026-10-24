@@ -2,7 +2,7 @@
 
 - **Req ID**: <id>
 - **template-version**: `v1.0.0`
-- **关联**: `@.devflow/<id>/01-analysis.md`、`@.devflow/CONTEXT.md`、`@.devflow/references/tech-stacks.md`
+- **关联**: `@.devflow/<id>/01-analysis.md`、`@.devflow/memory/CONTEXT.md`、`@.devflow/references/tech-stacks.md`
 - **作者**: AI（Architect 角色）+ 人工 review
 - **基线版本**: <如有design-baseline.md，填写版本号；首次创建写"初始"">
 
