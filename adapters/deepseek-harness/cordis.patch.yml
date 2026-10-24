@@ -16,7 +16,10 @@
 
 - insert:
     - id: devflow-gate
-      name: 'dsh-devflow'
+      # 裸包名会从 DSH 安装目录 / pnpm 管理的 node_modules 解析，本地未发布的
+      # checkout 解析不到 → 插件加载失败 → DSH 启动中断（fail-loud）。
+      # 必须用 './' 相对路径形式（相对本 patch 文件所在目录），见 install.md 步骤 2.3。
+      name: './plugins/dsh-devflow'
       config:
         # Refuse mutations that leave the current gate unsatisfied.
         enforceGuard: true

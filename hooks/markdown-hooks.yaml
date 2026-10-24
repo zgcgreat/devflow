@@ -14,6 +14,7 @@ hooks:
       compress: "触发 caveman-shrink → ultra 压缩"
       archive: "触发 memory-compression 归档"
       extreme: "触发 output-compression extreme + surface-switch extreme"
+    note: "依赖 ecc-metrics-bridge.js 写入的 bridge 文件提供信号，无 bridge 时静默无操作"
 
   prompt-guard:
     description: "敏感信息检测与脱敏"
@@ -55,6 +56,7 @@ hooks:
       - "列出所有发现的问题"
       - "标记严重程度(CRITICAL/HIGH/MEDIUM/LOW)"
       - "推荐修复方案"
+    note: "信号来源: 优先读会话累加器，缺失时回退 git 工作区改动（非 git 环境无信号跳过）；fail_action: gate_fail"
 
   console-log-check:
     description: "console.log 检查(Markdown 降级版)"
@@ -66,6 +68,7 @@ hooks:
     actions:
       - "列出所有发现的 console.log"
       - "建议移除调试日志或替换为正式日志框架"
+    note: "发现残留以非零退出（gate_fail 成立，阻断门控）"
 
   security-scan:
     description: "安全扫描(Markdown 降级版)"
@@ -79,6 +82,7 @@ hooks:
       - "按 OWASP 分类列出所有安全问题"
       - "CRITICAL 问题必须标注"
       - "推荐修复方案和安全替代模式"
+    note: "fail_action: advisory（默认不启用，直接放行）— 发现问题以建议形式报告，不阻断门控。强制执行需 ECC_ENABLE_INSAITS=1 + Python 3.9+ + pip install insa-its，届时可作为硬门控(gate_fail)"
 
   cost-tracker:
     description: "成本追踪(Markdown 降级版)"

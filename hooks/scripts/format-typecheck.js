@@ -23,6 +23,7 @@ const os = require('os');
 const path = require('path');
 
 const { findProjectRoot, detectFormatter, resolveFormatterBin } = require('../lib/resolve-formatter');
+const { isGitRepo, getGitModifiedFiles } = require('../lib/utils');
 
 const MAX_STDIN = 1024 * 1024;
 // Total ms budget reserved for all batches (leaves headroom below the 300s Stop timeout)
@@ -136,14 +137,19 @@ function typecheckBatch(tsConfigDir, editedFiles, timeoutMs) {
 function main() {
   const accumFile = getAccumFile();
 
-  let raw;
+  let raw = null;
   try {
     raw = fs.readFileSync(accumFile, 'utf8');
+    try { fs.unlinkSync(accumFile); } catch { /* best-effort */ }
   } catch {
-    return; // No accumulator — nothing edited this response
+    // 累加器写入方（post-edit-accumulator.js）未随本仓库分发。
+    // 回退：用 git 工作区改动（HEAD diff）作为"本次编辑的文件"信号；
+    // 非 git 仓库则无信号，跳过（与 console-log-check.js 同一口径）。
+    if (isGitRepo()) {
+      raw = getGitModifiedFiles(['\\.(ts|tsx|js|jsx)$']).join('\n');
+    }
   }
-
-  try { fs.unlinkSync(accumFile); } catch { /* best-effort */ }
+  if (!raw) return;
 
   const files = parseAccumulator(raw);
   if (files.length === 0) return;

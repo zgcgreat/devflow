@@ -60,6 +60,10 @@ process.stdin.on('end', () => {
 
     if (hasConsole) {
       log('[Hook] Remove console.log statements before committing');
+      // hooks.json 将本钩子注册为 G5 的 fail_action: gate_fail ——
+      // 发现残留必须以非零退出，警告-only 会让注册表承诺的"门控失败"形同虚设
+      process.stdout.write(data);
+      process.exit(1);
     }
   } catch (err) {
     log(`[Hook] check-console-log error: ${err.message}`);

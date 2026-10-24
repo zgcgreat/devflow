@@ -19,7 +19,27 @@ const { findProjectDir, DEVFLOW_DIR } = require('./core-bridge');
 // 现与 domains/hooks/gate-check.js 一致，改为派生。
 
 function buildGates() {
-  const { GATES: AUTHORITATIVE, PHASES } = require('../../lib/phase-engine');
+  let AUTHORITATIVE, PHASES;
+  try {
+    ({ GATES: AUTHORITATIVE, PHASES } = require('../../lib/phase-engine'));
+  } catch (e) {
+    // lib/phase-engine.js 不可达（adapters/ 目录被单独拷贝时）→ 回退内置静态门控表，
+    // 与 core-bridge.js loadGateRules 的静态兜底表保持一致（phase 与产物名对齐权威定义）。
+    return {
+      G0:     { phase: 0,   artifacts: ['00-strategy.md'],    label: 'Strategy Gate',     type: 'auto' },
+      G1:     { phase: 1,   artifacts: ['01-analysis.md'],    label: 'Analysis Gate (5Whys)', type: 'auto' },
+      G2:     { phase: 1,   artifacts: ['01-analysis.md'],    label: 'Architecture Gate', type: 'manual' },
+      'G2.5': { phase: 1.5, artifacts: ['01b-context.md'],    label: 'Discussion Gate (Phase 1b)', type: 'manual' },
+      G3:     { phase: 2,   artifacts: ['02-design.md'],      label: 'Design Gate',       type: 'manual' },
+      'G3.5': { phase: 2.5, artifacts: ['02a-variants.md'],   label: 'Shotgun Gate (Phase 2a)', type: 'manual' },
+      G4:     { phase: 3,   artifacts: ['03-tasks.md'],       label: 'Task Plan Gate',    type: 'auto' },
+      G5:     { phase: 4,   artifacts: ['04-wave-logs.md'],   label: 'Build Gate',        type: 'manual' },
+      G6:     { phase: 5,   artifacts: ['05-test-report.md'], label: 'Test Gate',         type: 'auto' },
+      G7:     { phase: 6,   artifacts: ['06-review.md'],      label: 'Review Gate',       type: 'manual' },
+      'G7.5': { phase: 7,   artifacts: ['07-canary.md'],      label: 'Canary Gate',       type: 'manual' },
+      G8:     { phase: 8,   artifacts: ['08-archive.md'],     label: 'Archive Gate',      type: 'auto' },
+    };
+  }
   const map = {};
   for (const g of AUTHORITATIVE) {
     map[g.id] = { phase: g.phaseAfter, artifacts: [], label: g.name, type: g.type };

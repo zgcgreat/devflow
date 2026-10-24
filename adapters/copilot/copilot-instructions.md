@@ -17,16 +17,23 @@ This project uses devflow v3.0 phased workflow. As a GitHub Copilot assistant, f
 
 ## Phase Gate Requirements
 
-| Phase | Required Before Entry |
+Artifacts live under `.devflow/<req-id>/`. Before advancing past a phase, its exit gate requires the corresponding artifact:
+
+| Phase | Exit Artifact (Gate) |
 |-------|----------------------|
-| Phase 1 | Project initialized (Phase 0 complete) |
-| Phase 2 | Requirements documented (00-requirements.md) |
-| Phase 3 | Analysis complete (01-analysis.md), Design done (02-design.md) |
-| Phase 4 | Tasks planned (03-tasks.md) |
-| Phase 5 | Development log started (04-dev-log.md) |
-| Phase 6 | Tests written and passing (05-test-report.md) |
-| Phase 7 | Code review complete (06-code-review.md) |
-| Phase 8 | Release checklist verified (07-release-checklist.md) |
+| Phase 0 | 00-strategy.md (G0) |
+| Phase 1 | 01-analysis.md (G1; plus manual gate G2) |
+| Phase 1.5 | 01b-context.md (G2.5) |
+| Phase 2 | 02-design.md (G3) |
+| Phase 2.5 | 02a-variants.md (G3.5) |
+| Phase 3 | 03-tasks.md (G4, strict mode only) |
+| Phase 4 | 04-wave-logs.md (G5) |
+| Phase 5 | 05-test-report.md (G6) |
+| Phase 6 | 06-review.md (G7) |
+| Phase 7 | 07-canary.md (G7.5) |
+| Phase 8 | 08-archive.md (G8) |
+
+Mode trimming: `fast` starts at 04-wave-logs.md; `lean` starts at 02-design.md; no 03-tasks.md unless `strict`.
 
 ## Token Compression
 

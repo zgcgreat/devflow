@@ -6,6 +6,45 @@
 
 ---
 
+## [3.3.1] - 2026-10-24
+
+### Fixed — 门控强制硬化（高严重度）
+
+- `phase --set` 前向跳跃此前不校验途经门控，可从 Phase 0 无 `--force` 直达 Phase 4 绕过 G0-G3.5；现与 `--next` 同受门控拦截，`--force` 为显式逃生阀并记录到 state.json 的 `skips` 数组（含越过门控清单）
+- `phase --output` 此前 filePath 可省略、只查文件存在不校验产物名（README.md/目录可冒充）；现强制：路径必填 + 文件存在且为普通文件 + basename 必须等于该 Phase 预期产物名
+- state.json 此前非原子写（并发可截断）且损坏时静默清零全部门控历史；现 tmp+rename 原子写，损坏时备份为 `state.json.corrupt-*` 后显式重建
+- `devflow init` 在空目录把"改动规模阈值"误用于"仓库规模"，全新项目被误判 Fast（从 Phase 4 开始）；现 greenfield（0 文件 0 行非 brownfield）判 STANDARD，与 GO.md"从零开始必跑 Phase 0"一致
+- TaskPlanner 此前无环检测/无拓扑排序（GO.md 承诺的 Kahn 不存在），tasks.json 缺 wave 字段时静默产出 `wave: NaN`；现依赖完整性校验 + 环检测 + Kahn 拓扑 + 按最长依赖深度重算 Wave
+- 被跳过 Phase 的门控不再误拦 `nextPhase()`（模式切换残留场景正确传送到模式起点）
+
+### Fixed — 钩子诚实化
+
+- console-log-check 此前只警告恒 exit(0)，与 hooks.json 注册的 `gate_fail` 矛盾；现发现残留非零退出
+- security-scan 默认禁用却注册为 G6/G7 强制门控（恒放行）；注册语义改为 advisory 并注明启用前提（ECC_ENABLE_INSAITS=1 + Python 3.9+）
+- format-typecheck 依赖的会话累加器写入方不存在于本仓库，恒空转；现缺失时回退 git 工作区改动信号（与 console-log-check 同口径）
+- insaits-security-wrapper.js 与 security-scan.js 逐字节重复，前者改为别名入口（单一实现）
+- token-monitor/context-monitor 注册描述补充信号来源前提（无 harness 信号时为 no-op）
+
+### Fixed — 适配器
+
+- DSH `cordis.patch.yml` 裸包名 `dsh-devflow` 会导致 DSH 启动中断，改为 `./plugins/dsh-devflow`（与 install.md 一致）
+- 删除 `adapters/cursor/hooks/` 整目录死代码（脚本路径全部断链且与"Cursor 不支持原生 hook"自相矛盾）
+- codex/gemini/copilot/cursor 四处产物清单漂移（00-requirements.md 等旧名）对齐 phase-engine 权威定义
+- claude-code 适配器：非法 `PreCommit` 事件名修正为 Stop/PreCompact 等真实事件；install 指南不再整文件覆盖用户 `.claude/settings.json`（改为合并 hooks 段）；`DevFlow_HOME`/`DEVFLOW_HOME` 变量名统一
+- core-bridge.js：claude-code 检测改用真实存在的 `CLAUDECODE=1`；新增 `detect-runtime`/`read-state` CLI 入口（四处文档示范的命令此前静默无输出）；findArtifact 候选顺序与 gate-checker 统一；gate-checker 对 phase-engine 的 require 增加静态兜底（adapters 可独立拷贝）
+- harnesses/install.js：`--list`/`--status` 对损坏链接不再崩溃；陈旧文件清理同时移除残留空目录
+
+### Changed — 文档一致性
+
+- references/gate-rules.md：头部 v3.2 版本标签更新；依赖图 Phase 1 补画 G2；Phase 2a"可选"表述修正为 standard/strict 必跑
+- GO.md：Step 1 状态字段名对齐 state.json 真实字段（mode/currentPhase/gates/skips）；Phase 0/1 条件跳过补引擎落地方式（`--set --force` + skips 审计）；阶段依赖补 1b、修正 2a/3 可选性表述；greenfield 判定入 Step 1.5
+- docs/cli-reference.md 与实际 CLI 全量对齐（--version/--help、phase --set 门控行为、phase --output 产物名校验、task --file/--save/--json、mem --recent、init greenfield）
+- CONSTITUTION.md 谱系标注、根 README 安装目标现状、mode-rules greenfield 规则、hooks/markdown-hooks.yaml 与 hooks.json 语义同步
+
+### Tests
+
+- 21 → 26 项：新增 setPhase 前向门控拦截+审计、outputWritten 产物名校验、state.json 损坏备份重建、残留 Phase 传送、TaskPlanner 环检测/Kahn/Wave 重算、Memory id 唯一+访问统计持久化
+
 ---
 
 ## [3.3.0] - 2026-09-12

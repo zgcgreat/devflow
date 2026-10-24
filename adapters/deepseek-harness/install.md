@@ -28,8 +28,8 @@ DSH 只从下列根发现技能（**rank 数字小者优先**）：
 **重要：仓库根目录的 `SKILL.md` 不会被发现。** 文件必须位于 `<根>/<名字>/SKILL.md`。用 junction 让 checkout 保持唯一权威：
 
 ```powershell
-# Windows，无需管理员权限
-New-Item -ItemType Junction -Path "$env:USERPROFILE\.agents\skills\devflow" -Target "E:\LLM\skills\devflow"
+# Windows，无需管理员权限（<DEVFLOW_REPO> 替换为本地 devflow 仓库路径）
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.agents\skills\devflow" -Target "<DEVFLOW_REPO>"
 ```
 
 ```bash
@@ -95,7 +95,8 @@ $prof = "$env:APPDATA\dsh-desktop\harness\profiles\web"
 $dst  = "$prof\plugins\dsh-devflow"
 
 New-Item -ItemType Directory -Path (Split-Path $dst) -Force | Out-Null
-Copy-Item "E:\LLM\skills\dsh-devflow" $dst -Recurse -Force
+# <DSH_DEVFLOW_REPO> 替换为本地 dsh-devflow 插件仓库路径
+Copy-Item "<DSH_DEVFLOW_REPO>" $dst -Recurse -Force
 Remove-Item "$dst\.git" -Recurse -Force -ErrorAction SilentlyContinue
 ```
 
@@ -177,7 +178,7 @@ node "$dst\install\cordis-patch.mjs" --revert
 
 | 项 | 说明 |
 |---|---|
-| **不要桥接 `hooks.json`** | `dsh-hooks-claude-code` 需要显式 `configPath`，且只认 Claude Code 的 `事件 → matcher 数组` 结构。DevFlow 的 `hooks/hooks.json` 是 `{hooks: {"<id>": {event, script}}}`，在 DSH 里会解析出 **0 个 hook** |
+| **不要桥接 `hooks.json`** | `dsh-hooks-claude-code` 需要显式 `configPath`，且只认 Claude Code 的 `事件 → matcher 数组` 结构。DevFlow 的 `hooks/hooks.json` 是 `{hooks: {"<id>": {script, type, gates, fail_action}}}`，在 DSH 里会解析出 **0 个 hook** |
 | **不要移植 `hooks/scripts/`** | 那些脚本依赖 `CLAUDE_SESSION_ID` / `CLAUDE_PLUGIN_ROOT` / `CLAUDE_TRANSCRIPT_PATH` / `ECC_*`，DSH 从不设置这些变量 |
 | **不要直接发布到插件市场** | DSH 启动是 fail-loud，插件崩了会挡住启动。先本地挂载、跑通、再用 safe-mode 兜底 |
 | **npm 包名冲突** | registry 上的 `devflow` 由他人持有（latest `0.0.1`，2021），发布必须换名 |
@@ -189,5 +190,5 @@ node "$dst\install\cordis-patch.mjs" --revert
 Remove-Item "$env:USERPROFILE\.agents\skills\devflow" -Force
 
 # 从 $prof\cordis.patch.yml 里删掉 devflow-gate 那一行
-# 并删除 $prof\plugins\dsh-devflow（若用了方案 A）
+# 并删除步骤 2.3 安装的插件副本 $prof\plugins\dsh-devflow
 ```

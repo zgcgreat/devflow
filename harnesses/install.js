@@ -146,6 +146,15 @@ function isLink(p) {
   }
 }
 
+/** 读取链接目标；损坏链接（readlink 失败）显示为 <broken-link>，不抛错。 */
+function readLinkSafe(p) {
+  try {
+    return fs.readlinkSync(p);
+  } catch {
+    return '<broken-link>';
+  }
+}
+
 // ─── 安装动作 ───────────────────────────────────────────
 
 /** bundle 目标：整目录复制 + 清理陈旧文件。 */
@@ -198,6 +207,17 @@ function installBundle(targetDir, dryRun, force) {
       removedList.push(rel);
       if (!dryRun) {
         fs.rmSync(dst, { force: true });
+        // best-effort: 一并清理因此变空的父目录（不删除目标根目录本身，失败静默跳过）
+        let parent = path.dirname(dst);
+        while (true) {
+          const rel = path.relative(targetDir, parent);
+          if (!rel || rel.startsWith('..')) break; // 已到达/越过目标根
+          try {
+            if (fs.readdirSync(parent).length > 0) break;
+            fs.rmdirSync(parent);
+          } catch { break; }
+          parent = path.dirname(parent);
+        }
       }
       removed++;
     }
@@ -319,7 +339,7 @@ function cmdList() {
     const dir = t.dir();
     const state = t.kind === 'bundle' || t.kind === 'junction' ? readState(dir) : null;
     let status;
-    if (isLink(dir)) status = `已链接 -> ${fs.readlinkSync(dir)}`;
+    if (isLink(dir)) status = `已链接 -> ${readLinkSafe(dir)}`;
     else if (fs.existsSync(dir)) status = state ? `已安装 v${state.version}（${state.files?.length ?? '?'} 文件）` : '已存在（来源不明）';
     else status = '未安装';
     console.log(`  ${name.padEnd(12)} ${t.label.padEnd(18)} ${status}`);
@@ -337,7 +357,7 @@ function cmdStatus(name) {
   const state = readState(dir);
   console.log(`目标: ${target.label} (${name})`);
   console.log(`路径: ${dir}`);
-  if (isLink(dir)) console.log(`链接: -> ${fs.readlinkSync(dir)}`);
+  if (isLink(dir)) console.log(`链接: -> ${readLinkSafe(dir)}`);
   console.log(state ? `状态: ${JSON.stringify(state, null, 2)}` : '状态: 无安装记录');
 }
 

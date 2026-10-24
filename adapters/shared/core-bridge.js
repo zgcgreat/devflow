@@ -23,7 +23,8 @@ const RUNTIMES = {
   // 应当盖过 .cursorrules / codex.yaml 之类的"文件存在性"启发式判断。
   // DSH 每个会话都设置 DSH_SESSION_ID（另有 DSH_HOME / DSH_SHELL / DSH_WEB_URL）。
   'deepseek-harness': { detect: () => !!process.env.DSH_SESSION_ID },
-  'claude-code': { detect: () => !!process.env.CLAUDE_CODE_SESSION_ID },
+  // Claude Code hooks 环境会设置进程级 CLAUDECODE=1（不设置 CLAUDE_CODE_SESSION_ID）
+  'claude-code': { detect: () => process.env.CLAUDECODE === '1' },
   'cursor': { detect: () => fs.existsSync('.cursorrules') || fs.existsSync('.cursor/rules') },
   'copilot': { detect: () => fs.existsSync('.github/copilot-instructions.md') },
   'codex': { detect: () => fs.existsSync('codex.yaml') || fs.existsSync('AGENTS.md') },
@@ -130,13 +131,13 @@ function collectDevflowDirs(dir, depth = 0, out = []) {
   return out;
 }
 
-/** 定位产物：项目根 → .devflow/ 根 → 各级 <req-id>/ 子目录 */
+/** 定位产物：.devflow/ 根 → 各级 <req-id>/ 子目录 → 项目根（与 gate-checker.js resolveArtifactPath 顺序一致） */
 function findArtifact(projectDir, name) {
   const devflowRoot = path.join(projectDir, DEVFLOW_DIR);
   const candidates = [
-    path.join(projectDir, name),
     path.join(devflowRoot, name),
     ...collectDevflowDirs(devflowRoot).map(d => path.join(d, name)),
+    path.join(projectDir, name),
   ];
   return candidates.find(p => fs.existsSync(p)) || null;
 }
@@ -234,3 +235,38 @@ module.exports = {
   STATE_FILE,
   RUNTIMES,
 };
+
+// ─── CLI 入口 ───────────────────────────────────────────
+//
+// 各适配器文档（claude-code/install.md、codex/codex.yaml、gemini-cli/install.md、
+// adapters/README.md）示范的命令行用法在此落地：
+//   node core-bridge.js detect-runtime       打印 detectRuntime() 结果
+//   node core-bridge.js read-state <dir>     读取并打印 <dir>/.devflow/state.json
+
+if (require.main === module) {
+  const command = process.argv[2];
+
+  switch (command) {
+    case 'detect-runtime': {
+      console.log(detectRuntime());
+      break;
+    }
+    case 'read-state': {
+      const dir = process.argv[3];
+      if (!dir) {
+        console.error('Usage: core-bridge.js read-state <dir>');
+        process.exit(1);
+      }
+      const statePath = path.join(dir, DEVFLOW_DIR, STATE_FILE);
+      if (!fs.existsSync(statePath)) {
+        console.error(`未找到状态文件: ${statePath}`);
+        process.exit(1);
+      }
+      console.log(fs.readFileSync(statePath, 'utf8'));
+      break;
+    }
+    default:
+      console.log('DevFlow Core Bridge');
+      console.log('Commands: detect-runtime | read-state <dir>');
+  }
+}

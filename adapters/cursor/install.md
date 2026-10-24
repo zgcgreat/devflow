@@ -16,7 +16,7 @@ cp adapters/cursor/devflow.mdc .cursor/rules/devflow.mdc
 
 ### 2. 验证安装
 
-在 Cursor 中打开项目，开始新对话，确认 AI 助手能读取 `.devflow/STATE.md`。
+在 Cursor 中打开项目，开始新对话，确认 AI 助手能读取 `.devflow/state.json`。
 
 ### 3. 自定义配置
 
@@ -31,7 +31,7 @@ globs:
 ## 限制
 
 Cursor 不支持原生 hook 机制，以下功能需手动触发：
-- 阶段门禁检查：手动运行 `node adapters/shared/gate-checker.js <phase>`
+- 阶段门禁检查：手动运行 `node adapters/shared/gate-checker.js check <GATE_ID>`（如 `check G5`）；`next` 可查询当前 Phase 的下一个门控，`all` 批量检查
 - 记忆加载：AI 助手在对话开始时自动读取
 - 状态栏：不支持
 

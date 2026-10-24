@@ -4,8 +4,8 @@
   "description": "DevFlow Claude Code Adapter — Hook 映射注册表",
   "runtime": {
     "required": "node >= 18",
-    "adapter_home": "${DEVFLOW_HOME}/adapters/claude-code",
-    "scripts_root": "${DEVFLOW_HOME}/hooks/scripts"
+    "adapter_home": "$DEVFLOW_HOME/adapters/claude-code",
+    "scripts_root": "$DEVFLOW_HOME/hooks/scripts"
   },
   "hooks": {
     "session-startup": {
@@ -27,7 +27,7 @@
       "fail_action": "advisory"
     },
     "format-typecheck": {
-      "event": "PreCommit",
+      "event": "Stop",
       "script": "scripts/format-typecheck.js",
       "description": "Batch formatting + TypeScript type check before commit",
       "gates": ["G5", "G7"],
@@ -35,7 +35,7 @@
       "fail_action": "gate_fail"
     },
     "console-log-check": {
-      "event": "PreCommit",
+      "event": "Stop",
       "script": "scripts/console-log-check.js",
       "description": "Detect residual console.log statements in production code",
       "gates": ["G5"],
@@ -43,7 +43,7 @@
       "fail_action": "gate_fail"
     },
     "security-scan": {
-      "event": "PreCommit",
+      "event": "Stop",
       "script": "scripts/security-scan.js",
       "description": "OWASP security scan (injection/SSRF/sensitive data exposure)",
       "gates": ["G6", "G7"],
@@ -52,7 +52,7 @@
       "note": "Requires Python 3 for insaits-security-monitor.py"
     },
     "compact-suggest": {
-      "event": "PostToolUse",
+      "event": "PreCompact",
       "script": "scripts/compact-suggest.js",
       "description": "Suggest context compaction at logical breakpoints or when context expands",
       "gates": [],
@@ -60,7 +60,7 @@
       "fail_action": "advisory"
     },
     "cost-tracker": {
-      "event": "PostToolUse",
+      "event": "Stop",
       "script": "scripts/cost-tracker.js",
       "description": "Track cumulative session cost (token count + USD estimate)",
       "gates": [],
@@ -68,7 +68,7 @@
       "fail_action": "advisory"
     },
     "gate-enforcement": {
-      "event": "PreCommit",
+      "event": "Stop",
       "script": "scripts/context-monitor.js",
       "args": ["--mode", "gate-check"],
       "description": "Run gate-mapped hooks and report pass/fail before phase transition",

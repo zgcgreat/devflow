@@ -3,6 +3,16 @@
 > 本文件是 SKILL.md 模式部分的详细展开。
 > **v3.2**：四档模式（Fast/Lean/Standard/Strict）+ 选择题交互模式
 
+## Greenfield 判定规则
+
+空目录（0 文件、0 行且非 brownfield）→ 自动判定为 **Standard** — 从零开始必跑 Phase 0（YC 六问）。
+
+- 与 `lib/phase-engine.js` 的 `detectMode()` 单一来源一致（命中规则: `greenfield`）
+- 阈值表衡量的是"改动规模"，0 文件 0 行的空目录不能据此判 Fast/Lean
+- `devflow init` 未显式传 `--mode` 时按此自动判定，结果写入 state.json 的 `mode` 字段
+
+---
+
 ## Fast 模式准入 Checklist
 
 **进入 Fast 模式前，AI 必须确认以下所有条件：**

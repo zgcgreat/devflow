@@ -17,7 +17,7 @@ gemini "what is the current devflow phase?"
 
 ## 限制
 
-Gemini CLI 无原生 hook 支持。使用 `node adapters/shared/core-bridge.js` 手动获取状态。
+Gemini CLI 无原生 hook 支持。使用 `node adapters/shared/core-bridge.js read-state .` 手动获取状态。
 
 ## 卸载
 

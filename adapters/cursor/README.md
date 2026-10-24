@@ -15,9 +15,8 @@ See `install.md` for a step-by-step walkthrough.
 
 When Node.js is present, the adapter operates at Level 1 capability:
 
-- **JS hooks via Cursor's MCP integration** -- DevFlow hooks execute as MCP server calls, leveraging Cursor's Model Context Protocol support
-- **Gate auto-check** -- phase-transition hooks verify gate conditions through MCP tool calls
-- **Persona loads with hook support** -- personas can register MCP tools that respond to hook events
+- **Manual gate checks via CLI** -- run `node adapters/shared/gate-checker.js check <GATE_ID>` (also `next` / `all`) to verify gate artifacts on disk. Cursor has no native hook mechanism, so checks are invoked manually rather than automatically
+- **State and memory access via core-bridge** -- `node adapters/shared/core-bridge.js read-state .` reads the current phase from `.devflow/state.json`
 
 ### Level 0 (No Node.js)
 

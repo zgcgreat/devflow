@@ -1,6 +1,6 @@
 ---
 name: devflow
-version: 3.3.0
+version: 3.3.1
 description: |
   DevFlow — 带门控强制的分阶段软件交付流程（Phase 0-8）。
   当用户要求按阶段推进开发、或在动手写代码前需要先做需求分析、方案设计、任务拆分时使用。
@@ -14,7 +14,7 @@ description: |
   不适用：单行修复、纯问答、纯文档润色等无需流程约束的任务。
 ---
 
-# DevFlow v3.3.0 — AI 开发操作系统
+# DevFlow v3.3.1 — AI 开发操作系统
 
 > DevFlow Phase 管线 + Gate 门控 + 3 级运行时，零外部依赖自包含架构。
 > 所有文件在 devflow 目录内，无外部引用。
@@ -91,8 +91,8 @@ devflow status                 # 状态检查
 | R2 | 渐进式披露 | Phase 0-8 按需加载，不一次性展开 | 视作 Token 滥用，用户可要求立即压缩 |
 | R3 | Token 监控 70%/90% | >70% 提示压缩，>90% 触发 Caveman 压缩 | 超过 90% 用户可拒绝继续对话 |
 | R4 | 选择题优先 | GO.md Step 2: 给用户预设选项[A]/[B]/[C] | 用户可要求重新提问 |
-| R5 | Gate 声明式验证 | `references/gate-rules.md` 定义"跳过条件",`lib/phase-engine.js` 自动阻止非法推进 | phase-engine **不会**推进未通过门控的 Phase（见自动护卫） |
-| R6 | 门控不阻塞用户 | Fast/Lean 例外规则 + 用户显式 skip 优先于自动检查 | 跳过必须记录在路由声明中 |
+| R5 | Gate 声明式验证 | `references/gate-rules.md` 定义"跳过条件",`lib/phase-engine.js` 自动阻止非法推进 | phase-engine **不会**推进未通过门控的 Phase：`--next` 校验当前门控，`--set` 前向跳跃校验途经门控 |
+| R6 | 门控不阻塞用户 | Fast/Lean 例外规则 + 用户显式 skip 优先于自动检查 | 跳过必须用 `--force` 显式声明：引擎会记录到 state.json 的 `skips` 数组（含越过的门控），并在路由声明中标注 |
 | R7 | 单一来源 of truth | references/templates/ (26个) 是权威模板, domains/specification/templates/ 是简化版 | 不一致时以 references/templates/ 为准 |
 
 > R8-R11 → `layers/L2-ENGINE/hooks-system/_SKILL.md`（钩子系统规则）

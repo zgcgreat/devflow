@@ -34,8 +34,8 @@ DSH discovers skills only from these roots, lowest rank winning:
 `<root>/<name>/SKILL.md`. Use a directory junction so the checkout stays authoritative:
 
 ```powershell
-# Windows — no admin rights needed
-New-Item -ItemType Junction -Path "$env:USERPROFILE\.agents\skills\devflow" -Target "E:\LLM\skills\devflow"
+# Windows — no admin rights needed (<DEVFLOW_REPO> = your local devflow checkout path)
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.agents\skills\devflow" -Target "<DEVFLOW_REPO>"
 ```
 
 ```bash
@@ -47,7 +47,7 @@ Symlinks are followed (`watchFollowSymlinks` defaults to true), and DSH watches 
 changes, so edits to the checkout are picked up live.
 
 DSH renders **only `name` and `description`** (whitespace collapsed, truncated at 500 chars) into
-its skill catalog. `E:\LLM\skills\devflow\SKILL.md`'s description must therefore carry the
+its skill catalog. The checkout's `SKILL.md` description must therefore carry the
 routing words the model actually matches on (`requirement analysis`, `design`, `task breakdown`,
 `code review`, `phased workflow`, `gate`) — a description naming only the product is never selected.
 
@@ -69,8 +69,8 @@ The plugin lives in its own package (`dsh-devflow`), not in this repository. See
 - **No `hooks.json` bridge.** DSH's `dsh-hooks-claude-code` package needs an explicit `configPath`
   and expects Claude Code's `event -> matcher-group array` shape. DevFlow's
   `hooks/hooks.json` and `adapters/claude-code/hooks.json` use a different schema
-  (`hooks: { "<id>": { event, script, ... } }`) that parses to **zero** hooks in DSH. Do not point
-  a bridge at them.
+  (`hooks: { "<id>": { script, type, gates, fail_action, ... } }`) that parses to **zero**
+  hooks in DSH. Do not point a bridge at them.
 - **No `hooks/scripts/` port.** Those scripts read `CLAUDE_SESSION_ID`, `CLAUDE_PLUGIN_ROOT`,
   `CLAUDE_TRANSCRIPT_PATH` and `ECC_*` environment variables that DSH never sets.
 - **No dshmarket publication.** DSH is fail-loud: a plugin that fails to resolve aborts startup

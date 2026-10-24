@@ -91,8 +91,7 @@ Gate 流程（零运行时模式）：
 
 ```
 adapters/universal/
-  README.md          ← 本文件
-  INSTALL.md         ← 安装指引 (M5完善)
+  README.md          ← 本文件（通用安装指引见 adapters/README.md）
 
 hooks/
   checklist-fallback.md  ← 降级检查清单 (M2创建)

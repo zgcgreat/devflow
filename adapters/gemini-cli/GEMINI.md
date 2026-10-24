@@ -5,22 +5,29 @@
 This project uses DevFlow v3.0 phased workflow. Follow these instructions:
 
 ### Phase Awareness
-- Read `.devflow/STATE.md` to determine current phase
+- Read `.devflow/state.json` to determine current phase
 - Respect gate checks — do not skip phases
 - Load memory from `.devflow/memory/` for project context
 
 ### Phase Gate Requirements
 
-| Phase | Required Artifacts |
-|-------|-------------------|
-| Phase 1 | 00-requirements.md |
-| Phase 2 | 01-analysis.md |
-| Phase 3 | 02-design.md, 03-tasks.md |
-| Phase 4 | 03-tasks.md |
-| Phase 5 | 04-dev-log.md |
-| Phase 6 | 05-test-report.md |
-| Phase 7 | 06-code-review.md |
-| Phase 8 | 07-release-checklist.md |
+Artifacts live under `.devflow/<req-id>/`. Each phase's exit gate requires its artifact:
+
+| Phase | Artifact (Gate) |
+|-------|-----------------|
+| Phase 0 | 00-strategy.md (G0) |
+| Phase 1 | 01-analysis.md (G1; plus manual gate G2) |
+| Phase 1.5 | 01b-context.md (G2.5) |
+| Phase 2 | 02-design.md (G3) |
+| Phase 2.5 | 02a-variants.md (G3.5) |
+| Phase 3 | 03-tasks.md (G4, strict mode only) |
+| Phase 4 | 04-wave-logs.md (G5) |
+| Phase 5 | 05-test-report.md (G6) |
+| Phase 6 | 06-review.md (G7) |
+| Phase 7 | 07-canary.md (G7.5) |
+| Phase 8 | 08-archive.md (G8) |
+
+Mode trimming: `fast` starts at 04-wave-logs.md; `lean` starts at 02-design.md; no 03-tasks.md unless `strict`.
 
 ### Memory Management
 - Decisions: `.devflow/memory/DECISIONS.md`

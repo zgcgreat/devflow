@@ -7,31 +7,30 @@
 
 ## 安装步骤
 
-### 1. 复制配置文件
+### 1. 合并配置文件
 
-```bash
-# 将 hooks 和 settings 复制到项目 .claude/ 目录
-cp adapters/claude-code/hooks.json .claude/hooks.json
-cp adapters/claude-code/settings.json .claude/settings.json
-```
+把 `settings.json` 里的 hooks 配置段合并进你已有的 `.claude/settings.json`（与 `README.md` Installation 一致）。
+**不要整文件覆盖** —— `.claude/settings.json` 中通常已有你的其他配置。
+
+注意：Claude Code 不读取 `.claude/hooks.json`，`hooks.json` 仅作为 hook 映射参考，无需复制到 `.claude/`。
 
 ### 2. 设置环境变量
 
 在 `.env` 或 shell profile 中添加：
 
 ```bash
-export DevFlow_HOME="$(pwd)/path/to/devflow"
+export DEVFLOW_HOME="$(pwd)/path/to/devflow"
 ```
 
 ### 3. 验证安装
 
 ```bash
 # 测试 bridge 是否可用
-node $DevFlow_HOME/adapters/shared/core-bridge.js detect-runtime
+node $DEVFLOW_HOME/adapters/shared/core-bridge.js detect-runtime
 # 应输出: claude-code
 
 # 测试状态读取
-node $DevFlow_HOME/adapters/shared/core-bridge.js read-state .
+node $DEVFLOW_HOME/adapters/shared/core-bridge.js read-state .
 ```
 
 ### 4. CLAUDE.md 注入
@@ -51,6 +50,6 @@ This project uses devflow v3.0 workflow. Current phase is tracked in `.devflow/s
 ## 卸载
 
 ```bash
-rm .claude/hooks.json .claude/settings.json
+# 从 .claude/settings.json 中移除合并进去的 DevFlow hooks 配置段
 # 从 CLAUDE.md 中移除 DevFlow Integration 段落
 ```

@@ -1,4 +1,4 @@
-# GO — DevFlow v3.3.0 统一路由器
+# GO — DevFlow v3.3.1 统一路由器
 
 > **AI指令**：
 > 1. 本文件是 v3 路由入口，读完后按第四步路由表匹配用户意图
@@ -91,8 +91,8 @@ Phase 详细流程详见 docs/phases/（phase-0-strategy.md ~ phase-7-canary-arc
 ## Step 1 · 读取项目状态
 
 1. 尝试读 `.devflow/state.json`。不存在 → 运行 `devflow init` 创建
-2. 关注字段：`活跃req` / `当前阶段` / `中断任务`
-3. 如存在 `中断任务` 非空 → **优先级最高**，直接走恢复分支
+2. 关注字段：`mode`（模式）/ `currentPhase`（当前阶段）/ `gates`（已过门控）/ `skips`（--force 跳过的审计记录）
+3. 如 `skips` 非空 → 输出审计提示（存在被强制跳过的门控，路由声明中必须标注）
 4. **初始化记忆系统**（首次使用必跑）:
    - 检查 `.devflow/memory/` 是否存在
    - **如不存在** → 创建目录并初始化：
@@ -143,6 +143,7 @@ devflow phase --mode lean                            # 应用判定结果
 ```
 
 未提供 `--files`/`--lines` 时按 `--risk` 降级：low → fast，其余 → standard。
+空目录（greenfield：0 文件 0 行且非 brownfield）自动判定为 STANDARD — 从零开始必跑 Phase 0
 （详见 `references/mode-rules.md`）
 
 > **自动判定已落地**：`devflow init` 在未显式传 `--mode` 时会自动扫描当前项目规模并调用 `detectMode()` 判定模式（可用 `--mode` 覆盖），结果写入 `.devflow/state.json`。AI 直接进入 Step 1 读取 state.json 的 `mode` 字段即可，无需每次手动 `devflow detect`。
@@ -200,6 +201,8 @@ devflow phase --mode lean                            # 应用判定结果
 - ✅ 技术方案无歧义
 - ✅ 影响范围可控
 - ❌ 需求包含"支持XX"但未列具体项 → 必跑5Whys追问
+
+**引擎落地方式**：满足跳过条件并经用户确认后，执行 `devflow phase --set <目标Phase> --force` 显式跳过 —— 引擎会记录到 state.json 的 skips 数组（含越过的门控清单），且必须在路由声明的『前置裁剪』中标注。不加 --force 的前向跳跃会被门控拦截。
 
 ---
 
@@ -311,11 +314,11 @@ Step 3.4: Grep降级声明
 
 **核心规则 (R4)**: 缺前置产物 → 不允许直接进入。
 
-**阶段依赖**: `0→1→2→[2a]→3→4→5→6→7→8`
+**阶段依赖**: `0→1→1b→2→2a→[3]→4→5→6→7→8`
 
 **可选阶段**:
-- **[2a] 设计枪战**: 仅前端/UI项目需要
-- **[3] 任务拆分**: 复杂项目建议使用
+- **[2a] 设计枪战**: standard/strict 模式必跑；前端/UI 项目产出完整变体对比，其他项目可产出轻量变体记录
+- **[3] 任务拆分**: 仅 strict 必跑（standard 及以下跳过，Phase 4 内联拆分）
 
 ---
 
@@ -353,6 +356,17 @@ Mode: <Fast/Lean/Standard/Strict>
 ---
 
 ## 版本历史
+
+### v3.3.1 (2026-10-24) — 门控强制硬化 + 全量审计修复
+- **门控引擎**：`phase --set` 前向跳跃现在校验途经门控（防绕过整个门控体系）；`--force` 显式跳过记录到 state.json 的 `skips` 数组（审计可追溯）
+- **产物先于声称**：`phase --output` 强制产物文件名等于该 Phase 预期产物名（如 02-design.md），目录冒充/README 冒充/无路径均拒绝
+- **状态可靠性**：state.json 原子写（tmp+rename）；损坏时备份为 state.json.corrupt-* 后显式重建，不再静默清零
+- **模式判定**：空目录 greenfield 自动判 STANDARD（从零开始必跑 Phase 0），不再误判 Fast
+- **任务规划**：TaskPlanner 补齐依赖完整性校验、环检测、Kahn 拓扑排序，Wave 按最长依赖深度重算（缺失/非法 wave 字段自动纠正）
+- **钩子诚实化**：console-log-check 发现残留非零退出（gate_fail 成立）；security-scan 改 advisory（默认不启用，强制需 ECC_ENABLE_INSAITS=1 + Python）；format-typecheck 回退 git 工作区信号；监控类钩子标注信号来源前提
+- **适配器修复**：DSH cordis.patch.yml 包名修复；删除 cursor/hooks/ 死代码目录；codex/gemini/copilot/cursor 产物清单对齐权威定义；claude-code 事件名修正（Stop/PreCompact 等）+ 不再覆盖用户 settings.json；core-bridge 新增 CLI 入口与 CLAUDECODE 检测
+- **文档一致性**：gate-rules 版本标签与依赖图、GO.md 阶段依赖/条件跳过落地方式/state 字段名、mode-rules greenfield 规则、cli-reference 全量对齐
+- 测试 21 → 26 项（新增 setPhase 门控/outputWritten 校验/状态损坏恢复/残留传送/TaskPlanner/Memory 回归）
 
 ### v3.3.0 (2026-09-12) — 项目更名 DevFlow
 - **品牌统一** — ForgeOS 正式更名 DevFlow，全仓 1333+ 处替换（含 bin/devflow.js、.devflow/ 目录约定）

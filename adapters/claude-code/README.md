@@ -30,18 +30,18 @@ When CodeGraph is also available, the adapter gains Level 2 capabilities:
 
 ## Hook Mapping
 
-8 hooks are mapped to scripts in this adapter:
+8 hooks are mapped to scripts in this adapter (all scripts live in `$DEVFLOW_HOME/hooks/scripts/`):
 
-| Hook | Script | Trigger |
-|------|--------|---------|
-| context-monitor | `context-monitor.js` | phase_transition, periodic_check |
-| prompt-guard | `prompt-guard.js` | user_input |
-| phase-transition | `phase-transition.js` | phase_boundary |
-| tool-execution | `tool-execution.js` | tool_call |
-| format-typecheck | `format-typecheck.js` | gate_check |
-| console-log-check | `console-log-check.js` | gate_check |
-| security-scan | `security-scan.js` | gate_check |
-| cost-tracker | `cost-tracker.js` | session_end |
+| Hook | Script | Event |
+|------|--------|-------|
+| session-startup | `context-monitor.js` | SessionStart |
+| phase-context-inject | `context-monitor.js` | UserPromptSubmit |
+| format-typecheck | `format-typecheck.js` | Stop |
+| console-log-check | `console-log-check.js` | Stop |
+| security-scan | `security-scan.js` | Stop |
+| compact-suggest | `compact-suggest.js` | PreCompact |
+| cost-tracker | `cost-tracker.js` | Stop |
+| gate-enforcement | `context-monitor.js` | Stop |
 
 ## Files Included
 

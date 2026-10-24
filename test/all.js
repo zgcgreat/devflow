@@ -236,6 +236,7 @@ TESTS.push({
       [{ files: 1, lines: 10, risk: 'high' }, 'strict'],
       [{ files: 1, lines: 10, modules: 5 }, 'strict'],
       [{ risk: 'low' }, 'fast'],
+      [{ files: 0, lines: 0, brownfield: false }, 'standard'], // greenfield 空项目必跑 Phase 0
     ];
     const errors = [];
     for (const [input, expect] of cases) {
@@ -248,34 +249,117 @@ TESTS.push({
   },
 });
 
-// Test 5f: setPhase — 相位切换与非法值防护（守护 --phase 不再是死参数）
+// Test 5f: setPhase — 前向跳跃门控强制 + skips 审计（v3.3.1 硬化后的预期行为）
 TESTS.push({
-  name: 'setPhase — 相位切换生效且拒绝非法值',
+  name: 'setPhase — 前向门控拦截 + --force 审计记录',
   run: () => {
     const { PhaseEngine } = require(path.join(ROOT, 'lib', 'phase-engine'));
     const engine = new PhaseEngine(mkWorkspace());
     const errors = [];
-
-    engine.setMode('standard');
-    engine.setPhase(5);
-    if (engine.state.currentPhase !== 5) errors.push(`setPhase(5) 未生效: ${engine.state.currentPhase}`);
 
     // 非法 Phase 必须抛错
     let threw = false;
     try { engine.setPhase(99); } catch { threw = true; }
     if (!threw) errors.push('setPhase(99) 未拒绝非法值');
 
-    // 当前模式下被跳过的 Phase 必须拒绝（除非 force）
-    engine.setMode('fast');
+    // 前向跳跃途经门控未通过 → 必须拒绝（防 --set 绕过门控体系）
+    engine.setMode('standard');
     let blocked = false;
-    try { engine.setPhase(0); } catch { blocked = true; }
-    if (!blocked) errors.push('fast 模式下 setPhase(0) 未被拦截');
+    try { engine.setPhase(5); } catch { blocked = true; }
+    if (!blocked) errors.push('standard 下 setPhase(0→5) 未被门控拦截');
 
-    try { engine.setPhase(0, { force: true }); } catch (e) { errors.push(`force 切换失败: ${e.message}`); }
-    if (engine.state.currentPhase !== 0) errors.push('force 切换未生效');
+    // --force 显式跳过：生效且记录审计（skips 含越过的门控）
+    let forced = null;
+    try { forced = engine.setPhase(5, { force: true }); } catch (e) { errors.push(`force 切换失败: ${e.message}`); }
+    if (engine.state.currentPhase !== 5) errors.push('force 切换未生效');
+    const skips = engine.state.skips || [];
+    if (skips.length !== 1) errors.push(`skips 应记录 1 次，实际 ${skips.length}`);
+    if (skips[0] && !Array.isArray(skips[0].crossedGates)) errors.push('skips 缺少 crossedGates 审计字段');
+
+    // 后向跳跃（回看）不受门控拦截
+    try { engine.setPhase(2); } catch (e) { errors.push(`后向跳跃被误拦: ${e.message}`); }
+    if (engine.state.currentPhase !== 2) errors.push('后向跳跃未生效');
+
+    // 当前模式下被跳过的 Phase 拒绝（除非 force，并记录 crossedSkippedPhase）
+    engine.setMode('fast');
+    let skipBlocked = false;
+    try { engine.setPhase(0); } catch { skipBlocked = true; }
+    if (!skipBlocked) errors.push('fast 模式下 setPhase(0) 未被拦截');
+    try { engine.setPhase(0, { force: true }); } catch (e) { errors.push(`force 跨模式切换失败: ${e.message}`); }
+    const lastSkip = (engine.state.skips || [])[engine.state.skips.length - 1];
+    if (!lastSkip || lastSkip.crossedSkippedPhase !== true) errors.push('跨模式 force 跳过未标记 crossedSkippedPhase');
 
     return errors.length === 0
-      ? { pass: true, detail: '相位切换生效，非法值与跨模式切换均被拒绝' }
+      ? { pass: true, detail: '前向跳跃门控拦截 ✅ force 审计记录 ✅ 后向自由 ✅ 跨模式拦截 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 5g: outputWritten — 产物名硬校验（CONSTITUTION 产物先于声称）
+TESTS.push({
+  name: 'outputWritten — 产物名校验 + 门控联动',
+  run: () => {
+    const { PhaseEngine } = require(path.join(ROOT, 'lib', 'phase-engine'));
+    const dir = mkWorkspace();
+    const engine = new PhaseEngine(dir);
+    engine.setMode('standard');
+    const errors = [];
+    const expectThrow = (fn, label) => {
+      try { fn(); errors.push(`${label} 未被拒绝`); } catch { /* expected */ }
+    };
+
+    // 缺路径 / 不存在 / 文件名不符 / 目录冒充 / 未知 Phase
+    expectThrow(() => engine.outputWritten(2), '无路径调用');
+    expectThrow(() => engine.outputWritten(2, path.join(dir, 'nope', '02-design.md')), '不存在文件');
+    const decoy = path.join(dir, 'README.md');
+    fs.writeFileSync(decoy, 'x');
+    expectThrow(() => engine.outputWritten(2, decoy), '文件名不符(README.md 冒充)');
+    const dirDecoy = path.join(dir, '.devflow', 'req-1', '02-design.md');
+    fs.mkdirSync(dirDecoy, { recursive: true });
+    expectThrow(() => engine.outputWritten(2, dirDecoy), '目录冒充产物');
+    expectThrow(() => engine.outputWritten(99, decoy), '未知 Phase');
+
+    if (engine.state.gates.G3) errors.push('校验失败时 G3 不应被标记通过');
+
+    // 合法产物 → 通过主门控 G3（人工门 G2 类不在 outputWritten 职责内）
+    const artifact = path.join(dir, '.devflow', 'req-1', '02-design.md');
+    fs.rmSync(dirDecoy, { recursive: true, force: true });
+    fs.writeFileSync(artifact, '# design');
+    try { engine.outputWritten(2, artifact); } catch (e) { errors.push(`合法产物被拒: ${e.message}`); }
+    if (!engine.state.gates.G3) errors.push('合法产物未联动通过 G3');
+    if (!engine.state.outputs['02-design.md']) errors.push('产物未记录到 outputs');
+
+    return errors.length === 0
+      ? { pass: true, detail: '缺路径/不存在/名字不符/目录冒充/未知Phase 全拒绝；合法产物联动过门 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 5h: 状态文件 — 损坏备份重建（不静默清零）+ 原子写无残留 tmp
+TESTS.push({
+  name: 'Phase引擎 — state.json 损坏备份重建',
+  run: () => {
+    const { PhaseEngine } = require(path.join(ROOT, 'lib', 'phase-engine'));
+    const dir = mkWorkspace();
+    const engine = new PhaseEngine(dir);
+    engine.setMode('lean');
+    const stateFile = path.join(dir, '.devflow', 'state.json');
+
+    // 写入损坏内容 → 重建为初始状态且保留备份
+    fs.writeFileSync(stateFile, '{ this is not json !!');
+    const revived = new PhaseEngine(dir);
+    const errors = [];
+    if (revived.state.currentPhase !== 0 || revived.state.mode !== null) errors.push('损坏后未重置为初始状态');
+    const backups = fs.readdirSync(path.join(dir, '.devflow')).filter(f => f.startsWith('state.json.corrupt-'));
+    if (backups.length !== 1) errors.push(`损坏备份缺失 (期望 1 个，实际 ${backups.length})`);
+
+    // 正常保存后无 .tmp 残留（原子写）
+    revived.setMode('fast');
+    const tmpLeft = fs.readdirSync(path.join(dir, '.devflow')).filter(f => f.endsWith('.tmp'));
+    if (tmpLeft.length > 0) errors.push(`原子写残留 tmp 文件: ${tmpLeft.join(', ')}`);
+
+    return errors.length === 0
+      ? { pass: true, detail: '损坏 → 备份 + 显式重建；保存 → 无 tmp 残留 ✅' }
       : { pass: false, detail: errors.join('; ') };
   },
 });
@@ -435,6 +519,95 @@ TESTS.push({
   },
 });
 
+// Test 12b: 模式切换残留 — 被跳过 Phase 的门控不误拦 nextPhase 传送
+TESTS.push({
+  name: 'Phase引擎 — 残留 Phase 不被已跳过门控误拦',
+  run: () => {
+    const { PhaseEngine } = require(path.join(ROOT, 'lib', 'phase-engine'));
+    const e = new PhaseEngine(mkWorkspace());
+    const errors = [];
+    // 制造残留：standard 落在 Phase 2，切 fast 后 Phase 2 被跳过
+    e.setMode('standard');
+    e.setPhase(2, { force: true });
+    e.setMode('fast'); // setMode 重置到 Phase 4，故直接手改残留再验证
+    e.state.currentPhase = 2;
+    const result = e.nextPhase();
+    if (result.blocked) errors.push(`被已跳过 Phase 的门控误拦: ${result.reason}`);
+    else if (e.state.currentPhase !== 4) errors.push(`应传送到 fast 起点 Phase 4，实际 ${e.state.currentPhase}`);
+    return errors.length === 0
+      ? { pass: true, detail: '残留 Phase 2 在 fast 下正确传送到 Phase 4，无误拦' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 12c: TaskPlanner — 环检测 / 未知依赖 / Kahn 拓扑重算 Wave
+TESTS.push({
+  name: 'TaskPlanner — 环检测 + Kahn 拓扑 + Wave 重算',
+  run: () => {
+    const { TaskPlanner } = require(path.join(ROOT, 'lib', 'task-planner'));
+    const errors = [];
+    const expectThrow = (planner, label) => {
+      try { planner._assignWaves(); errors.push(`${label} 未被拒绝`); } catch { /* expected */ }
+    };
+
+    // 环: T1→T2→T1
+    const cyc = new TaskPlanner();
+    cyc.tasks = [
+      { id: 'T1', name: 'a', deps: ['T2'] },
+      { id: 'T2', name: 'b', deps: ['T1'] },
+    ];
+    expectThrow(cyc, '循环依赖');
+
+    // 未知依赖: T1 依赖 TX
+    const unk = new TaskPlanner();
+    unk.tasks = [{ id: 'T1', name: 'a', deps: ['TX'] }];
+    expectThrow(unk, '未知依赖');
+
+    // wave 缺失/非法 → 按依赖深度重算，依赖永远在更早 Wave
+    const p = new TaskPlanner();
+    p.tasks = [
+      { id: 'T1', name: 'base', deps: [] },                       // 无 wave 字段
+      { id: 'T2', name: 'mid', deps: ['T1'], wave: 'NaN-bad' },   // 非法 wave
+      { id: 'T3', name: 'top', deps: ['T2'], wave: 1 },           // 声称 wave 1（错）
+    ];
+    p._assignWaves();
+    const w = Object.fromEntries(p.tasks.map(t => [t.id, t.wave]));
+    if (w.T1 !== 1 || w.T2 !== 2 || w.T3 !== 3) errors.push(`Wave 重算错误: ${JSON.stringify(w)}`);
+    if (p.waves.some((wave, i) => i > 0 && wave.wave <= p.waves[i - 1].wave)) errors.push('Wave 序列非严格递增');
+    const depOk = p.tasks.every(t => (t.deps || []).every(d => w[d] < t.wave));
+    if (!depOk) errors.push('存在依赖未落在更早 Wave');
+
+    // loadFromFile 对环的任务文件抛错且带上下文
+    const dir = mkWorkspace();
+    const badFile = path.join(dir, 'tasks.json');
+    fs.writeFileSync(badFile, JSON.stringify({ tasks: [{ id: 'A', deps: ['B'] }, { id: 'B', deps: ['A'] }] }));
+    try { p.loadFromFile(badFile); errors.push('loadFromFile 未拒绝环任务文件'); } catch { /* expected */ }
+
+    return errors.length === 0
+      ? { pass: true, detail: '环/未知依赖拒绝 ✅ wave 重算（T1=1,T2=2,T3=3）✅ 文件加载校验 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 12d: Memory — id 唯一 + 搜索访问统计持久化（隔离工作区）
+TESTS.push({
+  name: 'Memory — id 唯一 + 访问统计落盘',
+  run: () => {
+    const { DevFlowMemory } = require(path.join(ROOT, 'lib', 'memory'));
+    const m = new DevFlowMemory(mkWorkspace());
+    const errors = [];
+    const a = m.save('JWT 认证决策记录', ['auth']);
+    const b = m.save('第二条记忆');
+    if (a.id === b.id) errors.push('同毫秒保存 id 碰撞');
+    m.search('JWT');
+    const hit = m.short.find(e => e.id === a.id);
+    if (!hit || hit.accessCount !== 2) errors.push(`搜索后访问统计未持久化 (期望 2，实际 ${hit ? hit.accessCount : 'null'})`);
+    return errors.length === 0
+      ? { pass: true, detail: 'id 唯一 ✅ 访问统计持久化 ✅（工作区隔离）' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
 // Test 13: adapters 门控映射 — 按 phaseAfter 反查，杜绝 G${phase} 拼接导致的错位与静默放行
 TESTS.push({
   name: 'adapters 门控 — 相位映射正确且无静默放行',
@@ -537,7 +710,7 @@ TESTS.push({
 
 // 运行
 console.log('='.repeat(50));
-console.log('🔬 DevFlow v3.3.0 完整性验证\n');
+console.log('🔬 DevFlow v3.3.1 完整性验证\n');
 
 let passCount = 0, failCount = 0;
 

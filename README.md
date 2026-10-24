@@ -113,8 +113,9 @@ adapters/
 | Claude Code / Cursor / Copilot / Codex / Gemini CLI | 各自目录 | 手动拷贝，见 `adapters/<宿主>/install.md` |
 
 ```bash
-# 目前只有 WorkBuddy 目标由脚本实现；其余宿主请按 adapters/<宿主>/install.md 手动拷贝
-node bin/devflow.js install
+# 脚本化目标: workbuddy(默认) / claude / dsh；cursor 等其余宿主请按 adapters/<宿主>/install.md 手动拷贝
+node bin/devflow.js install --list   # 查看全部安装目标与状态
+node bin/devflow.js install          # 安装到默认目标 (workbuddy)
 ```
 
 > ⚠️ 本仓库**未发布到 npm**。registry 上的 `devflow` 由他人持有（latest `0.0.1`），

@@ -44,6 +44,7 @@ const HELP = `DevFlow v${JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'pac
   devflow task --describe <描述> [--visualize]       任务分解 (DAG)
   devflow mem --save <内容> [--tags a,b]             保存记忆
   devflow mem --search <关键词>                       搜索记忆
+  devflow mem --recent                                最近记忆
   devflow mem --stats                                 记忆统计
   devflow party --scenario <场景>                     Party 评分仲裁
   devflow party --role <角色> <方案> [--role ...]    手动评分
@@ -75,8 +76,9 @@ const CMDS = {
     }
 
     const devflowDir = path.resolve('.devflow');
-    fs.mkdirSync(path.resolve(devflowDir, 'memory'), { recursive: true });
-    fs.mkdirSync(path.resolve(devflowDir, 'outputs'), { recursive: true });
+    // 产物目录约定：GO.md 规定产物落 .devflow/<req-id>/（由 gate-check.js 递归定位），
+    // 不预建 outputs/ 以免误导。此处只建记忆系统骨架。
+    fs.mkdirSync(path.resolve(devflowDir, 'memory', 'domain-skills'), { recursive: true });
     const e = new engine.PhaseEngine();
     const r = e.setMode(mode);
 
@@ -98,6 +100,13 @@ const CMDS = {
     for (const [f, c] of Object.entries(memSkeleton)) {
       const fp = path.join(memDir, f);
       if (!fs.existsSync(fp)) fs.writeFileSync(fp, c);
+    }
+    // GO.md Step 1 记忆骨架的第 5 项：领域技能沉淀目录
+    const domainSkillsDir = path.join(memDir, 'domain-skills');
+    fs.mkdirSync(domainSkillsDir, { recursive: true });
+    const domainSkillsReadme = path.join(domainSkillsDir, 'README.md');
+    if (!fs.existsSync(domainSkillsReadme)) {
+      fs.writeFileSync(domainSkillsReadme, '# 领域技能沉淀\n\n> Phase 8 归档时，把可复用的领域经验以独立 .md 沉淀到此目录。\n');
     }
     const constitutionPath = path.join(devflowDir, 'PROJECT_CONSTITUTION.md');
     if (!fs.existsSync(constitutionPath)) {
@@ -180,7 +189,7 @@ const CMDS = {
   当前: Phase ${s.currentPhase} — ${s.currentName}
   进度: ${s.progress}
   门控: ${Object.keys(s.gates).length} 个已通过
-  产出: ${Object.keys(s.outputs).length} 个已记录
+  产出: ${Object.keys(s.outputs).length} 个已记录${(s.skips || []).length > 0 ? `\n  跳过审计: ${s.skips.length} 次 --force 强制跳过（详见 state.json skips）` : ''}
   门控合规: ${s.gateCompliant ? '✅' : '⛔ ' + s.gateStatus}`);
       return;
     }
@@ -205,8 +214,14 @@ const CMDS = {
       }
       return;
     }
-    // default: 当前 Phase 信息
-    console.log(e.current());
+    // default: 当前 Phase 状态摘要（而非原始对象 dump）
+    const s = e.status();
+    console.log(`DevFlow Phase 状态
+  模式: ${s.mode}
+  当前: Phase ${s.currentPhase} — ${s.currentName}
+  进度: ${s.progress}
+  门控合规: ${s.gateCompliant ? '✅' : '⛔ ' + s.gateStatus}
+提示: devflow phase --status 查看详情, --list 查看管线`);
   },
 
   detect: (args) => {
@@ -230,15 +245,31 @@ const CMDS = {
   task: (args) => {
     const planner = require('../lib/task-planner');
     const p = new planner.TaskPlanner();
-    if (args.includes('--describe')) {
+    if (args.includes('--file')) {
+      const fp = args[args.indexOf('--file') + 1];
+      try {
+        p.loadFromFile(path.resolve(fp));
+      } catch (err) {
+        console.error(`❌ 加载失败: ${err.message}`);
+        process.exit(1);
+      }
+    } else if (args.includes('--describe')) {
       const desc = args[args.indexOf('--describe') + 1];
       p.generateFromDescription(desc);
-      const result = p.toJSON();
-      console.log(`任务分解: "${desc}"
-  ${result.totalTasks} 个任务, ${result.totalWaves} 个 Wave`);
-      result.tasks.forEach(t => console.log(`  ${t.id}  Wave ${t.wave}  ${t.name}`));
-      if (args.includes('--visualize')) console.log(`\nDAG:\n${result.mermaid}`);
+    } else {
+      console.log(`用法: devflow task --describe "<功能描述>" [--visualize] [--json] [--save <文件>]
+      devflow task --file <tasks.json> [--json]     加载并校验已有任务计划（环检测/拓扑排序）`);
+      return;
     }
+    if (args.includes('--save')) p.saveToFile(path.resolve(args[args.indexOf('--save') + 1]));
+    const result = p.toJSON();
+    if (args.includes('--json')) {
+      console.log(JSON.stringify(result, null, 2));
+      return;
+    }
+    console.log(`任务分解: ${result.totalTasks} 个任务, ${result.totalWaves} 个 Wave`);
+    result.tasks.forEach(t => console.log(`  ${t.id}  Wave ${t.wave}  ${t.name}  依赖: ${(t.deps || []).join(',') || '无'}`));
+    if (args.includes('--visualize')) console.log(`\nDAG:\n${result.mermaid}`);
   },
 
   mem: (args) => {
@@ -253,6 +284,9 @@ const CMDS = {
       const query = args[args.indexOf('--search') + 1];
       const results = m.search(query);
       results.forEach(r => console.log(`[${r.layer}] ${r.content.slice(0, 80)} (${r.score})`));
+    } else if (args.includes('--recent')) {
+      const results = m.recent();
+      results.forEach(r => console.log(`[${r.layer}] ${r.content.slice(0, 80)}`));
     } else if (args.includes('--stats')) {
       const s = m.stats();
       console.log(`记忆统计: ${s.total} 条 (短期:${s.short} / 长期:${s.long} / 归档:${s.archive})`);
@@ -278,11 +312,13 @@ const CMDS = {
       const summaries = [];
       for (let i = 0; i < args.length; i++) {
         if (args[i] === '--role') {
-          roles.push(args[++i]);
-          summaries.push(args[++i] || '');
+          const role = args[++i];
+          if (!role) { console.error('❌ --role 后缺少角色名'); process.exit(1); }
+          roles.push(role);
+          summaries.push(args[++i] || ''); // 方案摘要在行尾可省略，仲裁表自动回退为 "<角色>方案"
         }
       }
-      roles.forEach((r, i) => a.addProposal(r, summaries[i]));
+      roles.forEach((r, i) => a.addProposal(r, summaries[i] || `${r}方案`));
       console.log(a.tableText());
     }
   },
@@ -310,8 +346,8 @@ const CMDS = {
     try {
       child.execFileSync(process.execPath, [gateCheck, ...passArgs], { stdio: 'inherit' });
     } catch (err) {
-      // gate-check 在门控未通过时返回非零退出码 (预期行为)，输出已通过 stdio inherit 打印，不抛异常
-      process.exitCode = 1;
+      // gate-check 在门控未通过时返回非零退出码 (预期行为)，输出已通过 stdio inherit 打印
+      process.exitCode = err.status || 1;
     }
   },
 
@@ -464,6 +500,16 @@ function main() {
 
   const cmd = args[0];
   const cmdArgs = args.slice(1);
+
+  // 通用旗标：--version/-v 与 --help/-h 不走"未知命令"分支
+  if (cmd === '--version' || cmd === '-v') {
+    console.log(JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'package.json'), 'utf8')).version);
+    return;
+  }
+  if (cmd === '--help' || cmd === '-h') {
+    console.log(HELP);
+    return;
+  }
 
   // 状态守卫：除 init/help/doctor 外，所有命令先验证状态
   if (!['init', 'help', 'doctor'].includes(cmd)) {

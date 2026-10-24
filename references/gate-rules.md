@@ -1,7 +1,7 @@
-# 阶段门验证规则 (v3.2) ⭐v3.2
+# 阶段门验证规则 (v3.3.1) ⭐v3.3.1
 
 > 本文件是 GO.md 第四步的详细展开，由 GO.md 按需加载。
-> **版本**: v3.2 — 选择题交互模式 + Lean 模式例外规则
+> **版本**: v3.3.1 — 选择题交互模式 + Lean 模式例外规则
 
 ## 阶段依赖关系图
 
@@ -9,7 +9,7 @@
 Phase 0 ──► Phase 1 ──► Phase 1b ──► Phase 2 ──► Phase 2a ──► Phase 3
   │            │            │             │            │            │
   ▼            ▼            ▼             ▼            ▼            ▼
-G0:Strategy  G1:5Whys   G2.5:Discuss  G3:Design   G3.5:Shotgun  G4:TaskPlan
+G0:Strategy  G1:5Whys+G2  G2.5:Discuss  G3:Design   G3.5:Shotgun  G4:TaskPlan
   │            │            │             │            │            │
   ▼            ▼            ▼             ▼            ▼            ▼
 00-strategy  01-analysis  01b-context  02-design   02a-variants  03-tasks
@@ -27,7 +27,7 @@ G0:Strategy  G1:5Whys   G2.5:Discuss  G3:Design   G3.5:Shotgun  G4:TaskPlan
 **依赖规则**：
 - 每个阶段必须依赖前一阶段的产物
 - Phase 1b (G2.5) 决策捕获为 Phase 2 的关键前置
-- Phase 2a (G3.5) 设计枪战可选，仅复杂设计需要
+- Phase 2a (G3.5) 设计枪战在 Standard/Strict 模式必跑（Fast/Lean 跳过）
 - Phase 7 (G7.5) Canary 门控为全量发布的硬性前置
 - Fast 模式可跳过 Phase 0~3，直接进入 Phase 4（需满足条件）
 - Lean 模式可跳过 Phase 0~2a，进入 Phase 2 轻量方案设计或直接 Phase 4 ⭐v3.1
