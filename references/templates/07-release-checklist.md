@@ -1,5 +1,7 @@
 ﻿# 07-release-checklist：<req-id>
 
+> ⚠️ 已弃用（v3.4.0）：引擎产物名已改为 07-canary.md，请使用对应新模板；本文件保留供历史 req 参考。
+
 - **Req ID**: <id>
 - **template-version**: `v1.0.0`
 - **发布时间**: <YYYY-MM-DD HH:mm>

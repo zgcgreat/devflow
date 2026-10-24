@@ -1,6 +1,7 @@
 ---
 name: phase-7-canary
-version: 3.0.0
+preamble-tier: 2
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 7
 description: Deploy changes in staged batches (10% → 50% → 100%) with automatic health checks and rollback on threshold breach
@@ -49,6 +50,8 @@ allowed-tools:
 
 ## 健康检查阈值
 
+> 表中 200ms 等为**示例默认值**，实际阈值来自 `01-analysis.md` 的非功能性需求（NFR），逐 req 填写。
+
 | Stage | Traffic | Duration | error_rate | latency_p99 | CPU | Memory |
 |-------|---------|----------|------------|-------------|-----|--------|
 | Canary-1 | 10% | 5min | ≤1.0% | <200ms | <60% | <70% |
@@ -75,13 +78,19 @@ allowed-tools:
 
 ## 产物模板
 
+> **完整权威模板见 `references/templates/07-canary.md`**（5 必填段：灰度方案/阈值表/各阶段健康指标实测/回滚与异常事件记录/升级判定与全量发布结论）。以下为速览，**以权威模板为准**。
+
 ```markdown
 # Canary Deployment Report — [req-id]
-## Deployment Summary
-- Version / Strategy / Started / Completed / Duration
-## Stage Results
+## 灰度方案
+- 各阶段流量比例 / 观察时长 / 进入条件
+## 阈值表
+- error_rate / latency_p99 / CPU / Memory（来源：01-analysis.md NFR）
+## 各阶段健康指标实测
 | Stage | Traffic | Duration | error_rate | latency_p99 | Status |
-## Issues / Rollback Events
+## 回滚/异常事件记录
+- 回滚次数 / 事件明细（无异常写"无"）
+## 升级判定与全量发布结论
 **Final Result**: [PASS / FAIL / PASS WITH NOTES]
 ```
 

@@ -2,7 +2,7 @@
 name: phase-4-build
 description: Phase 4 构建阶段 — Wave 执行、原子 Task 编码、Verify 验证与 Commit
 preamble-tier: 2
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 4
 requires: [g4-gate-decision, task-list, wave-plan]
@@ -27,8 +27,8 @@ allowed-tools:
 
 > **Layer**: L1-INTERACTION (交互层) → Layer 2 引擎层 Engine 介入
 > **前置产物**: `03-tasks.md` (Phase 3 通过 G4)
-> **后置产物**: Phase 4 自身不写 summary，仅编排和消费
-> **门控**: G5 — Integration Gate
+> **后置产物**: `.devflow/<req-id>/04-wave-logs.md`（Wave 执行日志汇总：各 wave 的任务/文件/结果/心跳/失败重试/偏差记录）
+> **门控**: G5 — Build Gate
 
 ## 核心定位
 
@@ -43,8 +43,9 @@ Wave Executor (L2-ENGINE) = **执行层**：负责"怎么做完"，含 Kahn 拓�
 
 ## 输出
 
+- `.devflow/<req-id>/04-wave-logs.md` — Wave 执行日志汇总（各 wave 的任务/文件/结果/心跳/失败重试/偏差记录）
 - 按 Wave 分组执行的代码变更
-- 消费 `.devflow/waves/wave-{N}/SUMMARY.md` — Wave Executor 写入
+- 消费 `.devflow/waves/wave-{N}/SUMMARY.md` — Wave Executor 写入的 wave 目录内过程记录，最终汇总进 `04-wave-logs.md`
 
 ## 执行流程
 
@@ -65,7 +66,7 @@ Wave Executor (L2-ENGINE) = **执行层**：负责"怎么做完"，含 Kahn 拓�
 
 > **交互协议**: 先展示完整确认清单，再逐项逐个确认。
 
-## G5 门控检查 (Phase 4→5)
+## G5 — Build Gate 门控检查 (Phase 4→5)
 
 ### Step 1: Hook 自动检查 (推荐, L1+)
 

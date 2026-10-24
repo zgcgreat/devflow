@@ -1,7 +1,7 @@
 ---
 name: phase-6-review
 preamble-tier: 2
-version: 3.0.0
+version: 3.4.0
 description: |
   Two-stage adversarial review: Stage A (spec compliance) + Stage B (code quality).
   Detects PRD gaps, edge cases, acceptance failures, and blind spots.
@@ -11,7 +11,8 @@ requires: [g6-gate-decision, test-report, coverage-metrics]
 provides: [review-report, fix-recommendations, g7-gate-decision, review-context]
 source: 交互层 Three-Layer Adversarial Review + Two-Stage Spec Compliance
 dependencies:
-  - code-quality, spec-compliance
+  - code-review-and-quality
+  - spec-driven-development
 gate: G7
 triggers:
   - review phase
@@ -53,10 +54,14 @@ allowed-tools:
 ```
 Phase 6: 双阶段审查
     ├─→ Stage A: Spec Compliance (Acceptance Auditor)
-    │   └─ Gate: NOT_PASS → 直接退回 Phase 3，不进 Stage B
+    │   └─ Gate: NOT_PASS → 不进 Stage B；实现类缺陷退回对应 Wave 修复（Phase 4 重入），任务拆分结构性问题才退回 Phase 3 重拆
     └─→ Stage B: Code Review (Blind Hunter + Edge Case Hunter 并行)
         └─ Gate: G7 → PASS/FAIL
 ```
+
+> **退回原则（统一口径）**：实现类缺陷退回对应 Wave 修复（Phase 4 重入）；任务拆分结构性问题才退回 Phase 3 重拆。
+>
+> **与 `reviewer/_SKILL.md` 的关系**：`reviewer/_SKILL.md` 是 Blind Hunter → Edge Case Hunter → Acceptance Auditor 三条审查线的执行剧本；本文件的 Stage A/B 是编排分流视角（Stage A 收编 Acceptance Auditor 的验收审计，Stage B 收编 Blind/Edge 两条线）。Acceptance Auditor 在两处出现属同一环节，不是两次审查。
 
 **Step 0**: 触发式参考加载 — 前端项目加载 `ui-anti-patterns.md` (8类反模式)
 **Stage A**: PRD→实现覆盖矩阵 — 逐条对照 AC + Delta Spec 确认 + 回归影响
@@ -94,7 +99,7 @@ Phase 6: 双阶段审查
 | Stage A PRD 覆盖 | 100% AC 有对应实现 |
 | Stage B High severity | 所有 HIGH 必须修复 |
 | Specialist CRITICAL | CRITICAL → 阻塞 |
-| Cross-Model Review | CRITICAL tasks → 多模型对比 (R14) |
+| Cross-Model Review | CRITICAL tasks → 多模型对比（出处：`references/RULES-v3.md` R13 · 双阶段审查） |
 
 > Hook FAIL ≠ Gate FAIL。Hook 仅推荐，最终决策权在人工确认。
 

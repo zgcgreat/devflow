@@ -184,19 +184,21 @@ Execute **Story-level 10-step implementation** for each task:
 #### Step 1.1: Read Story + Acceptance Criteria
 
 ```bash
-# Load task specification
-cat .devflow/tasks/{task-id}.md
+# Load task specification（单文件 XML 任务块；如存在 03-tasks.json 则优先解析 JSON）
+awk '/<task id="T01">/,/<\/task>/' .devflow/<req-id>/03-tasks.md
 
-# Extract acceptance criteria
-grep "^AC[0-9]" .devflow/tasks/{task-id}.md
+# Extract acceptance criteria（与 lib/ac-coverage.js 同口径；也可直接 devflow gates --ac .devflow/<req-id>）
+grep -E "^### AC-[0-9]+" .devflow/<req-id>/01-analysis.md
 ```
 
-**Example AC**:
+**Example AC**（01-analysis.md 中的 AC 标题格式）:
 ```markdown
-**AC1**: User can login with email/password  
-**AC2**: Invalid credentials show error message  
-**AC3**: Successful login redirects to dashboard  
-**AC4**: Session persists across page refresh  
+### AC-1 · 邮箱密码登录
+- **Given** 已注册用户
+- **When** 输入正确邮箱密码
+- **Then** 登录成功并跳转工作台
+
+### AC-2 · 无效凭证提示
 ```
 
 #### Step 1.2: Confirm File List

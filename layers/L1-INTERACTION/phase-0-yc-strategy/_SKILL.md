@@ -1,6 +1,6 @@
 ---
 name: phase-0-yc-strategy
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 0
 description: Apply Y Combinator's due diligence framework to validate project viability before implementation
@@ -38,8 +38,8 @@ external-inputs: [project-context]
 
 ## 核心定位
 
-1. **六问评估** — Pain Point / Competition / Advantage / Acquisition / Monetization / 2x Speed (5分制)
-2. **G1 Gate 决策** — ≥4 question scores ≥3/5 则 PASS
+1. **六问评估** — 用户是谁 / 他们的核心问题 / 现有方案为什么不够好 / 我们的方案为什么更好 / 商业模式 / 为什么是现在 (5分制)
+2. **G0 Gate 决策** — ≥4 question scores ≥3/5 则 PASS
 3. **战略文档生成** — 输出 `00-strategy.md`
 
 ## 产物
@@ -51,40 +51,54 @@ external-inputs: [project-context]
 
 详见 `docs/phases/phase-0-strategy.md`
 
-> **G1 Gate**: ≥4 questions ≥3/5 → PASS; 弱点项 → Phase 1 follow-up
+> **G0 Gate**: ≥4 questions ≥3/5 → PASS; 弱点项 → Phase 1 follow-up
 
 ## Error Taxonomy
 
 | Priority | Condition | Recovery |
 |----------|-----------|----------|
-| P0 | Q1<2 AND Q6 无明确瓶颈 | 返回 Phase 1: 探索相邻市场 |
-| P1 | Q1≥3 but CAC>$300 or payback>24mo | 返回 Phase 1: 深度用户访谈 |
-| P2 | ≥2 questions <3 with no evidence | 强制执行 Phase 1 |
+| P0 | Q1<2 AND Q6 无明确瓶颈 | 重新界定问题域（目标用户/场景）后重跑六问；需求层追问移交 Phase 1 5Whys |
+| P1 | Q1≥3 but CAC>$300 or payback>24mo | 战略层动作：补充获客/变现假设的用户访谈证据后重评；需求细节移交 Phase 1 |
+| P2 | ≥2 questions <3 with no evidence | 六问 FAIL：补齐证据后重跑；弱点项写入 follow-up-queue 由 Phase 1 深挖 |
 | P3 | CONFIDENCE=LOW | 标记 UNSUBSTANTIATED，继续 |
 
 ## Boundary Conditions
 
 | Parameter | Value |
 |-----------|-------|
-| YC questions | 6/6 mandatory, ≥4 substantive for G1 pass |
+| YC questions | 6/6 mandatory, ≥4 substantive for G0 pass |
 | Evidence coverage | ≥4 of 6 data-backed |
 | Confidence | HIGH→skip Phase 1; MEDIUM→optional; LOW→require Phase 1 |
 | Skip when | Internal tooling / Bug fix <1 week / Regulatory requirement |
 
 ## 产物模板
 
+> **完整权威模板见 `domains/specification/templates/00-strategy.md`**，以下为速览骨架，六问措辞以权威模板为准。
+
 ```markdown
-# Phase 0: YC Six Questions — [Project Name]
-## YC Six Questions
-- Q1 Pain: {score}/5 — {answer}
-- Q2 Competition: {score}/5 — {answer}
-- Q3 Advantage: {score}/5 — {answer}
-- Q4 Acquisition: {score}/5 — {answer}
-- Q5 Monetization: {score}/5 — {answer}
-- Q6 2x Speed: {score}/5 — {answer}
-## G1 Gate Result
+# 战略评估：[一句话标题]
+
+## YC 六问
+| # | 问题 | 评分 | 回答 |
+|---|------|------|------|
+| 1 | 用户是谁？ | {score}/5 | {answer} |
+| 2 | 他们的核心问题？ | {score}/5 | {answer} |
+| 3 | 现有方案为什么不够好？ | {score}/5 | {answer} |
+| 4 | 我们的方案为什么更好？ | {score}/5 | {answer} |
+| 5 | 商业模式？ | {score}/5 | {answer} |
+| 6 | 为什么是现在？ | {score}/5 | {answer} |
+
+## 影响范围
+- **涉及文件**: {files} | **涉及模块**: {modules}
+- **影响人数**: {users/devs} | **风险等级**: {低/中/高}
+
+## G0 Gate Result
 **Passing**: {count}/6 (threshold: ≥4) | **Result**: [PASS/FAIL]
 **Weak Areas**: Q{N} → Phase 1 follow-up
+
+## 决策记录
+- **CEO Office Hours 结论**: {如加载 expertise 域}
+- **Party Mode 决策**: {如加载 Party Mode}
 ```
 
 ## DevFlow 增强

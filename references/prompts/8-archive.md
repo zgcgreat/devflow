@@ -16,9 +16,9 @@
 - `@.devflow/<req-id>/01-analysis.md`
 - `@.devflow/<req-id>/02-design.md`
 - `@.devflow/<req-id>/03-tasks.md`
-- `@.devflow/<req-id>/04-dev-log.md`
+- `@.devflow/<req-id>/04-wave-logs.md`
 - `@.devflow/<req-id>/05-test-report.md`
-- `@.devflow/<req-id>/06-code-review.md`
+- `@.devflow/<req-id>/06-review.md`
 - `@.devflow/<req-id>/UAT.md`
 - `@.devflow/lessons-learned.md`
 - `@.devflow/DECISIONS.md`
@@ -159,11 +159,11 @@
 | 分析文档 | `.devflow/<req-id>/01-analysis.md` | ✅/❌ |
 | 设计文档 | `.devflow/<req-id>/02-design.md` | ✅/❌ |
 | 任务列表 | `.devflow/<req-id>/03-tasks.md` | ✅/❌ |
-| 开发日志 | `.devflow/<req-id>/04-dev-log.md` | ✅/❌ |
+| 开发日志 | `.devflow/<req-id>/04-wave-logs.md` | ✅/❌ |
 | 测试报告 | `.devflow/<req-id>/05-test-report.md` | ✅/❌ |
-| 审查报告 | `.devflow/<req-id>/06-code-review.md` | ✅/❌ |
+| 审查报告 | `.devflow/<req-id>/06-review.md` | ✅/❌ |
 | UAT 结果 | `.devflow/<req-id>/UAT.md` | ✅/❌ |
-| 发布清单 | `.devflow/<req-id>/07-release-checklist.md` | ✅/❌ |
+| 发布清单 | `.devflow/<req-id>/07-canary.md` | ✅/❌ |
 
 ---
 

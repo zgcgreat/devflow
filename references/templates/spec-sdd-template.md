@@ -226,7 +226,8 @@
 ├── [02a-ui-design.md]       # UI 设计（前端项目）
 ├── 03-tasks.md              # 任务拆分
 ├── *-dev-log.md             # 开发记录
+├── 04-wave-logs.md          # Wave 执行日志汇总
 ├── 05-test-report.md        # 测试报告
-├── 06-code-review.md        # 代码审查
-└── 07-release-checklist.md  # 发布清单（含 Gate 检查点）
+├── 06-review.md             # 审查报告
+└── 07-canary.md             # 灰度发布报告
 ```

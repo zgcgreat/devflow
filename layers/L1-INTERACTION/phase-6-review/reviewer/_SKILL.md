@@ -1,13 +1,25 @@
 ---
 name: phase-6-reviewer
 preamble-tier: 2
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 6
 parent: phase-6-review
 gate: G7
 requires: [g6-gate-decision, test-report]
 provides: [review-findings, fix-recommendations]
+dependencies:
+  - code-review-and-quality
+triggers:
+  - review phase
+  - adversarial review
+  - three-layer review
+  - /review
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - AskUserQuestion
 description: |
   Three-layer adversarial code review specialist for Phase 6 Review.
   Blind Hunter / Edge Case Hunter / Acceptance Auditor pipeline.
@@ -62,6 +74,11 @@ Perform comprehensive code review through three specialized layers: Blind Hunter
 
 **Identify content type**:
 ```bash
+# 中间产物目录：Windows 可移植 + 符合产物纪律（禁止写 /tmp）
+REQ_ID="<req-id>"
+NOTES_DIR=".devflow/${REQ_ID}/review-notes"
+mkdir -p "${NOTES_DIR}"
+
 # Check if diff provided
 if [ -n "$DIFF_INPUT" ]; then
   CONTENT_TYPE="diff"
@@ -70,13 +87,13 @@ if [ -n "$DIFF_INPUT" ]; then
 # Check if branch provided
 elif [ -n "$BRANCH_NAME" ]; then
   CONTENT_TYPE="branch"
-  git diff main...${BRANCH_NAME} > /tmp/branch-diff.txt
+  git diff main...${BRANCH_NAME} > ${NOTES_DIR}/branch-diff.txt
   echo "Reviewing branch: ${BRANCH_NAME} (${COMMIT_COUNT} commits)"
   
 # Check if file provided
 elif [ -n "$FILE_PATH" ]; then
   CONTENT_TYPE="file"
-  cat ${FILE_PATH} > /tmp/file-content.txt
+  cat ${FILE_PATH} > ${NOTES_DIR}/file-content.txt
   echo "Reviewing file: ${FILE_PATH}"
   
 else
@@ -117,23 +134,23 @@ Ready to begin Layer 1: Blind Hunter Review.
 **Execution**:
 
 ```bash
-# Load diff/content
-cat /tmp/${CONTENT_TYPE}-content.txt
+# Load diff/content (来自 Step 0 的 ${NOTES_DIR})
+cat ${NOTES_DIR}/${CONTENT_TYPE}-content.txt
 
 # Perform adversarial analysis
 echo "Scanning for issues..."
 
 # Check for common anti-patterns
-grep -n "console.log\|print(" /tmp/diff.txt && echo "⚠️ Debug statements left in code"
-grep -n "TODO\|FIXME\|HACK" /tmp/diff.txt && echo "⚠️ Placeholder comments found"
-grep -n "eval(\|exec(" /tmp/diff.txt && echo "🔴 Dangerous eval/exec usage"
-grep -n "password\|secret\|api_key" /tmp/diff.txt | grep -v "// " && echo "🔴 Hardcoded credentials detected"
+grep -n "console.log\|print(" ${NOTES_DIR}/diff.txt && echo "⚠️ Debug statements left in code"
+grep -n "TODO\|FIXME\|HACK" ${NOTES_DIR}/diff.txt && echo "⚠️ Placeholder comments found"
+grep -n "eval(\|exec(" ${NOTES_DIR}/diff.txt && echo "🔴 Dangerous eval/exec usage"
+grep -n "password\|secret\|api_key" ${NOTES_DIR}/diff.txt | grep -v "// " && echo "🔴 Hardcoded credentials detected"
 
 # Check for error handling gaps
-grep -B2 -A2 "catch\|except" /tmp/diff.txt | grep -v "log\|report" && echo "🟡 Silent error swallowing"
+grep -B2 -A2 "catch\|except" ${NOTES_DIR}/diff.txt | grep -v "log\|report" && echo "🟡 Silent error swallowing"
 
 # Check for resource leaks
-grep -n "open(\|connect(" /tmp/diff.txt | grep -v "with\|close" && echo "🟡 Potential resource leak"
+grep -n "open(\|connect(" ${NOTES_DIR}/diff.txt | grep -v "with\|close" && echo "🟡 Potential resource leak"
 ```
 
 **Issue classification**:
@@ -182,7 +199,7 @@ src/config.ts:3 — ❓ QUESTION: Why hardcoded API URL? Consider environment va
 echo "Analyzing branching paths..."
 
 # Identify all conditionals
-grep -n "if\|switch\|case\|else if" /tmp/diff.txt
+grep -n "if\|switch\|case\|else if" ${NOTES_DIR}/diff.txt
 
 # For each conditional, check for:
 # 1. Missing else/default branch
@@ -272,19 +289,32 @@ EOF
 **Execution**:
 
 ```bash
-# Load task specification
-TASK_ID=$(grep "^Task:" wave-summary.md | awk '{print $2}')
-cat .devflow/tasks/${TASK_ID}.md
+# DevFlow 任务数据约定：单文件清单 .devflow/<req-id>/03-tasks.md
+# （XML 风格 <task id="T01"> 任务块，含 <read_files>/<write_files> 子标签），不是每任务一文件
+REQ_ID="<req-id>"
+TASK_ID="T01"
 
-# Extract acceptance criteria
-grep "^AC[0-9]" .devflow/tasks/${TASK_ID}.md
+# ① 按任务块提取（awk 范围匹配）
+awk "/<task id=\"${TASK_ID}\">/,/<\/task>/" .devflow/${REQ_ID}/03-tasks.md
+
+# ② 如存在 Phase 3 生成的 JSON 任务清单（03-tasks.json）则优先解析
+if [ -f .devflow/${REQ_ID}/03-tasks.json ]; then
+  jq '.tasks[] | select(.id=="T01")' .devflow/${REQ_ID}/03-tasks.json
+fi
+
+# 该任务声明的文件范围（<write_files>/<read_files> 子标签）
+TASK_FILES=$(awk "/<task id=\"${TASK_ID}\">/,/<\/task>/" .devflow/${REQ_ID}/03-tasks.md | grep -E "<write_files>|<read_files>")
+
+# Extract acceptance criteria (与 lib/ac-coverage.js 同口径：### AC-N 标题行)
+grep -E "^### AC-[0-9]+" .devflow/${REQ_ID}/01-analysis.md
+# 也可直接获得 AC 覆盖率报告：devflow gates --ac .devflow/${REQ_ID}
 
 # For each AC, verify implementation exists
 echo "Checking AC compliance..."
 
-for ac_line in $(grep "^AC[0-9]" .devflow/tasks/${TASK_ID}.md); do
-  ac_number=$(echo $ac_line | grep -oP 'AC\d+')
-  ac_description=$(echo $ac_line | cut -d':' -f2-)
+for ac_line in $(grep -E "^### AC-[0-9]+" .devflow/${REQ_ID}/01-analysis.md); do
+  ac_number=$(echo $ac_line | grep -oE 'AC-[0-9]+')
+  ac_description=$(echo $ac_line | sed 's/^#\+\s*//')
   
   echo "Verifying ${ac_number}: ${ac_description}"
   
@@ -297,8 +327,8 @@ for ac_line in $(grep "^AC[0-9]" .devflow/tasks/${TASK_ID}.md); do
   fi
 done
 
-# Check for scope creep (files not in TASK.md)
-EXPECTED_FILES=$(grep "^Files:" .devflow/tasks/${TASK_ID}.md | cut -d':' -f2-)
+# Check for scope creep (files not declared in 03-tasks.md)
+EXPECTED_FILES="${TASK_FILES}"
 ACTUAL_FILES=$(git diff --name-only HEAD~1)
 
 for file in $ACTUAL_FILES; do
@@ -314,7 +344,7 @@ done
 | Check | Criteria | Pass/Fail |
 |-------|----------|-----------|
 | **AC Coverage** | All acceptance criteria implemented | {Y/N} |
-| **File Scope** | No files outside TASK.md | {Y/N} |
+| **File Scope** | No files outside 03-tasks.md 声明范围 | {Y/N} |
 | **Dependency Scope** | No unapproved dependencies | {Y/N} |
 | **Test Coverage** | Tests cover all ACs | {Y/N} |
 | **No Placeholders** | No TODO/FIXME/HACK comments | {Y/N} |
@@ -326,7 +356,7 @@ done
 ## Acceptance Audit Report
 
 **Task**: {task_id} — {task_description}  
-**Specification**: `.devflow/tasks/{task_id}.md`  
+**Specification**: `.devflow/<req-id>/03-tasks.md`（任务块 `<task id="{task_id}">`）  
 
 ### AC Compliance
 
@@ -350,7 +380,7 @@ done
 - src/models/User.ts ✓
 - src/api/auth.ts ✓
 - src/types/auth.ts ✓
-- src/utils/logger.ts ⚠️ SCOPE CREEP (not in TASK.md)
+- src/utils/logger.ts ⚠️ SCOPE CREEP (not in 03-tasks.md)
 
 **Dependencies**:
 - bcrypt ✓ (approved)
@@ -360,7 +390,7 @@ done
 ### R6 Anti-Hallucination Check
 
 - [x] R6.1: No unauthorized file modifications
-- [ ] R6.2: No files outside TASK.md → FAILED (logger.ts)
+- [ ] R6.2: No files outside 03-tasks.md → FAILED (logger.ts)
 - [x] R6.3: No unapproved dependencies → FAILED (lodash)
 - [x] R6.4: No placeholder/TODO code
 - [x] R6.5: Tests not modified to pass
@@ -387,7 +417,7 @@ done
    }, []);
    ```
 
-3. **Scope Cleanup**: Remove logger.ts or add to TASK.md
+3. **Scope Cleanup**: Remove logger.ts or add to 03-tasks.md 任务声明
 4. **Dependency Approval**: Approve lodash or replace with native methods
 
 ### Final Verdict
@@ -410,22 +440,22 @@ done
 **Merge findings from all layers**:
 
 ```bash
-# Collect findings from each layer
-cat blind-hunter-findings.md > combined-review.md
-echo "" >> combined-review.md
-echo "---" >> combined-review.md
-echo "" >> combined-review.md
-cat edge-case-findings.json >> combined-review.md
-echo "" >> combined-review.md
-echo "---" >> combined-review.md
-echo "" >> combined-review.md
-cat acceptance-audit.md >> combined-review.md
+# Collect findings from each layer (统一写入 ${NOTES_DIR}，即 .devflow/<req-id>/review-notes/)
+cat ${NOTES_DIR}/blind-hunter-findings.md > ${NOTES_DIR}/combined-review.md
+echo "" >> ${NOTES_DIR}/combined-review.md
+echo "---" >> ${NOTES_DIR}/combined-review.md
+echo "" >> ${NOTES_DIR}/combined-review.md
+cat ${NOTES_DIR}/edge-case-findings.json >> ${NOTES_DIR}/combined-review.md
+echo "" >> ${NOTES_DIR}/combined-review.md
+echo "---" >> ${NOTES_DIR}/combined-review.md
+echo "" >> ${NOTES_DIR}/combined-review.md
+cat ${NOTES_DIR}/acceptance-audit.md >> ${NOTES_DIR}/combined-review.md
 
 # Count findings by severity
-CRITICAL_COUNT=$(grep -c "🔴 CRITICAL" combined-review.md || echo 0)
-HIGH_COUNT=$(grep -c "🟡 HIGH" combined-review.md || echo 0)
-MEDIUM_COUNT=$(grep -c "🔵 MEDIUM" combined-review.md || echo 0)
-QUESTION_COUNT=$(grep -c "❓ QUESTION" combined-review.md || echo 0)
+CRITICAL_COUNT=$(grep -c "🔴 CRITICAL" ${NOTES_DIR}/combined-review.md || echo 0)
+HIGH_COUNT=$(grep -c "🟡 HIGH" ${NOTES_DIR}/combined-review.md || echo 0)
+MEDIUM_COUNT=$(grep -c "🔵 MEDIUM" ${NOTES_DIR}/combined-review.md || echo 0)
+QUESTION_COUNT=$(grep -c "❓ QUESTION" ${NOTES_DIR}/combined-review.md || echo 0)
 
 TOTAL_FINDINGS=$((CRITICAL_COUNT + HIGH_COUNT + MEDIUM_COUNT + QUESTION_COUNT))
 
@@ -438,12 +468,14 @@ echo "  ❓ Questions: ${QUESTION_COUNT}"
 
 **Decision matrix**:
 
+> **G7 口径**（对齐 `references/gate-rules.md` 与主文件 `phase-6-review/_SKILL.md`）：**Critical 必须修复；HIGH 修复或经用户显式确认接受（记录于 `06-review.md`）后可过 G7**。
+
 | Scenario | Critical | High | Action |
 |----------|----------|------|--------|
-| **BLOCK** | ≥1 | Any | ❌ Must fix before merge |
-| **NEEDS WORK** | 0 | ≥3 | ⚠️ Fix high-severity issues |
-| **CONDITIONAL PASS** | 0 | 1-2 | ✅ Merge after fixing highs |
-| **PASS** | 0 | 0 | ✅ Ready to merge |
+| **BLOCK** | ≥1 | Any | ❌ Critical 必须修复后重审 |
+| **NEEDS WORK** | 0 | ≥3 | ⚠️ 修复 HIGH，或逐项经用户显式确认接受（记录于 06-review.md） |
+| **CONDITIONAL PASS** | 0 | 1-2 | ⚠️ 修复 HIGH；无法立即修复的经用户显式确认接受（记录于 06-review.md）后可过 G7 |
+| **PASS** | 0 | 0 | ✅ 可过 G7 |
 
 **Output format** (final review report):
 
@@ -585,8 +617,8 @@ echo "  ❓ Questions: ${QUESTION_COUNT}"
 | Level | Name | Definition | Action | Impact |
 |-------|------|------------|--------|--------|
 | **P0** | BLOCKING | ≥1 🔴 CRITICAL finding (crash, security vuln, data loss), or Layer 3 shows AC coverage <50% | Block merge, list required fixes, loop back to Executor with specific feedback | Prevents PR/branch from merging until fixed |
-| **P1** | RECOVERABLE | ≥3 🟡 HIGH findings (logic errors, race conditions, leaks) but no CRITICAL, or R6 violations >2 (files outside TASK.md, unapproved dependencies) | NEEDS WORK verdict, list fixes by priority, Executor re-implements with targeted QA pass | Delays merge but does not block; proceed after fixes verified |
-| **P2** | WARNING | 1-2 🟡 HIGH findings acceptably minor, 🔵 MEDIUM count >5 (code smell accumulation), scope creep on non-critical files | CONDITIONAL PASS — merge allowed after high-severity fixes applied, medium issues post-merge | No blocking impact, proceed normally |
+| **P1** | RECOVERABLE | ≥3 🟡 HIGH findings (logic errors, race conditions, leaks) but no CRITICAL, or R6 violations >2 (files outside 03-tasks.md 声明范围, unapproved dependencies) | NEEDS WORK verdict, list fixes by priority, Executor re-implements with targeted QA pass | Delays merge but does not block; proceed after fixes verified |
+| **P2** | WARNING | 1-2 🟡 HIGH findings acceptably minor, 🔵 MEDIUM count >5 (code smell accumulation), scope creep on non-critical files | CONDITIONAL PASS — 修复 HIGH 或经用户显式确认接受（记录于 06-review.md）后过 G7，medium issues post-merge | No blocking impact, proceed normally |
 | **P3** | INFO | Zero findings for trivial diff (<10 LOC), edge case gap is theoretical unlikely scenario, reviewer confidence LOW due to single-file scope only | Proceed with caution, note confidence caveats in report, suggest human spot-check if critical path | No impact, continue |
 
 **Severity Assignment Rules**:
@@ -723,14 +755,16 @@ echo "  ❓ Questions: ${QUESTION_COUNT}"
 
 **Diff Generation**:
 ```bash
+# 中间产物统一写入 .devflow/<req-id>/review-notes/（Windows 可移植 + 符合产物纪律）
+
 # Branch diff
-git diff main...feature-branch > /tmp/branch-diff.txt
+git diff main...feature-branch > ${NOTES_DIR}/branch-diff.txt
 
 # File diff
-git diff HEAD~1 src/api/auth.ts > /tmp/file-diff.txt
+git diff HEAD~1 src/api/auth.ts > ${NOTES_DIR}/file-diff.txt
 
 # Uncommitted changes
-git diff > /tmp/uncommitted-diff.txt
+git diff > ${NOTES_DIR}/uncommitted-diff.txt
 ```
 
 **Pattern Matching**:
@@ -753,8 +787,11 @@ cat edge-case-findings.json | jq '.' > /dev/null && echo "Valid JSON" || echo "I
 
 **AC Compliance Check**:
 ```bash
-# Extract ACs from task spec
-grep "^AC[0-9]" .devflow/tasks/TASK-001.md
+# Extract ACs from analysis spec (与 lib/ac-coverage.js 同口径：### AC-N 标题行)
+grep -E "^### AC-[0-9]+" .devflow/<req-id>/01-analysis.md
+
+# 或直接获得 AC 覆盖率报告
+devflow gates --ac .devflow/<req-id>
 
 # Verify implementation
 grep -rn "login\|authenticate" src/api/auth.ts

@@ -1,14 +1,13 @@
 ---
 name: phase-2a-shotgun
 preamble-tier: 2
-version: 3.0.0
+version: 3.4.0
 description: |
-  Multi-variant design generation — 4-6 design variants with trade-offs and AI recommendation.
+  Multi-variant design generation — 4-5 design variants (min 4, max 5) with trade-offs and AI recommendation.
 layer: L1-INTERACTION
 phase: 2a
 requires: [g3-gate-decision, design-document]
 provides: [variant-proposals, weighted-scores, g3.5-gate-decision]
-parent: phase-2a-shotgun
 dependencies:
   - phase-2-design
 gate: G3.5
@@ -28,17 +27,16 @@ allowed-tools:
 # Phase 2a: Design Shotgun — Multi-Variant Design Generation
 
 > **前置产物**: `02-design.md` (Phase 2 通过 G3)
-> **后置产物**: `02a-design-variants.md` + `02a-design-final.md`
+> **后置产物**: `.devflow/<req-id>/02a-variants.md`
 > **门控**: G3.5 — Shotgun Gate
 
 ## 核心定位
 
-生成 4-6 设计变体，含优劣势和加权评分，AI 推荐最佳选项，用户选择。
+生成 4-5 个设计变体（最少 4，上限 5），含优劣势和加权评分，AI 推荐最佳选项，用户选择。
 
 ## 产物
 
-- `02a-design-variants.md` — 4-6 变体 (含优劣势、维护性评分)
-- `02a-design-final.md` — 最终选定方案 (含加权评分矩阵)
+- `.devflow/<req-id>/02a-variants.md` — 变体对比矩阵与最终选择记录写在同一个文件里，最终选择作为其中一节（含加权评分矩阵与用户确认记录）
 
 ## 执行流程
 

@@ -1,14 +1,14 @@
 ---
 name: phase-0-strategy
 preamble-tier: 2
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 0
 description: |
   Strategy and ideation phase — capture forward-looking ideas as structured seeds,
   define project scope, and establish initial context before formal Phase 1 analysis.
 requires: []
-provides: [g0-gate-decision, strategy-seeds, project-scope]
+provides: [strategy-seeds, project-scope]
 dependencies:
   - writing-plans
 gate: G0
@@ -29,7 +29,8 @@ external-inputs: [project-context]
 
 > **前置**: 无 (项目启动阶段)
 > **后置产物**: `.planning/seeds/SEED-*.md`, 项目初始上下文
-> **门控**: G0 — Seed Quality Gate
+> **门控**: 本技能是 Phase 0 的前置子步骤（种子捕获），不直接过 G0 — Strategy Gate；
+> 种子孵化后进入 `phase-0-yc-strategy`，由 YC 六问评分（≥4 题达 3/5）通过 G0 并产出 `00-strategy.md`
 
 ## 核心定位
 
@@ -44,9 +45,17 @@ external-inputs: [project-context]
 
 ## 执行流程
 
-详见 `docs/phases/phase-0-strategy.md`
+种子捕获流程以本文件为准（捕获 → 结构化 → 孵化）。
 
-> **交互协议**: 种子完整性 → 风险级别 → 是否进入 Phase 1
+> **交互协议**: 种子完整性 → 风险级别（"是否进入 Phase 1"由 `phase-0-yc-strategy` 的 G0 决策负责，不属本子步骤）
+
+## 交接
+
+1. 种子孵化完成 → 进入子步骤 `phase-0-yc-strategy`（YC 六问可行性验证）
+2. 六问评分通过 → 产出 `.devflow/<req-id>/00-strategy.md` → 关闭 G0（Strategy Gate）
+3. G0 PASS 后才进入 Phase 1（5 Whys 需求澄清）
+
+> YC 六问流程详见 `docs/phases/phase-0-strategy.md`——该文档主体是六问评估流程，属 `phase-0-yc-strategy`；种子流程以本文件为准。
 
 ## Error Taxonomy
 
@@ -61,7 +70,7 @@ external-inputs: [project-context]
 | Condition | Action |
 |-----------|--------|
 | 无 project-context 且用户沉默 >3 轮 | 中止并请求项目背景 |
-| 已有 strategy-seeds 且无变更 | 直接 PASS G0 |
+| 已有 strategy-seeds 且无变更 | 跳过重复捕获，直接进入 `phase-0-yc-strategy`（G0 由六问评分判定，非本子步骤判定） |
 
 ## DevFlow 增强
 
@@ -76,7 +85,7 @@ Phase 0 启动时自动执行双维度检测:
 2. **TechStack检测**: 扫描文件后缀 + 配置文件 → Python/Go/Rust/Java/Kotlin/...
 3. **联合决策**: Scale增幅% + TechStack增幅% → Token预算 + Persona加载 + Hook级别
 
-**Gate 0 报告模板**:
+**双维度检测报告模板** (Phase 0 启动时输出, 非 G0 判定):
 ```
 检测到: Scale={level}, TechStack={stacks}
 将加载: {N}核心Persona + {M}扩展Persona + {K}安全规则

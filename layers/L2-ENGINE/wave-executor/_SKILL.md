@@ -279,10 +279,10 @@ The parallelism level definitions below map concrete scenarios to the canonical 
 **Detection logic**:
 
 ```bash
-# Check for shared file modifications
+# Check for shared file modifications（文件清单来自 03-tasks.md 各任务块的 <write_files>；如存在 03-tasks.json 则优先 jq 解析）
 for task in $(yq '.waves[] | select(.wave_number == N) | .tasks[].id' wave-plan.yaml); do
-  FILES=$(grep "^files:" .devflow/tasks/${task}.yaml | cut -d':' -f2-)
-  
+  FILES=$(awk '/<task id="'$task'">/,/<\/task>/' .devflow/<req-id>/03-tasks.md | grep -A5 "<write_files>" | grep -oE '[^<>/ ]+\.[a-z]+' | tr '\n' ' ')
+
   if echo "$SHARED_FILES" | grep -qF "$FILES"; then
     echo "⚠️ Task $task shares files with another task → force serial"
     PARALLELISM=LOW

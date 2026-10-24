@@ -2,10 +2,10 @@
 name: phase-3-task-plan
 description: Phase 3 任务规划 — ADR 映射、Task 拆分、DAG 依赖分析与 Wave 分组
 preamble-tier: 2
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 3
-requires: [g3.5-gate-decision, design-document]
+requires: [g3-gate-decision, g3.5-gate-decision, design-document]
 provides: [task-list, dag-dependencies, wave-plan, g4-gate-decision, dependency-annotations]
 source: 交互层 Phase 3 (Task Plan & DAG)
 dependencies:
@@ -44,6 +44,20 @@ allowed-tools:
 
 详见 `docs/phases/phase-3-tasks.md`
 
+## 机器校验
+
+任务清单建议同时保存 JSON 副本（`.devflow/<req-id>/03-tasks.json`，格式 `{"tasks":[{"id","name","deps"}]}`），用已有 CLI 自动校验：
+
+```bash
+devflow task --file .devflow/<req-id>/03-tasks.json
+# 或直接调用库并输出 mermaid DAG 图
+node lib/task-planner.js --file .devflow/<req-id>/03-tasks.json --visualize
+```
+
+- **依赖完整性**：引用不存在的任务 → 报错（对应 Error Taxonomy 的 UNRESOLVED_DEP）
+- **环检测**：Kahn 拓扑排序无法收敛 → 报错（对应 CYCLE_DETECTED）
+- **Wave 重算**：缺失或非法的 wave 字段会被拓扑排序自动纠正
+
 ## Error Taxonomy
 
 | Level | Name | Recovery | Impact |
@@ -61,6 +75,8 @@ allowed-tools:
 | Max DAG Depth | ≤ task count / 2 |
 | Wave Parallelism Ratio | Independent tasks ≥60% (warn if <60%) |
 | Task Plan Timeout | ≤10 min |
+
+> **核验方式说明**：上表中 NON_ATOMIC_TASK、DAG 深度、Wave 并行度、WARN_VERIFY_ABSENT 四项**暂无机器实现**——执行主体：AI 人工核验，结果写入 `03-tasks.md` 自检记录，不要误以为是机器检查（机器仅覆盖"机器校验"小节列出的依赖完整性/环检测/Wave 重算）。
 
 ## DevFlow 增强
 

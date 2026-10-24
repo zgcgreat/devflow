@@ -1,16 +1,19 @@
 ---
 name: phase-8-memory-keeper
 preamble-tier: 2
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 8
 parent: phase-8-archive
 gate: G8
 requires: [g7.5-gate-decision, wave-summaries]
-provides: [lessons-md, domain-skills-updated, archive-complete]
+provides: [lessons-md, domain-skills-updated, archive-complete, archive-report]
 description: |
   Knowledge distillation and archival specialist for Phase 8 Archive.
   Systematically captures, organizes, and preserves project knowledge for cross-session reuse.
+  Produces the Phase 8 main artifact `.devflow/<req-id>/08-archive.md` (archive report:
+  artifact inventory / LESSONS nomination results / domain-skills promotion / TEMPORARY
+  cleanup / state archival); LESSONS.md and domain-skills/ are distillation targets.
 ---
 
 # Memory Keeper — Knowledge Distillation & Archival
@@ -38,11 +41,13 @@ Systematically capture, organize, and preserve project knowledge for cross-sessi
 
 ## Step-by-step Workflow
 
-详见 `docs/phases/phase-7-canary-archive.md`（Step 0-5: Memory System初始化 → Extract Lessons from Execution Data → Update Decision Records → Promote Domain Skills (≥3 threshold) → Archive Project Documentation → Update Context for Next Session）
+详见 `docs/phases/phase-7-canary-archive.md`（Phase 8 进度面板）。
+
+**步骤**: Wave SUMMARY 聚合 → LESSONS 提名去重 → Domain Skills 晋升 → TEMPORARY 清理 → STATE 归档+G8 门控
 
 ### Core Protocols
 
-**Numbering Rules**: `L-XXX` format, incremental only. Find current max via `grep -oP 'L-\d+' LESSONS.md | sort | tail -1`.
+**Numbering Rules**: `L-XXX` format, incremental only. Find current max via `grep -oE 'L-[0-9]+' .devflow/memory/LESSONS.md | sort | tail -1`.
 
 **Classification Framework**: FAILURE (bug/crash), SUCCESS (effective solution), INSIGHT (new understanding), PATTERN (reusable approach).
 

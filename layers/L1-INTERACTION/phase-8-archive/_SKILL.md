@@ -1,7 +1,7 @@
 ---
 name: phase-8-archive
 preamble-tier: 2
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 8
 requires: [g7.5-gate-decision, canary-report]
@@ -31,7 +31,7 @@ allowed-tools:
 # Phase 8: 知识归档 (Knowledge Archival)
 
 > **前置**: G7.5 Canary 通过
-> **后置产物**: `memory/LESSONS.md` + `memory/domain-skills/*.md` + `STATE.md` 归档
+> **后置产物**: `.devflow/<req-id>/08-archive.md`（归档报告：产物盘点/LESSONS 提名结果/domain-skills 晋升/TEMPORARY 清理/状态归档）；`.devflow/memory/LESSONS.md` 与 `.devflow/memory/domain-skills/` 是沉淀目标而非门控产物
 > **门控**: G8 — Archive Quality Gate
 
 ## 核心定位
@@ -46,13 +46,14 @@ allowed-tools:
 - 所有 Phase 产物 (`.devflow/<req-id>/`)
 - Wave SUMMARY.md 文件 — `.devflow/waves/wave-{N}/SUMMARY.md`
 - Phase 6/7 审查及 Canary 报告
-- `.devflow/memory/STATE.md`
+- `.devflow/state.json`（引擎状态文件，JSON）
 
 ## 输出
 
-- `memory/LESSONS.md` — Lessons Learned 更新
-- `memory/domain-skills/*.md` — Domain Skills Promotion
-- `STATE.md` — 归档完成状态标记
+- `.devflow/<req-id>/08-archive.md` — 归档报告（主产物：产物盘点/LESSONS 提名结果/domain-skills 晋升/TEMPORARY 清理/状态归档）
+- `.devflow/memory/LESSONS.md` — Lessons Learned 更新（沉淀目标）
+- `.devflow/memory/domain-skills/*.md` — Domain Skills Promotion（沉淀目标）
+- `.devflow/state.json` — 归档完成状态标记（引擎状态文件，JSON）
 
 ## 执行流程
 
@@ -64,7 +65,7 @@ allowed-tools:
 
 | Level | Name | Recovery | Impact |
 |-------|------|----------|--------|
-| P0 | BLOCKING (LESSONS.md write fails) | Retry; output to `/tmp/phase8-archive-{req-id}.md` | Knowledge not persisted |
+| P0 | BLOCKING (LESSONS.md write fails) | Retry; output archive report to `.devflow/<req-id>/08-archive.md` | Knowledge not persisted |
 | P1 | RECOVERABLE (Wave SUMMARY missing) | Skip missing wave, document skipped | Partial knowledge loss |
 | P2 | WARNING (pattern 2-3 times, below ≥3 threshold) | Mark `[NEEDS MORE DATA]` | Graduation deferred |
 | P3 | INFO (TEMPORARY.md empty) | Log info, no action | No impact |

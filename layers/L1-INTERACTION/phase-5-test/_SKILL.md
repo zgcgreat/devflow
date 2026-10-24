@@ -2,7 +2,7 @@
 name: phase-5-test
 description: Phase 5 测试阶段 — 测试策略制定、测试用例执行、覆盖度验证与 Bug 修复循环
 preamble-tier: 2
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 5
 requires: [g5-gate-decision, wave-summaries, code-commits]
@@ -26,7 +26,7 @@ allowed-tools:
 # Phase 5: 测试 (QA + 交叉波测试矩阵)
 
 > **前置产物**: Phase 4 所有 Wave 完成
-> **后置产物**: `.devflow/test/05-test-report.md`
+> **后置产物**: `.devflow/<req-id>/05-test-report.md`（必须与 `01-analysis.md` 同级：lib/ac-coverage.js 只在报告同级及父级两级直查 01-analysis.md，放到报告的子目录会让 AC 覆盖率检查被绕过）
 > **门控**: G6 — Test Quality Gate
 
 ## 输入
@@ -84,7 +84,7 @@ allowed-tools:
 
 > Hook FAIL ≠ Gate FAIL。Hook 仅推荐，最终决策权在人工确认。
 
-**Gate G6.5** (浏览器 QA, 仅前端):
+**浏览器 QA 子检查**（属 G6 内部检查项，非引擎门控，仅前端）:
 - Strict/Audit: P0+P1 阻断
 - Standard: 仅 P0 阻断
 - Fast: 跳过

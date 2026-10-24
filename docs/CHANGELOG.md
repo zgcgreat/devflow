@@ -6,6 +6,16 @@
 
 ---
 
+## [3.4.1] - 2026-10-24
+
+### Fixed — Phase 子技能契约与质量（14 文件全量审计修复）
+
+- **产物名契约（阻断级）**：phase-4 声明不写产物但引擎要求 04-wave-logs.md、phase-8 全篇无 08-archive.md、phase-2a 写 02a-design-variants.md、phase-1b 写 CONTEXT.md —— 四者按字面执行会在 outputWritten() 硬校验处必然 FAIL，全部对齐引擎 PHASES；phase-5 产物目录 .devflow/test/ 会绕过 ac-coverage.js 的 AC 源定位，改为 .devflow/<req-id>/
+- **门控编号卫生**：phase-0-yc 正文 4 处 G1→G0；phase-1b 子门 G1-G5 改"检查项 1-5"（消除与全局门控冲突）；phase-4 "Integration Gate"→"Build Gate"（含 L1 README）；phase-5 自创 G6.5 改为 G6 内部子检查标注
+- **模板库补齐**：新增 00-strategy/01b-context/02a-variants/04-wave-logs/06-review/07-canary/08-archive 七个 R13.11 双载体模板（总数 32），引擎 11 个产物名模板首次全覆盖；旧 04-dev-log/06-code-review/07-release-checklist 头部标注弃用；references/prompts/ 四文件（4-dev/6-review/7-integration/8-archive）产物名映射到新契约
+- **内容质量**：phase-2-design 补 6 步执行步骤+AskUserQuestion 权限+删除不合理 15min 超时；phase-3 接线 devflow task --file 机器校验并标注 4 项人工核验项；phase-1 内联模板 AC 格式对齐 ### AC-N（修复 G6 覆盖率解析）；reviewer(L2-ENGINE executor/wave-executor 同病) 数据约定适配 DevFlow 布局；phase-0-yc/1b/2a/6/7 与 docs 五处阈值/退回路径/步骤引用矛盾消除；phase-6-review dependencies 指向真实技能
+- 14 个子技能 frontmatter 版本戳 3.0.0 → 3.4.0，缺失字段（preamble-tier/dependencies/allowed-tools/triggers）补齐
+
 ## [3.4.0] - 2026-10-24
 
 ### Added — 内容级门控与 Git 链路（功能补齐三件套）

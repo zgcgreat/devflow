@@ -4,6 +4,8 @@
 
 > 本文件**跨 req 长期累积**。每个 req 在 ANALYSIS 阶段会向这里追加术语和决策。
 > 目标：为 AI 提供项目级的「域语言 + 默认偏好」，省去重复解释。
+>
+> **注意（v3.4.0）**：Phase 1b 决策捕获产物名为 `01b-context.md`（见 `references/templates/01b-context.md`）；本模板用于**项目级上下文**，不是 Phase 1b 产物。
 
 ---
 

@@ -357,6 +357,12 @@ Mode: <Fast/Lean/Standard/Strict>
 
 ## 版本历史
 
+### v3.4.1 (2026-10-24) — Phase 子技能契约与质量修复
+- **产物名契约统一**：phase-4(04-wave-logs)/phase-8(08-archive)/phase-2a(02a-variants)/phase-1b(01b-context) 四个子技能声明的产物名与引擎硬校验对齐（修复前按其执行门控必然 FAIL）；phase-5 产物目录改 .devflow/<req-id>/（修复 AC 覆盖率检查被目录布局绕过）
+- **门控编号卫生**：yc-strategy 4 处 G1→G0；1b 子门 G1-G5 改检查项 1-5；phase-4 Integration Gate→Build Gate（含 L1 README/docs）；G6.5 改为 G6 内部子检查
+- **模板库补齐**：新增 00-strategy/01b-context/02a-variants/04-wave-logs/06-review/07-canary/08-archive 7 个 R13.11 双载体模板（32 个），旧 04-dev-log/06-code-review/07-release-checklist 标注弃用，prompts 四文件产物名映射到新契约
+- **内容质量**：phase-2-design 补 6 步执行步骤与 AskUserQuestion；phase-3 接线 devflow task --file 机器校验；reviewer/executor/wave-executor 数据约定适配 DevFlow 布局（03-tasks.md 任务块 + ### AC-N）；phase-0-yc/1/2a/6/7/docs 五处内部矛盾消除；14 个子技能版本戳 3.4.0
+
 ### v3.4.0 (2026-10-24) — 内容级门控 + Git 链路（功能补齐）
 - **AC 覆盖率检查器** (lib/ac-coverage.js)：G6 的 "AC覆盖率 ≥90%" 从纸面声明变为机器度量 —— 解析 01-analysis.md 的 AC 清单 ↔ 05-test-report.md 的用例映射表，覆盖率不足或存在 ❌ 用例即 FAIL；Fast/Lean 无 AC 来源时豁免
 - **模板内容校验** (lib/template-check.js)：R13.11 双载体清单机器化 —— 以模板自带的必填段落清单为单一来源，校验产物段落齐全 + 无未替换占位符；devflow gates --phase 自动执行，--template 可单独校验

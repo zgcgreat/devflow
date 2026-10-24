@@ -26,8 +26,10 @@
 
 健康检查:
 ✓ error_rate: 0.02% (阈值 < 0.5%)
-✓ 响应时间: P99 = 230ms (阈值 < 500ms)
+✓ 响应时间: P99 = 180ms (阈值 < 200ms) ✅
 ✓ 错误日志: 0 异常
+
+> 注：以上阈值为示例默认（p99<200ms、error_rate<0.5%），实际阈值来自 `01-analysis.md` 的非功能性需求（NFR），逐 req 填写。
 
 ─────────────────────────────
 
@@ -63,7 +65,8 @@
 > **门控**: G8 (Archive Gate) — LESSONS.md 和 domain-skills 已更新 → 通过
 > **Layer**: Layer 2+3
 > **适用模式**: Fast（归档到LESSONS）, Lean（归档到LESSONS）, Standard（完整）, Strict（完整）
-> **前置产物**: `.devflow/memory/LESSONS.md`、`.devflow/memory/domain-skills/`
+> **前置产物**: `.devflow/<req-id>/08-archive.md`（归档报告，主产物：产物盘点/LESSONS 提名结果/domain-skills 晋升/TEMPORARY 清理/状态归档）
+> **沉淀目标**: `.devflow/memory/LESSONS.md`、`.devflow/memory/domain-skills/`（知识沉淀目标，非门控产物）
 
 ---
 

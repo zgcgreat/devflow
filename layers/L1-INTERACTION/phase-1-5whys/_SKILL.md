@@ -1,6 +1,6 @@
 ---
 name: phase-1-5whys
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 1
 description: Apply the "5 Whys" root cause analysis technique to uncover true user needs beneath surface-level requests
@@ -31,6 +31,8 @@ token_budget: "~200K per execution agent"
 > **前置产物**: Phase 0 通过 G0
 > **后置产物**: `.devflow/<req-id>/01-analysis.md`
 > **门控**: G1 — Requirements Quality Gate
+>
+> **G1/G2 分工**: G1 = 5 Whys 分析完成（自动门控，满足条件即过）；G2 = 需求范围用户确认（人工门控，AskUserQuestion 交互确认后关闭）
 
 ## 核心定位
 
@@ -40,11 +42,11 @@ token_budget: "~200K per execution agent"
 
 ## 产物
 
-- `.devflow/<req-id>/01-analysis.md` — 5 Whys 链 + 用户故事 + AC + 术语表 + 范围边界 + G2 Gate
+- `.devflow/<req-id>/01-analysis.md` — 6 必填段：用户故事 / 验收准则（AC）/ 范围切分 / 非功能性需求 / 依赖与假设 / 需求完整性检查（另含 5 Whys 链与术语表）
 - **User Stories**: `US-{NNN}: [Role] can [Action] so that [Benefit]` (P0/P1/P2)
-- **Acceptance Criteria**: `AC-{NNN}` with Given/When/Then
+- **Acceptance Criteria**: `### AC-{NNN} · <短标题>` 独立标题段 + Given/When/Then 列表（G6 覆盖率按 `### AC-N` 标题行解析，AC 必须写成独立段落，不可行内内联）
 - **Glossary**: ≥3 术语定义
-- **Scope Boundaries**: In Scope (✅) / Out of Scope (❌)
+- **Scope Boundaries**: 范围切分 v1（本次必做）/ v2（下一轮）/ out（永远不做）
 
 ## 执行流程
 
@@ -72,15 +74,31 @@ token_budget: "~200K per execution agent"
 
 ## 产物模板
 
+> **完整模板与 6 必填段（用户故事/验收准则（AC）/范围切分/非功能性需求/依赖与假设/需求完整性检查）见 `references/templates/01-analysis.md`**，以下为速览骨架。注意：AC 必须是 `### AC-N · 短标题` 独立标题段（`lib/ac-coverage.js` 据此解析 G6 覆盖率），禁止写成行内 `**AC**: AC-N: ...`。
+
 ```markdown
 # Phase 1: Requirements Analysis — [Project Name]
 ## 5 Whys Root Cause Analysis
 **Starting Point**: "{original request}" | **Root Cause**: "{underlying problem}"
-## User Stories
+## 用户故事
 ### US-NNN: [Role] can [Action] so that [Benefit]
-**Priority**: P0/P1/P2 | **AC**: AC-N: Given/When/Then
-## Glossary (≥3 terms) | Term | Definition | Example |
-## Scope: In Scope ✅ / Out of Scope ❌
+**Priority**: P0/P1/P2
+## 验收准则（AC）
+### AC-1 · <短标题>
+- **Given** <初始状态>
+- **When** <用户动作>
+- **Then** <可观察结果>
+- **验证方式**: `<命令或手动 UAT 编号>`
+## 范围切分
+### v1（本次必做）/ v2（下一轮考虑）/ out（永远不做）
+## 非功能性需求
+- 性能 / 可访问性 / 安全 / 兼容性 / 可观测性（如无写"无"）
+## 依赖与假设
+- 依赖的外部服务、库、内部模块；已假设的前提条件
+## 术语表 (≥3 terms)
+| Term | Definition | Example |
+## 需求完整性检查（SDD 强制）
+- [ ] 无 [NEEDS CLARIFICATION] 残留 / 可测试 / 范围边界清晰 ...
 ## G2 Gate: AC Testability / Scope Clarity / Glossary / Risk Balance / Phase 0 Consistency
 ```
 

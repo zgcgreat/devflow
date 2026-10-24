@@ -106,7 +106,7 @@
 
 ## 你的职责
 
-**⚠️ 强制要求**：必须严格按照 `@devflow/templates/06-code-review.md` 模板的完整结构分四轮审查（后端 / lib 项目跳过第三轮），**保存到 `.devflow/<req-id>/06-code-review.md`**。**不得省略或改写任何段落**。
+**⚠️ 强制要求**：必须严格按照 `@devflow/templates/06-review.md` 模板的完整结构分四轮审查（后端 / lib 项目跳过第三轮），**保存到 `.devflow/<req-id>/06-review.md`**。**不得省略或改写任何段落**。
 
 ### 第一轮 · Spec 合规审查
 
@@ -244,7 +244,7 @@
 **Remedy（修补）**：<具体怎么改，贴 before/after 代码或接口调整>
 ```
 
-把 brooks-lint 输出原样贴入 `06-code-review.md` 的「代码质量审查 · 6 维衰退」段，不要改写丝毫。补充部分仅为指向 fix 任务。
+把 brooks-lint 输出原样贴入 `06-review.md` 的「代码质量审查 · 6 维衰退」段，不要改写丝毫。补充部分仅为指向 fix 任务。
 
 ##### 路径 B · 未装 brooks-lint（内置回退）
 
@@ -306,7 +306,7 @@ AI 自己逐个维度诊断 diff，发现的每个问题都要：
 
 **执行步骤**：
 
-装了 brooks-lint → `/brooks-audit`，拿到 Mermaid 依赖图，贴入 06-code-review.md。重点核：
+装了 brooks-lint → `/brooks-audit`，拿到 Mermaid 依赖图，贴入 06-review.md。重点核：
 - 是否出现**循环依赖**（图中虚线反向箭头）
 - 是否出现「业务层 → 低层」线路以外的反向依赖（如 `domain/` 依赖 `controller/`）
 - 是否出现跨边界依赖（如 `frontend/` 直接 import `backend/` 实现）
@@ -390,7 +390,7 @@ UI 审查触发判定：
 
 每条命中**必须列出文件:行号**，标 🔴 Critical 并生成 fix 任务。
 
-> 装了 [impeccable](https://impeccable.style) → 跑 `npx impeccable detect <changed-files>` 自动化扫描，把输出贴进 06-code-review.md。
+> 装了 [impeccable](https://impeccable.style) → 跑 `npx impeccable detect <changed-files>` 自动化扫描，把输出贴进 06-review.md。
 
 #### 3.3 视觉北极星一致性
 
@@ -498,7 +498,7 @@ UI 审查触发判定：
 - 单一函数 > 80 行
 - 测试覆盖率有显著下降
 
-拿另一个模型重跑前三轮必跑审查（第四轮按触发条件判，不重跑），两份报告的差异填入 `06-code-review.md` 末尾的「跨模型分歧」章节。重点看两份报告都指出的 🔴 项（差异越少越可信）与**仅一方指出的 🔴 项**（需人工裁判）。
+拿另一个模型重跑前三轮必跑审查（第四轮按触发条件判，不重跑），两份报告的差异填入 `06-review.md` 末尾的「跨模型分歧」章节。重点看两份报告都指出的 🔴 项（差异越少越可信）与**仅一方指出的 🔴 项**（需人工裁判）。
 
 **输出**：
 ```markdown
@@ -691,7 +691,7 @@ AI: ✅ 已记录：问题 3 跳过（原因：历史遗留）
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  📝 审查报告: .devflow/<req-id>/06-code-review.md                 │
+│  📝 审查报告: .devflow/<req-id>/06-review.md                 │
 │  📋 修复任务: 2 条已追加到 03-tasks.md                    │
 │  ➡️  下一步: 进入 4-dev 执行修复                             │
 └─────────────────────────────────────────────────────────────┘
@@ -699,14 +699,14 @@ AI: ✅ 已记录：问题 3 跳过（原因：历史遗留）
 
 ## 输出
 
-- `.devflow/<req-id>/06-code-review.md`（**必须严格按模板格式输出**）
+- `.devflow/<req-id>/06-review.md`（**必须严格按模板格式输出**）
 - 0~N 条新增 fix 任务追加到 `03-tasks.md`
 - **更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `review`
   - `阶段状态` 设为 `completed` 或 `blocked`
   - `上次完成阶段` 设为 `review`
   - `下一阶段` 设为 `integration`
-  - 在「阶段进度」清单中打钩 `审查 → 06-code-review.md`
+  - 在「阶段进度」清单中打钩 `审查 → 06-review.md`
 
 ## 约束（强制）
 
@@ -726,7 +726,7 @@ AI: ✅ 已记录：问题 3 跳过（原因：历史遗留）
 - ⏳ 第二轮 · 6 维诊断输出含 4 要素 + 书本引用 + R1~R6 编号
 - ⏳ 第二轮 · 测试报告已读取并输出内容摘要
 - ⏳ 第三轮（如有）· UI 设计文件已读取
-- ⏳ 第四轮按触发条件判完（命中触发必跑，未命中可跳但要在 06-code-review.md 写明"X 未命中"）
+- ⏳ 第四轮按触发条件判完（命中触发必跑，未命中可跳但要在 06-review.md 写明"X 未命中"）
 - ⏳ 每条发现都有严重度标签
 - ⏳ 每个 Critical 都已生成 fix 任务或经人工确认"已知接受"
 - ⏳ 报告里没有自己悄悄改过的代码
@@ -736,8 +736,8 @@ AI: ✅ 已记录：问题 3 跳过（原因：历史遗留）
 
 ```
 ✅ 审查 完成
-📝 产物：.devflow/<req-id>/06-code-review.md
-📊 STATE.md 阶段进度已更新：[x] 审查 → 06-code-review.md
+📝 产物：.devflow/<req-id>/06-review.md
+📊 STATE.md 阶段进度已更新：[x] 审查 → 06-review.md
 
 审查统计：
 - 四轮审查: <列出每轮状态>

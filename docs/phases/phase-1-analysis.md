@@ -145,7 +145,7 @@
 
 **第3步：用户回答后更新进度，继续下一题**（同上模式，逐项确认）
 
-**第4步：全部决策完毕后生成 `CONTEXT.md`**
+**第4步：全部决策完毕后生成 `01b-context.md`**
 
 ```
 ✅ Phase 1b 完成 — 技术决策全部确认
@@ -156,7 +156,7 @@
 3. 状态管理：B → Context API + useReducer
 4. 错误处理：A → 立即提示 + 重试3次
 
-已生成：`.devflow/<req-id>/CONTEXT.md`
+已生成：`.devflow/<req-id>/01b-context.md`
 
 请确认或输入 /skip 跳过 Phase 1b：
 ```
@@ -165,9 +165,9 @@
 
 - ✅ 决策覆盖率 ≥70% → 通过
 - ✅ 所有未决项标注 [NEEDS CLARIFICATION] → 通过
-- ✅ CONTEXT.md格式正确 → 通过
+- ✅ 01b-context.md格式正确 → 通过
 
-**⚠️ 关键约束**: CONTEXT.md将作为Phase 2方案设计的约束条件，确保设计方案符合用户偏好。
+**⚠️ 关键约束**: 01b-context.md将作为Phase 2方案设计的约束条件，确保设计方案符合用户偏好。（决策捕获产物模板见 `references/templates/01b-context.md`）
 
 ### 常见歧义领域
 
@@ -190,7 +190,7 @@
 /devflow spec tasks                # 生成 specs/XXX/tasks.md
 ```
 
-SDD完成后自动生成CONTEXT.md，然后进入Phase 2。
+SDD完成后自动生成01b-context.md，然后进入Phase 2。
 
 > **注**: SDD（Spec-Driven Development）集成说明已内联合并到本文件的上述章节，
 > 不再维护独立的 `SDD-INTEGRATION.md`。

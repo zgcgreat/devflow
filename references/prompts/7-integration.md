@@ -49,9 +49,9 @@
 - `@.devflow/<req-id>/01-analysis.md`
 - `@.devflow/<req-id>/02-design.md`
 - `@.devflow/<req-id>/03-tasks.md`
-- `@.devflow/<req-id>/04-dev-log.md`
+- `@.devflow/<req-id>/04-wave-logs.md`
 - `@.devflow/<req-id>/05-test-report.md`（含 UAT 脚本）
-- `@.devflow/<req-id>/06-code-review.md`
+- `@.devflow/<req-id>/06-review.md`
 - `@.devflow/lessons-learned.md`
 - 当前已合并/待合并的代码
 
@@ -77,7 +77,7 @@
 
 ### 3. 编制发布清单
 
-**⚠️ 强制要求**：必须严格按照 `@devflow/templates/07-release-checklist.md` 模板的完整结构输出，**保存到 `.devflow/<req-id>/07-release-checklist.md`**。**不得省略或改写任何段落**。
+**⚠️ 强制要求**：必须严格按照 `@devflow/templates/07-canary.md` 模板的完整结构输出，**保存到 `.devflow/<req-id>/07-canary.md`**。**不得省略或改写任何段落**。
 
 逐项与用户确认：
 
@@ -196,13 +196,13 @@
 ### 7. 出 PR（可选）
 
 如果用户用 git 流水线：
-- 检查 PR 标题/正文已自动从 00-requirements.md + 04-dev-log.md 拼装
+- 检查 PR 标题/正文已自动从 00-requirements.md + 04-wave-logs.md 拼装
 - 列出涉及的文件、AC 覆盖、UAT 结论
 - 把 `.devflow/` 内的文件归类到 PR 描述（不污染代码 diff）
 
 ## 输出
 
-- `.devflow/<req-id>/07-release-checklist.md`（**必须严格按模板格式输出** — 发布检查清单 + 回滚方案）
+- `.devflow/<req-id>/07-canary.md`（**必须严格按模板格式输出** — 发布检查清单 + 回滚方案）
 - `.devflow/<req-id>/UAT.md`
 - 归档后的 `.devflow/archive/<...>/`
 - 更新的 `.devflow/需求LOG.md` 与 `.devflow/STATE.md`
@@ -213,7 +213,7 @@
   - `阶段状态` 设为 `completed` 或 `blocked`
   - `上次完成阶段` 设为 `integration`
   - `下一阶段` 设为 `none` 或发布后归档动作
-  - 在「阶段进度」清单中打钩 `集成 → 07-release-checklist.md`
+  - 在「阶段进度」清单中打钩 `集成 → 07-canary.md`
   - 归档后：`活跃 Req` 改为 `无`，`当前阶段` 设为 `none`，`阶段状态` 设为 `completed`
 
 ## 约束（强制）
@@ -227,7 +227,7 @@
 
 - ⏳ 全量自动化结果已贴出且全绿
 - ⏳ 每条 UAT 都有人工通过/失败标注
-- ⏳ **07-release-checklist.md 已生成**，所有 10 项检查已逐项确认
+- ⏳ **07-canary.md 已生成**，所有 10 项检查已逐项确认
 - ⏳ 回滚方案已与用户确认
 - ⏳ 失败的项目都已经过最多 3 轮自动重试，超限的已暂停
 - ⏳ 需求LOG 已追加
@@ -239,8 +239,8 @@
 
 ```
 ✅ 集成 完成
-📝 产物：.devflow/<req-id>/07-release-checklist.md
-📊 STATE.md 阶段进度已更新：[x] 集成 → 07-release-checklist.md
+📝 产物：.devflow/<req-id>/07-canary.md
+📊 STATE.md 阶段进度已更新：[x] 集成 → 07-canary.md
 
 集成统计：
 - UAT 通过: <Y/N>

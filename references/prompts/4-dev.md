@@ -305,7 +305,7 @@ dev-snapshot.md 是临时文件，不归档。
 3. **DOUBT** — adversarial 视角：**证明它错了**，而不是确认它对了
 4. **RECONCILE** — 分类发现，修复或记录
 
-**审查输出写入 `04-dev-log.md` 的「关键决策反方审查」段**。不阻塞流程，但 Critical 发现必须先修再标记完成。
+**审查输出写入 `04-wave-logs.md` 的「关键决策反方审查」段**。不阻塞流程，但 Critical 发现必须先修再标记完成。
 
 ## 自检
 
@@ -327,7 +327,7 @@ dev-snapshot.md 是临时文件，不归档。
 
 ```
 ✅ 开发 完成
-📝 产物：.devflow/<req-id>/04-dev-log.md
+📝 产物：.devflow/<req-id>/04-wave-logs.md
 📊 STATE.md 阶段进度已更新：[x] 开发 → *-dev-log.md
 
 开发统计：
@@ -343,7 +343,7 @@ dev-snapshot.md 是临时文件，不归档。
 ## 触发下一步 & 自动推进
 
 - 还有未完成任务 → 清窗，再次进入 `@devflow/references/prompts/4-dev.md` 跑下一个
-- **全部完成 → 生成 `04-dev-log.md`**：**⚠️ 强制要求**：必须严格按照 `@devflow/templates/04-dev-log.md` 模板的完整结构汇总本次开发阶段全部任务的执行情况、关键决策、与设计的偏离、遗留事项和质量证据，保存到 `.devflow/<req-id>/04-dev-log.md`。**不得省略或改写任何段落**。
+- **全部完成 → 生成 `04-wave-logs.md`**：**⚠️ 强制要求**：必须严格按照 `@devflow/templates/04-wave-logs.md` 模板的完整结构汇总本次开发阶段全部任务的执行情况、关键决策、与设计的偏离、遗留事项和质量证据，保存到 `.devflow/<req-id>/04-wave-logs.md`。**不得省略或改写任何段落**。
 - **全部完成 → 更新 `.devflow/STATE.md`**：
   - `当前阶段` 设为 `dev`
   - `阶段状态` 设为 `completed` 或 `blocked`

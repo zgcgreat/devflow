@@ -1,6 +1,6 @@
 ---
 name: canary-wrapper
-version: 3.0.0
+version: 3.4.0
 layer: L1-INTERACTION
 phase: 7
 parent: phase-7-canary

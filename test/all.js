@@ -889,7 +889,7 @@ TESTS.push({
 
 // 运行
 console.log('='.repeat(50));
-console.log('🔬 DevFlow v3.4.0 完整性验证\n');
+console.log('🔬 DevFlow v3.4.1 完整性验证\n');
 
 let passCount = 0, failCount = 0;
 

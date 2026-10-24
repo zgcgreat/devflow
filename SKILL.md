@@ -95,7 +95,7 @@ devflow git start req-001      # req 工作分支 + 产物提交链路
 | R4 | 选择题优先 | GO.md Step 2: 给用户预设选项[A]/[B]/[C] | 用户可要求重新提问 |
 | R5 | Gate 声明式验证 | `references/gate-rules.md` 定义"跳过条件",`lib/phase-engine.js` 自动阻止非法推进 | phase-engine **不会**推进未通过门控的 Phase：`--next` 校验当前门控，`--set` 前向跳跃校验途经门控 |
 | R6 | 门控不阻塞用户 | Fast/Lean 例外规则 + 用户显式 skip 优先于自动检查 | 跳过必须用 `--force` 显式声明：引擎会记录到 state.json 的 `skips` 数组（含越过的门控），并在路由声明中标注 |
-| R7 | 单一来源 of truth | references/templates/ (26个) 是权威模板, domains/specification/templates/ 是简化版 | 不一致时以 references/templates/ 为准 |
+| R7 | 单一来源 of truth | references/templates/ (32个) 是权威模板, domains/specification/templates/ 是简化版 | 不一致时以 references/templates/ 为准 |
 
 > R8-R11 → `layers/L2-ENGINE/hooks-system/_SKILL.md`（钩子系统规则）
 
