@@ -77,14 +77,20 @@ devflow git start req-001      # req 工作分支 + 产物提交链路
 
 ## 三级运行时 (来自 DevFlow)
 
+> **⭐ 检测原则：按能力探测，禁止按宿主名字猜。**
+> 加载本技能后先执行一次探测（在技能安装目录内）：`node bin/devflow.js --version`
+> - ✅ 成功输出版本号 → **L1+**（本技能可驱动机器内核）
+> - ❌ 失败（无 node / 路径不可达）→ **L0**，静默降级，不报错不阻塞
+
 | 级别 | 检测条件 | 能力 |
 |------|---------|------|
-| **L0** | 无 Node.js / Copilot / Gemini CLI | 纯 Markdown 指令 + SKILL.md 规则 |
-| **L1** | Node.js + Claude Code / Cursor | phase-engine.js + hooks/scripts/ 执行 |
+| **L0** | 探测失败（无 Node.js / CLI 不可达） | 纯 Markdown 指令 + SKILL.md 规则 |
+| **L1** | 探测成功（Node.js ≥ 18，任意宿主：Claude Code / Cursor / WorkBuddy / Copilot CLI 等） | phase-engine.js + hooks/scripts/ 执行 |
 | **L2** | L1 + CodeGraph / SQLite | 知识图谱桥接 + 完整集成 |
 
 > 降级规则：不报错、不阻塞。L0 环境用 Markdown 指令，L1/L2 自动启用 JS 内核。
 > 前置条件：L1/L2 需要 **Node.js ≥ 18**（`devflow doctor` 自动校验运行时版本）；未安装或版本不足时降级 L0。
+> L1 与 L0 的差别只在**门控强制力**（机器拦截 vs 指令约束），流程、Phase、产物、模板完全一致。
 
 ## 强制行为约束 (R1-R7, 来自 DevFlow)
 
