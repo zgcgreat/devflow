@@ -137,3 +137,16 @@ Lean 模式允许跳过 Phase 0 到 Phase 2a 之间的产物，但必须满足�
 | 模式升级 / 降级 | any | 用户确认后执行 |
 
 > 自动门控（无需人工确认，满足条件即过）：G0 / G1 (5Whys 完成) / G4 (TaskPlan) / G6 (AC 覆盖率 ≥ 90%) / G8 (归档完成)。
+
+## 机器检查（v3.4.0 起）
+
+门控分两层，`devflow gates --phase <N>` 一次执行全部：
+
+| 层 | 检查内容 | 实现 |
+|----|---------|------|
+| 存在性 | 前置产物按名字递归定位（`.devflow/<req-id>/` 三层深度） | `gate-check.js` 默认口径 |
+| 内容级 | ① 每个产物按其模板的 R13.11 必填段落清单校验段落齐全 + 占位符已替换（`lib/template-check.js`）② G6 额外度量 AC 覆盖率：解析 `01-analysis.md` 的 `### AC-N` 与 `05-test-report.md` 的用例映射表，覆盖率 ≥ 90% 且无 ❌ 用例才通过（`lib/ac-coverage.js`） | `gate-check.js` 的 `{content: true}` 路径 |
+
+> Fast/Lean 模式无 `01-analysis.md`（AC 来源不存在），AC 覆盖检查显式豁免（ℹ️ 提示），仅产物存在性受检。
+> 单独运行：`devflow gates --ac <目录>`（AC 覆盖率报告）、`devflow gates --template <文件>`（模板内容校验）。
+> 产物流转建议配合 `devflow git start <req-id>` / `devflow git checkpoint` 使用，流程产物按 req 分支留痕。

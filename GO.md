@@ -1,4 +1,4 @@
-# GO — DevFlow v3.3.1 统一路由器
+# GO — DevFlow v3.4.0 统一路由器
 
 > **AI指令**：
 > 1. 本文件是 v3 路由入口，读完后按第四步路由表匹配用户意图
@@ -356,6 +356,13 @@ Mode: <Fast/Lean/Standard/Strict>
 ---
 
 ## 版本历史
+
+### v3.4.0 (2026-10-24) — 内容级门控 + Git 链路（功能补齐）
+- **AC 覆盖率检查器** (lib/ac-coverage.js)：G6 的 "AC覆盖率 ≥90%" 从纸面声明变为机器度量 —— 解析 01-analysis.md 的 AC 清单 ↔ 05-test-report.md 的用例映射表，覆盖率不足或存在 ❌ 用例即 FAIL；Fast/Lean 无 AC 来源时豁免
+- **模板内容校验** (lib/template-check.js)：R13.11 双载体清单机器化 —— 以模板自带的必填段落清单为单一来源，校验产物段落齐全 + 无未替换占位符；devflow gates --phase 自动执行，--template 可单独校验
+- **Git 链路** (lib/git-bridge.js + devflow git)：req-id ↔ 分支 (devflow/<req-id>) ↔ 提交 (devflow(<req-id>): ...) 链路自动化；checkpoint 只 stage .devflow/ 流程产物，不碰源代码
+- gate-check G6 联动 AC 覆盖；CLI 新增 gates --ac/--template 与 git start/status/checkpoint/verify；doctor 新增 3 项检查
+- 测试 26 → 30 项（AC 覆盖率 4 场景 / 模板校验 4 场景 / 真实 git 仓库链路 / gate-check 内容级与 adapters 口径兼容）
 
 ### v3.3.1 (2026-10-24) — 门控强制硬化 + 全量审计修复
 - **门控引擎**：`phase --set` 前向跳跃现在校验途经门控（防绕过整个门控体系）；`--force` 显式跳过记录到 state.json 的 `skips` 数组（审计可追溯）

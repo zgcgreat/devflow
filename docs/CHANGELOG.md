@@ -6,6 +6,22 @@
 
 ---
 
+## [3.4.0] - 2026-10-24
+
+### Added — 内容级门控与 Git 链路（功能补齐三件套）
+
+- **AC 覆盖率检查器** `lib/ac-coverage.js`：G6 的 "AC 覆盖率 ≥ 90%" 从纸面声明变为机器度量。解析 01-analysis.md 的 `### AC-N` 清单与 05-test-report.md 的用例映射表（1.1 测试矩阵 + 新增测试登记），覆盖率不足阈值或存在 ❌ 状态用例即 FAIL；Fast/Lean 模式无 01-analysis.md（无 AC 来源）时显式豁免。CLI：`devflow gates --ac <目录>`
+- **模板内容校验** `lib/template-check.js`：R13.11 双载体清单机器化。以 references/templates/ 模板自带的 `<!-- 必填段落清单 -->` 注释为单一来源（零副本），校验产物包含全部必填段落标题且无未替换 CJK 占位符（`<角色>`/`<req-id>` 等）。CLI：`devflow gates --template <文件>`；`devflow gates --phase N` 自动对每个产物执行
+- **Git 链路** `lib/git-bridge.js` + `devflow git` 子命令：req-id ↔ 分支（`devflow/<req-id>`）↔ 提交（`devflow(<req-id>): <说明>`）链路自动化。start 创建分支并写 `.devflow/<req-id>/git.json`；checkpoint 只 stage `.devflow/` 流程产物（绝不自动提交源代码）；verify 检查分支约定/链路记录/未提交产物
+- `gate-check.js` 的 `checkGate()` 新增可选 `{ content: true }` 内容级检查（CLI gates 路径启用；G6 联动 AC 覆盖率），默认存在性口径不变 —— adapters/core-bridge 契约不受影响
+- doctor 新增 3 项检查（AC 覆盖检查器/模板内容校验/Git 链路桥接）；HELP/文档全量更新
+
+### Tests
+
+- 26 → 30 项：AC 覆盖率 4 场景（75% 拦截/❌用例拦截/100% 通过/无 AC 来源豁免）、模板校验 4 场景（全段落/缺段/占位符/无模板豁免）、真实临时 git 仓库上的 start-checkpoint-verify 链路、gate-check 内容级生效 + adapters 存在性口径兼容回归
+
+---
+
 ## [3.3.1] - 2026-10-24
 
 ### Fixed — 门控强制硬化（高严重度）

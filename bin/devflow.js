@@ -52,7 +52,13 @@ const HELP = `DevFlow v${JSON.parse(fs.readFileSync(path.join(DEVFLOW_HOME, 'pac
   devflow code --scan <目录>                          代码扫描
   devflow caveman --file <路径> [--level lite|full|ultra|wenyan]  压缩
   devflow caveman --compress <文本>                   压缩文本
-  devflow gates --phase <N>                           门控检查
+  devflow gates --phase <N>                           门控检查 (含内容级: 模板段落 + G6 AC 覆盖率)
+  devflow gates --ac <目录>                           AC 覆盖率报告 (.devflow 或 .devflow/<req-id>)
+  devflow gates --template <文件>                     模板内容校验 (必填段落 + 占位符)
+  devflow git start <req-id> [--from <base>]          创建 devflow/<req-id> 分支并记录链路
+  devflow git status                                  req-id ↔ 分支 ↔ 提交链路状态
+  devflow git checkpoint "<说明>"                     提交流程产物检查点 (只 stage .devflow/)
+  devflow git verify                                  链路健康检查
   devflow install [--target <name>] [--dry-run]       安装到运行时 (--list 查看目标)
   devflow install --list                              列出安装目标与状态
   devflow install --uninstall [--target <name>]       卸载
@@ -340,6 +346,34 @@ const CMDS = {
   },
 
   gates: (args) => {
+    // --ac <目录>: 独立 AC 覆盖率报告（G6 度量）
+    if (args.includes('--ac')) {
+      const target = args[args.indexOf('--ac') + 1] || '.devflow';
+      const { checkACCoverage } = require('../lib/ac-coverage');
+      const r = checkACCoverage(path.resolve(target));
+      // formatReport 未导出时本地渲染
+      const lines = r.applicable
+        ? [`AC 覆盖率: ${r.coveredPct}% (${r.covered.length}/${r.total})，阈值 ${r.threshold}%`,
+           r.uncovered.length > 0 ? `  ⚠️ 未覆盖: ${r.uncovered.join(', ')}` : '  ✅ 全部 AC 已有用例映射',
+           ...(r.failing.length > 0 ? [`  ❌ 失败用例覆盖: ${r.failing.join(', ')}`] : []),
+           r.pass ? '✅ PASS' : '❌ FAIL']
+        : [`ℹ️ ${r.reason}`];
+      console.log(lines.join('\n'));
+      process.exitCode = r.pass ? 0 : 1;
+      return;
+    }
+    // --template <文件>: 独立模板内容校验（R13.11 机器化）
+    if (args.includes('--template')) {
+      const target = args[args.indexOf('--template') + 1];
+      if (!target) { console.error('用法: devflow gates --template <产物文件>'); process.exit(1); }
+      const { checkTemplate } = require('../lib/template-check');
+      const abs = path.resolve(target);
+      if (!fs.existsSync(abs)) { console.error(`❌ 文件不存在: ${abs}`); process.exit(1); }
+      const r = checkTemplate(abs);
+      console.log(`模板内容校验: ${path.basename(abs)}\n  ${r.reason}\n${r.pass ? '✅' : '❌'} ${r.pass ? 'PASS' : 'FAIL'}`);
+      process.exitCode = r.pass ? 0 : 1;
+      return;
+    }
     const child = require('child_process');
     const gateCheck = path.join(DEVFLOW_HOME, 'domains', 'hooks', 'gate-check.js');
     const passArgs = process.argv.slice(process.argv.indexOf('gates') + 1);
@@ -348,6 +382,53 @@ const CMDS = {
     } catch (err) {
       // gate-check 在门控未通过时返回非零退出码 (预期行为)，输出已通过 stdio inherit 打印
       process.exitCode = err.status || 1;
+    }
+  },
+
+  git: (args) => {
+    const { GitBridge } = require('../lib/git-bridge');
+    const bridge = new GitBridge(process.cwd());
+    const [sub, ...rest] = args;
+    const val = (flag) => { const i = rest.indexOf(flag); return i >= 0 ? rest[i + 1] : undefined; };
+    try {
+      if (sub === 'start') {
+        if (!rest[0]) throw new Error('用法: devflow git start <req-id> [--from <base>]');
+        const r = bridge.start(rest[0], { from: val('--from') });
+        console.log(`${r.created ? '已创建' : '已切换到'}分支 ${r.branch} (基于 ${r.base})`);
+        console.log(`链路记录: .devflow/${r.reqId}/git.json`);
+        return;
+      }
+      if (sub === 'status') {
+        if (!bridge.isRepo()) { console.log('当前目录不是 git 仓库'); process.exitCode = 1; return; }
+        const reqId = bridge.reqFromBranch();
+        console.log(`DevFlow Git 链路\n  当前分支: ${bridge.currentBranch()}${reqId ? ` (req: ${reqId})` : ' (不符合 devflow/<req-id> 约定)'}`);
+        const linked = bridge.linkedReqs();
+        if (linked.length > 0) console.log(`  已链路 req: ${linked.map(l => l.reqId).join(', ')}`);
+        if (reqId) {
+          const c = bridge.branchCommits(reqId);
+          if (c) console.log(`  分支提交: ${c.count} 条${c.latest ? `，最近: ${c.latest}` : ''}`);
+        }
+        const changes = bridge.artifactChanges();
+        console.log(`  未提交流程产物: ${changes.length} 个${changes.length > 0 ? '（devflow git checkpoint "<说明>" 收口）' : ''}`);
+        return;
+      }
+      if (sub === 'checkpoint') {
+        const r = bridge.checkpoint(rest[0]);
+        if (r.commit) console.log(`✅ 已提交 ${r.commit}: devflow(${r.reqId}) 流程产物`);
+        else console.log('ℹ️ 无流程产物变更可提交');
+        return;
+      }
+      if (sub === 'verify') {
+        const r = bridge.verify();
+        console.log(`DevFlow Git 链路检查\n  ${r.pass ? '✅ 通过' : `❌ ${r.issues.length} 个问题`}`);
+        r.issues.forEach(i => console.log(`  - ${i}`));
+        process.exitCode = r.pass ? 0 : 1;
+        return;
+      }
+      console.log(`用法: devflow git start <req-id> [--from <base>] | status | checkpoint "<说明>" | verify`);
+    } catch (err) {
+      console.error(`❌ ${err.message}`);
+      process.exit(1);
     }
   },
 
@@ -407,6 +488,9 @@ const CMDS = {
       { name: '压缩引擎', run: () => loadable('domains/memory/caveman.js') },
       { name: '门控检查', run: () => loadable('domains/hooks/gate-check.js') },
       { name: 'Phase 引擎', run: () => loadable('lib/phase-engine.js') },
+      { name: 'AC 覆盖检查器', run: () => loadable('lib/ac-coverage.js') },
+      { name: '模板内容校验', run: () => loadable('lib/template-check.js') },
+      { name: 'Git 链路桥接', run: () => loadable('lib/git-bridge.js') },
       { name: '.devflow 目录', run: () => present(path.resolve('.devflow')) },
     ];
 
@@ -511,8 +595,9 @@ function main() {
     return;
   }
 
-  // 状态守卫：除 init/help/doctor 外，所有命令先验证状态
-  if (!['init', 'help', 'doctor'].includes(cmd)) {
+  // 状态守卫：除 init/help/doctor/git 外，所有命令先验证状态
+  // （git 链路只依赖 .devflow/<req-id>/git.json，不需要 state.json）
+  if (!['init', 'help', 'doctor', 'git'].includes(cmd)) {
     const state = stateGuard();
     if (!state) {
       // 非阻塞：仅警告，让用户自己决定是否继续

@@ -207,7 +207,7 @@ TESTS.push({
 
     // help 必须列出 CMDS 中实现的每一个命令，防止"实现了却不告知"
     const helpText = help.stdout || '';
-    const CMDS = ['init', 'status', 'phase', 'detect', 'task', 'mem', 'party', 'code', 'caveman', 'gates', 'install', 'doctor'];
+    const CMDS = ['init', 'status', 'phase', 'detect', 'task', 'mem', 'party', 'code', 'caveman', 'gates', 'git', 'install', 'doctor'];
     for (const cmd of CMDS) {
       if (!new RegExp(`devflow ${cmd}\\b`).test(helpText)) errors.push(`help 未列出命令: ${cmd}`);
     }
@@ -708,9 +708,188 @@ TESTS.push({
   },
 });
 
+// Test 16: AC 覆盖率 — G6 门控的真实度量（v3.4.0）
+TESTS.push({
+  name: 'AC 覆盖率 — 解析/阈值/失败用例/模式豁免',
+  run: () => {
+    const { checkACCoverage } = require(path.join(ROOT, 'lib', 'ac-coverage'));
+    const dir = mkWorkspace();
+    const reqDir = path.join(dir, '.devflow', 'req-9');
+    fs.mkdirSync(reqDir, { recursive: true });
+    const analysis = ['# A', '## 验收准则（AC）',
+      '### AC-1 · 登录', '### AC-2 · 登出', '### AC-3 · 记住我', '### AC-4 · 密码重置'].join('\n');
+    fs.writeFileSync(path.join(reqDir, '01-analysis.md'), analysis);
+    const mkReport = (rows) => ['# T', '## 第 1 轮 · 功能测试',
+      '| AC | 类型 | 用例 | 状态 |', '|---|---|---|---|', ...rows].join('\n');
+    const errors = [];
+
+    // 3/4 覆盖 = 75% < 90% → FAIL
+    fs.writeFileSync(path.join(reqDir, '05-test-report.md'), mkReport([
+      '| AC-1 | unit | `a.test.ts` | ✅ |', '| AC-2 | unit | `b.test.ts` | ✅ |', '| AC-3 | e2e | `c.spec.ts` | 🟡 |']));
+    let r = checkACCoverage(dir);
+    if (r.applicable !== true || r.pass !== false || r.coveredPct !== 75) errors.push(`75% 场景判定错误: pass=${r.pass} pct=${r.coveredPct}`);
+    if (!r.uncovered.includes('AC-4')) errors.push('未报告 AC-4 未覆盖');
+
+    // 100% 覆盖但含 ❌ → FAIL
+    fs.writeFileSync(path.join(reqDir, '05-test-report.md'), mkReport([
+      '| AC-1 | unit | `a.test.ts` | ✅ |', '| AC-2 | unit | `b.test.ts` | ❌ |',
+      '| AC-3 | e2e | `c.spec.ts` | ✅ |', '| AC-4 | manual | UAT-1 | ✅ |']));
+    r = checkACCoverage(dir);
+    if (r.pass !== false || !r.failing.includes('AC-2')) errors.push('❌ 用例未拦截');
+
+    // 100% 覆盖全 ✅ → PASS
+    fs.writeFileSync(path.join(reqDir, '05-test-report.md'), mkReport([
+      '| AC-1 | unit | `a.test.ts` | ✅ |', '| AC-2 | unit | `b.test.ts` | ✅ |',
+      '| AC-3 | e2e | `c.spec.ts` | ✅ |', '| AC-4 | manual | UAT-1 | ✅ |']));
+    r = checkACCoverage(dir);
+    if (r.pass !== true || r.coveredPct !== 100) errors.push(`全通过场景判定错误: pass=${r.pass} pct=${r.coveredPct}`);
+
+    // 无 AC 来源（Fast/Lean）→ 不适用且放行
+    const fastDir = mkWorkspace();
+    const fastReq = path.join(fastDir, '.devflow', 'req-f');
+    fs.mkdirSync(fastReq, { recursive: true });
+    fs.writeFileSync(path.join(fastReq, '05-test-report.md'), mkReport(['| AC-9 | unit | `x.test.ts` | ✅ |']));
+    r = checkACCoverage(fastDir);
+    if (r.applicable !== false || r.pass !== true) errors.push('Fast/Lean 无 AC 来源未豁免');
+
+    return errors.length === 0
+      ? { pass: true, detail: '75%<90% 拦截 ✅ ❌用例拦截 ✅ 100% 通过 ✅ 无AC来源豁免 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 17: 模板内容校验 — R13.11 双载体清单的机器化（v3.4.0）
+TESTS.push({
+  name: '模板内容校验 — 必填段落 + 占位符 + 无模板豁免',
+  run: () => {
+    const { checkTemplate } = require(path.join(ROOT, 'lib', 'template-check'));
+    const dir = mkWorkspace();
+    const errors = [];
+
+    // 01-analysis.md 模板自带 6 段清单 → 合法产物（全段落 + 无占位符）通过
+    const good = ['# ANALYSIS: req-1', '## 用户故事', '## 验收准则（AC）', '## 范围切分',
+      '## 非功能性需求', '## 依赖与假设', '## 需求完整性检查（SDD 强制 · 融合 spec-kit）'].join('\n');
+    const goodPath = path.join(dir, '01-analysis.md');
+    fs.writeFileSync(goodPath, good);
+    let r = checkTemplate(goodPath);
+    if (!r.hasChecklist || !r.pass) errors.push(`合法产物未通过: ${r.reason}`);
+
+    // 缺一个段落 → FAIL 且点名
+    fs.writeFileSync(goodPath, good.replace('## 范围切分\n', ''));
+    r = checkTemplate(goodPath);
+    if (r.pass !== false || !r.missing.includes('范围切分')) errors.push(`缺段未拦截: ${JSON.stringify(r.missing)}`);
+
+    // 残留 CJK 占位符 → FAIL
+    fs.writeFileSync(goodPath, good + '\n作为 <角色>，我想 <动作>\n');
+    r = checkTemplate(goodPath);
+    if (r.pass !== false || !r.placeholders.includes('<角色>')) errors.push(`占位符未拦截: ${JSON.stringify(r.placeholders)}`);
+
+    // 无同名模板 → 豁免
+    const unknown = path.join(dir, '99-unknown.md');
+    fs.writeFileSync(unknown, 'x');
+    r = checkTemplate(unknown);
+    if (r.hasTemplate !== false || r.pass !== true) errors.push('无模板场景未豁免');
+
+    return errors.length === 0
+      ? { pass: true, detail: '全段落通过 ✅ 缺段拦截 ✅ 占位符拦截 ✅ 无模板豁免 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 18: Git 链路 — 真实临时仓库上的 start/checkpoint/verify（v3.4.0）
+TESTS.push({
+  name: 'Git 链路 — 分支/提交/健康检查',
+  run: () => {
+    const { execFileSync } = require('child_process');
+    const { GitBridge } = require(path.join(ROOT, 'lib', 'git-bridge'));
+    const dir = mkWorkspace();
+    const errors = [];
+
+    // 搭建真实仓库（本地身份，避免依赖全局 git 配置）
+    const g = (args) => execFileSync('git', args, { cwd: dir, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+    g(['init', '-q']);
+    g(['config', 'user.email', 'test@devflow']);
+    g(['config', 'user.name', 'devflow-test']);
+    fs.writeFileSync(path.join(dir, 'README.md'), 'init');
+    g(['add', '.']);
+    g(['commit', '-q', '-m', 'init']);
+    const base = g(['rev-parse', '--abbrev-ref', 'HEAD']).trim();
+
+    const bridge = new GitBridge(dir);
+    // start: 创建分支 + 链路记录
+    const s = bridge.start('req-001');
+    if (!s.created || s.branch !== 'devflow/req-001') errors.push(`start 结果异常: ${JSON.stringify(s)}`);
+    if (bridge.currentBranch() !== 'devflow/req-001') errors.push('未切换到 devflow/req-001');
+    const link = bridge.readLink('req-001');
+    if (!link || link.base !== base) errors.push('git.json 链路记录缺失或 base 错误');
+
+    // verify: 未提交产物 → 不通过
+    const reqDir = path.join(dir, '.devflow', 'req-001');
+    fs.mkdirSync(reqDir, { recursive: true });
+    fs.writeFileSync(path.join(reqDir, '00-strategy.md'), 'x');
+    const v1 = bridge.verify();
+    if (v1.pass !== false || v1.uncommittedArtifacts < 1) errors.push('未提交产物未被检出');
+
+    // checkpoint: 提交流程产物 → verify 通过，分支提交数 ≥ 1
+    const c = bridge.checkpoint('Phase 0 战略产物');
+    if (!c.commit) errors.push('checkpoint 未产生提交');
+    const v2 = bridge.verify();
+    if (!v2.pass) errors.push(`checkpoint 后 verify 失败: ${v2.issues.join('; ')}`);
+    const bc = bridge.branchCommits('req-001');
+    if (!bc || bc.count < 1) errors.push('分支提交数统计错误');
+
+    // 非法 req-id 拒绝
+    let threw = false;
+    try { bridge.start('bad/req'); } catch { threw = true; }
+    if (!threw) errors.push('非法 req-id 未拒绝');
+
+    return errors.length === 0
+      ? { pass: true, detail: `start/checkpoint/verify 链路闭合 (base=${base})` }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
+// Test 19: gate-check 内容级集成 — G6 联动 AC 覆盖 + adapters 存在性口径兼容
+TESTS.push({
+  name: 'gate-check — 内容级检查生效且 adapters 口径不变',
+  run: () => {
+    const gc = require(path.join(ROOT, 'domains', 'hooks', 'gate-check.js'));
+    const { checkACCoverage } = require(path.join(ROOT, 'lib', 'ac-coverage'));
+    const dir = mkWorkspace();
+    const reqDir = path.join(dir, '.devflow', 'req-9');
+    fs.mkdirSync(reqDir, { recursive: true });
+    const errors = [];
+
+    fs.writeFileSync(path.join(reqDir, '01-analysis.md'),
+      '## 验收准则（AC）\n### AC-1 · a\n### AC-2 · b\n');
+    // 报告只覆盖 1/2 = 50% < 90%
+    fs.writeFileSync(path.join(reqDir, '05-test-report.md'),
+      '| AC | 类型 | 用例 | 状态 |\n|---|---|---|---|\n| AC-1 | unit | `a.test.ts` | ✅ |');
+
+    // 内容级开启: G6 必须因覆盖率不足失败
+    const g6 = gc.GATE_MAP['G6'];
+    if (gc.checkGate(g6, path.join(dir, '.devflow'), { content: true }) !== false) {
+      errors.push('G6 内容级检查未拦截 50% 覆盖率');
+    }
+    // 存在性口径（adapters 依赖）: 产物存在即通过，行为不变
+    if (gc.checkGate(g6, path.join(dir, '.devflow')) !== true) {
+      errors.push('G6 存在性口径被内容级检查污染（adapters 契约破坏）');
+    }
+
+    // 全覆盖场景
+    fs.writeFileSync(path.join(reqDir, '05-test-report.md'),
+      '| AC | 类型 | 用例 | 状态 |\n|---|---|---|---|\n| AC-1 | unit | `a.test.ts` | ✅ |\n| AC-2 | unit | `b.test.ts` | ✅ |');
+    if (!checkACCoverage(dir).pass) errors.push('100% 覆盖未通过');
+
+    return errors.length === 0
+      ? { pass: true, detail: 'G6 联动 AC 覆盖 ✅ 存在性口径兼容 ✅' }
+      : { pass: false, detail: errors.join('; ') };
+  },
+});
+
 // 运行
 console.log('='.repeat(50));
-console.log('🔬 DevFlow v3.3.1 完整性验证\n');
+console.log('🔬 DevFlow v3.4.0 完整性验证\n');
 
 let passCount = 0, failCount = 0;
 

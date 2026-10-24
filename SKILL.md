@@ -1,6 +1,6 @@
 ---
 name: devflow
-version: 3.3.1
+version: 3.4.0
 description: |
   DevFlow — 带门控强制的分阶段软件交付流程（Phase 0-8）。
   当用户要求按阶段推进开发、或在动手写代码前需要先做需求分析、方案设计、任务拆分时使用。
@@ -14,7 +14,7 @@ description: |
   不适用：单行修复、纯问答、纯文档润色等无需流程约束的任务。
 ---
 
-# DevFlow v3.3.1 — AI 开发操作系统
+# DevFlow v3.4.0 — AI 开发操作系统
 
 > DevFlow Phase 管线 + Gate 门控 + 3 级运行时，零外部依赖自包含架构。
 > 所有文件在 devflow 目录内，无外部引用。
@@ -69,6 +69,8 @@ description: |
 npm install -g devflow
 devflow init --mode standard   # 初始化管线
 devflow status                 # 状态检查
+devflow gates --phase 5        # 门控检查 (含 G6 AC 覆盖率 ≥90% + 模板必填段落)
+devflow git start req-001      # req 工作分支 + 产物提交链路
 # 所有命令参考: docs/cli-reference.md
 ```
 

@@ -18,6 +18,9 @@ const path = require('path');
 
 // 单一权威源：lib/phase-engine.js
 const { GATES, PHASES } = require('../../lib/phase-engine');
+// 内容级检查器（v3.4.0）：模板必填段落 + G6 AC 覆盖率
+const { checkTemplate } = require('../../lib/template-check');
+const { checkACCoverage } = require('../../lib/ac-coverage');
 
 /**
  * 由权威定义派生每个 gate 的前置产物：
@@ -82,19 +85,59 @@ function findArtifact(dir, name, depth = 0) {
   return null;
 }
 
-function checkGate(gate, dir) {
+/**
+ * 检查门控。
+ *
+ * 存在性检查（默认）：产物文件按名字递归定位，缺任一即 FAIL。
+ * 内容级检查（opts.content = true，CLI gates 路径启用）：
+ *   - 每个存在的产物按其模板的 R13.11 必填段落清单校验段落齐全 + 占位符已替换；
+ *   - G6 额外执行 AC 覆盖率检查（阈值 90%，无 ❌ 用例）。
+ *
+ * adapters/shared/core-bridge.js 以默认参数调用（存在性口径），行为保持不变。
+ */
+function checkGate(gate, dir, opts = {}) {
+  const content = opts.content === true;
   console.log(`\n🔍 ${gate.name} (${gate.artifacts.join(', ')}) [${gate.type}]`);
   console.log(`   目录: ${dir}/ (支持根目录与 <req-id>/ 子目录)`);
 
   const missing = gate.artifacts.filter(a => !findArtifact(dir, a));
-
-  if (missing.length === 0) {
-    console.log(`   ✅ PASS — 所有产物存在`);
-    return true;
-  } else {
+  if (missing.length > 0) {
     console.log(`   ❌ FAIL — 缺少: ${missing.join(', ')}`);
     return false;
   }
+
+  if (!content) {
+    console.log(`   ✅ PASS — 所有产物存在`);
+    return true;
+  }
+
+  // --- 内容级检查 ---
+  let pass = true;
+
+  for (const artifact of gate.artifacts) {
+    const artifactPath = findArtifact(dir, artifact);
+    if (!artifactPath) continue;
+    const t = checkTemplate(artifactPath);
+    if (!t.hasChecklist) {
+      console.log(`   ℹ️ ${artifact}: ${t.reason}`);
+      continue;
+    }
+    if (t.pass) {
+      console.log(`   ✅ ${artifact}: ${t.reason}`);
+    } else {
+      console.log(`   ❌ ${artifact}: ${t.reason}`);
+      pass = false;
+    }
+  }
+
+  if (gate.id === 'G6') {
+    const ac = checkACCoverage(dir);
+    console.log(`   ${ac.pass ? '✅' : ac.applicable ? '❌' : 'ℹ️'} AC 覆盖: ${ac.reason}`);
+    if (ac.applicable && !ac.pass) pass = false;
+  }
+
+  if (pass) console.log(`   ✅ PASS — 存在性 + 内容级检查全部通过`);
+  return pass;
 }
 
 function main() {
@@ -102,10 +145,10 @@ function main() {
   let allPass = true;
 
   if (opts.all) {
-    console.log('📋 DevFlow 门控全量检查 (派生自 phase-engine.js 权威定义)\n');
-    // 保持 GATES 声明顺序
+    console.log('📋 DevFlow 门控全量检查 (派生自 phase-engine.js 权威定义，含内容级检查)\n');
+    // 保持 GATES 声明顺序；CLI 路径启用内容级检查（模板段落 + G6 AC 覆盖率）
     GATES.forEach(g => {
-      if (!checkGate(GATE_MAP[g.id], opts.dir)) allPass = false;
+      if (!checkGate(GATE_MAP[g.id], opts.dir, { content: true })) allPass = false;
     });
   } else {
     const gate = findGate(opts);
@@ -114,7 +157,7 @@ function main() {
       console.error('      node gate-check.js --all');
       process.exit(1);
     }
-    if (!checkGate(gate, opts.dir)) allPass = false;
+    if (!checkGate(gate, opts.dir, { content: true })) allPass = false;
   }
 
   console.log(allPass ? '\n✅ 所有门控通过\n' : '\n❌ 部分门控未通过\n');

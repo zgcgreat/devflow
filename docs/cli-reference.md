@@ -1,6 +1,6 @@
 ---
 name: devflow-cli-reference
-version: 3.3.1
+version: 3.4.0
 description: DevFlow CLI 命令完整参考手册
 ---
 
@@ -90,10 +90,29 @@ devflow caveman --compress <文本>                   # 文本压缩
 ## 门控 & 健康
 
 ```bash
-devflow gates --phase <N>                           # 门控检查
+devflow gates --phase <N>                           # 门控检查（存在性 + 内容级：模板必填段落 + G6 AC 覆盖率）
+devflow gates --gate <GID> [--dir <目录>]           # 单门控检查 / --all 全量
+devflow gates --ac <目录>                           # AC 覆盖率报告（目录 = .devflow 或 .devflow/<req-id>）
+devflow gates --template <产物文件>                 # 模板内容校验（必填段落 + 未替换占位符）
 devflow install [--target <name>] [--dry-run]       # 安装到运行时 (--list 查看目标)
 devflow install --list                              # 列出安装目标与状态
 devflow install --uninstall [--target <name>]       # 卸载
 devflow doctor                                      # 健康检查
 devflow help                                        # 帮助信息
 ```
+
+- `gates --phase 5`：先按名字定位产物（缺任一 FAIL），再对每个产物执行模板内容校验（以 `references/templates/` 同名模板的 R13.11 必填段落清单为单一来源），G6 额外解析 `01-analysis.md` 的 `### AC-N` ↔ `05-test-report.md` 用例映射表，覆盖率 ≥ 90% 且无 ❌ 用例才通过。Fast/Lean 无 AC 来源时豁免（ℹ️）。
+- 退出码：0 = 通过，1 = 未通过（可接入脚本/钩子判定）。
+
+## Git 链路 (v3.4.0)
+
+```bash
+devflow git start <req-id> [--from <base>]          # 创建/切换 devflow/<req-id> 分支并写 .devflow/<req-id>/git.json
+devflow git status                                  # 当前分支/已链路 req/分支提交数/未提交产物
+devflow git checkpoint "<说明>"                     # 提交流程产物检查点: devflow(<req-id>): <说明>
+devflow git verify                                  # 分支约定 + 链路记录 + 未提交产物检查
+```
+
+- 约定：分支 `devflow/<req-id>`，提交格式 `devflow(<req-id>): <说明>`。
+- 安全边界：`checkpoint` 只 stage `.devflow/<req-id>/` 与 `.devflow/state.json`，**绝不自动提交源代码**。
+- 未配置 git 身份时 checkpoint 以本地一次性身份兜底（`-c user.name=devflow`）。
