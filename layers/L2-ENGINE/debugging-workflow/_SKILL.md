@@ -280,7 +280,7 @@ codesign --sign "$IDENTITY" --verbose=4 "$APP"
 ### `condition-based-waiting.md`
 替代硬编码延迟的条件等待策略。通用轮询函数 + 领域专用助手实现。真实影响：15个 flaky 测试从60%通过率到100%，执行时间减少40%。
 
-## Real-World Impact (来自 DevFlow-kit)
+## Real-World Impact (来自 DevFlow)
 
 - **Systematic approach**: 15-30分钟定位根因
 - **Random fixes approach**: 2-3小时反复试错
@@ -306,7 +306,7 @@ phase_4_completion:
 
 ---
 
-> **Adapted from**: DevFlow-kit `skills/systematic-debugging/` directory  
+> **Adapted from**: DevFlow `skills/systematic-debugging/` directory  
 > **Source files**: SKILL.md (~297 lines) + root-cause-tracing.md (~170 lines) + condition-based-waiting.md (~116 lines) + defense-in-depth.md (~123 lines) + condition-based-waiting-example.ts (~159 lines)  
 > **Total source**: ~865 lines condensed to integrated format  
 > **Key adaptation**: Inserted as Phase 4→5 transition hook in DevFlow's DAG; aligned with Wave Executor post-phase hooks
